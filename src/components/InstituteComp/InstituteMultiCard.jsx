@@ -42,7 +42,7 @@ const InstituteMultiCard = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 m-5">
+      <div className=" cursor-pointer grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 m-5">
         {institutes.map((each , index) => {
           return (
             <InstituteCard

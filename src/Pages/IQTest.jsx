@@ -210,27 +210,27 @@ const IQTest = () => {
                   <button
                     onClick={handlePrevious}
                     disabled={currentQuestion === 0}
-                    className="flex items-center bg-gray-200 p-2 rounded disabled:opacity-50"
+                    className=" cursor-pointer flex items-center bg-gray-200 p-2 rounded disabled:opacity-50"
                   >
                     <FaArrowLeft className="mr-2" /> Previous
                   </button>
                   <button
                     onClick={handleSave}
-                    className="flex items-center bg-yellow-500 p-2 rounded text-white"
+                    className=" cursor-pointer flex items-center bg-yellow-500 p-2 rounded text-white"
                   >
                     <FaSave className="mr-2" /> Save
                   </button>
                   {currentQuestion < questions.length - 1 ? (
                     <button
                       onClick={handleNext}
-                      className="flex items-center bg-blue-500 p-2 rounded text-white"
+                      className="cursor-pointer flex items-center bg-blue-500 p-2 rounded text-white"
                     >
                       Next <FaArrowRight className="ml-2" />
                     </button>
                   ) : (
                     <button
                       onClick={handleSubmit}
-                      className="flex items-center bg-green-500 p-2 rounded text-white"
+                      className=" cursor-pointer flex items-center bg-green-500 p-2 rounded text-white"
                     >
                       Submit <FaCheckCircle className="ml-2" />
                     </button>
