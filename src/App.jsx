@@ -5,7 +5,7 @@ import AOS from 'aos';
 import HeroSection from './Layouts/HeroSection';
 import DashboardPage from './Pages/DashboardPage';
 import LocationPage from './Pages/LocationPage';
-import LoginPage from './Pages/LoginPage';
+import LoginPage from './Pages/Login/LoginPage';
 import SignInPage from './Pages/SignInPage';
 import CardDetails from './components/CardDetails';
 import Roadmap from './components/Roadmap';
