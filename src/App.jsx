@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { RouterProvider } from 'react-router';
 import './App.css'
+import AOS from 'aos';
 import HeroSection from './Layouts/HeroSection';
 import DashboardPage from './Pages/DashboardPage';
 import LocationPage from './Pages/LocationPage';
@@ -17,9 +18,14 @@ import AppLayout from './Layouts/AppLayout';
 import InstituteMultiCard from './components/InstituteComp/InstituteMultiCard';
 import UniversityMultiCard from './components/UniversityComp/UniversityMultiCard';
 import SingleInstitute from './components/InstituteComp/SingleInstitute';
+import UniversityDetail from './components/UniversityComp/UniversityDetail';
 
 function App() {
+  AOS.init({ duration: 1000 }); // 1000ms = 1s
 
+  // React.useEffect(() => {
+   
+  // }, []);
   const router = createBrowserRouter([
     {
       path: "/",
@@ -41,6 +47,11 @@ function App() {
           path: "/university",
           element: <UniversityMultiCard />,
         },
+        {
+          path: "/university/:id", // Route for single university details
+          element: <UniversityDetail />,
+        },
+        
       ],
     },
     {
@@ -90,10 +101,8 @@ function App() {
   ]);
 
   return (
-    <>
-      <RouterProvider router={router}/>
-    </>
+    <RouterProvider router={router} />
   )
 }
 
-export default App
+export default App;
