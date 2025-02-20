@@ -48,15 +48,15 @@ const ReviewPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-3xl mx-auto bg-white p-5 shadow-lg rounded-xl">
+    <div className=" p-6">
+      <div className="">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
           Student Reviews
         </h2>
 
         <form
           onSubmit={formik.handleSubmit}
-          className="bg-gray-100 p-4 rounded-lg"
+          className=""
         >
           <h3 className="text-lg font-semibold text-gray-700 mb-3">
             Leave a Review
@@ -115,7 +115,7 @@ const ReviewPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+            className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
           >
             Submit Review
           </button>

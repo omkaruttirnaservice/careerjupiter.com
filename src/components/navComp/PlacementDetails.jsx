@@ -5,18 +5,18 @@ const PlacementDetails = () => {
     <div className="p-4 space-y-6">
       <div className="bg-blue-50 p-4 rounded-lg">
         <h1 className="text-2xl font-bold text-center">Placement Details</h1>
-        <div className="mt-4 flex flex-col md:flex-row justify-center items-center gap-4">
-          <select className="w-full md:w-auto p-2 border rounded">
+        <div className=" mt-4 flex flex-col md:flex-row justify-center items-center gap-4">
+          <select className=" cursor-pointer w-full md:w-auto p-2 border rounded">
             <option>Year</option>
             <option>2022</option>
             <option>2023</option>
           </select>
-          <select className="w-full md:w-auto p-2 border rounded">
+          <select className=" cursor-pointer w-full md:w-auto p-2 border rounded">
             <option>Course</option>
             <option>Computer Science</option>
             <option>Electrical Engineering</option>
           </select>
-          <select className="w-full md:w-auto p-2 border rounded">
+          <select className=" cursor-pointer w-full md:w-auto p-2 border rounded">
             <option>Branch</option>
             <option>Main Campus</option>
             <option>Remote Campus</option>

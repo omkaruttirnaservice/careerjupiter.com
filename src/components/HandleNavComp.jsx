@@ -5,6 +5,11 @@ import Scholarship from "./navComp/Scholarship";
 import ReviewPage from "./navComp/ReviewPage";
 import PlacementDetails from "./navComp/PlacementDetails";
 import CutoffTable from "./navComp/CutoffTable";
+import Ranking from "./navComp/Ranking";
+import Campus from "./navComp/Campus";
+import Gallery from "./navComp/Gallery";
+import News from "./navComp/News";
+import QuenAns from "./navComp/QuenAns";
 
 const HandleNavComp = ({ navName }) => {
 
@@ -22,6 +27,7 @@ const HandleNavComp = ({ navName }) => {
     "Reviews",
     "News",
     "QnA",
+    
   ];
 
     useEffect(() => {
@@ -41,8 +47,23 @@ const HandleNavComp = ({ navName }) => {
         case navItem[4]:
           setNavComp(<CutoffTable />);
           break;
+          case navItem[5]:
+          setNavComp(<Ranking />);
+          break;
+          case navItem[6]:
+            setNavComp(<Campus />);
+          break;
+          case navItem[7]:
+            setNavComp(<Gallery />);
+          break;
         case navItem[8]:
           setNavComp(<ReviewPage />);
+          break;
+          case navItem[9]:
+            setNavComp(<News />);
+          break;
+          case navItem[10]:
+            setNavComp(<QuenAns />);
           break;
         default:
           setNavComp(null);

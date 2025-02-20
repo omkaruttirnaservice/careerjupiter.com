@@ -38,3 +38,4 @@ const UniversityCard = ({ university, onClick }) => {
 };
 
 export default UniversityCard;
+
