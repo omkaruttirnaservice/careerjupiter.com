@@ -7,3 +7,4 @@ const UniversityCard = () => {
 };
 
 export default UniversityCard;
+

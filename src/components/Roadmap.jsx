@@ -1,256 +1,171 @@
-// const Roadmap = () => {
-//      const timelineData = [
-//        {
-//          week: 1,
-//          title: "Back End Developer",
-//          details: "C#, Asp.net, VB.Net, Net Core",
-//          side: "left",
-//        },
-//        {
-//          week: 2,
-//          title: "Front End Developer",
-//          details: "HTML, CSS, Bootstrap, Javascript, jQuery",
-//          side: "right",
-//        },
-//        {
-//          week: 3,
-//          title: "Software Testing",
-//          details: "Manual Testing, Selenium",
-//          side: "left",
-//        },
-//        {
-//          week: 4,
-//          title: "Database",
-//          details: "ADO.net, MySQL Server",
-//          side: "right",
-//        },
-//        {
-//          week: 5,
-//          title: "Capstone Project",
-//          details: "Full Stack Project",
-//          side: "left",
-//        },
-//        {
-//          week: 6,
-//          title: "Cloud Computing",
-//          details: "AWS/AZURE/GCP",
-//          side: "right",
-//        },
-//        {
-//          week: 7,
-//          title: "Interview Preparation",
-//          details: "Mock Interviews, Mini Projects",
-//          side: "left",
-//        },
-//        {
-//          week: 8,
-//          title: "Training",
-//          details: "Hands-On Job Training",
-//          side: "right",
-//        },
-//        {
-//          week: 9,
-//          title: "Ready To Deploy",
-//          details: "Job Ready",
-//          side: "left",
-//        },
-//      ];
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 
-//        const colors = [
-//          "bg-green-200 text-green-800",
-//          "bg-blue-200 text-blue-800",
-//          "bg-yellow-200 text-yellow-800",
-//          "bg-purple-200 text-purple-800",
-//        ];
+export default function VisualEducationRoadmap() {
+  const [path, setPath] = useState([]);
+  const [history, setHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
 
-//   return (
-//     <>
-//       <div className="flex flex-col items-center bg-gray-50 py-10 px-5">
-//         <div className="flex flex-col items-center mb-10">
-//           <div className="w-16 h-16 rounded-full bg-yellow-400 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
-//             👤
-//           </div>
-//           <h2 className="text-2xl font-semibold mt-3 text-gray-700">Learner</h2>
-//         </div>
+  const levelData = {
+    '10th Pass': ['HSC', 'Diploma', 'ITI'],
+    'HSC': ['Science', 'Commerce', 'Arts'],
+    Diploma: ['Engineering Diploma', 'Polytechnic', 'Computer Diploma'],
+    ITI: ['Electrician', 'Fitter', 'Plumber', 'Welder', 'Machinist', 'Turner', 'Computer Operator'],
+    Science: ['Engineering', 'Medical', 'B.Sc'],
+    Commerce: ['CA', 'CS', 'B.Com', 'MBA', 'Finance'],
+    Arts: ['BA', 'Law', 'UPSC', 'Journalism'],
+    'Engineering Diploma': ['Civil', 'Mechanical', 'IT', 'Electrical'],
+  };
 
-//         <div className="relative w-full max-w-2xl">
-//           <div className="absolute top-0 bottom-0 left-1/2 w-[3px] bg-gray-300 transform -translate-x-1/2 md:block hidden"></div>
+  const descriptions = {
+    Engineering: '⚙️ B.Tech, B.E - Core Engineering Fields',
+    Medical: '🩺 MBBS, BDS - Medical and Health Science',
+    'B.Sc': '🔬 B.Sc in Physics, Chemistry, Maths',
+    CA: '💼 Chartered Accountant',
+    CS: '💼 Company Secretary',
+    'B.Com': '📊 Bachelor of Commerce',
+    MBA: '📈 Master of Business Administration',
+    Finance: '🏦 Finance, Banking, Accounting',
+    BA: '🎨 Sociology, History, Psychology',
+    Law: '⚖️ Legal Field, Advocacy, Corporate Law',
+    UPSC: '🏛️ Civil Services Examination',
+    Journalism: '📰 Media, Reporting, News Industry',
+    Civil: '🏗️ Construction, Structural Engineering',
+    Mechanical: '⚙️ Machinery, Manufacturing',
+    IT: '💻 Software, Hardware, Networking',
+    Electrical: '⚡ Power, Electronics, Circuit Design',
+  };
 
-//           {timelineData.map((item, index) => {
-//             const colorClass = colors[index % colors.length]; // Pick color dynamically
-//             const isLeft = index % 2 === 0; // Alternate side dynamically
-
-//             return (
-//               <div
-//                 key={index}
-//                 className={`flex flex-col md:flex-row ${isLeft ? "md:justify-start" : "md:justify-end"} items-center mb-12 relative`}
-//               >
-//                 <div
-//                   className={`${colorClass} font-semibold px-4 py-1 rounded-md shadow-md mb-4 md:mb-0`}
-//                 >
-//                   Week {item.week}
-//                 </div>
-
-//                 <div
-//                   className={`bg-white p-5 shadow-md rounded-lg w-full md:w-50 border-l-4 md:ml-4 ${isLeft ? "border-blue-500" : "border-green-500"} ${isLeft ? "md:ml-4" : "md:mr-4"}`}
-//                 >
-//                   <h3 className="font-semibold text-lg text-gray-800">
-//                     {item.title}
-//                   </h3>
-//                   <p className="text-gray-600 text-sm mt-1">{item.details}</p>
-//                 </div>
-
-//                 <div className="w-6 h-6 bg-blue-500 rounded-full absolute left-1/2 transform -translate-x-1/2 border-4 border-white md:block hidden"></div>
-//               </div>
-//             );
-//           })}
-//         </div>
-
-//         <div className="flex flex-col items-center mt-10">
-//           <div className="w-16 h-16 rounded-full bg-yellow-500 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
-//             🎓
-//           </div>
-//           <h2 className="text-2xl font-semibold mt-3 text-gray-700">
-//             Ready Resource
-//           </h2>
-//         </div>
-//       </div>
-//       ;
-//     </>
-//   );
-// };
-
-// export default Roadmap;
-
-import React, { useState } from "react";
-
-const Roadmap = () => {
-  const [activeWeek, setActiveWeek] = useState(1); // Start with week 1
-
-  const timelineData = [
-    {
-      week: 1,
-      title: "Back End Developer",
-      details: "C#, Asp.net, VB.Net, Net Core",
-      side: "left",
-    },
-    {
-      week: 2,
-      title: "Front End Developer",
-      details: "HTML, CSS, Bootstrap, Javascript, jQuery",
-      side: "right",
-    },
-    {
-      week: 3,
-      title: "Software Testing",
-      details: "Manual Testing, Selenium",
-      side: "left",
-    },
-    {
-      week: 4,
-      title: "Database",
-      details: "ADO.net, MySQL Server",
-      side: "right",
-    },
-    {
-      week: 5,
-      title: "Capstone Project",
-      details: "Full Stack Project",
-      side: "left",
-    },
-    {
-      week: 6,
-      title: "Cloud Computing",
-      details: "AWS/AZURE/GCP",
-      side: "right",
-    },
-    {
-      week: 7,
-      title: "Interview Preparation",
-      details: "Mock Interviews, Mini Projects",
-      side: "left",
-    },
-    {
-      week: 8,
-      title: "Training",
-      details: "Hands-On Job Training",
-      side: "right",
-    },
-    {
-      week: 9,
-      title: "Ready To Deploy",
-      details: "Job Ready",
-      side: "left",
-    },
+  const itiCareerOptions = [
+    'Government Sector (Railways, PSU, Electricity Dept.)',
+    'Private Sector (Factories, Industries)',
+    'Self-Employment (Own Workshop, Repair Services)',
   ];
 
-  const colors = [
-    "bg-green-200 text-green-800",
-    "bg-blue-200 text-blue-800",
-    "bg-yellow-200 text-yellow-800",
-    "bg-purple-200 text-purple-800",
+  const handleBreadcrumbClick = (level, value) => {
+    const newPath = [...path.slice(0, level), value];
+    setPath(newPath);
+
+    // Update history for back/forward
+    const newHistory = [...history.slice(0, historyIndex + 1), newPath];
+    setHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+  };
+
+  const resetPath = () => {
+    setPath([]);
+    setHistory([[]]);
+    setHistoryIndex(0);
+  };
+
+  const handleBack = () => {
+    if (historyIndex > 0) {
+      setHistoryIndex(historyIndex - 1);
+      setPath(history[historyIndex - 1]);
+    }
+  };
+
+  const handleForward = () => {
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex(historyIndex + 1);
+      setPath(history[historyIndex + 1]);
+    }
+  };
+
+  const breadcrumbTrail = [
+    { label: '10th Pass', onClick: resetPath },
+    ...path.map((step, index) => ({
+      label: step,
+      onClick: () => handleBreadcrumbClick(index, step),
+    })),
   ];
+
+  const currentLevelData =
+    path.length === 0
+      ? levelData['10th Pass']
+      : levelData[path[path.length - 1]];
+
+  const currentStep = path[path.length - 1];
+  const isFinalStep = descriptions[currentStep] || path[0] === 'ITI';
 
   return (
-    <>
-      <div className="flex flex-col items-center bg-gray-50 py-10 px-5">
-        <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 rounded-full bg-yellow-400 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
-            👤
-          </div>
-          <h2 className="text-2xl font-semibold mt-3 text-gray-700">Learner</h2>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 flex flex-col items-center p-8 font-sans">
+    <h1 className="text-base sm:text-lg md:text-xl lg:text-3xl font-extrabold mb-12 text-gray-800 drop-shadow-lg animate-pulse">
+      📚 10th Pass ➜ Future Roadmap 🚀
+    </h1>
 
-        <div className="relative w-full max-w-2xl">
-          <div className="absolute top-0 bottom-0 left-1/2 w-[3px] bg-gray-300 transform -translate-x-1/2 md:block hidden"></div>
+      {/* Breadcrumb & Arrows */}
+      <div className="flex items-center space-x-4 mb-6 bg-white p-3 rounded-full shadow-md border border-purple-300 text-purple-800 font-medium">
+        <button
+          onClick={handleBack}
+          disabled={historyIndex <= 0}
+          className={`p-1 ${historyIndex <= 0 ? 'opacity-40 cursor-not-allowed' : 'hover:bg-purple-100 rounded-full'}`}
+        >
+          ⬅️
+        </button>
 
-          {timelineData.slice(0, activeWeek).map((item, index) => {
-            // Only show up to the active week
-            const colorClass = colors[index % colors.length]; // Pick color dynamically
-            const isLeft = index % 2 === 0; // Alternate side dynamically
-            const isActive = item.week <= activeWeek; // Check if week should be opened
+        {breadcrumbTrail.map((item, index) => (
+          <span key={index} className="flex items-center">
+            <button
+              className={`hover:underline ${
+                index === breadcrumbTrail.length - 1
+                  ? 'font-bold text-purple-900'
+                  : ''
+              }`}
+              onClick={item.onClick}
+            >
+              {item.label}
+            </button>
+            {index < breadcrumbTrail.length - 1 && <span className="mx-1">➜</span>}
+          </span>
+        ))}
 
-            return (
-              <div
-                key={index}
-                className={`flex flex-col md:flex-row ${isLeft ? "md:justify-start" : "md:justify-end"} items-center mb-12 relative`}
-                onClick={() => setActiveWeek(item.week + 1)} // Show next week when clicked
-              >
-                <div
-                  className={`${colorClass} font-semibold px-4 py-1 rounded-md shadow-md mb-4 md:mb-0`}
-                >
-                  Week {item.week}
-                </div>
-
-                {isActive && ( // Show details only if the week is active
-                  <div
-                    className={`bg-white p-5 shadow-md rounded-lg w-full md:w-50 border-l-4 md:ml-4 ${isLeft ? "border-blue-500" : "border-green-500"} ${isLeft ? "md:ml-4" : "md:mr-4"}`}
-                  >
-                    <h3 className="font-semibold text-lg text-gray-800">
-                      {item.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mt-1">{item.details}</p>
-                  </div>
-                )}
-
-                <div className="w-6 h-6 bg-blue-500 rounded-full absolute left-1/2 transform -translate-x-1/2 border-4 border-white md:block hidden"></div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="flex flex-col items-center mt-10">
-          <div className="w-16 h-16 rounded-full bg-yellow-500 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
-            🎓
-          </div>
-          <h2 className="text-2xl font-semibold mt-3 text-gray-700">
-            Ready Resource
-          </h2>
-        </div>
+        <button
+          onClick={handleForward}
+          disabled={historyIndex >= history.length - 1}
+          className={`p-1 ${historyIndex >= history.length - 1 ? 'opacity-40 cursor-not-allowed' : 'hover:bg-purple-100 rounded-full'}`}
+        >
+          ➡️
+        </button>
       </div>
-    </>
+
+      <div className="bg-white bg-opacity-90 backdrop-blur-lg p-8 rounded-3xl shadow-xl w-full max-w-3xl border-t-4 border-purple-500">
+        {isFinalStep ? (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex justify-center"
+          >
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-purple-200 max-w-md text-center transition-transform transform hover:scale-105 hover:shadow-xl">
+              <h3 className="text-xl font-bold text-purple-800 mb-2">
+                {currentStep}
+              </h3>
+              {path[0] === 'ITI' ? (
+                <ul className="list-disc pl-5 text-gray-700 space-y-2 text-left">
+                  {itiCareerOptions.map((option, index) => (
+                    <li key={index}>{option}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-700">{descriptions[currentStep]}</p>
+              )}
+            </div>
+          </motion.div>
+        ) : (
+          <div className="flex flex-wrap gap-4 justify-center">
+            {currentLevelData?.map((option) => (
+              <motion.button
+                key={option}
+                whileHover={{ scale: 1.05 }}
+                className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-full shadow-md font-semibold"
+                onClick={() => handleBreadcrumbClick(path.length, option)}
+              >
+                {option}
+              </motion.button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
-};
-
-export default Roadmap;
-
+}

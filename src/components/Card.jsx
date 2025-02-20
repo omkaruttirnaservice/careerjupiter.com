@@ -20,6 +20,9 @@ const Card = ({ image, name, description, rating, onClick }) => {
           </span>
         </div>
       </div>
+
+
+      
     </>
   );
 };
