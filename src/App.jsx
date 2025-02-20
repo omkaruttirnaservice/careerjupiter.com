@@ -9,7 +9,6 @@ import SignInPage from './Pages/SignInPage';
 import CardDetails from './components/CardDetails';
 import Roadmap from './components/Roadmap';
 import Nav from './Layouts/Nav';
-import TreeStructure from './components/TreeStructure';
 import IQTest from './Pages/IQTest';
 import MultiCards from './components/MultiCards';
 import ReviewPage from './components/navComp/ReviewPage';
@@ -74,10 +73,6 @@ function App() {
     {
       path: "/nav",
       element: <Nav />,
-    },
-    {
-      path: "/tree",
-      element: <TreeStructure />,
     },
     {
       path: "/iq",
