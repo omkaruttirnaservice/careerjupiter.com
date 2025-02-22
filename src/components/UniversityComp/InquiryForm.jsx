@@ -13,6 +13,7 @@ const InquiryForm = () => {
                                             <legend className="text-lg font-semibold text-gray-700 px-2">
                                                 Student Details
                                             </legend>
+                                            <br/>
                                             <div className="mb-4">
                                                 <label className="block font-medium text-gray-700">Name</label>
                                                 <input
@@ -45,9 +46,10 @@ const InquiryForm = () => {
                                                     placeholder="Enter your phone number"
                                                 />
                                             </div>
+                                           
                                             <button
                                                 type="submit"
-                                                className="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                                                className="cursor-pointer w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
                                             >
                                                 Submit
                                             </button>

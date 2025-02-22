@@ -36,12 +36,14 @@ const News = () => {
 
       <div className="max-w-6xl mx-auto bg-blue-50  shadow-xl rounded-2xl p-4 sm:p-8">
         <h2 className="text-2xl sm:text-3xl font-semibold text-indigo-600 mb-4 sm:mb-6">Stay Updated</h2>
+        <hr/>
 
         {newsArticles.map((article, index) => (
           <div
             key={index}
             className=""
           >
+            
             <div className="flex flex-col sm:flex-row items-start sm:items-center mb-3 sm:mb-4">
               <img
                 src={article.image}
@@ -54,6 +56,7 @@ const News = () => {
               </div>
             </div>
             <p className="text-gray-700 text-sm sm:text-base">{article.description}</p>
+            <hr/>
           </div>
         ))}
       </div>
