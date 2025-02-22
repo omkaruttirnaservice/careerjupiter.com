@@ -69,7 +69,7 @@ const Nav = () => {
                 </span>
                 <span className="inline-flex rounded-md shadow">
                   <NavLink
-                    to="/sign"
+                    to="../sign"
                     className="inline-flex items-center px-4 py-2 border  border-indigo-600 text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50"
                   >
                     Sign Up

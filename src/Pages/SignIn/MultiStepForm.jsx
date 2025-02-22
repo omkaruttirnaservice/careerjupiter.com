@@ -39,13 +39,14 @@ const MultiStepForm = () => {
       console.log("Server Response:", data);
     },
     onError: (error) => {
-      if (error.response) {
-        const errorMessage = error.response.message || "An error occurred";
-        toast.error(errorMessage);
-      } else if (error.request) {
-        toast.error("Network error. Please check your connection.");
+      if (error.response?.status === 400) {
+        toast.error("Invalid input. Please check your details.");
+      } else if (error.response?.status === 409) {
+        toast.error("This email is already registered. Try logging in.");
+      } else if (error.response?.status === 500) {
+        toast.error("Server error. Please try again later.");
       } else {
-        toast.error("Unexpected error: " + error.message);
+        toast.error("Something went wrong. Please try again.");
       }
     },
   });

@@ -6,7 +6,6 @@ import HeroSection from "./Layouts/HeroSection";
 import Dashboard from "./Pages/Dashboard";
 import LocationPage from "./Pages/LocationPage";
 import LoginPage from "./Pages/Login/LoginPage";
-import SignInPage from "./Pages/SignInPage";
 import CardDetails from "./components/CardDetails";
 import Roadmap from "./components/Roadmap";
 import Nav from "./Layouts/Nav";
@@ -78,7 +77,7 @@ function App() {
       element: <LoginPage />,
     },
     {
-      path: "/sign",
+      path: "../sign",
       element: <MultiStepForm />,
       element: (
         <ProtectedRoute>
@@ -97,7 +96,7 @@ function App() {
 
     // Public Routes
     { path: "/login", element: <LoginPage /> },
-    { path: "/sign", element: <SignInPage /> },
+    { path: "/sign", element: <MultiStepForm /> },
     { path: "/roadmap", element: <Roadmap /> },
     { path: "/nav", element: <Nav /> },
     { path: "/iq", element: <IQTest /> },
