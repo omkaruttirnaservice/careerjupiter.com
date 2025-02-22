@@ -1,29 +1,29 @@
-import { createBrowserRouter } from 'react-router-dom'
-import { RouterProvider } from 'react-router';
-import './App.css'
-import AOS from 'aos';
-import HeroSection from './Layouts/HeroSection';
-import DashboardPage from './Pages/DashboardPage';
-import LocationPage from './Pages/LocationPage';
-import LoginPage from './Pages/LoginPage';
-import SignInPage from './Pages/SignInPage';
-import CardDetails from './components/CardDetails';
-import Roadmap from './components/Roadmap';
-import Nav from './Layouts/Nav';
-import IQTest from './Pages/IQTest';
-import MultiCards from './components/MultiCards';
-import ReviewPage from './components/navComp/ReviewPage';
-import AppLayout from './Layouts/AppLayout';
-import InstituteMultiCard from './components/InstituteComp/InstituteMultiCard';
-import UniversityMultiCard from './components/UniversityComp/UniversityMultiCard';
-import SingleInstitute from './components/InstituteComp/SingleInstitute';
-import UniversityDetail from './components/UniversityComp/UniversityDetail';
+import { createBrowserRouter } from "react-router-dom";
+import { RouterProvider } from "react-router";
+import "./App.css";
+import AOS from "aos";
+import HeroSection from "./Layouts/HeroSection";
+import DashboardPage from "./Pages/DashboardPage";
+import LocationPage from "./Pages/LocationPage";
+import LoginPage from "./Pages/Login/LoginPage";
+import CardDetails from "./components/CardDetails";
+import Roadmap from "./components/Roadmap";
+import Nav from "./Layouts/Nav";
+import IQTest from "./Pages/IQTest";
+import MultiCards from "./components/MultiCards";
+import ReviewPage from "./components/navComp/ReviewPage";
+import AppLayout from "./Layouts/AppLayout";
+import InstituteMultiCard from "./components/InstituteComp/InstituteMultiCard";
+import UniversityMultiCard from "./components/UniversityComp/UniversityMultiCard";
+import SingleInstitute from "./components/InstituteComp/SingleInstitute";
+import UniversityDetail from "./components/UniversityComp/UniversityDetail";
+import MultiStepForm from "./Pages/SignIn/MultiStepForm";
 
 function App() {
   AOS.init({ duration: 1000 }); // 1000ms = 1s
 
   // React.useEffect(() => {
-   
+
   // }, []);
   const router = createBrowserRouter([
     {
@@ -50,7 +50,6 @@ function App() {
           path: "/university/:id", // Route for single university details
           element: <UniversityDetail />,
         },
-        
       ],
     },
     {
@@ -67,7 +66,7 @@ function App() {
     },
     {
       path: "/sign",
-      element: <SignInPage />,
+      element: <MultiStepForm />,
     },
     {
       path: "/card/:id",
@@ -95,9 +94,7 @@ function App() {
     },
   ]);
 
-  return (
-    <RouterProvider router={router} />
-  )
+  return <RouterProvider router={router} />;
 }
 
 export default App;

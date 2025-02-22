@@ -1,10 +1,10 @@
 import axios from "axios"
 
 const api = axios.create({
-    baseURL:"",
+  baseURL: "http://192.168.1.17:5000",
 });
 
-export const getData = ()=>{
-    return api.get("");
+export const userSignUp = (data)=>{
+    return api.post("/api/auth/signup",data);
 };
 
