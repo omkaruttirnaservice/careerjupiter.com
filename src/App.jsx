@@ -3,9 +3,10 @@ import { RouterProvider } from "react-router";
 import "./App.css";
 import AOS from "aos";
 import HeroSection from "./Layouts/HeroSection";
-import DashboardPage from "./Pages/DashboardPage";
+import Dashboard from "./Pages/Dashboard";
 import LocationPage from "./Pages/LocationPage";
 import LoginPage from "./Pages/Login/LoginPage";
+import SignInPage from "./Pages/SignInPage";
 import CardDetails from "./components/CardDetails";
 import Roadmap from "./components/Roadmap";
 import Nav from "./Layouts/Nav";
@@ -18,6 +19,7 @@ import UniversityMultiCard from "./components/UniversityComp/UniversityMultiCard
 import SingleInstitute from "./components/InstituteComp/SingleInstitute";
 import UniversityDetail from "./components/UniversityComp/UniversityDetail";
 import MultiStepForm from "./Pages/SignIn/MultiStepForm";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   AOS.init({ duration: 1000 }); // 1000ms = 1s
@@ -50,11 +52,22 @@ function App() {
           path: "/university/:id", // Route for single university details
           element: <UniversityDetail />,
         },
+        { path: "/", element: <HeroSection /> },
+        { path: "/college", element: <MultiCards /> },
+        { path: "/institute", element: <InstituteMultiCard /> },
+        { path: "/university", element: <UniversityMultiCard /> },
+        { path: "/university/:id", element: <UniversityDetail /> },
       ],
     },
+
+    // 🔒 Protected Routes (Login Required)
     {
       path: "/dashboard",
-      element: <DashboardPage />,
+      element: (
+        <ProtectedRoute>
+          <Dashboard/>
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/location",
@@ -67,31 +80,29 @@ function App() {
     {
       path: "/sign",
       element: <MultiStepForm />,
+      element: (
+        <ProtectedRoute>
+          <LocationPage />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/card/:id",
-      element: <CardDetails />,
+      element: (
+        <ProtectedRoute>
+          <CardDetails />
+        </ProtectedRoute>
+      ),
     },
-    {
-      path: "/institute/:id",
-      element: <SingleInstitute />,
-    },
-    {
-      path: "/roadmap",
-      element: <Roadmap />,
-    },
-    {
-      path: "/nav",
-      element: <Nav />,
-    },
-    {
-      path: "/iq",
-      element: <IQTest />,
-    },
-    {
-      path: "/review",
-      element: <ReviewPage />,
-    },
+
+    // Public Routes
+    { path: "/login", element: <LoginPage /> },
+    { path: "/sign", element: <SignInPage /> },
+    { path: "/roadmap", element: <Roadmap /> },
+    { path: "/nav", element: <Nav /> },
+    { path: "/iq", element: <IQTest /> },
+    { path: "/review", element: <ReviewPage /> },
+    { path: "/institute/:id", element: <SingleInstitute /> },
   ]);
 
   return <RouterProvider router={router} />;
