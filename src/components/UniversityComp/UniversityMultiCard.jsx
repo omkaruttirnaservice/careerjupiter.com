@@ -1,9 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import UniversityCard from "./UniversityCard";
+import TagsSection from "../TagsSection";
 
 const UniversityMultiCard = () => {
   const navigate = useNavigate();
+
+  const tags = ["All", "Harvard University", "Stanford University"];
 
   const universities = [
     {
@@ -69,26 +72,29 @@ const UniversityMultiCard = () => {
   ];
 
   return (
-    <div className="bg-gray-30 py-10">
-      <div className="container mx-auto px-4">
-        {/* Page Title */}
-        <h2 className="text-3xl font-bold mb-6 text-center">
-          Welcome to Education
-        </h2>
-        <p className="text-center text-gray-600 mb-10 max-w-xl mx-auto">
-          Discover the world's top universities with outstanding programs, 
-          cutting-edge research, and vibrant campus communities.
-        </p>
+    <div className="mt-10">
+    <TagsSection tags={tags}/>
+      <div className="bg-gray-30 py-10">
+        <div className="container mx-auto px-4">
+          {/* Page Title */}
+          <h2 className="text-3xl font-bold mb-6 text-center">
+            Welcome to Education
+          </h2>
+          <p className="text-center text-gray-600 mb-10 max-w-xl mx-auto">
+            Discover the world's top universities with outstanding programs,
+            cutting-edge research, and vibrant campus communities.
+          </p>
 
-        {/* Grid of Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {universities.map((uni) => (
-            <UniversityCard
-              key={uni.id}
-              university={uni}
-              onClick={() => navigate(`/university/${uni.id}`)}
-            />
-          ))}
+          {/* Grid of Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {universities.map((uni) => (
+              <UniversityCard
+                key={uni.id}
+                university={uni}
+                onClick={() => navigate(`/university/${uni.id}`)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

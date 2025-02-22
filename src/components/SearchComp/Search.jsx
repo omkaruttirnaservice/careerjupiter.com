@@ -1,15 +1,32 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
+import SearchSuggestions from "./SearchSuggestions";
+import { useSearchContext } from "./SearchContext";
+import { useLocation } from "react-router-dom";
+import { navigation } from "../../Constant/constantData";
 
-const SearchComponent = ({ onSearch }) => {
-  const [query, setQuery] = useState("");
+const SearchComponent = () => {
+  const { tagName, query, setQuery } = useSearchContext();
+  const { pathname } = useLocation();
+
+  const suggestions = ["first", "second", "Third"];
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
   };
 
   const handleSearch = () => {
-    onSearch(query);
+    switch (pathname) {
+      case navigation[1].href:
+        console.log("Api/college", { tagName }, { query }, { pathname });
+        break;
+      case navigation[2].href:
+        console.log("Api/institute", { tagName }, { query }, { pathname });
+        break;
+      case navigation[3].href:
+        console.log("Api/university", { tagName }, { query }, { pathname });
+        break;
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -38,6 +55,7 @@ const SearchComponent = ({ onSearch }) => {
             <IoSearchOutline />
           </button>
         </div>
+        <SearchSuggestions suggestions={suggestions} query={query} />
       </div>
     </div>
   );

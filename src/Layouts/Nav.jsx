@@ -1,16 +1,12 @@
 import { Popover, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import { Fragment} from "react";
+import { Fragment } from "react";
 import { NavLink } from "react-router-dom";
+import { useSearchContext } from "../components/SearchComp/SearchContext";
+import { navigation } from "../Constant/constantData";
 
 const Nav = () => {
-
-    const navigation = [
-      { name: "Home", href: "/" },
-      { name: "College", href: "/college" },
-      { name: "Class", href: "/institute" },
-      { name: "University", href: "/university" },
-    ];
+  const { setTagName, setQuery } = useSearchContext();
 
   return (
     <>
@@ -26,7 +22,7 @@ const Nav = () => {
             >
               <div className="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:left-0">
                 <span className="">
-                <b>CAREER NITI </b>
+                  <b>CAREER NITI </b>
                 </span>
               </div>
               <div className="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
@@ -52,6 +48,10 @@ const Nav = () => {
                   <NavLink
                     key={item.name}
                     to={item.href}
+                    onClick={() => {
+                      setTagName("All");
+                      setQuery("");
+                    }}
                     className="font-medium text-gray-500 hover:text-gray-900"
                   >
                     {item.name}

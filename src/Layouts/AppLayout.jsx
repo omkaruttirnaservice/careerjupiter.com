@@ -1,15 +1,21 @@
 import Nav from "./Nav";
-import SearchComponent from './../components/Search';
+
 import { Outlet } from "react-router-dom";
 import Footer from "../components/Footer";
+import SearchComponent from "../components/SearchComp/Search";
+import SearchContextProvider from "../components/SearchComp/SearchContext";
 
-const AppLayout = ()=>{
-    return(<>
-        <Nav/>
-        <SearchComponent/>
-        <Outlet/>
-        <Footer/>
-    </>)
-}
+const AppLayout = () => {
+  return (
+    <>
+      <SearchContextProvider>
+        <Nav />
+        <SearchComponent />
+        <Outlet />
+        <Footer />
+      </SearchContextProvider>
+    </>
+  );
+};
 
 export default AppLayout;

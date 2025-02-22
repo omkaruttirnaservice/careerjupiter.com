@@ -36,7 +36,6 @@ const MultiStepForm = () => {
     onSuccess: (data) => {
       toast.success("Form submitted successfully!");
       navigate("/login");
-      console.log("Server Response:", data);
     },
     onError: (error) => {
       if (error.response?.status === 400) {
@@ -145,7 +144,6 @@ const MultiStepForm = () => {
           is_verified: false,
           info: { current_education: values.education },
         };
-        console.log("Final Form Data:", finalData);
         mutation.mutate(finalData);
       }
     },

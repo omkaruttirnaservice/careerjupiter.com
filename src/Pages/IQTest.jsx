@@ -1,8 +1,13 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { FcAlarmClock } from "react-icons/fc"
-import { FaSave, FaArrowRight, FaArrowLeft, FaCheckCircle } from "react-icons/fa"
+import { useState, useEffect } from "react";
+import { FcAlarmClock } from "react-icons/fc";
+import {
+  FaSave,
+  FaArrowRight,
+  FaArrowLeft,
+  FaCheckCircle,
+} from "react-icons/fa";
 
 const IQTest = () => {
   // Sample questions
@@ -22,13 +27,23 @@ const IQTest = () => {
     {
       id: 3,
       question: "Who wrote the play 'Romeo and Juliet'?",
-      options: ["William Shakespeare", "Charles Dickens", "Mark Twain", "Jane Austen"],
+      options: [
+        "William Shakespeare",
+        "Charles Dickens",
+        "Mark Twain",
+        "Jane Austen",
+      ],
       answer: "William Shakespeare",
     },
     {
       id: 4,
       question: "What is the largest ocean on Earth?",
-      options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+      options: [
+        "Atlantic Ocean",
+        "Indian Ocean",
+        "Arctic Ocean",
+        "Pacific Ocean",
+      ],
       answer: "Pacific Ocean",
     },
     {
@@ -46,7 +61,12 @@ const IQTest = () => {
     {
       id: 7,
       question: "Who painted the Mona Lisa?",
-      options: ["Vincent van Gogh", "Leonardo da Vinci", "Pablo Picasso", "Claude Monet"],
+      options: [
+        "Vincent van Gogh",
+        "Leonardo da Vinci",
+        "Pablo Picasso",
+        "Claude Monet",
+      ],
       answer: "Leonardo da Vinci",
     },
     {
@@ -78,70 +98,67 @@ const IQTest = () => {
       question: "What is the largest mammal in the world?",
       options: ["Elephant", "Blue Whale", "Giraffe", "Shark"],
       answer: "Blue Whale",
-    }
+    },
+  ];
 
-  ]
-
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [answers, setAnswers] = useState(Array(questions.length).fill(""))
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [score, setScore] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(300)
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState(Array(questions.length).fill(""));
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(300);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0))
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [])
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Handle option selection
   const handleOptionSelect = (option) => {
-    const newAnswers = [...answers]
-    newAnswers[currentQuestion] = option
-    setAnswers(newAnswers)
-  }
+    const newAnswers = [...answers];
+    newAnswers[currentQuestion] = option;
+    setAnswers(newAnswers);
+  };
 
   // Navigate to the next question
   const handleNext = () => {
     if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
+      setCurrentQuestion(currentQuestion + 1);
     }
-  }
+  };
 
   // Navigate to the previous question
   const handlePrevious = () => {
     if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1)
+      setCurrentQuestion(currentQuestion - 1);
     }
-  }
+  };
 
   // Save progress
   const handleSave = () => {
-    alert("Progress saved!")
-  }
+    alert("Progress saved!");
+  };
 
   // Submit the test and calculate score
   const handleSubmit = () => {
-    let calculatedScore = 0
+    let calculatedScore = 0;
     answers.forEach((answer, index) => {
       if (answer === questions[index].answer) {
-        calculatedScore += 1
+        calculatedScore += 1;
       }
-    })
-    setScore(calculatedScore)
-    setIsSubmitted(true)
-    console.log("User Score:", calculatedScore)
-  }
+    });
+    setScore(calculatedScore);
+    setIsSubmitted(true);
+  };
 
   // Jump to a specific question
   const handleQuestionNavigation = (index) => {
-    setCurrentQuestion(index)
-  }
+    setCurrentQuestion(index);
+  };
 
   return (
     <>
-
       {/* Top section with title and timer */}
       {!isSubmitted && (
         <div className="w-full bg-gray-100 p-4 shadow-lg rounded-xl mb-4 flex justify-between items-center">
@@ -150,7 +167,8 @@ const IQTest = () => {
             <div className="bg-blue-500 h-4 rounded-full"></div>
           </div>
           <p className="text-lg flex flex-row items-center font-semibold">
-            <FcAlarmClock className="text-xl mr-2 font-bold" /> {Math.floor(timeLeft / 60)}:
+            <FcAlarmClock className="text-xl mr-2 font-bold" />{" "}
+            {Math.floor(timeLeft / 60)}:
             {(timeLeft % 60).toString().padStart(2, "0")}
           </p>
         </div>
@@ -161,7 +179,9 @@ const IQTest = () => {
         <div className="flex-1 bg-white p-6 rounded-lg shadow-md mb-4 md:mb-0 md:mr-4">
           {!isSubmitted ? (
             <>
-              <h2 className="text-xl font-bold mb-4">Question {currentQuestion + 1}</h2>
+              <h2 className="text-xl font-bold mb-4">
+                Question {currentQuestion + 1}
+              </h2>
               <p className="mb-4">{questions[currentQuestion].question}</p>
               <div className="space-y-2">
                 {questions[currentQuestion].options.map((option, index) => (
@@ -184,7 +204,6 @@ const IQTest = () => {
                 ))}
               </div>
 
-
               {/* Navigation buttons */}
               <div className="flex justify-between mt-6">
                 <button
@@ -199,7 +218,6 @@ const IQTest = () => {
                   Save
                 </button>
 
-
                 {currentQuestion < questions.length - 1 ? (
                   <button
                     onClick={handleNext}
@@ -207,7 +225,6 @@ const IQTest = () => {
                   >
                     Next <FaArrowRight className="ml-2" />
                   </button>
-
                 ) : answers[currentQuestion] !== "" ? ( // Show submit if last question has an answer
                   <button
                     onClick={handleSubmit}
@@ -215,10 +232,8 @@ const IQTest = () => {
                   >
                     Submit <FaCheckCircle className="ml-2" />
                   </button>
-
                 ) : null}
               </div>
-
             </>
           ) : (
             <div className="text-center space-y-6 w-full max-w-4xl mx-auto p-4 sm:p-6">
@@ -227,15 +242,23 @@ const IQTest = () => {
               {/* Grid for score details */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="bg-blue-100 p-4 rounded-lg shadow">
-                  <h3 className="text-xl font-semibold mb-2">Total Questions</h3>
-                  <p className="text-3xl font-bold text-blue-600">{questions.length}</p>
+                  <h3 className="text-xl font-semibold mb-2">
+                    Total Questions
+                  </h3>
+                  <p className="text-3xl font-bold text-blue-600">
+                    {questions.length}
+                  </p>
                 </div>
                 <div className="bg-red-100 p-4 rounded-lg shadow">
                   <h3 className="text-xl font-semibold mb-2">Wrong Answers</h3>
-                  <p className="text-3xl font-bold text-red-600">{questions.length - score}</p>
+                  <p className="text-3xl font-bold text-red-600">
+                    {questions.length - score}
+                  </p>
                 </div>
                 <div className="bg-green-100 p-4 rounded-lg shadow">
-                  <h3 className="text-xl font-semibold mb-2">Correct Answers</h3>
+                  <h3 className="text-xl font-semibold mb-2">
+                    Correct Answers
+                  </h3>
                   <p className="text-3xl font-bold text-green-600">{score}</p>
                 </div>
               </div>
@@ -247,7 +270,8 @@ const IQTest = () => {
                   {Math.round((score / questions.length) * 100)}%
                 </p>
                 <p className="mt-2 text-lg">
-                  You answered {score} out of {questions.length} questions correctly.
+                  You answered {score} out of {questions.length} questions
+                  correctly.
                 </p>
               </div>
             </div>
@@ -263,12 +287,13 @@ const IQTest = () => {
                 <button
                   key={q.id}
                   onClick={() => handleQuestionNavigation(index)}
-                  className={`p-2 rounded-full w-10 h-10 flex items-center justify-center ${currentQuestion === index
-                    ? "bg-blue-500 text-white"
-                    : answers[index]
-                      ? "bg-green-500 text-white"
-                      : "bg-red-500 text-white"
-                    }`}
+                  className={`p-2 rounded-full w-10 h-10 flex items-center justify-center ${
+                    currentQuestion === index
+                      ? "bg-blue-500 text-white"
+                      : answers[index]
+                        ? "bg-green-500 text-white"
+                        : "bg-red-500 text-white"
+                  }`}
                 >
                   {index + 1}
                 </button>
@@ -277,9 +302,8 @@ const IQTest = () => {
           </div>
         )}
       </div>
-
     </>
-  )
-}
+  );
+};
 
-export default IQTest
+export default IQTest;
