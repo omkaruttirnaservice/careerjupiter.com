@@ -10,8 +10,10 @@ const SearchContextProvider = ({ children }) => {
   const tags = ["All", "Diploma", "Engineering", "Pharmacy", "HSC"];
 
   const [tagName, setTagName] = useState("All");
-
   const [query, setQuery] = useState("");
+  const [collegesData, setCollegesData] = useState([]);
+  const [isLoading , setIsLoading] = useState("");
+  const [errorMsg , setErrorMsg] = useState();
 
   let value = {
     tags,
@@ -19,6 +21,12 @@ const SearchContextProvider = ({ children }) => {
     setTagName,
     query,
     setQuery,
+    collegesData,
+    setCollegesData,
+    isLoading,
+    setIsLoading,
+    errorMsg,
+    setErrorMsg,
   };
 
   return (

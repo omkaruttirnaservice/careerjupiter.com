@@ -2,7 +2,7 @@ import { Popover, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { Fragment } from "react";
 import { NavLink } from "react-router-dom";
-import { useSearchContext } from "../components/SearchComp/SearchContext";
+import { useSearchContext } from "../store/SearchContext";
 import { navigation } from "../Constant/constantData";
 
 const Nav = () => {

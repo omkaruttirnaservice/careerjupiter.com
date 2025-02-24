@@ -1,13 +1,18 @@
-import { useContext, useState } from "react";
-import { useSearchContext } from "./SearchComp/SearchContext";
+import { useLayoutEffect, useState } from "react";
+import { useSearchContext } from "../store/SearchContext";
 
 const TagsSection = ({ tags }) => {
   const [selectedTag, setSelectedTag] = useState("All");
   const { setTagName } = useSearchContext();
+
   const handleSelectedTab = (value) => {
     setSelectedTag(value);
     setTagName(value);
   };
+
+  useLayoutEffect(() => {
+    setTagName(selectedTag);
+  }, []);
 
   return (
     <div className="flex items-center justify-center mb-5">
