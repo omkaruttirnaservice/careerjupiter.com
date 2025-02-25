@@ -457,7 +457,7 @@ export const cityData = [
       "Ahmednagar",
       "Akola",
       "Amravati",
-      "Aurangabad",
+      "Chhatrapati Sambhajinagar",
       "Beed",
       "Bhandara",
       "Buldhana",
