@@ -22,6 +22,7 @@ const ReviewPage = () => {
       image: "https://randomuser.me/api/portraits/women/2.jpg",
     },
   ]);
+  const [message, setMessage] = useState(""); // For success/error messages
 
   useEffect(() => {
     // Dummy college data
@@ -39,27 +40,57 @@ const ReviewPage = () => {
   const formik = useFormik({
     initialValues: {
       name: "",
+      studentMobile: "",
       rating: 5,
       comment: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Name is required"),
-      rating: Yup.number().required("Rating is required"),
+      studentMobile: Yup.string()
+        .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits")
+        .required("Mobile number is required"),
+      rating: Yup.number().required("Rating is required").min(1).max(5),
       comment: Yup.string().required("Comment is required"),
     }),
-    onSubmit: (values, { resetForm }) => {
-      const newReview = {
-        id: Date.now(),
-        name: values.name,
-        rating: values.rating,
-        comment: values.comment,
-        image: `https://randomuser.me/api/portraits/lego/${Math.floor(
-          Math.random() * 10
-        )}.jpg`,
-      };
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        const response = await fetch("http://192.168.1.17:5000/reviews/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            collegeId,
+            studentMobile: values.studentMobile,
+            starRating: values.rating,
+            description: values.comment,
+          }),
+        });
 
-      setReviews([newReview, ...reviews]);
-      resetForm();
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to submit review");
+        }
+
+        const newReview = await response.json();
+        setReviews([
+          {
+            id: newReview.id || Date.now(),
+            name: values.name,
+            rating: values.rating,
+            comment: values.comment,
+            image: `https://randomuser.me/api/portraits/lego/${Math.floor(
+              Math.random() * 10
+            )}.jpg`,
+          },
+          ...reviews,
+        ]);
+        setMessage("Review submitted successfully!");
+        resetForm();
+      } catch (error) {
+        console.error("Error submitting review:", error.message);
+        setMessage(error.message || "Failed to submit review. Please try again.");
+      }
     },
   });
 
@@ -78,9 +109,19 @@ const ReviewPage = () => {
         <p className="text-center text-gray-600">Loading college data...</p>
       )}
 
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">
-        Student Reviews
-      </h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Student Reviews</h2>
+
+      {message && (
+        <p
+          className={`text-center text-sm p-2 rounded ${
+            message.includes("success")
+              ? "text-green-600 bg-green-100"
+              : "text-red-600 bg-red-100"
+          }`}
+        >
+          {message}
+        </p>
+      )}
 
       <form onSubmit={formik.handleSubmit} className="mb-6">
         <h3 className="text-lg font-semibold text-gray-700 mb-3">
@@ -99,6 +140,21 @@ const ReviewPage = () => {
           />
           {formik.touched.name && formik.errors.name && (
             <div className="text-red-500 text-sm">{formik.errors.name}</div>
+          )}
+        </div>
+
+        <div className="mb-3">
+          <input
+            type="tel"
+            name="studentMobile"
+            placeholder="Your Mobile Number"
+            className="w-full p-2 border rounded"
+            value={formik.values.studentMobile}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.studentMobile && formik.errors.studentMobile && (
+            <div className="text-red-500 text-sm">{formik.errors.studentMobile}</div>
           )}
         </div>
 
@@ -151,7 +207,7 @@ const ReviewPage = () => {
             className="bg-gray-50 p-4 rounded-lg shadow-sm flex gap-4"
           >
             <img
-              src={review.image}
+              src={review.image || "https://via.placeholder.com/50"}
               alt={review.name}
               className="w-12 h-12 rounded-full border"
             />

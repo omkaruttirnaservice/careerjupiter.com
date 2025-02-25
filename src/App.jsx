@@ -56,6 +56,7 @@ function App() {
         { path: "/institute", element: <InstituteMultiCard /> },
         { path: "/university", element: <UniversityMultiCard /> },
         { path: "/university/:id", element: <UniversityDetail /> },
+        {path: "/institute", element: <ReviewPage />}
       ],
     },
 
