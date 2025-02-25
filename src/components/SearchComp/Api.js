@@ -6,7 +6,7 @@ const api = axios.create({
 
 export const searchCollege = async ({ searchKey, category, type }) => {
   const response = await api.get(
-    `?searchKey=${searchKey}&category=${category}&type=${type}`
+    `?searchKey=${searchKey}&collegeCategory=${category}&type=${type}`
   );
   return response.data; // Return API response data
 };

@@ -4,6 +4,7 @@ import TagsSection from "./TagsSection";
 import { useSearchContext } from "../store/SearchContext";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import { BACKEND_SERVER_IP } from "../Constant/constantData";
 
 const MultiCards = () => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const MultiCards = () => {
                 collegeType={card.collegeType}
                 collegeCategory={card.collegeCategory}
                 rating="4.5"
-                onClick={() => navigate(`/card/${card._id}`)}
+                onClick={() => navigate(`/college/${card._id}`)}
               />
             ))}
           </div>

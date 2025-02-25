@@ -64,7 +64,7 @@ function App() {
       path: "/dashboard",
       element: (
         <ProtectedRoute>
-          <Dashboard/>
+          <Dashboard />
         </ProtectedRoute>
       ),
     },
@@ -86,7 +86,7 @@ function App() {
       ),
     },
     {
-      path: "/card/:id",
+      path: "/college/:id",
       element: (
         <ProtectedRoute>
           <CardDetails />

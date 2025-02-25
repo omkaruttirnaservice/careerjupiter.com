@@ -7,3 +7,8 @@ const api = axios.create({
 export const userSignUp = (data) => {
   return api.post("/api/auth/signup", data);
 };
+
+export const getCollege = async (id) => {
+  const response = await api.get(`/api/college/${id}`);
+  return JSON.parse(response.data.data);
+};
