@@ -52,7 +52,7 @@ function App() {
           element: <UniversityDetail />,
         },
         { path: "/", element: <HeroSection /> },
-        { path: "/college", element: <MultiCards /> },
+        // { path: "/college", element: <MultiCards /> },
         { path: "/institute", element: <InstituteMultiCard /> },
         { path: "/university", element: <UniversityMultiCard /> },
         { path: "/university/:id", element: <UniversityDetail /> },
