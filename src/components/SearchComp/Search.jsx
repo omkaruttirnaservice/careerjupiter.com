@@ -1,15 +1,19 @@
+import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
-import SearchSuggestions from "./SearchSuggestions";
-import { useSearchContext } from "../../store/SearchContext";
 import { useLocation } from "react-router-dom";
-import { navigation } from "../../Constant/constantData";
-import { useQuery } from "@tanstack/react-query";
+import { useSearchContext } from "../../store/SearchContext";
 import { searchCollege } from "./Api";
 
 const SearchComponent = () => {
-  const { tagName, query, setQuery, setCollegesData, setIsLoading } =
-    useSearchContext();
+  const {
+    tagName,
+    query,
+    setQuery,
+    setCollegesData,
+    setIsLoading,
+    setErrorMsg,
+  } = useSearchContext();
   const { pathname } = useLocation();
 
   const [searchParams, setSearchParams] = useState({
@@ -18,102 +22,58 @@ const SearchComponent = () => {
     type: "",
   });
 
-  const [debouncedQuery, setDebouncedQuery] = useState("");
-
-  // Debounce effect: Set debouncedQuery after delay
-  // useEffect(() => {
-  //   const handler = setTimeout(() => {
-  //     setDebouncedQuery(query);
-  //   }, 500); // Adjust delay time (500ms)
-
-  //   return () => {
-  //     clearTimeout(handler);
-  //   };
-  // }, [query]);
-
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isPending, isError, error, refetch } = useQuery({
     queryKey: ["colleges", searchParams],
     queryFn: () => searchCollege(searchParams),
-    // enabled: !!debouncedQuery, // Only run when searchKey is not empty
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retry: false,
   });
 
   useEffect(() => {
-    // call query here
     handleSearch();
   }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      refetch();
-    }, 1000);
+      handleSearch();
+    }, 1500);
     return () => {
       clearTimeout(timeout);
     };
-  }, [searchParams]);
+  }, [searchParams, query]);
 
   useEffect(() => {
     if (data?.data) {
       setCollegesData(data.data);
-      setIsLoading(isLoading);
     }
-  }, [data, setCollegesData, setIsLoading]);
+  }, [data]);
 
-  console.log("api-search-response------", data);
+  useEffect(() => {
+    setIsLoading(isPending);
+  }, [isPending]);
+
+  useEffect(() => {
+    if (isError) {
+      setCollegesData([]);
+    }
+    
+  }, [isError]);
 
   const handleInputChange = (e) => {
-    setQuery(e.target.value);
-    handleSearch();
+    const inputValue = e.target.value;
+    setQuery(inputValue);
   };
 
   const handleSearch = () => {
-    const _pathName = pathname.slice(1);
-
-    setSearchParams({
-      searchKey: query,
-      category: tagName,
-      type: _pathName,
+    setSearchParams((prev) => {
+      const newParams = {
+        searchKey: query,
+        category: tagName,
+        type: pathname.slice(1),
+      };
+      return newParams;
     });
-    console.log(_pathName);
-    // setTimeout(() => {
-    // setSearchParams({
-    //   searchKey: query,
-    //   category: tagName,
-    //   type: _pathName,
-    // });
-    // console.log(searchParams);
-    // refetch();
-    // console.log(tagName);
-    // }, 500);
-
-    // switch (pathname) {
-    //   case navigation[1].href:
-    //     console.log("Api/college", { tagName }, { query }, { pathname });
-    //     setSearchParams({
-    //       searchKey: query,
-    //       category: tagName,
-    //       type: pathname.slice(1),
-    //     });
-    //     break;
-    //   case navigation[2].href:
-    //     console.log("Api/institute", { tagName }, { query }, { pathname });
-    //     setSearchParams({
-    //       searchKey: query,
-    //       category: tagName,
-    //       type: pathname.slice(1),
-    //     });
-    //     break;
-    //   case navigation[3].href:
-    //     console.log("Api/university", { tagName }, { query }, { pathname });
-    //     setSearchParams({
-    //       searchKey: query,
-    //       category: tagName,
-    //       type: pathname.slice(1),
-    //     });
-    //     break;
-    // }
   };
 
   return (

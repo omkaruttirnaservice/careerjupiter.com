@@ -884,3 +884,5 @@ export const navigation = [
   { name: "Class", href: "/institute" },
   { name: "University", href: "/university" },
 ];
+
+export const BACKEND_SERVER_IP = import.meta.env.VITE_BACKEND_URL;

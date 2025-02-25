@@ -12,8 +12,8 @@ const SearchContextProvider = ({ children }) => {
   const [tagName, setTagName] = useState("All");
   const [query, setQuery] = useState("");
   const [collegesData, setCollegesData] = useState([]);
-  const [isLoading , setIsLoading] = useState("");
-  const [errorMsg , setErrorMsg] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState();
 
   let value = {
     tags,

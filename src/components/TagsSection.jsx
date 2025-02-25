@@ -3,11 +3,12 @@ import { useSearchContext } from "../store/SearchContext";
 
 const TagsSection = ({ tags }) => {
   const [selectedTag, setSelectedTag] = useState("All");
-  const { setTagName } = useSearchContext();
+  const { setTagName ,setIsLoading } = useSearchContext();
 
   const handleSelectedTab = (value) => {
     setSelectedTag(value);
     setTagName(value);
+    setIsLoading(true);
   };
 
   useLayoutEffect(() => {
@@ -15,7 +16,7 @@ const TagsSection = ({ tags }) => {
   }, []);
 
   return (
-    <div className="flex items-center justify-center mb-5">
+    <div className="flex items-center justify-center mt-10 mb-5">
       <div className="text-center">
         <div className="flex flex-wrap justify-center gap-3">
           {tags.map((tag, index) => (
