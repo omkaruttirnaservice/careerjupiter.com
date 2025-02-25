@@ -46,6 +46,7 @@ const SearchComponent = () => {
   useEffect(() => {
     if (data?.data) {
       setCollegesData(data.data);
+      setIsLoading(false);
     }
   }, [data]);
 
@@ -57,7 +58,6 @@ const SearchComponent = () => {
     if (isError) {
       setCollegesData([]);
     }
-    
   }, [isError]);
 
   const handleInputChange = (e) => {
