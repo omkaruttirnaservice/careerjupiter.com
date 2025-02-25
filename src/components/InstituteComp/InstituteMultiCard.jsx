@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import InstituteCard from "./InstituteCard";
+import TagsSection from './../TagsSection';
 
 const InstituteMultiCard = () => {
 
     const navigate = useNavigate();
+
+    const tags = ["All", "Physics", "Maths", "MERN", "English Specking"];
 
   const institutes = [
     {
@@ -42,16 +45,19 @@ const InstituteMultiCard = () => {
 
   return (
     <>
-      <div className=" cursor-pointer grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 m-5">
-        {institutes.map((each , index) => {
-          return (
-            <InstituteCard
-              institute={each}
-              key={index}
-              onClick={() => navigate(`/institute/${each.id}`)}
-            />
-          );
-        })}
+      <div className="mt-10">
+      <TagsSection tags={tags}/>
+        <div className=" cursor-pointer grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 m-5">
+          {institutes.map((each, index) => {
+            return (
+              <InstituteCard
+                institute={each}
+                key={index}
+                onClick={() => navigate(`/institute/${each.id}`)}
+              />
+            );
+          })}
+        </div>
       </div>
     </>
   );

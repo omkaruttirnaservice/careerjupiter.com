@@ -14,6 +14,16 @@ const navigation = [
   { name: "Company", href: "#" },
 ];
 
+const tags = [
+  "All",
+  "Parul University",
+  "K.R. Mangalam University",
+  "SPPU University",
+  "B Tech",
+  "M Tech",
+  "Bachelor of Engineering",
+];
+
 const Data = [
   {
     id: 1,
@@ -91,8 +101,8 @@ const HeroSection = () => {
           <div className="relative pt-14 pb-16 sm:pb-14 sm:pt-4 md:pt-0">
             <main className="mx-auto max-w-7xl px-4 sm:mt-14">
               <div className="text-center ">
-                {/* <SearchComponent onSearch={handleSearch} /> */}
-                <TagsSection />
+            
+                <TagsSection tags={tags} />
                 <div className="flex flex-row justify-center gap-3 sm:gap-4 md:gap-5 text-xl font-bold sm:text-3xl md:text-4xl">
                   <h1 className=" text-gray-900">Find your</h1>
                   <span className="text-blue-400">

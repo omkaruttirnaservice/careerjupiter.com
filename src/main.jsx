@@ -43,12 +43,12 @@ function handleError(error) {
 
 // Render the app
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  <>
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <App />
       </QueryClientProvider>
     </Provider>
     <ToastContainer position="top-right" autoClose={3000} />
-  </StrictMode>
+  </>
 );

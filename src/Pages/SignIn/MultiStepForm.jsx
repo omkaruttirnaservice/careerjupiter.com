@@ -36,7 +36,6 @@ const MultiStepForm = () => {
     onSuccess: (data) => {
       toast.success("Form submitted successfully!");
       navigate("/login");
-      console.log("Server Response:", data);
     },
     onError: (error) => {
       if (error.response?.status === 400) {
@@ -145,7 +144,6 @@ const MultiStepForm = () => {
           is_verified: false,
           info: { current_education: values.education },
         };
-        console.log("Final Form Data:", finalData);
         mutation.mutate(finalData);
       }
     },
@@ -237,93 +235,117 @@ const MultiStepForm = () => {
     }
   };
 
+    const progressPercentage = ((step + 1) / steps.length) * 100;
+
   return (
-    <form
-      onSubmit={formik.handleSubmit}
-      className="p-6 max-w-md mx-auto bg-white shadow-lg rounded-lg"
-    >
-      <h2 className="text-xl font-semibold mb-4">
-        Step {step + 1} of {steps.length}
-      </h2>
+    <>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+        <form
+          onSubmit={formik.handleSubmit}
+          className="w-full max-w-lg bg-white shadow-2xl rounded-2xl p-8"
+        >
+          <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
+            <div
+              className="bg-blue-500 h-3 rounded-full transition-all duration-300"
+              style={{ width: `${progressPercentage}%` }}
+            ></div>
+          </div>
 
-      {steps[step].name === "location" ? (
-        <div className="mb-3">
-          <label className="block mb-1">Select your location on the map:</label>
-          <button
-            type="button"
-            onClick={handleGetCurrentLocation}
-            className="bg-green-500 text-white p-2 rounded mb-2"
-          >
-            Get Current Location
-          </button>
-          <MapContainer
-            center={[20.5937, 78.9629]}
-            zoom={5}
-            style={{ height: "300px", width: "100%" }}
-          >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <LocationMarker setLocation={setLocation} location={location} />
-          </MapContainer>
-          {location.lat && location.lng && (
-            <p className="mt-2">
-              Selected Location: Latitude {location.lat}, Longitude{" "}
-              {location.lng}
-            </p>
-          )}
-        </div>
-      ) : (
-        <div className="mb-3">
-          <label className="block mb-1">{steps[step].label}</label>
-          {steps[step].type === "select" ? (
-            <select
-              {...formik.getFieldProps(steps[step].name)}
-              onChange={(e) => {
-                if (steps[step].name === "state") {
-                  handleStateChange(e);
-                } else if (steps[step].name === "district") {
-                  handleDistrictChange(e);
-                } else if (steps[step].name === "education") {
-                  handleEducationChange(e);
-                }
-              }}
-              className="border p-2 w-full"
-            >
-              <option value="">Select {steps[step].label}</option>
-              {steps[step].options.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+          <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">
+            Step {step + 1} of {steps.length}
+          </h2>
+
+          {steps[step].name === "location" ? (
+            <div className="mb-6 text-center">
+              <label className="block text-lg font-semibold text-gray-700 mb-2">
+                Select Your Location on the Map:
+              </label>
+              <button
+                type="button"
+                onClick={handleGetCurrentLocation}
+                className="bg-green-500 text-white px-4 py-2 rounded-lg mb-4 hover:bg-green-600 transition"
+              >
+                Get Current Location
+              </button>
+              <div className="w-full h-72 rounded-lg overflow-hidden shadow-lg border">
+                <MapContainer
+                  center={[20.5937, 78.9629]}
+                  zoom={5}
+                  style={{ height: "100%", width: "100%" }}
+                >
+                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                  <LocationMarker
+                    setLocation={setLocation}
+                    location={location}
+                  />
+                </MapContainer>
+              </div>
+              {location.lat && location.lng && (
+                <p className="mt-3 text-lg font-medium text-gray-600">
+                  📍 Latitude: {location.lat}, Longitude: {location.lng}
+                </p>
+              )}
+            </div>
           ) : (
-            <input
-              type={steps[step].type}
-              {...formik.getFieldProps(steps[step].name)}
-              className="border p-2 w-full"
-            />
+            <div className="mb-6">
+              <label className="block text-lg font-semibold text-gray-700 mb-2">
+                {steps[step].label}
+              </label>
+              {steps[step].type === "select" ? (
+                <select
+                  {...formik.getFieldProps(steps[step].name)}
+                  onChange={(e) => {
+                    if (steps[step].name === "state") handleStateChange(e);
+                    else if (steps[step].name === "district")
+                      handleDistrictChange(e);
+                    else if (steps[step].name === "education")
+                      handleEducationChange(e);
+                  }}
+                  className="border p-3 w-full rounded-lg text-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                >
+                  <option value="">Select {steps[step].label}</option>
+                  {steps[step].options.map((option) => (
+                    <option key={option} value={option} className="text-lg">
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type={steps[step].type}
+                  {...formik.getFieldProps(steps[step].name)}
+                  className="border p-3 w-full rounded-lg text-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                />
+              )}
+              {formik.touched[steps[step].name] &&
+                formik.errors[steps[step].name] && (
+                  <p className="text-red-500 mt-2 text-lg">
+                    {formik.errors[steps[step].name]}
+                  </p>
+                )}
+            </div>
           )}
-          {formik.touched[steps[step].name] &&
-            formik.errors[steps[step].name] && (
-              <p className="text-red-500">{formik.errors[steps[step].name]}</p>
-            )}
-        </div>
-      )}
 
-      <div className="mt-4 flex justify-between">
-        {step > 0 && (
-          <button
-            type="button"
-            onClick={() => setStep(step - 1)}
-            className="bg-gray-500 text-white p-2 rounded"
-          >
-            Previous
-          </button>
-        )}
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-          {step === steps.length - 1 ? "Submit" : "Next"}
-        </button>
+          <div className="mt-6 flex justify-between">
+            {step > 0 && (
+              <button
+                type="button"
+                onClick={() => setStep(step - 1)}
+                className="bg-gray-500 text-white px-6 py-2 rounded-lg text-lg hover:bg-gray-600 transition"
+              >
+                Previous
+              </button>
+            )}
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-6 py-2 rounded-lg text-lg hover:bg-blue-600 transition"
+            >
+              {step === steps.length - 1 ? "Submit" : "Next"}
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
+    </>
   );
 };
 

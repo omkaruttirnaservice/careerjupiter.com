@@ -21,10 +21,7 @@ const Card = ({ image, name, description, rating, onClick }) => {
             ⭐ {rating}/5
           </span>
         </div>
-      </div>
-
-
-      
+      </div> 
     </>
   );
 };
