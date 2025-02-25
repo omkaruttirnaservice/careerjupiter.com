@@ -9,9 +9,11 @@ import { cityData } from "../../Constant/constantData";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const educationOptions = ["BE", "BCom", "MCA", "BCS", "BSc", "BA", "MBA"];
+const educationOptions = ["SSC", "HSC", "ITI", "Graduation", "Post Graduation", "BA", "MBA"];
 
 const LocationMarker = ({ setLocation, location }) => {
+
+  
   const map = useMapEvents({
     click(e) {
       setLocation({ lat: e.latlng.lat, lng: e.latlng.lng });
@@ -25,6 +27,7 @@ const LocationMarker = ({ setLocation, location }) => {
 };
 
 const MultiStepForm = () => {
+  let totalFormSteps = 15
   const [step, setStep] = useState(0);
   const [location, setLocation] = useState({ lat: null, lng: null });
   const [districtOptions, setDistrictOptions] = useState([]);
@@ -38,17 +41,27 @@ const MultiStepForm = () => {
       navigate("/login");
     },
     onError: (error) => {
-      if (error.response?.status === 400) {
-        toast.error("Invalid input. Please check your details.");
-      } else if (error.response?.status === 409) {
-        toast.error("This email is already registered. Try logging in.");
-      } else if (error.response?.status === 500) {
-        toast.error("Server error. Please try again later.");
+      const status = error?.response?.status;
+      const errorData = error?.response?.data;
+
+      console.error("Error details:", errorData);
+
+      if (status === 400 && errorData?.field) {
+        // Handle specific field errors
+        formik.setFieldError(errorData.field, errorData?.message || "Invalid input.");
+      } else if (status === 409) {
+        // Conflict error (like existing email or mobile)
+        toast.error(errorData?.usrMsg || "This account already exists.");
+      } else if (status === 500) {
+        // Server error
+        toast.error("Internal server error. Please try again later.");
       } else {
-        toast.error("Something went wrong. Please try again.");
+        // General error fallback
+        toast.error(errorData?.usrMsg || "Something went wrong. Please check your details.");
       }
     },
   });
+
 
   const formik = useFormik({
     initialValues: {
@@ -71,6 +84,7 @@ const MultiStepForm = () => {
       latitude: "",
       longitude: "",
     },
+
     validationSchema: [
       Yup.object({ f_name: Yup.string().required("First Name is required") }),
       Yup.object({ m_name: Yup.string().required("Middle Name is required") }),
@@ -120,6 +134,7 @@ const MultiStepForm = () => {
       Yup.object({ district: Yup.string().required("District is required") }),
       Yup.object({ education: Yup.string().required("Education is required") }),
     ][step],
+
     onSubmit: (values) => {
       if (step < steps.length - 1) {
         setStep(step + 1);
@@ -235,60 +250,64 @@ const MultiStepForm = () => {
     }
   };
 
-    const progressPercentage = ((step + 1) / steps.length) * 100;
+  const progressPercentage = ((step + 1) / steps.length) * 100;
 
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4 sm:p-8">
+
         <form
           onSubmit={formik.handleSubmit}
-          className="w-full max-w-lg bg-white shadow-2xl rounded-2xl p-8"
+          className="w-full max-w-lg sm:max-w-2xl bg-white shadow-2xl rounded-2xl sm:rounded-3xl p-6 sm:p-12 border-t-4 sm:border-t-8 border-indigo-600 transition-transform transform hover:scale-105 duration-300"
         >
-          <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
+          <div className="w-full bg-gray-300 rounded-full h-3 sm:h-5 mb-6 sm:mb-10 overflow-hidden shadow-md relative">
             <div
-              className="bg-blue-500 h-3 rounded-full transition-all duration-300"
-              style={{ width: `${progressPercentage}%` }}
+              className="bg-gradient-to-r from-indigo-500 to-pink-500 h-3 sm:h-5 rounded-full transition-all duration-500"
+              style={{
+                width: `${(step / totalFormSteps) * 100}%`,
+              }}
             ></div>
+            <span className="absolute top-0 left-1/2 transform -translate-x-1/2 text-xs sm:text-sm font-bold text-indigo-700 mt-4 sm:mt-6">
+              {Math.round((step / totalFormSteps) * 100)}%
+            </span>
           </div>
 
-          <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">
-            Step {step + 1} of {steps.length}
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-indigo-700 text-center mb-6 sm:mb-10">
+            {Math.round((step / totalFormSteps) * 100)}% Completed
           </h2>
 
+
           {steps[step].name === "location" ? (
-            <div className="mb-6 text-center">
-              <label className="block text-lg font-semibold text-gray-700 mb-2">
+            <div className="mb-6 sm:mb-10 text-center">
+              <label className="block text-lg sm:text-2xl font-semibold text-gray-800 mb-4 sm:mb-6">
                 Select Your Location on the Map:
               </label>
               <button
                 type="button"
                 onClick={handleGetCurrentLocation}
-                className="bg-green-500 text-white px-4 py-2 rounded-lg mb-4 hover:bg-green-600 transition"
+                className="bg-green-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg sm:rounded-xl font-medium mb-4 sm:mb-6 hover:bg-green-700 transition duration-300"
               >
                 Get Current Location
               </button>
-              <div className="w-full h-72 rounded-lg overflow-hidden shadow-lg border">
+              <div className="w-full h-64 sm:h-[450px] rounded-lg sm:rounded-xl overflow-hidden shadow-lg border-2 border-indigo-600">
                 <MapContainer
                   center={[20.5937, 78.9629]}
                   zoom={5}
                   style={{ height: "100%", width: "100%" }}
                 >
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                  <LocationMarker
-                    setLocation={setLocation}
-                    location={location}
-                  />
+                  <LocationMarker setLocation={setLocation} location={location} />
                 </MapContainer>
               </div>
               {location.lat && location.lng && (
-                <p className="mt-3 text-lg font-medium text-gray-600">
+                <p className="mt-3 sm:mt-5 text-sm sm:text-lg font-medium text-gray-700">
                   📍 Latitude: {location.lat}, Longitude: {location.lng}
                 </p>
               )}
             </div>
           ) : (
-            <div className="mb-6">
-              <label className="block text-lg font-semibold text-gray-700 mb-2">
+            <div className="mb-6 sm:mb-10">
+              <label className="block text-lg sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-5">
                 {steps[step].label}
               </label>
               {steps[step].type === "select" ? (
@@ -296,16 +315,14 @@ const MultiStepForm = () => {
                   {...formik.getFieldProps(steps[step].name)}
                   onChange={(e) => {
                     if (steps[step].name === "state") handleStateChange(e);
-                    else if (steps[step].name === "district")
-                      handleDistrictChange(e);
-                    else if (steps[step].name === "education")
-                      handleEducationChange(e);
+                    else if (steps[step].name === "district") handleDistrictChange(e);
+                    else if (steps[step].name === "education") handleEducationChange(e);
                   }}
-                  className="border p-3 w-full rounded-lg text-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                  className="border-2 border-indigo-400 p-3 sm:p-4 w-full rounded-lg sm:rounded-xl text-sm sm:text-lg focus:ring-4 focus:ring-indigo-500 outline-none transition-shadow shadow-md hover:shadow-lg"
                 >
                   <option value="">Select {steps[step].label}</option>
                   {steps[step].options.map((option) => (
-                    <option key={option} value={option} className="text-lg">
+                    <option key={option} value={option} className="text-sm sm:text-lg">
                       {option}
                     </option>
                   ))}
@@ -314,31 +331,30 @@ const MultiStepForm = () => {
                 <input
                   type={steps[step].type}
                   {...formik.getFieldProps(steps[step].name)}
-                  className="border p-3 w-full rounded-lg text-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                  className="border-2 border-indigo-400 p-3 sm:p-4 w-full rounded-lg sm:rounded-xl text-sm sm:text-lg focus:ring-4 focus:ring-indigo-500 outline-none transition-shadow shadow-md hover:shadow-lg"
                 />
               )}
-              {formik.touched[steps[step].name] &&
-                formik.errors[steps[step].name] && (
-                  <p className="text-red-500 mt-2 text-lg">
-                    {formik.errors[steps[step].name]}
-                  </p>
-                )}
+              {formik.touched[steps[step].name] && formik.errors[steps[step].name] && (
+                <p className="text-red-600 mt-2 sm:mt-4 text-sm sm:text-lg">
+                  {formik.errors[steps[step].name]}
+                </p>
+              )}
             </div>
           )}
 
-          <div className="mt-6 flex justify-between">
+          <div className="mt-6 sm:mt-10 flex justify-between">
             {step > 0 && (
               <button
                 type="button"
                 onClick={() => setStep(step - 1)}
-                className="bg-gray-500 text-white px-6 py-2 rounded-lg text-lg hover:bg-gray-600 transition"
+                className="bg-gray-700 text-white px-6 sm:px-10 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-lg hover:bg-gray-800 transition duration-300"
               >
                 Previous
               </button>
             )}
             <button
               type="submit"
-              className="bg-blue-500 text-white px-6 py-2 rounded-lg text-lg hover:bg-blue-600 transition"
+              className="bg-indigo-600 text-white px-6 sm:px-10 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-lg hover:bg-indigo-700 transition duration-300"
             >
               {step === steps.length - 1 ? "Submit" : "Next"}
             </button>
