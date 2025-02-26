@@ -3,37 +3,18 @@ import { useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import ShowReviews from "./ReviewList";
-
-// API to submit a new review
-const submitReview = async (reviewData) => {
-  try {
-    const response = await axios.post(
-      "http://192.168.1.17:5000/api/reviews/create?type=college",
-      reviewData,
-      { headers: { "Content-Type": "application/json" } }
-    );
-
-    if (response.status !== 201 && response.status !== 200) {
-      throw new Error("Failed to submit review");
-    }
-
-    return response.data;
-  } catch (error) {
-    console.error("Error submitting review:", error.response?.data || error.message);
-    throw error;
-  }
-};
+import { handleReviews } from "../InstituteComp/Api";
 
 const ReviewPage = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
 
+  // Submit review mutation
   const mutation = useMutation({
-    mutationFn: submitReview,
+    mutationFn: (reviewData) => handleReviews("submit", reviewData),
     onSuccess: () => {
-      queryClient.invalidateQueries(["reviews", id]); // Refresh reviews if needed
+      queryClient.invalidateQueries(["reviews", id]); // Refresh the reviews
       formik.resetForm();
     },
     onError: (error) => {
@@ -41,6 +22,7 @@ const ReviewPage = () => {
     },
   });
 
+  // Formik setup
   const formik = useFormik({
     initialValues: {
       studentMobile: "",
@@ -67,8 +49,7 @@ const ReviewPage = () => {
         description: values.comment,
       };
 
-      console.log("Submitting review:", reviewData);
-      mutation.mutate(reviewData);
+      mutation.mutate(reviewData); // Submit review
     },
   });
 
@@ -149,9 +130,9 @@ const ReviewPage = () => {
         >
           {mutation.isLoading ? "Submitting..." : "Submit Review"}
         </button>
-
-        <ShowReviews />
       </form>
+
+      <ShowReviews />
     </div>
   );
 };

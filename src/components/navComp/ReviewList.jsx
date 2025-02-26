@@ -1,16 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-
-// Function to fetch reviews by college ID
-const fetchReviews = async (id) => {
-  const response = await axios.get(`http://192.168.1.17:5000/api/reviews/${id}?type=college`);
-  if (response.data?.statusCode !== 200 || !response.data.success) {
-    throw new Error("Failed to fetch reviews");
-  }
-  return JSON.parse(response.data.data || "[]");
-};
+import { handleReviews } from "../InstituteComp/Api"; // Import the unified API handler
 
 // Star rating component with golden stars
 const StarRating = ({ rating }) => {
@@ -34,7 +25,7 @@ const StarRating = ({ rating }) => {
   );
 };
 
-// Calculate "time ago" in days/weeks/months
+// Calculate "time ago" for reviews
 const timeAgo = (date) => {
   const now = new Date();
   const reviewDate = new Date(date);
@@ -60,7 +51,7 @@ const ShowReviews = () => {
 
   const { data: reviews = [], isLoading, isError } = useQuery({
     queryKey: ["reviews", id],
-    queryFn: () => fetchReviews(id),
+    queryFn: () => handleReviews("fetch", { id }),
     enabled: !!id,
   });
 
@@ -73,7 +64,7 @@ const ShowReviews = () => {
   }
 
   return (
-    <div className="mt-10  bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
+    <div className="mt-10 bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
       <h2 className="text-3xl font-extrabold text-gray-800 mb-8 text-center">📚 College Reviews</h2>
 
       {reviews.length > 0 ? (
