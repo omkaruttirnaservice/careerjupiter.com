@@ -2,34 +2,42 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import ShowReviews from "./ReviewList";
 
+// API to submit a new review
 const submitReview = async (reviewData) => {
-  const response = await fetch("http://192.168.1.17:5000/api/reviews/create", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(reviewData),
-  });
+  try {
+    const response = await axios.post(
+      "http://192.168.1.17:5000/api/reviews/create?type=college",
+      reviewData,
+      { headers: { "Content-Type": "application/json" } }
+    );
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to submit review");
+    if (response.status !== 201 && response.status !== 200) {
+      throw new Error("Failed to submit review");
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting review:", error.response?.data || error.message);
+    throw error;
   }
-
-  return await response.json(); // Successful response data
 };
 
 const ReviewPage = () => {
-  const { id } = useParams(); // College ID from URL
+  const { id } = useParams();
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: submitReview,
-    onSuccess: (data) => {
-      console.log("✅ Review submitted successfully:", data);
+    onSuccess: () => {
+      queryClient.invalidateQueries(["reviews", id]); // Refresh reviews if needed
       formik.resetForm();
     },
     onError: (error) => {
-      console.error("❌ Submission error:", error.message);
+      console.error("Error submitting review:", error.message);
     },
   });
 
@@ -41,26 +49,26 @@ const ReviewPage = () => {
     },
     validationSchema: Yup.object({
       studentMobile: Yup.string()
-        .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits")
+        .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
         .required("Mobile number is required"),
-      rating: Yup.number().required("Rating is required").min(1).max(5),
+      rating: Yup.number().min(1).max(5).required("Rating is required"),
       comment: Yup.string().required("Comment is required"),
     }),
     onSubmit: (values) => {
       if (!id) {
-        alert("❌ Cannot submit review — College ID is missing.");
+        alert("College ID is missing.");
         return;
       }
 
       const reviewData = {
-        id, // College ID from URL
+        id,
         studentMobile: values.studentMobile,
         starRating: values.rating,
         description: values.comment,
       };
 
-      console.log("🚀 Sending review data:", reviewData);
-      mutation.mutate(reviewData); // Trigger TanStack Query mutation
+      console.log("Submitting review:", reviewData);
+      mutation.mutate(reviewData);
     },
   });
 
@@ -82,11 +90,11 @@ const ReviewPage = () => {
         </p>
       )}
 
-      {/* {mutation.isError && (
+      {mutation.isError && (
         <p className="text-red-600 bg-red-100 p-2 rounded text-center">
-          ❌ {mutation.error.message}
+          ❌ Failed to submit review. Please try again.
         </p>
-      )} */}
+      )}
 
       <form onSubmit={formik.handleSubmit} className="mb-6">
         <div className="mb-3">
@@ -134,11 +142,15 @@ const ReviewPage = () => {
 
         <button
           type="submit"
-          className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+          className={`w-full p-2 rounded text-white ${
+            mutation.isLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+          }`}
           disabled={mutation.isLoading}
         >
           {mutation.isLoading ? "Submitting..." : "Submit Review"}
         </button>
+
+        <ShowReviews />
       </form>
     </div>
   );
