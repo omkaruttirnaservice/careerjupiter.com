@@ -1,67 +1,76 @@
-import React from 'react';
+import React from "react";
+import {
+  FaBuilding,
+  FaBed,
+  FaBook,
+  FaHospital,
+  FaChalkboardTeacher,
+  FaFlask,
+  FaFutbol,
+  FaBus,
+  FaUtensils,
+} from "react-icons/fa";
 
 const Infrastructure = () => {
+  // if (!data)
+  //   return <p className="text-center text-red-500">No data available</p>;
+
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen p-8 w-full">
-      <h1 className="text-2xl font-extrabold text-center mb-10 text-blue-700">
-        Welcome to Our Campus
-      </h1>
-
-      <div className="">
-        <h2 className="text-3xl font-semibold text-blue-600 mb-6">
-          Campus Overview
-        </h2>
-        <p className="text-gray-800 mb-6">
-          Our campus is located in a vibrant, scenic area, offering
-          state-of-the-art facilities and a thriving community for students to
-          live and learn. The campus has been designed to promote both academic
-          success and student well-being, providing all the amenities needed for
-          a well-rounded college experience.
-        </p>
-
-        <h3 className="text-2xl font-semibold text-blue-600 mb-4">
-          Key Features:
-        </h3>
-        <ul className="list-disc pl-6 text-gray-800">
-          <li>Modern lecture halls and classrooms</li>
-          <li>State-of-the-art labs and research facilities</li>
-          <li>Extensive sports and recreation areas</li>
-          <li>Beautiful green spaces for relaxation and study</li>
-          <li>Multiple dining options with diverse food choices</li>
-        </ul>
-
-        <h3 className="text-2xl font-semibold text-blue-600 mt-8 mb-4">
-          Campus Photos:
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <img
-            src="https://media.istockphoto.com/id/499551389/photo/harvard-campus-with-brilliant-fall-foliage.jpg?s=612x612&w=0&k=20&c=ijWPxJP7NEidtSKCLzoMZzgaXotb02nLl9n4_XDvjvM="
-            alt="Campus Image 1"
-            className="rounded-xl shadow-lg transform transition-all hover:scale-105"
-          />
-          <img
-            src="https://s3.amazonaws.com/thumbnails.thecrimson.com/photos/2020/05/26/163346_1344696.jpg.1500x1000_q95_crop-smart_upscale.jpg"
-            alt="Campus Image 2"
-            className="rounded-xl shadow-lg transform transition-all hover:scale-105"
-          />
-          <img
-            src="https://www.howtogetinto-harvard.com/wp-content/uploads/2019/06/harvard-university-campus-Weekends-at-Harvard-yard.jpg"
-            alt="Campus Image 3"
-            className="rounded-xl shadow-lg transform transition-all hover:scale-105"
-          />
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-bold mb-4 text-center">
+        Infrastructure Details
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gray-100 p-4 rounded-lg flex items-center gap-2">
+          <FaBuilding className="text-blue-500" />
+          <p className="font-semibold">Campus Area:</p>
+          <p>{data.campusArea || "N/A"}</p>
         </div>
-
-        <h3 className="text-2xl font-semibold text-blue-600 mt-8 mb-4">
-          Location:
-        </h3>
-        <p className="text-gray-800">
-          The campus is located at the heart of the city, easily accessible by
-          public transport. It is surrounded by a vibrant community and provides
-          easy access to nearby shopping, dining, and entertainment areas.
-        </p>
-        <p className="text-gray-800">
-          <strong>Address:</strong> 123 College Avenue, City, Country
-        </p>
+        <div className="bg-gray-100 p-4 rounded-lg flex items-center gap-2">
+          <FaBed className="text-green-500" />
+          <p className="font-semibold">Hostel Availability:</p>
+          <p>{data.hostelAvailability ? "Available" : "Not Available"}</p>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg flex items-center gap-2">
+          <FaBed className="text-purple-500" />
+          <p className="font-semibold">Hostel Details:</p>
+          <p>{data.hostelDetails || "N/A"}</p>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg flex items-center gap-2">
+          <FaBook className="text-orange-500" />
+          <p className="font-semibold">Library:</p>
+          <p>{data.library?.size || "N/A"}</p>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg flex items-center gap-2">
+          <FaHospital className="text-red-500" />
+          <p className="font-semibold">Medical Facilities:</p>
+          <p>{data.medicalFacilities ? "Available" : "Not Available"}</p>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg flex items-center gap-2">
+          <FaChalkboardTeacher className="text-yellow-500" />
+          <p className="font-semibold">Number of Classrooms:</p>
+          <p>{data.numberOfClassrooms || "N/A"}</p>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg flex items-center gap-2">
+          <FaFlask className="text-teal-500" />
+          <p className="font-semibold">Number of Labs:</p>
+          <p>{data.numberOfLabs || "N/A"}</p>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg flex items-center gap-2">
+          <FaFutbol className="text-indigo-500" />
+          <p className="font-semibold">Sports Facilities:</p>
+          <p>{data.sportsFacilities?.join(", ") || "N/A"}</p>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg flex items-center gap-2">
+          <FaBus className="text-blue-400" />
+          <p className="font-semibold">Transport Facility:</p>
+          <p>{data.transportFacility?.join(", ") || "N/A"}</p>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg flex items-center gap-2">
+          <FaUtensils className="text-pink-500" />
+          <p className="font-semibold">Canteen & Food Services:</p>
+          <p>{data.canteenAndFoodServices ? "Available" : "Not Available"}</p>
+        </div>
       </div>
     </div>
   );
