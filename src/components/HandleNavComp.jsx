@@ -11,7 +11,13 @@ import Gallery from "./navComp/Gallery";
 import News from "./navComp/News";
 import QuenAns from "./navComp/QuenAns";
 
-const HandleNavComp = ({ navName, courses, infrastructure }) => {
+const HandleNavComp = ({
+  navName,
+  courses,
+  infrastructure,
+  placementData,
+  imageGallery,
+}) => {
   const [navComp, setNavComp] = useState(<Overview />);
 
   const navItem = [
@@ -40,7 +46,7 @@ const HandleNavComp = ({ navName, courses, infrastructure }) => {
         setNavComp(<Scholarship />);
         break;
       case navItem[3]:
-        setNavComp(<PlacementDetails coursesData={courses} />);
+        setNavComp(<PlacementDetails placementData={placementData} />);
         break;
       case navItem[4]:
         setNavComp(<CutoffTable />);
@@ -52,7 +58,7 @@ const HandleNavComp = ({ navName, courses, infrastructure }) => {
         setNavComp(<Infrastructure infrastructure={infrastructure} />);
         break;
       case navItem[7]:
-        setNavComp(<Gallery />);
+        setNavComp(<Gallery imageGallery={imageGallery} />);
         break;
       case navItem[8]:
         setNavComp(<ReviewPage />);

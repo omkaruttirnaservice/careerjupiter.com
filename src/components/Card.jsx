@@ -18,38 +18,40 @@ const Card = ({
   return (
     <>
       <div
-        className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-white hover:cursor-pointer hover:shadow-xl transition-shadow duration-300"
+        className="max-w-sm w-full sm:w-80 md:w-96 lg:w-[24rem] xl:w-[28rem] rounded-2xl overflow-hidden shadow-md bg-white hover:shadow-lg transition-all duration-300 cursor-pointer"
         onClick={onClick}
       >
         <img
-          className="w-full h-48 object-cover"
+          className="w-full h-52 object-cover rounded-t-2xl"
           src={`${BACKEND_SERVER_IP}${image}`}
           alt={name}
         />
-        <div className="px-6 py-4">
-          <div className="flex flex-row justify-between">
-            <div className="font-bold text-xl ">{toPascalCase(name)}</div>
-            <div className="flex flex-row gap-1 items-center justify-center mt-0">
-              <ImLocation className="text-red-400 " />
-              <p className="text-gray-500 text-xs">{`${dist},${state}`}</p>
+        <div className="p-5">
+          <div className="flex flex-col">
+            <h2 className="font-semibold text-lg md:text-xl text-gray-900">
+              {toPascalCase(name)}
+            </h2>
+            <div className="flex items-center gap-1 text-gray-500 text-sm">
+              <ImLocation className="text-red-500" />
+              <span>{`${dist}, ${state}`}</span>
             </div>
           </div>
-          <p className="text-gray-700 text-base mt-2">
-            {description?.length > 100
-              ? description.slice(0, 100) + "..."
+          <p className="text-gray-600 text-sm md:text-base mt-2 line-clamp-3">
+            {description?.length > 120
+              ? `${description.slice(0, 120)}...`
               : description}
           </p>
-        </div>
-        <div className="px-6 pb-4 flex gap-2">
-          <span className="inline-block bg-blue-200 rounded-full px-3 py-1 text-sm font-semibold text-blue-700">
-            {accreditation}
-          </span>
-          <span className="inline-block bg-blue-200 rounded-full px-3 py-1 text-sm font-semibold text-blue-700">
-            {collegeType}
-          </span>
-          <span className="inline-block px-3 py-1 bg-blue-200 rounded-full text-sm font-semibold text-blue-700">
-            {collegeCategory}
-          </span>
+          <div className="flex flex-wrap gap-2 mt-3 bottom-0">
+            <span className="bg-blue-100 text-blue-600 text-xs md:text-sm font-medium px-3 py-1 rounded-full">
+              {accreditation}
+            </span>
+            <span className="bg-green-100 text-green-600 text-xs md:text-sm font-medium px-3 py-1 rounded-full">
+              {collegeType}
+            </span>
+            <span className="bg-purple-100 text-purple-600 text-xs md:text-sm font-medium px-3 py-1 rounded-full">
+              {collegeCategory}
+            </span>
+          </div>
         </div>
       </div>
     </>

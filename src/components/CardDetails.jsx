@@ -62,7 +62,7 @@ const CardDetails = () => {
         block: "nearest",
         inline: "center",
       });
-      setIsManualClick(false); // Reset
+      setIsManualClick(false);
     }
   }, [navName]);
 
@@ -75,15 +75,11 @@ const CardDetails = () => {
     queryFn: () => getCollege(id),
   });
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   const college = data?.college;
   const courses = data?.courses;
   const infrastructure = data?.infrastructure;
-
-  console.log("college data:",data);
+  const placements = data?.placements;
+  const imageGallery = data?.college?.imageGallery;
 
   if (!college) {
     return <p className="text-center text-gray-600 mt-8">No data found.</p>;
@@ -94,29 +90,33 @@ const CardDetails = () => {
       <button className="fixed bottom-6 right-6 z-10 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition duration-300">
         <NavLink to="/review"> 📝 Review</NavLink>
       </button>
-      <div className="max-w-7xl mx-auto p-4 mt-15">
-        <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col md:flex-row relative">
-          <div className="md:w-2/3 p-4">
-            <h1 className="text-2xl font-bold">{college.collegeName}</h1>
-            <div className="flex items-center mt-2 text-gray-600">
-              <span className="bg-yellow-400 text-white px-2 py-1 rounded text-sm">
+      <div className="max-w-7xl mx-auto p-4 mt-5">
+        <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col md:flex-row gap-6 relative max-w-4xl mx-auto">
+          <div className="md:w-2/3 space-y-4">
+            <h1 className="text-2xl font-bold text-gray-900">
+              {college.collegeName}
+            </h1>
+            <div className="flex items-center text-gray-600">
+              <span className="bg-yellow-400 text-white px-2 py-1 rounded text-sm font-semibold">
                 {data.rating} ⭐
               </span>
             </div>
-            <p className="mt-2 text-gray-700 text-sm">
+            <p className="text-gray-700 text-sm leading-relaxed">
               {college.info?.description}
             </p>
-            <div className="mx-auto bg-white mt-5 space-y-3">
-              <div className="flex items-center">
-                <FaPhone className="text-blue-500 mr-4" size={15} />
-                <p className="text-gray-800 ">{college.contactDetails}</p>
+
+            {/* Contact Details */}
+            <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+              <div className="flex items-center text-gray-700">
+                <FaPhone className="text-blue-500 mr-3" size={18} />
+                <p>{college.contactDetails}</p>
               </div>
-              <div className="flex items-center">
-                <FaEnvelope className="text-blue-500 mr-4" size={15} />
-                <p className="text-gray-800 ">{college.email_id}</p>
+              <div className="flex items-center text-gray-700">
+                <FaEnvelope className="text-blue-500 mr-3" size={18} />
+                <p>{college.email_id}</p>
               </div>
-              <div className="flex items-center">
-                <FaGlobe className="text-blue-500 mr-4" size={15} />
+              <div className="flex items-center text-gray-700">
+                <FaGlobe className="text-blue-500 mr-3" size={18} />
                 <a
                   href={college.websiteURL}
                   target="_blank"
@@ -126,29 +126,29 @@ const CardDetails = () => {
                   {college.websiteURL}
                 </a>
               </div>
-              <div className="flex items-center">
-                <FaMapMarkerAlt className="text-blue-500 mr-4" size={15} />
-                <p className="text-gray-800 ">
-                  {`${college.address.dist}`},&nbsp;
-                  {`${college.address.state}`}
-                </p>
+              <div className="flex items-center text-gray-700">
+                <FaMapMarkerAlt className="text-blue-500 mr-3" size={18} />
+                <p>{`${college.address.dist}, ${college.address.state}`}</p>
               </div>
             </div>
-            <div className="mt-4 flex space-x-4">
-              <button className="bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-md hover:bg-blue-700">
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
                 Download Brochure
               </button>
-              <button className="cursor-pointer border border-blue-600 text-blue-600 px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white">
+              <button className="border border-blue-600 text-blue-600 px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white transition">
                 Show Reviews
               </button>
             </div>
           </div>
 
-          <div className="md:w-1/3 flex justify-center relative">
+          {/* Image Section */}
+          <div className="w-full flex justify-center items-center mt-10">
             <img
               src={`${BACKEND_SERVER_IP}${college.image}`}
               alt="College Building"
-              className="rounded-lg w-full h-auto"
+              className="rounded-lg w-full h-auto max-w-3xl object-cover shadow-md"
             />
           </div>
         </div>
@@ -176,6 +176,8 @@ const CardDetails = () => {
             navName={navName}
             courses={courses}
             infrastructure={infrastructure}
+            placementData={placements}
+            imageGallery={imageGallery}
           />
         </div>
       </div>
