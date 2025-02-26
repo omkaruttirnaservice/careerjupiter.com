@@ -14,7 +14,7 @@ const CardDetails = () => {
     "Placements",
     "CutOffs",
     "Ranking",
-    "Campus",
+    "Infrastructure",
     "Gallery",
     "Reviews",
     "News",
@@ -75,8 +75,15 @@ const CardDetails = () => {
     queryFn: () => getCollege(id),
   });
 
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   const college = data?.college;
-  console.log("college data:", college);
+  const courses = data?.courses;
+  const infrastructure = data?.infrastructure;
+
+  // console.log("college data:", college);
 
   if (!college) {
     return <p className="text-center text-gray-600 mt-8">No data found.</p>;
@@ -165,7 +172,11 @@ const CardDetails = () => {
         </div>
 
         <div ref={sectionRef} className="mt-4">
-          <HandleNavComp navName={navName} />
+          <HandleNavComp
+            navName={navName}
+            courses={courses}
+            infrastructure={infrastructure}
+          />
         </div>
       </div>
     </>
