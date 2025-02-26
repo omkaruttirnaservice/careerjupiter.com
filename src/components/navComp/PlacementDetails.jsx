@@ -34,7 +34,7 @@ const PlacementDetails = ({ coursesData }) => {
               <div className="bg-red-400/20 p-4 rounded-lg backdrop-blur-md">
                 <div className="text-white/80 text-sm mb-1">Annual Package</div>
                 <div className="text-3xl md:text-4xl font-bold text-white">
-                  {item.package}
+                  ₹{item.package}
                 </div>
               </div>
             </div>
