@@ -7,7 +7,7 @@ const SingleInstitute = ()=>{
 
     const institutes = [
       {
-        id: 1,
+        id: 1, 
         image:
           "https://plus.unsplash.com/premium_photo-1733306464128-d6b80ed2f2e2?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGNsYXNzcm9vbSUyMGltYWdlfGVufDB8fDB8fHww",
         name: "Institute Name",

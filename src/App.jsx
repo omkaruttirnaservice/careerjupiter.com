@@ -56,6 +56,7 @@ function App() {
         { path: "/institute", element: <InstituteMultiCard /> },
         { path: "/university", element: <UniversityMultiCard /> },
         { path: "/university/:id", element: <UniversityDetail /> },
+        {path: "/institute", element: <ReviewPage />}
       ],
     },
 
@@ -100,7 +101,7 @@ function App() {
     { path: "/roadmap", element: <Roadmap /> },
     { path: "/nav", element: <Nav /> },
     { path: "/iq", element: <IQTest /> },
-    { path: "/review", element: <ReviewPage /> },
+    { path: "/review/:id", element: <ReviewPage /> },
     { path: "/institute/:id", element: <SingleInstitute /> },
   ]);
 

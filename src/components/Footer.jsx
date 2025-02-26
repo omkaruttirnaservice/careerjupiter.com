@@ -3,7 +3,7 @@ import { FaTwitter, FaYoutube, FaFacebook, FaInstagram, FaLinkedin } from 'react
 
 const Footer = () => {
   return (
-    <div className="bg-gray-100 text-blcyan">
+    <div className="mt-auto bg-gray-100 text-blcyan">
       <footer className="footer p-10">
         <nav className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
           <div className="space-y-4">
