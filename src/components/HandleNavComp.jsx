@@ -11,7 +11,7 @@ import Gallery from "./navComp/Gallery";
 import News from "./navComp/News";
 import QuenAns from "./navComp/QuenAns";
 
-const HandleNavComp = ({ navName, courses }) => {
+const HandleNavComp = ({ navName, courses, infrastructure }) => {
   const [navComp, setNavComp] = useState(<Overview />);
 
   const navItem = [
@@ -49,7 +49,7 @@ const HandleNavComp = ({ navName, courses }) => {
         setNavComp(<Ranking />);
         break;
       case navItem[6]:
-        setNavComp(<Infrastructure />);
+        setNavComp(<Infrastructure infrastructure={infrastructure} />);
         break;
       case navItem[7]:
         setNavComp(<Gallery />);

@@ -83,7 +83,7 @@ const CardDetails = () => {
   const courses = data?.courses;
   const infrastructure = data?.infrastructure;
 
-  // console.log("college data:", college);
+  console.log("college data:",data);
 
   if (!college) {
     return <p className="text-center text-gray-600 mt-8">No data found.</p>;

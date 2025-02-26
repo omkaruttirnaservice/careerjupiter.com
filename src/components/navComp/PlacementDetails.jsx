@@ -6,7 +6,18 @@ const PlacementDetails = ({ coursesData }) => {
     coursesData[0]?.courses[0].placementDetails
   );
 
-  const placementData = coursesData[0]?.courses[0].placementDetails;
+  // const placementData = coursesData[0]?.courses[0].placementDetails;
+
+   const placementData =[
+        {
+          "company": "Infosys",
+          "package": 600000
+        },
+        {
+          "company": "TCS",
+          "package": 550000
+        }
+      ];
 
   return (
     <div className="max-w-7xl mx-auto p-4">
