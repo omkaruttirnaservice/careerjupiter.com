@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 const AppLayout = () => {
 	const authState = useSelector((state) => state.auth);
 	const navigate = useNavigate();
+	console.log(authState,'-authState')
 
 	useLayoutEffect(() => {
 		if (!authState.isLoggedIn) {

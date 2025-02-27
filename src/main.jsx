@@ -39,7 +39,8 @@ function handleError(error) {
 }
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  // <StrictMode>
+  <>
     <OldStoreProvider store={store}>
       <AuthProvider store={AuthStore}>
         <QueryClientProvider client={queryClient}>
@@ -48,5 +49,6 @@ createRoot(document.getElementById("root")).render(
       </AuthProvider>
     </OldStoreProvider>
     <ToastContainer position="top-right" autoClose={3000} />
-  </StrictMode>
+  </>
+  // </StrictMode>
 );
