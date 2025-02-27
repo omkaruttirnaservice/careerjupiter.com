@@ -52,7 +52,13 @@ const Nav = () => {
                       setTagName("All");
                       setQuery("");
                     }}
-                    className="font-medium text-gray-500 hover:text-gray-900"
+                    className={({ isActive }) =>
+                      `font-medium hover:text-gray-900 ${
+                        isActive
+                          ? "text-blue-600 font-semibold"
+                          : "text-gray-500"
+                      }`
+                    }
                   >
                     {item.name}
                   </NavLink>

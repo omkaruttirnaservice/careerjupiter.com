@@ -4,6 +4,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import { useLocation } from "react-router-dom";
 import { useSearchContext } from "../../store/SearchContext";
 import { searchCollege } from "./Api";
+import { navigation } from "../../Constant/constantData";
 
 const SearchComponent = () => {
   const {
@@ -12,6 +13,7 @@ const SearchComponent = () => {
     setQuery,
     setCollegesData,
     setIsLoading,
+    setUniversityData,
     setErrorMsg,
   } = useSearchContext();
   const { pathname } = useLocation();
@@ -45,10 +47,41 @@ const SearchComponent = () => {
 
   useEffect(() => {
     if (data?.data) {
+      //
       setCollegesData(data.data);
       setIsLoading(false);
     }
   }, [data]);
+
+  useEffect(()=>{
+    switch (pathname) {
+      case navigation[1].href:
+        setSearchParams({
+          searchKey: query,
+          category: tagName,
+          type: pathname.slice(1),
+        });
+        break;
+      case navigation[2].href:
+        setSearchParams({
+          searchKey: query,
+          category: tagName,
+          type: pathname.slice(1),
+        });
+        break;
+      case navigation[3].href:
+        console.log("Api/university", { tagName }, { query }, { pathname });
+        setSearchParams({
+          searchKey: query,
+          category: tagName,
+          type: pathname.slice(1),
+        });
+        console.log("Api/university data", );
+        setUniversityData(data?.data);
+        break;
+    }
+
+  },[data])
 
   useEffect(() => {
     setIsLoading(isPending);

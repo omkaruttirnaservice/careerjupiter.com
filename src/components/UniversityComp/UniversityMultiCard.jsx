@@ -2,9 +2,15 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import UniversityCard from "./UniversityCard";
 import TagsSection from "../TagsSection";
+import { useSearchContext } from "../../store/SearchContext";
 
 const UniversityMultiCard = () => {
   const navigate = useNavigate();
+
+  const { UniversityData } = useSearchContext();
+
+  console.log("universityData inside university component:.....",UniversityData?.data);
+  
 
   const tags = ["All", "Harvard University", "Stanford University"];
 
