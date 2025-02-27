@@ -11,6 +11,7 @@ import UniversityInformation from './UniversityInformation';
 const UniversityDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    
 
     const universities = [
         {

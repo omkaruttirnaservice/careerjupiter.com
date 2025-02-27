@@ -8,7 +8,6 @@ const UniversityCard = ({ university, onClick }) => {
                  transition-transform transform hover:-translate-y-2 hover:shadow-2xl
                  cursor-pointer"
     >
-      {/* Image Container */}
       <div className="h-48 overflow-hidden">
         <img
           src={university.image}
@@ -19,7 +18,6 @@ const UniversityCard = ({ university, onClick }) => {
         />
       </div>
 
-      {/* Card Content */}
       <div className="p-4">
         <h3 className="text-xl font-bold mb-1">{university.name}</h3>
         <p className="text-gray-500 text-sm mb-2">{university.location}</p>
@@ -28,7 +26,6 @@ const UniversityCard = ({ university, onClick }) => {
         </p>
       </div>
 
-      {/* Rank Tag (top-right corner) */}
       <div className="absolute top-0 right-0 bg-red-500 text-white
                       text-sm font-semibold px-3 py-1 rounded-bl-lg">
         #{university.rank}
@@ -38,4 +35,3 @@ const UniversityCard = ({ university, onClick }) => {
 };
 
 export default UniversityCard;
-
