@@ -1,7 +1,7 @@
 // api/reviewApi.js
 import axios from "axios";
 
-const API_BASE_URL = "http://192.168.1.17:5000/api";
+const baseURL = "http://192.168.1.17:5000/api";
 
 /**
  * Handles API requests for fetching or submitting reviews.
@@ -16,12 +16,12 @@ export const handleReviews = async (action, payload = {}) => {
     if (action === "fetch") {
       const { id } = payload;
       if (!id) throw new Error("College ID is required to fetch reviews.");
-      response = await axios.get(`${API_BASE_URL}/reviews/${id}?type=college`);
+      response = await axios.get(`${baseURL}/reviews/${id}?type=college`);
     } 
     
     else if (action === "submit") {
       response = await axios.post(
-        `${API_BASE_URL}/reviews/create?type=college`,
+        `${baseURL}/reviews/create?type=college`,
         payload,
         { headers: { "Content-Type": "application/json" } }
       );

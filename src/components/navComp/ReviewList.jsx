@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { handleReviews } from "../InstituteComp/Api"; // Import the unified API handler
+import { handleReviews } from "./Api"; // Import the unified API handler
 
 // Star rating component with golden stars
 const StarRating = ({ rating }) => {

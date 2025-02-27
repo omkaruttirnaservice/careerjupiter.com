@@ -7,8 +7,10 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { Provider } from "react-redux";
+import { Provider as OldStoreProvider } from "react-redux";
 import store from "./redux/Store.js";
+import { Provider as AuthProvider } from "react-redux";
+import AuthStore from "./store-redux/store.js";
 import { AxiosError } from "axios";
 
 import { ToastContainer } from "react-toastify";
@@ -36,19 +38,15 @@ function handleError(error) {
   console.error("Query Error:", errorMessage);
 }
 
-// function handleError(error) {
-//   const data = error?.response?.data;
-//   toSafeInteger.error(data?.userMessage || "somthing want wrong");
-// }
-
-// Render the app
 createRoot(document.getElementById("root")).render(
-  <>
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-    </Provider>
+  <StrictMode>
+    <OldStoreProvider store={store}>
+      <AuthProvider store={AuthStore}>
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </AuthProvider>
+    </OldStoreProvider>
     <ToastContainer position="top-right" autoClose={3000} />
-  </>
+  </StrictMode>
 );

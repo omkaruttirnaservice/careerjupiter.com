@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ShowReviews from "./ReviewList";
-import { handleReviews } from "../InstituteComp/Api";
+import { handleReviews } from "./Api";
 
 const ReviewPage = () => {
   const { id } = useParams();

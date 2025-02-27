@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
-import { loginUser } from "./login-api";
+import { loginUser } from "./Api";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -30,10 +30,16 @@ const LoginPage = () => {
         return;
       }
 
-      const userData = {
-        user: { mobile_no: formik.values.mobile_no, _id: userId },
-        token: parsedData.token,
-      };
+     // userData ऑब्जेक्ट
+const userData = {
+  userData: {}, // email_id वापरला
+  token: parsedData.token,
+};
+
+// store in copkie
+document.cookie = `userData=${JSON.stringify(userData)}; path=/; max-age=3600`; // 1 तासासाठी वैध
+
+      
 
       dispatch(login(userData));
       localStorage.setItem("auth", JSON.stringify(userData));
@@ -41,7 +47,7 @@ const LoginPage = () => {
       setPopup({ type: "success", message: "Login Successful!" });
       setTimeout(() => {
         setPopup(null);
-        navigate("/dashboard");
+        navigate("/");
       }, 2000);
     },
     onError: (error) => {
@@ -52,25 +58,28 @@ const LoginPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      mobile_no: "",
+      email_id: "",
       password: "",
     },
+    
     validationSchema: Yup.object({
-      mobile_no: Yup.string()
-        .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits")
-        .required("Mobile number is required"),
+      email_id: Yup.string()
+        .email("Invalid email format") // 'email_id' नुसार email validation
+        .required("Email is required"),
       password: Yup.string()
         .required("Password is required")
         .min(8, "Password must be at least 8 characters long")
         .matches(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/,
-          "Password must contain at least one uppercase, one lowercase, one number, and one special character"
+          "Password must contain at least one uppercase, one lowercase, and one special character"
         ),
     }),
+    
     onSubmit: (values) => {
-      loginMutation.mutate(values);
+      loginMutation.mutate(values); // email_id आता पुढे नेला जाईल
     },
   });
+  
 
   return (
 
@@ -101,47 +110,52 @@ const LoginPage = () => {
           </p>
 
           <form className="mt-6 space-y-4" onSubmit={formik.handleSubmit}>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Mobile Number
-              </label>
-              <input
-                name="mobile_no"
-                type="number"
-                value={formik.values.mobile_no}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className={`w-full px-2 py-2 rounded-lg border ${
-                  formik.touched.mobile_no && formik.errors.mobile_no
-                    ? "border-red-500"
-                    : "border-green-500"
-                } focus:outline-none focus:ring-2 focus:ring-black-500`}
-              />
-              <div className="h-5 text-red-500 text-sm mt-1">
-                {formik.touched.mobile_no && formik.errors.mobile_no}
-              </div>
-            </div>
+            {/* Email Field */}
+{/* Email Field */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Email
+  </label>
+  <input
+    name="email_id" // email ऐवजी आता email_id
+    type="email"
+    value={formik.values.email_id}
+    onChange={formik.handleChange}
+    onBlur={formik.handleBlur}
+    className={`w-full px-2 py-2 rounded-lg border ${
+      formik.touched.email_id && formik.errors.email_id
+        ? "border-red-500"
+        : "border-green-500"
+    } focus:outline-none focus:ring-2 focus:ring-black-500`}
+  />
+  <div className="h-5 text-red-500 text-sm mt-1">
+    {formik.touched.email_id && formik.errors.email_id}
+  </div>
+</div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <input
-                name="password"
-                type="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className={`w-full px-2 py-2 rounded-lg border ${
-                  formik.touched.password && formik.errors.password
-                    ? "border-red-500"
-                    : "border-green-600"
-                } focus:outline-none focus:ring-2 focus:ring-black-500`}
-              />
-              <div className="h-5 text-red-500 text-sm mt-1">
-                {formik.touched.password && formik.errors.password}
-              </div>
-            </div>
+
+{/* Password Field */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Password
+  </label>
+  <input
+    name="password"
+    type="password"
+    value={formik.values.password}
+    onChange={formik.handleChange}
+    onBlur={formik.handleBlur}
+    className={`w-full px-2 py-2 rounded-lg border ${
+      formik.touched.password && formik.errors.password
+        ? "border-red-500"
+        : "border-green-600"
+    } focus:outline-none focus:ring-2 focus:ring-black-500`}
+  />
+  <div className="h-5 text-red-500 text-sm mt-1">
+    {formik.touched.password && formik.errors.password}
+  </div>
+</div>
+
 
             <div>
               <button

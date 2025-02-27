@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
-import { userSignUp } from "../../api/ApiService";
+import { userSignUp } from "./Api";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { cityData } from "../../Constant/constantData";
