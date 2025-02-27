@@ -3,7 +3,7 @@ import { NavLink, useParams, useSearchParams } from "react-router-dom";
 import { FaPhone, FaEnvelope, FaGlobe, FaMapMarkerAlt } from "react-icons/fa";
 import HandleNavComp from "./HandleNavComp";
 import { useQuery } from "@tanstack/react-query";
-import { getCollege } from "../api/ApiService";
+import { getCollege } from "./Api";
 import { BACKEND_SERVER_IP } from "../Constant/constantData";
 
 const CardDetails = () => {
