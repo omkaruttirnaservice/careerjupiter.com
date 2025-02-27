@@ -9,17 +9,6 @@ import { useSelector } from 'react-redux';
 
 const AppLayout = () => {
 	const authState = useSelector((state) => state.auth);
-<<<<<<< HEAD
-	const navigate = useNavigate();
-	console.log(authState,'-authState')
-
-	useLayoutEffect(() => {
-		if (!authState.isLoggedIn) {
-			navigate('/signin');
-		}
-	}, []);
-=======
->>>>>>> 4b6f12d5226801d729676450730f6cff33a3c491
 
 	return (
 		<>

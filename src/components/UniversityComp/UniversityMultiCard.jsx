@@ -1,8 +1,9 @@
+// src/components/UniversityMultiCard.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UniversityCard from "./UniversityCard";
 import TagsSection from "../TagsSection";
-import axios from "axios";
+import { fetchUniversities } from "./Api";
 
 const UniversityMultiCard = () => {
   const navigate = useNavigate();
@@ -10,25 +11,21 @@ const UniversityMultiCard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch data from API
   useEffect(() => {
-    const fetchUniversities = async () => {
+    const getUniversities = async () => {
       try {
-        const response = await axios.get("http://192.168.1.17:5000/api/university/all");
-        const parsedData = JSON.parse(response.data?.data || "{}");
-        setUniversities(parsedData?.universities || []);
+        const data = await fetchUniversities();
+        setUniversities(data);
       } catch (err) {
-        console.error("Failed to fetch universities:", err);
         setError("Failed to load data.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUniversities();
+    getUniversities();
   }, []);
 
-  // Generate tags (unique university names)
   const tags = ["All", ...new Set(universities.map((uni) => uni.universityName))];
 
   return (

@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
 		path: '/',
 		element: <AppLayout />,
 		children: [
-			// { path: '', element: <HeroSection /> },
+			{ path: '', element: <HeroSection /> },
 			{ path: 'college', element: <MultiCards /> },
 			{ path: 'college/:id', element: <CardDetails /> },
 
