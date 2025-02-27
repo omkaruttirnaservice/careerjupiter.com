@@ -101,7 +101,7 @@ function App() {
     { path: "/roadmap", element: <Roadmap /> },
     { path: "/nav", element: <Nav /> },
     { path: "/iq", element: <IQTest /> },
-    { path: "/review/:id", element: <ReviewPage /> },
+    { path: "/reviews/:id", element: <ReviewPage /> },
     { path: "/institute/:id", element: <SingleInstitute /> },
   ]);
 
