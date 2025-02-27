@@ -3,9 +3,9 @@ import * as Yup from 'yup';
 import { useMutation } from '@tanstack/react-query';
 import { loginUser } from './Api';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useEffect, useLayoutEffect, useState } from 'react';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../features/auth/authSlice';
 import loginImage from '../../assets/images/images';
 import Cookie from 'js-cookie';
@@ -13,6 +13,18 @@ const LoginPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [popup, setPopup] = useState(null);
+
+	const authState = useSelector((state) => state.auth);
+	useEffect(() => {
+		const redirectPath =
+			location.state && location.state.from ? location.state.from : '/';
+
+		console.log(redirectPath, '====');
+
+		if (authState.isLoggedIn) {
+			navigate(redirectPath);
+		}
+	}, []);
 
 	const loginMutation = useMutation({
 		mutationFn: loginUser,

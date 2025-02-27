@@ -1,6 +1,6 @@
 import Nav from './Nav';
 
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer';
 import SearchComponent from '../components/SearchComp/Search';
 import SearchContextProvider from '../store/SearchContext';
@@ -9,22 +9,19 @@ import { useSelector } from 'react-redux';
 
 const AppLayout = () => {
 	const authState = useSelector((state) => state.auth);
-	const navigate = useNavigate();
-
-	useLayoutEffect(() => {
-		if (!authState.isLoggedIn) {
-			navigate('/signin');
-		}
-	}, []);
 
 	return (
 		<>
-			<SearchContextProvider>
-				<Nav />
-				<SearchComponent />
-				<Outlet />
-				<Footer />
-			</SearchContextProvider>
+			{authState.isLoggedIn ? (
+				<SearchContextProvider>
+					<Nav />
+					<SearchComponent />
+					<Outlet />
+					<Footer />
+				</SearchContextProvider>
+			) : (
+				<Navigate to="/signin" replace />
+			)}
 		</>
 	);
 };
