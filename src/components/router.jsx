@@ -39,8 +39,8 @@ export const router = createBrowserRouter([
 
 	{ path: '/dashboard', element: <Dashboard /> },
 
-	{ path: '/signin', element: <LoginPage /> },
-	{ path: '/signup', element: <MultiStepForm /> },
+	{ path: '/login', element: <LoginPage /> },
+	{ path: '/signin', element: <MultiStepForm /> },
 	{ path: '/roadmap', element: <Roadmap /> },
 	{ path: '/iq', element: <IQTest /> },
 ]);
