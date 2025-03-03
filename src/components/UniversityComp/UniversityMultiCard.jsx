@@ -55,6 +55,11 @@ const UniversityMultiCard = () => {
                       location: `${uni.address?.line1 || "Address not available"}, ${uni.address?.state || "N/A"}`,
                       image: uni.image || "https://via.placeholder.com/300",
                       description: uni.info?.description || "No description available.",
+                      tags: [
+                        { label: "Bar Council of India Approved", type: "approved" },
+                        { label: "Government", type: "government" },
+                        { label: "Diploma", type: "diploma" },
+                      ],
                     }}
                     onClick={() => navigate(`/university/${uni._id}`)}
                   />
