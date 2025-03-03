@@ -1,65 +1,64 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InstituteCard from "./InstituteCard";
-import TagsSection from './../TagsSection';
+import TagsSection from "./../TagsSection";
 
 const InstituteMultiCard = () => {
+  const [institutes, setInstitutes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const tags = ["All", "Physics", "Maths", "MERN", "English Speaking"];
 
-    const tags = ["All", "Physics", "Maths", "MERN", "English Specking"];
+  useEffect(() => {
+    const fetchInstitutes = async () => {
+      try {
+        const response = await fetch("http://192.168.1.5:5000/api/class/all/");
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          const parsedData = JSON.parse(result.data).classes;
 
-  const institutes = [
-    {
-      id: 1,
-      name: "Institute A",
-      rank: 5,
-      successRatio: 95,
-      image:
-        "https://images.unsplash.com/photo-1592069915234-2a5c74fbd347?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGluc3RpdHV0ZXxlbnwwfHwwfHx8MA%3D%3D",
-    },
-    {
-      id: 2,
-      name: "Institute B",
-      rank: 5,
-      successRatio: 90,
-      image:
-        "https://plus.unsplash.com/premium_photo-1676892435585-d29aee82ad6d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGluc3RpdHV0ZXxlbnwwfHwwfHx8MA%3D%3D",
-    },
-    {
-      id: 3,
-      name: "Institute C",
-      rank: 5,
-      successRatio: 85,
-      image:
-        "https://images.unsplash.com/photo-1592069915234-2a5c74fbd347?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGluc3RpdHV0ZXxlbnwwfHwwfHx8MA%3D%3D",
-    },
-    {
-      id: 4,
-      name: "Institute D",
-      rank: 5,
-      successRatio: 80,
-      image:
-        "https://plus.unsplash.com/premium_photo-1676892435585-d29aee82ad6d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGluc3RpdHV0ZXxlbnwwfHwwfHx8MA%3D%3D",
-    },
-  ];
+          const formattedInstitutes = parsedData.map((cls) => ({
+            id: cls._id,
+            name: cls.className,
+            rank: 5,
+            successRatio: cls.admissionEntranceDetails?.lastYearCutoffMarks || "N/A",
+            image: cls.image.startsWith("http") ? cls.image : `http://192.168.1.5:5000${cls.image}`,
+            description: cls.info?.description || "No description available",
+            category: cls.Category || "N/A",
+            location: `${cls.address?.line1}, ${cls.address?.line2}, ${cls.address?.dist}`,
+          }));
+
+          setInstitutes(formattedInstitutes);
+        }
+      } catch (error) {
+        console.error("Error fetching institutes:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInstitutes();
+  }, []);
+
+  if (loading) {
+    return <p className="text-center mt-10">Loading classes...</p>;
+  }
 
   return (
-    <>
-      <div className="mt-10">
-      <TagsSection tags={tags}/>
-        <div className=" cursor-pointer grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 m-5">
-          {institutes.map((each, index) => {
-            return (
-              <InstituteCard
-                institute={each}
-                key={index}
-                onClick={() => navigate(`/institute/${each.id}`)}
-              />
-            );
-          })}
-        </div>
+    <div className="mt-10">
+      <TagsSection tags={tags} />
+      <div className="cursor-pointer grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 m-5">
+        {institutes.map((each) => (
+          <InstituteCard
+            institute={each}
+            key={each.id}
+            onClick={() => navigate(`/institute/${each.id}`)}
+          />
+        ))}
       </div>
-    </>
+    </div>
   );
 };
 
