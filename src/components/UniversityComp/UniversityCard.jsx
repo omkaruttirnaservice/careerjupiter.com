@@ -1,4 +1,5 @@
 import React from "react";
+import { MapPin, Medal } from "lucide-react"; // Importing icons
 
 const UniversityCard = ({ university, onClick }) => {
   return (
@@ -22,15 +23,22 @@ const UniversityCard = ({ university, onClick }) => {
       {/* Card Content */}
       <div className="p-4">
         <h3 className="text-xl font-bold mb-1">{university.name}</h3>
-        <p className="text-gray-500 text-sm mb-2">{university.location}</p>
+
+        {/* Location with Icon */}
+        <div className="flex items-center text-gray-500 text-sm mb-2">
+          <MapPin size={16} className="mr-1 text-red-500" />
+          {university.location}
+        </div>
+
         <p className="text-gray-600 text-sm leading-relaxed">
           {university.description}
         </p>
       </div>
 
-      {/* Rank Tag (top-right corner) */}
+      {/* Rank Tag with Icon (top-right corner) */}
       <div className="absolute top-0 right-0 bg-red-500 text-white
-                      text-sm font-semibold px-3 py-1 rounded-bl-lg">
+                      text-sm font-semibold px-3 py-1 rounded-bl-lg flex items-center">
+        <Medal size={14} className="mr-1" />
         #{university.rank}
       </div>
     </div>
@@ -38,4 +46,3 @@ const UniversityCard = ({ university, onClick }) => {
 };
 
 export default UniversityCard;
-
