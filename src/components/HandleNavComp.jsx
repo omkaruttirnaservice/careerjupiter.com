@@ -17,58 +17,59 @@ const HandleNavComp = ({
   infrastructure,
   placementData,
   imageGallery,
+  review,
 }) => {
   const [navComp, setNavComp] = useState(<Overview />);
 
   const navItem = [
-    "Overview",
+    // "Overview",
     "Courses & Fees",
-    "Scholarship",
+    // "Scholarship",
     "Placements",
-    "CutOffs",
-    "Ranking",
+    // "CutOffs",
+    // "Ranking",
     "Infrastructure",
     "Gallery",
     "Reviews",
-    "News",
-    "QnA",
+    // "News",
+    // "QnA",
   ];
 
   useEffect(() => {
     switch (navName) {
+      // case navItem[0]:
+      //   setNavComp(<Overview />);
+      //   break;
       case navItem[0]:
-        setNavComp(<Overview />);
-        break;
-      case navItem[1]:
         setNavComp(<CoursesFee coursesData={courses} />);
         break;
-      case navItem[2]:
-        setNavComp(<Scholarship />);
-        break;
-      case navItem[3]:
+      // case navItem[2]:
+      //   setNavComp(<Scholarship />);
+      //   break;
+      case navItem[1]:
         setNavComp(<PlacementDetails placementData={placementData} />);
         break;
-      case navItem[4]:
-        setNavComp(<CutoffTable />);
-        break;
-      case navItem[5]:
-        setNavComp(<Ranking />);
-        break;
-      case navItem[6]:
+      // case navItem[4]:
+      //   setNavComp(<CutoffTable />);
+      //   break;
+      // case navItem[5]:
+      //   setNavComp(<Ranking />);
+      //   break;
+      case navItem[2]:
         setNavComp(<Infrastructure infrastructure={infrastructure} />);
         break;
-      case navItem[7]:
+      case navItem[3]:
         setNavComp(<Gallery imageGallery={imageGallery} />);
         break;
-      case navItem[8]:
-        setNavComp(<ReviewPage />);
+      case navItem[4]:
+        setNavComp(<ReviewPage reviewCollegeName={review} />);
         break;
-      case navItem[9]:
-        setNavComp(<News />);
-        break;
-      case navItem[10]:
-        setNavComp(<QuenAns />);
-        break;
+      // case navItem[9]:
+      //   setNavComp(<News />);
+      //   break;
+      // case navItem[10]:
+      //   setNavComp(<QuenAns />);
+      //   break;
       default:
         setNavComp(null);
     }

@@ -48,7 +48,7 @@ const MultiCards = () => {
       )}
 
       {!isLoading && collegesData?.length !== 0 && (
-        <div className="mt-10">
+        <div className="mt-10 flex justify-center">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 m-5">
             {collegesData?.map((card, index) => (
               <Card

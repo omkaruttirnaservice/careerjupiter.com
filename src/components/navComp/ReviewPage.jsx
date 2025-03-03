@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -6,9 +6,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ShowReviews from "./ReviewList";
 import { handleReviews } from "./Api";
 
-const ReviewPage = () => {
+const ReviewPage = ({ reviewCollegeName }) => {
   const { id } = useParams();
   const queryClient = useQueryClient();
+  const [selectedRating, setSelectedRating] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   // Submit review mutation
   const mutation = useMutation({
@@ -16,6 +18,9 @@ const ReviewPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["reviews", id]); // Refresh the reviews
       formik.resetForm();
+      setSelectedRating(null); // Reset rating to empty
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 5000); // Hide success message after 5 sec
     },
     onError: (error) => {
       console.error("Error submitting review:", error.message);
@@ -26,26 +31,24 @@ const ReviewPage = () => {
   const formik = useFormik({
     initialValues: {
       studentMobile: "",
-      rating: 5,
       comment: "",
     },
     validationSchema: Yup.object({
       studentMobile: Yup.string()
         .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
         .required("Mobile number is required"),
-      rating: Yup.number().min(1).max(5).required("Rating is required"),
       comment: Yup.string().required("Comment is required"),
     }),
     onSubmit: (values) => {
-      if (!id) {
-        alert("College ID is missing.");
+      if (!id || selectedRating === null) {
+        alert("College ID is missing or rating not selected.");
         return;
       }
 
       const reviewData = {
         id,
         studentMobile: values.studentMobile,
-        starRating: values.rating,
+        starRating: selectedRating,
         description: values.comment,
       };
 
@@ -59,13 +62,15 @@ const ReviewPage = () => {
 
       {id ? (
         <p className="mb-4 text-gray-600">
-          College ID: <strong>{id}</strong>
+          College Name: <strong>{reviewCollegeName}</strong>
         </p>
       ) : (
-        <p className="text-red-600 font-bold">College ID not found. Please check the URL.</p>
+        <p className="text-red-600 font-bold">
+          College ID not found. Please check the URL.
+        </p>
       )}
 
-      {mutation.isSuccess && (
+      {showSuccess && (
         <p className="text-green-600 bg-green-100 p-2 rounded text-center">
           ✅ Review submitted successfully!
         </p>
@@ -87,25 +92,24 @@ const ReviewPage = () => {
             {...formik.getFieldProps("studentMobile")}
           />
           {formik.touched.studentMobile && formik.errors.studentMobile && (
-            <div className="text-red-500 text-sm">{formik.errors.studentMobile}</div>
+            <div className="text-red-500 text-sm">
+              {formik.errors.studentMobile}
+            </div>
           )}
         </div>
 
-        <div className="mb-3">
-          <select
-            name="rating"
-            className="w-full p-2 border rounded"
-            {...formik.getFieldProps("rating")}
-          >
-            {[5, 4, 3, 2, 1].map((num) => (
-              <option key={num} value={num}>
-                {num} Star{num > 1 ? "s" : ""}
-              </option>
-            ))}
-          </select>
-          {formik.touched.rating && formik.errors.rating && (
-            <div className="text-red-500 text-sm">{formik.errors.rating}</div>
-          )}
+        <div className="mb-3 flex space-x-2">
+          {[1, 2, 3, 4, 5].map((num) => (
+            <span
+              key={num}
+              className={`cursor-pointer text-3xl ${
+                num <= selectedRating ? "text-yellow-500" : "text-gray-400"
+              }`}
+              onClick={() => setSelectedRating(num)}
+            >
+              ★
+            </span>
+          ))}
         </div>
 
         <div className="mb-3">
@@ -124,9 +128,11 @@ const ReviewPage = () => {
         <button
           type="submit"
           className={`w-full p-2 rounded text-white ${
-            mutation.isLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+            mutation.isLoading || selectedRating === null
+              ? "bg-gray-400"
+              : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={mutation.isLoading}
+          disabled={mutation.isLoading || selectedRating === null}
         >
           {mutation.isLoading ? "Submitting..." : "Submit Review"}
         </button>

@@ -17,18 +17,14 @@ export const handleReviews = async (action, payload = {}) => {
     if (action === "fetch") {
       const { id } = payload;
       if (!id) throw new Error("College ID is required to fetch reviews.");
-      response = await axios.get(`${BASE_URL}/reviews/${id}?type=college`);
-    } 
-    
-    else if (action === "submit") {
+      response = await axios.get(`${BASE_URL}/api/reviews/${id}?type=college`);
+    } else if (action === "submit") {
       response = await axios.post(
-        `${BASE_URL}/reviews/create?type=college`,
+        `${BASE_URL}/api/reviews/create?type=college`,
         payload,
         { headers: { "Content-Type": "application/json" } }
       );
-    } 
-    
-    else {
+    } else {
       throw new Error("Invalid action. Use 'fetch' or 'submit'.");
     }
 
@@ -36,8 +32,9 @@ export const handleReviews = async (action, payload = {}) => {
       throw new Error(response.data?.message || "Request failed.");
     }
 
-    return action === "fetch" ? JSON.parse(response.data.data || "[]") : response.data;
-
+    return action === "fetch"
+      ? JSON.parse(response.data.data || "[]")
+      : response.data;
   } catch (error) {
     throw error.response?.data || error.message;
   }

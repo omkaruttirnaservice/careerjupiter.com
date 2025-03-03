@@ -8,17 +8,17 @@ import { BACKEND_SERVER_IP } from "../Constant/constantData";
 
 const CardDetails = () => {
   const navItem = [
-    "Overview",
+    // "Overview",
     "Courses & Fees",
-    "Scholarship",
+    // "Scholarship",
     "Placements",
-    "CutOffs",
-    "Ranking",
+    // "CutOffs",
+    // "Ranking",
     "Infrastructure",
     "Gallery",
     "Reviews",
-    "News",
-    "QnA",
+    // "News",
+    // "QnA",
   ];
 
   const { id } = useParams();
@@ -154,7 +154,7 @@ const CardDetails = () => {
         </div>
 
         {/* Tabs Section */}
-        <div className="gap-3 md:gap-1 mt-6 border-b flex items-center space-x-2 overflow-x-auto md:justify-start text-gray-600 text-sm scrollbar-hide">
+        <div className="gap-3 md:gap-1 mt-6 border-b flex items-center flex-row space-x-2 overflow-x-auto md:justify-start text-gray-600 text-sm scrollbar-hide">
           {navItem.map((each) => (
             <div
               key={each}
@@ -178,6 +178,7 @@ const CardDetails = () => {
             infrastructure={infrastructure}
             placementData={placements}
             imageGallery={imageGallery}
+            review={college.collegeName}
           />
         </div>
       </div>

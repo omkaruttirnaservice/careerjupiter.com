@@ -15,6 +15,7 @@ const SearchComponent = () => {
     setIsLoading,
     setUniversityData,
     setErrorMsg,
+    setInstitutesData,
   } = useSearchContext();
   const { pathname } = useLocation();
 
@@ -68,7 +69,7 @@ const SearchComponent = () => {
           category: tagName,
           type: pathname.slice(1),
         });
-        // setInstitutesData(data?.data);
+        setInstitutesData(data?.data);
         break;
         
       case navigation[3].href:
@@ -80,7 +81,6 @@ const SearchComponent = () => {
         });
         console.log("Api/university data", );
         setUniversityData(data?.data);
-        setIsLoading(false);
         break;
     }
 

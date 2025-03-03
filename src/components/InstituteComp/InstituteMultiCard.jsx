@@ -2,13 +2,20 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InstituteCard from "./InstituteCard";
 import TagsSection from "./../TagsSection";
+import { useSearchContext } from "../../store/SearchContext";
 
 const InstituteMultiCard = () => {
   const [institutes, setInstitutes] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  let { UniversityData, errorMsg, isLoading, instituteData } =
+    useSearchContext();
+
   const tags = ["All", "Physics", "Maths", "MERN", "English Speaking"];
+
+  console.log("instituteData ........", instituteData);
+  
 
   useEffect(() => {
     const fetchInstitutes = async () => {
