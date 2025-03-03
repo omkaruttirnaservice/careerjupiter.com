@@ -11,7 +11,7 @@ const Card = ({
   state,
   dist,
   accreditation,
-  collegeCategory,
+  Category,
   collegeType,
   onClick,
 }) => {
@@ -49,7 +49,7 @@ const Card = ({
               {collegeType}
             </span>
             <span className="bg-purple-100 text-purple-600 text-xs md:text-sm font-medium px-3 py-1 rounded-full">
-              {collegeCategory}
+              {Category}
             </span>
           </div>
         </div>

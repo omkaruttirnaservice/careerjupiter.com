@@ -62,7 +62,7 @@ const MultiCards = () => {
                 dist={card.address?.dist}
                 accreditation={card.accreditation}
                 collegeType={card.collegeType}
-                collegeCategory={card.collegeCategory}
+                Category={card.Category}
                 rating="4.5"
                 onClick={() => navigate(`/college/${card._id}`)}
               />

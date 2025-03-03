@@ -22,8 +22,12 @@ const UniversityCard = ({ university, onClick }) => {
 
       {/* Card Content */}
       <div className="p-4">
-        <h3 className="text-xl font-bold mb-1">{university.name}</h3>
-
+        <div className="flex flex-row items-center justify-between">
+          <h3 className="text-xl font-bold mb-1">{university.name}</h3>
+          <span className="bg-green-100 text-green-600 text-xs md:text-sm font-medium px-3 py-1 rounded-full">
+            {university.category}
+          </span>
+        </div>
         {/* Location with Icon */}
         <div className="flex items-center text-gray-500 text-sm mb-2">
           <MapPin size={16} className="mr-1 text-red-500" />
@@ -36,10 +40,11 @@ const UniversityCard = ({ university, onClick }) => {
       </div>
 
       {/* Rank Tag with Icon (top-right corner) */}
-      <div className="absolute top-0 right-0 bg-red-500 text-white
-                      text-sm font-semibold px-3 py-1 rounded-bl-lg flex items-center">
-        <Medal size={14} className="mr-1" />
-        #{university.rank}
+      <div
+        className="absolute top-0 right-0 bg-red-500 text-white
+                      text-sm font-semibold px-3 py-1 rounded-bl-lg flex items-center"
+      >
+        <Medal size={14} className="mr-1" />#{university.rank}
       </div>
     </div>
   );

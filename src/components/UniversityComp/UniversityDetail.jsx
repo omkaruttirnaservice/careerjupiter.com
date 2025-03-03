@@ -7,10 +7,17 @@ import PlacementOpportunities from './PlacementOpportunities';
 import OfferedCourse from './OfferedCourse';
 import UniversityRanking from './UniversityRanking';
 import UniversityInformation from './UniversityInformation';
+import { getUniversity } from './Api';
+import { useQuery } from '@tanstack/react-query';
 
 const UniversityDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+
+      const { data } = useQuery({
+        queryKey: ["university", id],
+        queryFn: () => getUniversity(id),
+      });
     
 
     const universities = [

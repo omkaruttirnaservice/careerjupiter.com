@@ -78,10 +78,11 @@ const SearchComponent = () => {
         });
         console.log("Api/university data", );
         setUniversityData(data?.data);
+        setIsLoading(false);
         break;
     }
 
-  },[data])
+  },[data]);
 
   useEffect(() => {
     setIsLoading(isPending);
