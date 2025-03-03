@@ -9,8 +9,10 @@ const UniversityMultiCard = () => {
 
   const { UniversityData } = useSearchContext();
 
-  console.log("universityData inside university component:.....",UniversityData?.data);
-  
+  console.log(
+    "universityData inside university component:++++.....",
+    UniversityData
+  );
 
   const tags = ["All", "Harvard University", "Stanford University"];
 
@@ -79,7 +81,7 @@ const UniversityMultiCard = () => {
 
   return (
     <div className="mt-10">
-    <TagsSection tags={tags}/>
+      <TagsSection tags={tags} />
       <div className="bg-gray-30 py-10">
         <div className="container mx-auto px-4">
           {/* Page Title */}
