@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InstituteCard from "./InstituteCard";
 import TagsSection from "./../TagsSection";
+import { searchCollege } from "../SearchComp/Api";
 
 const InstituteMultiCard = () => {
   const [institutes, setInstitutes] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const tags = ["All", "Physics", "Maths", "MERN", "English Speaking"];
+  const tags = ["All","Diploma","Engineering"];
 
   useEffect(() => {
     const fetchInstitutes = async () => {
