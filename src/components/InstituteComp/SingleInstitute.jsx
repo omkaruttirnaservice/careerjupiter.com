@@ -2,16 +2,28 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import CourseMultiCard from "./CourseMultiCard";
 
+// Fetch class details and courses
 const fetchInstitute = async (id) => {
+  // Fetch class details
   const response = await fetch(`http://192.168.1.5:5000/api/class/${id}`);
   if (!response.ok) {
     throw new Error("Failed to fetch class details");
   }
   const result = await response.json();
-  if (result.success && result.data) {
-    return JSON.parse(result.data); // Parse the nested JSON string
+  if (!(result.success && result.data)) {
+    throw new Error(result.errMsg || "Failed to fetch class details");
   }
-  throw new Error(result.errMsg || "Failed to fetch class details");
+  const parsedData = JSON.parse(result.data);
+
+  // Fetch courses
+  const courseResponse = await fetch(`http://192.168.1.5:5000/api/class/course/${id}`);
+  if (!courseResponse.ok) {
+    throw new Error("Failed to fetch courses");
+  }
+  const courseResult = await courseResponse.json();
+  const parsedCourses = courseResult.success ? JSON.parse(courseResult.data).courses[0]?.courses || [] : [];
+
+  return { ...parsedData, courses: parsedCourses };
 };
 
 const SingleInstitute = () => {
@@ -38,6 +50,7 @@ const SingleInstitute = () => {
 
   return (
     <>
+      {/* Class Header */}
       <div className="flex items-center justify-center bg-gray-100 relative">
         <div className="w-full relative">
           <div
@@ -96,27 +109,59 @@ const SingleInstitute = () => {
         </div>
       </div>
 
-      <section className="mt-20 p-8 bg-gray-50 rounded-lg">
-        <h2 className="text-2xl font-bold mb-4">Courses Available</h2>
-        {courses && courses.length > 0 ? (
-          courses.map((course) => (
-            <div key={course._id} className="p-4 mb-4 border rounded-md bg-white">
-              <h3 className="text-xl font-semibold">{course.courseName}</h3>
-              <p>Type: {course.courseType}</p>
-              <p>Duration: {course.duration}</p>
-              <p>Fee: ₹{course.feeStructure?.amount} ({course.feeStructure?.type})</p>
-              <p>Scholarship: {course.scholarshipOrDiscounts || "N/A"}</p>
-              <p>Study Material Provided: {course.studyMaterialProvided ? "Yes" : "No"}</p>
-            </div>
-          ))
-        ) : (
-          <p>No courses available.</p>
-        )}
-      </section>
+      {/* Courses Section */}
+      <section className="mt-20 p-10 bg-gradient-to-br  rounded-lg shadow-2xl">
+  <h2 className="text-5xl font-extrabold text-center text-black mb-10 tracking-wide">
+    🚀 Discover Our Trending Courses
+  </h2>
 
-      <CourseMultiCard />
+  {courses && courses.length > 0 ? (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {courses.map((course) => (
+        <div
+          key={course._id}
+          className="bg-gradient-to-r from-indigo-500 to-blue-500 rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-300 hover:shadow-2xl"
+        >
+          {/* Header */}
+          <div className="p-6 text-white">
+            <h3 className="text-3xl font-bold">{course.courseName}</h3>
+            <p className="text-lg opacity-80 mt-2">{course.courseType}</p>
+          </div>
 
-      
+          {/* Details */}
+          <div className="p-6 bg-white text-gray-800 space-y-4">
+            <p className="flex items-center gap-2">
+              📅 <strong>Duration:</strong> {course.duration}
+            </p>
+            <p className="flex items-center gap-2">
+              💸 <strong>Fee:</strong> ₹{course.feeStructure?.amount} ({course.feeStructure?.type})
+            </p>
+            <p className="flex items-center gap-2">
+              🎁 <strong>Scholarship:</strong> {course.scholarshipOrDiscounts || "N/A"}
+            </p>
+            <p className="flex items-center gap-2">
+              📚 <strong>Study Material:</strong> {course.studyMaterialProvided ? "Yes" : "No"}
+            </p>
+          </div>
+
+          {/* CTA */}
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-center">
+            {/* <button className="w-full bg-white text-blue-600 font-bold py-3 rounded-lg hover:bg-blue-500 hover:text-white transition-all duration-300">
+              Enroll Now 🚀
+            </button> */}
+          </div>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p className="text-center text-white text-lg mt-10">
+      No courses available at the moment. Stay tuned! 📚
+    </p>
+  )}
+</section>
+
+
+      {/* <CourseMultiCard /> */}
     </>
   );
 };
