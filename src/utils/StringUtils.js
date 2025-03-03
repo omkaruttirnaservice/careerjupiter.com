@@ -1,5 +1,7 @@
-export const toPascalCase = (str) => {
-  return str
-    .replace(/[_\s-]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ""))
-    .replace(/^(.)/, (match) => match.toUpperCase());
-};
+export function toPascalCase(str) {
+  if (!str) return ""; // Handle undefined or null input
+  return str.replace(
+    /\w+/g,
+    (w) => w[0].toUpperCase() + w.slice(1).toLowerCase()
+  );
+}
