@@ -68,7 +68,9 @@ const SearchComponent = () => {
           category: tagName,
           type: pathname.slice(1),
         });
+        // setInstitutesData(data?.data);
         break;
+        
       case navigation[3].href:
         console.log("Api/university", { tagName }, { query }, { pathname });
         setSearchParams({
@@ -77,7 +79,7 @@ const SearchComponent = () => {
           type: pathname.slice(1),
         });
         console.log("Api/university data", );
-        setUniversityData(data?.data);
+        // setUniversityData(data?.data);
         break;
     }
 

@@ -4,7 +4,7 @@ import { BASE_URL } from "../../utils/constansts";
 
 export const loginUser = async (userData) => {
   try {
-    const response = await fetch(BASE_URL, {
+    const response = await fetch(`${BASE_URL}/api/auth/signin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

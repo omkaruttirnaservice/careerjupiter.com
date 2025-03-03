@@ -4,7 +4,7 @@ import { BASE_URL } from '../../utils/constansts';
 
 export const searchCollege = async ({ searchKey, category, type }) => {
 	const response = await axios.get(
-		`${BASE_URL}/api/search/?searchKey=${searchKey}&category=${category}&type=${type}`
+		`${BASE_URL}/api/search/?searchKey=${searchKey}&Category=${category}&type=${type}`
 	);
 	return response.data;
 };
