@@ -14,6 +14,7 @@ import Roadmap from '../components/Roadmap';
 import UniversityDetail from '../components/UniversityComp/UniversityDetail';
 import UniversityMultiCard from '../components/UniversityComp/UniversityMultiCard';
 import ReviewPage from '../components/navComp/ReviewPage';
+// import ClassesList from './InstituteComp/ClassesList.jsx';
 
 export const router = createBrowserRouter([
 	{

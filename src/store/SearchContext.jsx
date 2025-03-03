@@ -15,6 +15,7 @@ const SearchContextProvider = ({ children }) => {
   const [UniversityData, setUniversityData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState();
+  const [instituteData,setInstitutesData] = useState([]) 
 
   let value = {
     tags,
@@ -30,6 +31,9 @@ const SearchContextProvider = ({ children }) => {
     setErrorMsg,
     UniversityData,
     setUniversityData,
+    instituteData,
+    setInstitutesData,
+    
   };
 
   return (
