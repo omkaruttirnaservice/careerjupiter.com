@@ -40,8 +40,8 @@ export const router = createBrowserRouter([
 
 	{ path: '/dashboard', element: <Dashboard /> },
 
-	{ path: '/login', element: <LoginPage /> },
-	{ path: '/signin', element: <MultiStepForm /> },
+	{ path: '/signin', element: <LoginPage /> },
+	{ path: '/signup', element: <MultiStepForm /> },
 	{ path: '/roadmap', element: <Roadmap /> },
 	{ path: '/iq', element: <IQTest /> },
 ]);
