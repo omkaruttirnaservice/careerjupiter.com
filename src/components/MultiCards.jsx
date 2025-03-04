@@ -1,29 +1,30 @@
-import Card from "./Card";
 import { useNavigate } from "react-router-dom";
 import TagsSection from "./TagsSection";
 import { useSearchContext } from "../store/SearchContext";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
 import { BACKEND_SERVER_IP } from "../Constant/constantData";
+import { FaMapMarkerAlt } from "react-icons/fa"; // Import icon
+
 
 const MultiCards = () => {
   const navigate = useNavigate();
-
   let { tags, collegesData, errorMsg, isLoading } = useSearchContext();
 
   useEffect(() => {
-    toast.error(errorMsg || "Server error");
+    if (errorMsg) {
+      toast.error(errorMsg || "Server error");
+    }
   }, [errorMsg]);
 
   return (
     <>
+      {/* Tags Section */}
       <TagsSection tags={tags} />
 
+      {/* Loader */}
       {isLoading && (
-        <div
-          role="status"
-          className="h-48 w-dvw flex flex-row gap-3 items-center justify-center"
-        >
+        <div className="h-48 w-full flex items-center justify-center gap-3">
           <svg
             aria-hidden="true"
             className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
@@ -40,32 +41,80 @@ const MultiCards = () => {
               fill="currentFill"
             />
           </svg>
-          <p>Searching.......</p>
+          <p className="text-gray-600">Searching.......</p>
         </div>
       )}
+
+      {/* No Data Found */}
       {!isLoading && collegesData?.length === 0 && (
         <h1 className="text-red-500 text-center mt-5">No data found.</h1>
       )}
 
-      {!isLoading && collegesData?.length !== 0 && (
-        <div className="mt-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 m-5">
-            {collegesData?.map((card, index) => (
-              <Card
+      {/* College Cards */}
+      {!isLoading && collegesData?.length > 0 && (
+        <div className="mt-10 px-4">
+          <h2 className="text-3xl font-bold text-center mb-6">
+            Explore Top Colleges
+          </h2>
+          <p className="text-center text-gray-600 mb-10 max-w-xl mx-auto">
+            Find the best colleges with outstanding programs and excellent learning
+            opportunities.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {collegesData?.map((college, index) => (
+              <div
                 key={index}
-                id={card._id}
-                card={card}
-                image={card.image}
-                name={card.collegeName}
-                description={card.info?.description}
-                state={card.address?.state}
-                dist={card.address?.dist}
-                accreditation={card.accreditation}
-                collegeType={card.collegeType}
-                Category={card.Category}
-                rating="4.5"
-                onClick={() => navigate(`/college/${card._id}`)}
-              />
+                className="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-transform duration-200 cursor-pointer"
+                onClick={() => navigate(`/college/${college._id}`)}
+              >
+                {college.image && (
+                  <img
+                    src={`${BACKEND_SERVER_IP}${college.image}`}
+                    alt={college.collegeName || "College Image"}
+                    className="w-full h-48 object-cover"
+                    loading="lazy"
+                  />
+                )}
+                <div className="p-5">
+                  <h3 className="text-xl font-semibold">{college.collegeName}</h3>
+                  <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
+                    <FaMapMarkerAlt className="text-red-500" /> {/* Red Location Icon */}
+                    {college.address?.state}, {college.address?.dist}
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm line-clamp-3">
+                    {college.info?.description || "No description available."}
+                  </p>
+
+                  {/* Tags Section */}
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {college.tags?.map((tag, i) => (
+                      <span
+                        key={i}
+                        className="bg-gray-200 text-gray-700 text-xs font-semibold px-3 py-1 rounded-full"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Category & Accreditation */}
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    <span className="bg-blue-100 text-blue-600 text-xs font-semibold px-3 py-1 rounded-full">
+                      {college.collegeType}
+                    </span>
+                    {college.Category && (
+                      <span className="bg-green-100 text-green-600 text-xs font-semibold px-3 py-1 rounded-full">
+                        {college.Category}
+                      </span>
+                    )}
+                    {college.accreditation && (
+                      <span className="bg-purple-100 text-purple-600 text-xs font-semibold px-3 py-1 rounded-full">
+                        {college.accreditation}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
