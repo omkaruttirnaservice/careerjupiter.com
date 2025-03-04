@@ -14,6 +14,7 @@ import Roadmap from '../components/Roadmap';
 import UniversityDetail from '../components/UniversityComp/UniversityDetail';
 import UniversityMultiCard from '../components/UniversityComp/UniversityMultiCard';
 import ReviewPage from '../components/navComp/ReviewPage';
+import MyEligibility from './eligibility/MyEligibility.jsx';
 // import ClassesList from './InstituteComp/ClassesList.jsx';
 
 export const router = createBrowserRouter([
@@ -44,6 +45,7 @@ export const router = createBrowserRouter([
 	{ path: '/signup', element: <MultiStepForm /> },
 	{ path: '/roadmap', element: <Roadmap /> },
 	{ path: '/iq', element: <IQTest /> },
+	{ path: '/myeligibility', element: <MyEligibility /> },
 ]);
 
 // unused repeated
