@@ -881,7 +881,7 @@ export const cityData = [
 export const navigation = [
   { name: "Home", href: "/" },
   { name: "College", href: "/college" },
-  { name: "Class", href: "/institute" },
+  { name: "Class", href: "/class" },
   { name: "University", href: "/university" },
 ];
 

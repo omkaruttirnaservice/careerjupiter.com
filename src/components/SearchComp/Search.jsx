@@ -14,8 +14,8 @@ const SearchComponent = () => {
     setCollegesData,
     setIsLoading,
     setUniversityData,
-    setErrorMsg,
     setInstitutesData,
+    setErrorMsg,
   } = useSearchContext();
   const { pathname } = useLocation();
 
@@ -25,9 +25,15 @@ const SearchComponent = () => {
     type: "",
   });
 
-  const { data, isPending, isError, error, refetch } = useQuery({
+  const getPathType = () => {
+    const pathParts = pathname.split("/");
+    return pathParts.length > 2 ? pathParts[1] : pathname.slice(1);
+  };
+
+  const { data, isPending, isError, error } = useQuery({
     queryKey: ["colleges", searchParams],
     queryFn: () => searchCollege(searchParams),
+    // enabled: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retry: false,
@@ -48,13 +54,12 @@ const SearchComponent = () => {
 
   useEffect(() => {
     if (data?.data) {
-      //
       setCollegesData(data.data);
       setIsLoading(false);
     }
   }, [data]);
 
-  useEffect(()=>{
+  useEffect(() => {
     switch (pathname) {
       case navigation[1].href:
         setSearchParams({
@@ -71,7 +76,7 @@ const SearchComponent = () => {
         });
         setInstitutesData(data?.data);
         break;
-        
+
       case navigation[3].href:
         console.log("Api/university", { tagName }, { query }, { pathname });
         setSearchParams({
@@ -79,12 +84,11 @@ const SearchComponent = () => {
           category: tagName,
           type: pathname.slice(1),
         });
-        console.log("Api/university data", );
+        console.log("Api/university data");
         setUniversityData(data?.data);
         break;
     }
-
-  },[data]);
+  }, [data]);
 
   useEffect(() => {
     setIsLoading(isPending);
@@ -92,21 +96,26 @@ const SearchComponent = () => {
 
   useEffect(() => {
     if (isError) {
+      setErrorMsg(error);
       setCollegesData([]);
+      setInstitutesData([]);
+      setUniversityData([]);
     }
   }, [isError]);
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
     setQuery(inputValue);
+    setIsLoading(true);
   };
 
   const handleSearch = () => {
     setSearchParams((prev) => {
+      const type = getPathType();
       const newParams = {
         searchKey: query,
         category: tagName,
-        type: pathname.slice(1),
+        type
       };
       return newParams;
     });

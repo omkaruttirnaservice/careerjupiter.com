@@ -28,8 +28,8 @@ export const router = createBrowserRouter([
 			{ path: 'university', element: <UniversityMultiCard /> },
 			{ path: 'university/:id', element: <UniversityDetail /> },
 
-			{ path: 'institute', element: <InstituteMultiCard /> },
-			{ path: 'institute/:id', element: <SingleInstitute /> },
+			{ path: 'class', element: <InstituteMultiCard /> },
+			{ path: 'class/:id', element: <SingleInstitute /> },
 
 			{ path: 'reviews/:id', element: <ReviewPage /> },
 

@@ -2,7 +2,6 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { FaMapMarkerAlt, FaPhoneAlt, FaCalendarAlt } from 'react-icons/fa'; // Added calendar icon
-import { fetchUniversityById } from './Api'; // API call
 import UniversityRanking from './UniversityRanking';
 import OfferedCourse from './OfferedCourse';
 import PlacementOpportunities from './PlacementOpportunities';
@@ -12,13 +11,6 @@ import InquiryForm from './InquiryForm';
 const UniversityDetail = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
-
-	// Fetch university data using react-query
-	const { data, isLoading, isError, error } = useQuery({
-		queryKey: ['university', id],
-		queryFn: () => fetchUniversityById(id),
-		staleTime: 5 * 60 * 1000,
-	});
 
 	if (isLoading) {
 		return (

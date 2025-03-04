@@ -3,12 +3,15 @@ import { useSearchContext } from "../store/SearchContext";
 
 const TagsSection = ({ tags }) => {
   const [selectedTag, setSelectedTag] = useState("All");
-  const { setTagName ,setIsLoading } = useSearchContext();
+  const { setTagName, setIsLoading, setUniversityData, setInstitutesData } =
+    useSearchContext();
 
   const handleSelectedTab = (value) => {
     setSelectedTag(value);
     setTagName(value);
     setIsLoading(true);
+    setUniversityData([]);
+    setInstitutesData([]);
   };
 
   useLayoutEffect(() => {

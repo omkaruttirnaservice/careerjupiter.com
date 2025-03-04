@@ -1,4 +1,5 @@
 import { FaTrophy, FaChartLine, FaTags, FaMapMarkerAlt } from "react-icons/fa";
+import { BACKEND_SERVER_IP } from "../../Constant/constantData";
 
 const InstituteCard = ({ institute, onClick }) => {
   return (
@@ -9,43 +10,53 @@ const InstituteCard = ({ institute, onClick }) => {
       {/* Image */}
       <img
         className="w-full h-60 object-cover"
-        src={institute.image || "https://via.placeholder.com/600"}
-        alt={institute.name || "Institute Image"}
+        src={`${BACKEND_SERVER_IP}${institute.image}`}
+        alt={institute.className || "Institute Image"}
       />
 
       {/* Content */}
       <div className="p-6">
-        <h2 className="text-3xl font-bold text-gray-800 mb-3">
-          {institute.name || "Institute Name"}
+        <h2 className="text-xl font-bold text-gray-800 mb-3">
+          {institute.className || "Institute Name"}
         </h2>
 
         {/* Rank & Success Ratio */}
         <div className="flex justify-between items-center mb-4 text-sm text-gray-700">
           <div className="flex items-center space-x-2">
             <FaTrophy className="text-yellow-500" />
-            <p><strong>Rank:</strong> {institute.rank || "N/A"}</p>
+            <p>
+              <strong>Rank:</strong> {institute.rank || "N/A"}
+            </p>
           </div>
           <div className="flex items-center space-x-2">
             <FaChartLine className="text-green-500" />
-            <p><strong>Success Ratio:</strong> {institute.studentSuccessRatio || "N/A"}</p>
+            <p>
+              <strong>Success Ratio:</strong>{" "}
+              {institute.studentSuccessRatio || "N/A"}
+            </p>
           </div>
         </div>
 
         {/* Category */}
         <div className="flex items-center space-x-2 text-sm text-gray-700 mb-3">
           <FaTags className="text-blue-500" />
-          <p><strong>Category:</strong> {institute.category || "N/A"}</p>
+          <p>
+            <strong>Category:</strong> {institute.Category || "N/A"}
+          </p>
         </div>
 
         {/* Location */}
         <div className="flex items-center space-x-2 text-sm text-gray-700">
           <FaMapMarkerAlt className="text-red-500" />
-          <p><strong>Location:</strong> {institute.location || "N/A"}</p>
+          <p>
+            <strong>Location:</strong>{" "}
+            {`${institute.address.dist}, ${institute.address.state}` || "N/A"}
+          </p>
         </div>
 
         {/* Description */}
         <p className="text-gray-600 text-sm mt-4 line-clamp-3">
-          {institute.description || "No description available."}
+          {institute.info.description || "No description available."}
         </p>
       </div>
     </div>

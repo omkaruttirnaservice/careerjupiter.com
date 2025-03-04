@@ -154,21 +154,28 @@ const CardDetails = () => {
         </div>
 
         {/* Tabs Section */}
-        <div className="gap-3 md:gap-1 mt-6 border-b flex items-center flex-row space-x-2 overflow-x-auto md:justify-start text-gray-600 text-sm scrollbar-hide">
-          {navItem.map((each) => (
-            <div
-              key={each}
-              ref={(el) => (tabRefs.current[each] = el)}
-              onClick={() => handleNavName(each)}
-              className={`cursor-pointer h-10 flex items-center justify-center px-4 whitespace-nowrap transition-all rounded-md ${
-                each === navName
-                  ? "text-blue-600 hover:bg-gray-200 border-b-2 border-blue-600 font-semibold"
-                  : "text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              {each}
+
+        <div className="relative mt-6 border-b text-gray-600 text-sm">
+          <div className="flex justify-center">
+            <div className="flex items-center overflow-x-auto scrollbar-hide scroll-smooth w-full max-w-3xl justify-center md:space-x-2">
+              <div className="flex space-x-4 md:space-x-6 px-4 md:px-0 overflow-x-auto scrollbar-hide">
+                {navItem.map((each) => (
+                  <div
+                    key={each}
+                    ref={(el) => (tabRefs.current[each] = el)}
+                    onClick={() => handleNavName(each)}
+                    className={`cursor-pointer h-10 px-4 whitespace-nowrap transition-all rounded-md snap-start ${
+                      each === navName
+                        ? "text-blue-600 hover:bg-gray-200 border-b-2 border-blue-600 font-semibold"
+                        : "text-gray-600 hover:bg-gray-200"
+                    }`}
+                  >
+                    {each}
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
+          </div>
         </div>
 
         <div ref={sectionRef} className="mt-4">

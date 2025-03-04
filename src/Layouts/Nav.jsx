@@ -6,7 +6,7 @@ import { useSearchContext } from "../store/SearchContext";
 import { navigation } from "../Constant/constantData";
 
 const Nav = () => {
-  const { setTagName, setQuery } = useSearchContext();
+  const { setTagName, setQuery, setIsLoading } = useSearchContext();
 
   return (
     <>
@@ -51,6 +51,7 @@ const Nav = () => {
                     onClick={() => {
                       setTagName("All");
                       setQuery("");
+                      setIsLoading(true);
                     }}
                     className={({ isActive }) =>
                       `font-medium hover:text-gray-900 ${
