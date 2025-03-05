@@ -5,13 +5,11 @@ import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ShowReviews from "./ReviewList";
 import { handleReviews } from "./Api";
-
 const ReviewPage = ({ reviewCollegeName }) => {
   const { id } = useParams();
   const queryClient = useQueryClient();
   const [selectedRating, setSelectedRating] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
-
   // Submit review mutation
   const mutation = useMutation({
     mutationFn: (reviewData) => handleReviews("submit", reviewData),
@@ -26,7 +24,6 @@ const ReviewPage = ({ reviewCollegeName }) => {
       console.error("Error submitting review:", error.message);
     },
   });
-
   // Formik setup
   const formik = useFormik({
     initialValues: {
@@ -44,22 +41,18 @@ const ReviewPage = ({ reviewCollegeName }) => {
         alert("College ID is missing or rating not selected.");
         return;
       }
-
       const reviewData = {
         id,
         studentMobile: values.studentMobile,
         starRating: selectedRating,
         description: values.comment,
       };
-
       mutation.mutate(reviewData); // Submit review
     },
   });
-
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">Leave a Review</h2>
-
       {id ? (
         <p className="mb-4 text-gray-600">
           College Name: <strong>{reviewCollegeName}</strong>
@@ -75,13 +68,11 @@ const ReviewPage = ({ reviewCollegeName }) => {
           ✅ Review submitted successfully!
         </p>
       )}
-
       {mutation.isError && (
         <p className="text-red-600 bg-red-100 p-2 rounded text-center">
-          ❌ Failed to submit review. Please try again.
+          :x: Failed to submit review. Please try again.
         </p>
       )}
-
       <form onSubmit={formik.handleSubmit} className="mb-6">
         <div className="mb-3">
           <input
@@ -97,7 +88,6 @@ const ReviewPage = ({ reviewCollegeName }) => {
             </div>
           )}
         </div>
-
         <div className="mb-3 flex space-x-2">
           {[1, 2, 3, 4, 5].map((num) => (
             <span
@@ -111,7 +101,6 @@ const ReviewPage = ({ reviewCollegeName }) => {
             </span>
           ))}
         </div>
-
         <div className="mb-3">
           <textarea
             name="comment"
@@ -124,7 +113,6 @@ const ReviewPage = ({ reviewCollegeName }) => {
             <div className="text-red-500 text-sm">{formik.errors.comment}</div>
           )}
         </div>
-
         <button
           type="submit"
           className={`w-full p-2 rounded text-white ${
@@ -137,10 +125,8 @@ const ReviewPage = ({ reviewCollegeName }) => {
           {mutation.isLoading ? "Submitting..." : "Submit Review"}
         </button>
       </form>
-
       <ShowReviews />
     </div>
   );
 };
-
 export default ReviewPage;
