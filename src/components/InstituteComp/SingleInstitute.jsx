@@ -4,6 +4,8 @@ import { BASE_URL } from '../../utils/constansts';
 import { BACKEND_SERVER_IP } from '../../Constant/constantData';
 import ImageGallery from './ImageGallery';
 import FacultyDetails from './FacultyDetails';
+import Reviewpage from './Reviewpage';
+
 
 const fetchInstitute = async (id) => {
 	const response = await fetch(`${BASE_URL}/api/class/${id}`);
@@ -122,7 +124,7 @@ const SingleInstitute = () => {
 								</span>
 							</div>
 						</div>
-
+						
 						{/* Owner Info */}
 						<div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center text-gray-700 space-y-2 sm:space-y-0">
 							<p className="text-sm sm:text-base">
@@ -154,9 +156,13 @@ const SingleInstitute = () => {
 						</div>
 					</div>
 				</div>
+
+
 			</div>
 
-			<section className="mt-20 p-4 bg-gray-50 rounded-lg">
+			<Reviewpage />
+
+			{/* <section className="mt-20 p-4 bg-gray-50 rounded-lg">
 				<h2 className="text-2xl font-bold mb-8 text-center">
 					Courses Available
 				</h2>
@@ -195,10 +201,11 @@ const SingleInstitute = () => {
 				) : (
 					<p className="text-center text-gray-600">No courses available.</p>
 				)}
-			</section>
+			</section> */}
 
 			<ImageGallery />
 			<FacultyDetails />
+			<ReviewPage/>
 		</>
 	);
 };

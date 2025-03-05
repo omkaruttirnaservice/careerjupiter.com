@@ -32,6 +32,8 @@ const FacultyDetails = () => {
   }
 
   const faculty = institute?.class?.faculty_Details || [];
+  const staf_profile = institute?.class?.staff_profile || [];
+  console.log("profile",staf_profile)
   console.log( " faculty details",faculty)
 
   if (!faculty.length) {
@@ -53,7 +55,7 @@ const FacultyDetails = () => {
         >
           <div className="relative">
             <img
-              src={`${BASE_URL}${member.image}`}
+              src={`${BASE_URL}${member.staff_profile}`}
               alt={member.name}
               className="w-28 h-28 rounded-full object-cover mb-4 border-4 border-indigo-300 shadow-lg"
             />
