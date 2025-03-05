@@ -15,6 +15,7 @@ import UniversityDetail from '../components/UniversityComp/UniversityDetail';
 import UniversityMultiCard from '../components/UniversityComp/UniversityMultiCard';
 import ReviewPage from '../components/navComp/ReviewPage';
 import ProfileDB from './ProfileDashboard/ProfileDB.jsx';
+import MyEligibility from './eligibility/MyEligibility.jsx';
 // import ClassesList from './InstituteComp/ClassesList.jsx';
 
 export const router = createBrowserRouter([
@@ -41,11 +42,11 @@ export const router = createBrowserRouter([
 
   { path: "/dashboard", element: <Dashboard /> },
 
-  { path: "/signin", element: <LoginPage /> },
-  { path: "/signup", element: <MultiStepForm /> },
-  { path: "/roadmap", element: <Roadmap /> },
-  { path: "/iq", element: <IQTest /> },
-  { path: "/profile", element: <ProfileDB /> },
+	{ path: '/signin', element: <LoginPage /> },
+	{ path: '/signup', element: <MultiStepForm /> },
+	{ path: '/roadmap', element: <Roadmap /> },
+	{ path: '/iq', element: <IQTest /> },
+	{ path: '/myeligibility', element: <MyEligibility /> },
 ]);
 
 // unused repeated
