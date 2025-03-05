@@ -6,8 +6,7 @@ import { fetchUniversityById } from './Api'; // API call
 import UniversityRanking from './UniversityRanking';
 import OfferedCourse from './OfferedCourse';
 import PlacementOpportunities from './PlacementOpportunities';
-import EntranceExam from './EntranceExam';
-import InquiryForm from './InquiryForm';
+
 
 const UniversityDetail = () => {
 	const { id } = useParams();
@@ -66,7 +65,7 @@ const UniversityDetail = () => {
 				<div className="bg-white shadow-md rounded-lg p-6">
 					{/* Location */}
 					<div className="flex items-center mb-6">
-						<FaMapMarkerAlt className="text-red-500 text-2xl mr-2" />
+						<FaMapMarkerAlt className="text-red-500 text-3xl mr-2" />
 						<h2 className="text-3xl font-bold text-gray-800">Location</h2>
 					</div>
 					<p className="text-lg text-gray-600 mb-4">
@@ -94,12 +93,12 @@ const UniversityDetail = () => {
 					<div className="flex items-center mb-8">
 						<FaPhoneAlt className="text-green-600 text-xl mr-2" />
 						<p className="text-lg text-gray-700">
-							{uni.contactDetails?.phoneNumber || 'No contact available'}
+							{uni.contactDetails?.phoneNumber || '+91-123 123 123 123'}
 						</p>
 					</div>
 
 					{/* Ranking & Courses */}
-					<UniversityRanking university={uni} />
+					{/* <UniversityRanking university={uni} /> */}
 					<OfferedCourse courses={courses} />
 					<PlacementOpportunities university={uni} />
 

@@ -46,7 +46,7 @@ export const router = createBrowserRouter([
 	{ path: '/signup', element: <MultiStepForm /> },
 	{ path: '/roadmap', element: <Roadmap /> },
 	{ path: '/iq', element: <IQTest /> },
-	{ path: '/myeligibility', element: <MyEligibility /> },
+	{ path: '/my-eligibility', element: <MyEligibility /> },
 	{ path: '/profile', element: <ProfileDB /> },
 ]);
 
