@@ -19,28 +19,28 @@ import MyEligibility from './eligibility/MyEligibility.jsx';
 // import ClassesList from './InstituteComp/ClassesList.jsx';
 
 export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <AppLayout />,
-    children: [
-      { path: "", element: <HeroSection /> },
-      { path: "college", element: <MultiCards /> },
-      { path: "college/:id", element: <CardDetails /> },
+	{
+		path: '/',
+		element: <AppLayout />,
+		children: [
+			{ path: '', element: <HeroSection /> },
+			{ path: 'college', element: <MultiCards /> },
+			{ path: 'college/:id', element: <CardDetails /> },
 
-      { path: "university", element: <UniversityMultiCard /> },
-      { path: "university/:id", element: <UniversityDetail /> },
+			{ path: 'university', element: <UniversityMultiCard /> },
+			{ path: 'university/:id', element: <UniversityDetail /> },
 
-      { path: "class", element: <InstituteMultiCard /> },
-      { path: "class/:id", element: <SingleInstitute /> },
+			{ path: 'class', element: <InstituteMultiCard /> },
+			{ path: 'class/:id', element: <SingleInstitute /> },
 
-      { path: "reviews/:id", element: <ReviewPage /> },
+			{ path: 'reviews/:id', element: <ReviewPage /> },
 
-      { path: "university", element: <UniversityMultiCard /> },
-      { path: "university/:id", element: <UniversityDetail /> },
-    ],
-  },
+			{ path: 'university', element: <UniversityMultiCard /> },
+			{ path: 'university/:id', element: <UniversityDetail /> },
+		],
+	},
 
-  { path: "/dashboard", element: <Dashboard /> },
+	{ path: '/dashboard', element: <Dashboard /> },
 
 	{ path: '/signin', element: <LoginPage /> },
 	{ path: '/signup', element: <MultiStepForm /> },

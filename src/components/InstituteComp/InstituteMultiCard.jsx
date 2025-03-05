@@ -30,7 +30,7 @@ const InstituteMultiCard = () => {
 							<InstituteCard
 								institute={each}
 								key={each.id}
-								onClick={() => navigate(`/institute/${each.id}`)}
+								onClick={() => navigate(`/class/${each._id}`)}
 							/>
 						))}
 					</div>
