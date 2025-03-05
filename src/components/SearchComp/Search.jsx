@@ -17,6 +17,7 @@ const SearchComponent = () => {
     setInstitutesData,
     setErrorMsg,
   } = useSearchContext();
+  
   const { pathname } = useLocation();
 
   const [searchParams, setSearchParams] = useState({
