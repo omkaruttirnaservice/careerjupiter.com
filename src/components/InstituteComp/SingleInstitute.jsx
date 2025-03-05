@@ -70,7 +70,7 @@ const SingleInstitute = () => {
           <div
             className="w-full h-[70vh] bg-cover bg-center relative"
             style={{
-              backgroundImage: `url(${BACKEND_SERVER_IP}${institute.class.staff_Profile})`
+              backgroundImage: `url(${BACKEND_SERVER_IP}${institute.class.image})`
             }}
              >
             {console.log(institute?.class?.image )}
@@ -113,6 +113,11 @@ const SingleInstitute = () => {
     </p>
     <p className="text-sm sm:text-base">
       📞 <span className="font-semibold">Contact:</span> {institute.class.contactDetails || "N/A"}
+      
+    </p>
+    <p className="text-sm sm:text-base">
+      <span className="font-semibold">franchise or Independent:</span> {institute.class.franchiseOrIndependent || "N/A"}
+      
     </p>
     <a
       href={institute.class.websiteURL || "#"}
@@ -122,6 +127,12 @@ const SingleInstitute = () => {
     >
       Visit Website
     </a>
+  </div>
+  <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center text-gray-700 space-y-2 sm:space-y-0">
+    <p className="text-sm sm:text-base">
+      <span className="font-semibold">Established Year:</span> {institute.class.yearEstablished || "N/A"}
+    </p>
+   
   </div>
 </div>
 

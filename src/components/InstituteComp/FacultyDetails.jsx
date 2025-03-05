@@ -39,30 +39,34 @@ const FacultyDetails = () => {
   }
 
   return (
-    <section className="mt-10 p-4 bg-gray-50 rounded-lg">
-      <h2 className="text-2xl font-bold mb-6 text-center">Faculty Members</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {faculty.map((member, index) => (
-          <motion.div 
-            key={index}
-            className="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center text-center hover:shadow-xl transition-shadow duration-300"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: index * 0.2 }}
-          >
-            <img 
-              src={`${BASE_URL}${member.image}`} 
-              alt={member.name} 
-              className="w-24 h-24 rounded-full object-cover mb-4 border-2 border-gray-300" 
+    <section className="mt-10 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-lg">
+    <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Meet Our Faculty</h2>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      {faculty.map((member, index) => (
+        <motion.div
+          key={index}
+          className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center text-center hover:shadow-2xl transition-shadow duration-300 relative overflow-hidden"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: index * 0.2 }}
+          whileHover={{ scale: 1.05 }}
+        >
+          <div className="relative">
+            <img
+              src={`${BASE_URL}${member.image}`}
+              alt={member.name}
+              className="w-28 h-28 rounded-full object-cover mb-4 border-4 border-indigo-300 shadow-lg"
             />
-            <h3 className="text-lg font-semibold">{member.staff_Name
-            }</h3>
-            <p className="text-gray-600 text-sm">{member.subject}</p>
-            <p className="text-gray-500 text-xs">Experience: {member.experiences} years</p>
-          </motion.div>
-        ))}
-      </div>
-    </section>
+            <div className="absolute inset-0 bg-indigo-500 opacity-10 rounded-full"></div>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-800">{member.staff_Name}</h3>
+          <p className="text-gray-600 text-sm mt-1">{member.subject}</p>
+          <p className="text-gray-500 text-xs mt-1">Experience: {member.experiences} years</p>
+          <div className="mt-4 px-4 py-1 text-sm bg-indigo-100 text-indigo-700 rounded-full">Faculty Member</div>
+        </motion.div>
+      ))}
+    </div>
+  </section>
   );
 };
 
