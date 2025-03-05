@@ -47,6 +47,7 @@ export const router = createBrowserRouter([
 	{ path: '/roadmap', element: <Roadmap /> },
 	{ path: '/iq', element: <IQTest /> },
 	{ path: '/myeligibility', element: <MyEligibility /> },
+	{ path: '/profile', element: <ProfileDB /> },
 ]);
 
 // unused repeated
