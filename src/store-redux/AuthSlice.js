@@ -8,7 +8,7 @@ function getCookie(name) {
 		const [key, value] = cookie.split('=');
 		if (key === name) {
 			try {
-				return JSON.parse(decodeURIComponent(value));
+				return decodeURIComponent(value);
 			} catch (error) {
 				console.error('Error parsing cookie:', error);
 			}

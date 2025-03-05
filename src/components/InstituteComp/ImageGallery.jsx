@@ -10,7 +10,7 @@ const fetchInstitute = async (id) => {
     }
     const result = await response.json();
     if (result.success && result.data) {
-      return JSON.parse(result.data); // Parse the nested JSON string
+      return (result.data); // Parse the nested JSON string
     }
     throw new Error(result.errMsg || "Failed to fetch class details");
   };

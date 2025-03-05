@@ -10,5 +10,5 @@ export const userSignUp = (data) => {
 
 export const getCollege = async (id) => {
 	const response = await axios.get(`/api/college/${id}`);
-	return JSON.parse(response.data.data);
+	return response.data.data;
 };

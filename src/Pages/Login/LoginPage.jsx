@@ -34,8 +34,7 @@ const LoginPage = () => {
 				return;
 			}
 
-			let parsedData =
-				typeof data.data === 'string' ? JSON.parse(data.data) : data.data;
+			let parsedData = typeof data.data === 'string' ? data.data : data.data;
 			console.log('parsedData', parsedData);
 
 			const userId =

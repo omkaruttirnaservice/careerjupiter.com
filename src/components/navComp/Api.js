@@ -32,9 +32,7 @@ export const handleReviews = async (action, payload = {}) => {
 			throw new Error(response.data?.message || 'Request failed.');
 		}
 
-		return action === 'fetch'
-			? JSON.parse(response.data.data || '[]')
-			: response.data;
+		return action === 'fetch' ? response.data.data || '[]' : response.data;
 	} catch (error) {
 		throw error.response?.data || error.message;
 	}
