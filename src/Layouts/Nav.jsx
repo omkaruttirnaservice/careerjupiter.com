@@ -21,20 +21,28 @@ const Nav = () => {
               aria-label="Global"
             >
               <div className="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:left-0">
-                <span className="">
-                  <b>CAREER NITI </b>
-                </span>
+
               </div>
               <div className="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
                 <div className="flex items-center justify-between w-full md:w-auto">
                   <a href="#">
                     <span className="sr-only">Workflow</span>
                     <img
-                      className="h-8 w-auto sm:h-10"
-                      src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                      className="h-8 w-auto sm:h-10 mr-3"
+                      src="/c-niti.png"
                       alt=""
                     />
                   </a>
+
+                  {/* <span className=" font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+                    करियर निती
+                  </span> */}
+
+                  <span className=" font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+                 <b>CAREER NITI </b>
+                </span>
+
+
                   <div className="-mr-2 flex items-center md:hidden">
                     <Popover.Button className="bg-gray-50 rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                       <span className="sr-only">Open main menu</span>
@@ -54,10 +62,9 @@ const Nav = () => {
                       setIsLoading(true);
                     }}
                     className={({ isActive }) =>
-                      `font-medium hover:text-gray-900 ${
-                        isActive
-                          ? "text-blue-600 font-semibold"
-                          : "text-gray-500"
+                      `font-medium hover:text-gray-900 ${isActive
+                        ? "text-blue-600 font-semibold"
+                        : "text-gray-500"
                       }`
                     }
                   >

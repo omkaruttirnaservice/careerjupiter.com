@@ -1,359 +1,129 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { FiFilter, FiStar, FiX } from "react-icons/fi"
+import { useState, useEffect } from "react";
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { FiFilter, FiStar, FiX } from "react-icons/fi";
+
+// Create an Axios instance
+const axiosInstance = axios.create({
+  baseURL: 'http://192.168.1.5:5000/api', // Your API base URL
+});
 
 const MyEligibility = () => {
-  const [selectedEducation, setSelectedEducation] = useState("")
-  const [examOptions, setExamOptions] = useState([])
-  const [selectedExam, setSelectedExam] = useState("")
-  const [percentage, setPercentage] = useState("")
-  const [selectedDistrict, setSelectedDistrict] = useState("")
-  const [selectedCaste, setSelectedCaste] = useState("")
-  const [sortOrder, setSortOrder] = useState("")
-  const [colleges, setColleges] = useState([])
-  const [filteredColleges, setFilteredColleges] = useState([])
-  const [showFilter, setShowFilter] = useState(false)
-  const [activeFilters, setActiveFilters] = useState([])
-  const [collegeType, setCollegeType] = useState("")
-  const [ratingFilter, setRatingFilter] = useState("")
-  const [cutoffRange, setCutoffRange] = useState({ min: "", max: "" })
-  const [selectedBranch, setSelectedBranch] = useState("") // State for selected branch
+  const [selectedEducation, setSelectedEducation] = useState("");
+  const [examOptions, setExamOptions] = useState([]);
+  const [selectedExam, setSelectedExam] = useState("");
+  const [percentage, setPercentage] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedCaste, setSelectedCaste] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
+  const [colleges, setColleges] = useState([]);
+  const [filteredColleges, setFilteredColleges] = useState([]);
+  const [showFilter, setShowFilter] = useState(false);
+  const [activeFilters, setActiveFilters] = useState([]);
+  const [collegeType, setCollegeType] = useState("");
+  const [ratingFilter, setRatingFilter] = useState("");
+  const [cutoffRange, setCutoffRange] = useState({ min: "", max: "" });
+  const [selectedBranch, setSelectedBranch] = useState("");
+  const [cutoffs, setCutoffs] = useState([]);
 
-  const [phoneNumber, setPhoneNumber] = useState("")
-  const [otp, setOtp] = useState("")
-  const [isOtpSent, setIsOtpSent] = useState(false)
-  const [isOtpVerified, setIsOtpVerified] = useState(false)
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [otp, setOtp] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
 
-  // Dynamic college data with branches and last year's cutoff based on caste
-  const localCollegeData = {
-    Pune: [
-      {
-        name: "Local School Pune",
-        location: "Pune",
-        rating: 4.0,
-        distance: 1.0,
-        popularity: 80,
-        type: "Local",
-        cutoff: { Open: 75, OBC: 70, SC: 65, ST: 60 }, // Added cutoff for 10th
-      },
-      {
-        name: "Local College Pune",
-        location: "Pune",
-        rating: 4.2,
-        distance: 1.5,
-        popularity: 85,
-        type: "Local",
-        cutoff: { Open: 80, OBC: 75, SC: 70, ST: 65 }, // Added cutoff for 10th
-      },
-    ],
-  }
-
-  const higherLevelCollegeData = {
-    Pune: [
-      {
-        name: "MIT Pune",
-        location: "Pune",
-        branches: {
-          "Computer Science": { lastYearCutoff: { Open: 85, OBC: 80, SC: 75, ST: 70 } },
-          "Mechanical": { lastYearCutoff: { Open: 80, OBC: 75, SC: 70, ST: 65 } },
-        },
-        rating: 4.5,
-        distance: 2.5,
-        popularity: 95,
-        type: "Private",
-      },
-      {
-        name: "COEP",
-        location: "Pune",
-        branches: {
-          "Computer Science": { lastYearCutoff: { Open: 90, OBC: 85, SC: 80, ST: 75 } },
-          "Civil": { lastYearCutoff: { Open: 85, OBC: 80, SC: 75, ST: 70 } },
-        },
-        rating: 4.8,
-        distance: 1.8,
-        popularity: 98,
-        type: "Government",
-      },
-    ],
-    Mumbai: [
-      {
-        name: "IIT Bombay",
-        location: "Mumbai",
-        branches: {
-          "Computer Science": { lastYearCutoff: { Open: 98, OBC: 95, SC: 90, ST: 85 } },
-          "Electrical": { lastYearCutoff: { Open: 95, OBC: 92, SC: 88, ST: 85 } },
-        },
-        rating: 4.9,
-        distance: 5.2,
-        popularity: 100,
-        type: "Government",
-      },
-    ],
-    Nagpur: [
-      {
-        name: "VNIT Nagpur",
-        location: "Nagpur",
-        branches: {
-          "Computer Science": { lastYearCutoff: { Open: 95, OBC: 90, SC: 85, ST: 80 } },
-          "Mechanical": { lastYearCutoff: { Open: 90, OBC: 85, SC: 80, ST: 75 } },
-        },
-        rating: 4.7,
-        distance: 6.3,
-        popularity: 94,
-        type: "Government",
-      },
-    ],
-  }
-
+  // Define education options
   const educationOptions = {
-    "10th": ["Diploma", "ITI"],
-    "11th": ["Science", "Commerce", "Arts"],
+    "10th": [],
     "12th": ["JEE", "NEET", "CET"],
-  }
+  };
 
-  const casteOptions = ["Open", "OBC", "SC", "ST"]
-  const collegeTypes = ["Government", "Private", "Deemed", "Autonomous"]
-  const ratingOptions = ["4+ Stars", "3+ Stars", "2+ Stars"]
+  // Fetch cutoffs using TanStack Query
+  const { data: cutoffsData, isLoading: isCutoffsLoading } = useQuery({
+    queryKey: ['cutoffs'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/cutoff/all');
+      return response.data.usrMsg;
+    }
+  });
+
+  // Fetch colleges based on selected district and education
+  const { data: collegesData, isLoading: isCollegesLoading } = useQuery({
+    queryKey: ['colleges', selectedDistrict, selectedEducation],
+    queryFn: async () => {
+      if (!selectedDistrict || !selectedEducation) return [];
+      const response = await axiosInstance.get(`/colleges?district=${selectedDistrict}&education=${selectedEducation}`);
+      return response.data; // Adjust based on your API response structure
+    },
+    enabled: !!selectedDistrict && !!selectedEducation, // Only run if district and education are selected
+  });
 
   useEffect(() => {
-    if (selectedDistrict) {
-      applyAllFilters()
+    if (cutoffsData) {
+      setCutoffs(cutoffsData);
     }
-  }, [selectedDistrict, collegeType, ratingFilter, cutoffRange.min, cutoffRange.max, sortOrder, selectedCaste, selectedBranch])
+  }, [cutoffsData]);
+
+  useEffect(() => {
+    if (collegesData) {
+      setColleges(collegesData);
+      setFilteredColleges(collegesData);
+    }
+  }, [collegesData]);
+
+  useEffect(() => {
+    applyAllFilters();
+  }, [
+    selectedDistrict,
+    collegeType,
+    ratingFilter,
+    cutoffRange.min,
+    cutoffRange.max,
+    sortOrder,
+    selectedCaste,
+    selectedBranch,
+  ]);
 
   const handleEducationChange = (education) => {
-    setSelectedEducation(education)
-    setSelectedExam("")
-    setExamOptions(educationOptions[education] || [])
-    setColleges([])
-    setFilteredColleges([])
+    setSelectedEducation(education);
+    setSelectedExam("");
+    setExamOptions(educationOptions[education] || []);
+    setColleges([]);
+    setFilteredColleges([]);
     setSelectedBranch(""); // Reset selected branch when education changes
-  }
+  };
 
   const handleDistrictChange = (district) => {
-    setSelectedDistrict(district)
-    const districtColleges = selectedEducation === "10th" ? localCollegeData[district] || [] : higherLevelCollegeData[district] || [];
-    setColleges(districtColleges)
-    setFilteredColleges(districtColleges)
-
-    // Reset selected branch when district changes
-    setSelectedBranch("");
-
-    // Apply current filters
-    applyAllFilters(districtColleges)
-  }
+    setSelectedDistrict(district);
+  };
 
   const handleCasteChange = (caste) => {
-    setSelectedCaste(caste)
-  }
+    setSelectedCaste(caste);
+  };
 
-  const handleSortChange = (order, collegeList = filteredColleges) => {
-    setSortOrder(order)
-    const sortedColleges = [...collegeList]
-
-    switch (order) {
-      case "popularity":
-        sortedColleges.sort((a, b) => b.popularity - a.popularity)
-        break
-      case "ratingHighToLow":
-        sortedColleges.sort((a, b) => b.rating - a.rating)
-        break
-      case "cutoffLowToHigh":
-        sortedColleges.sort((a, b) => {
-          const aCutoff = a.branches[selectedBranch]?.lastYearCutoff[selectedCaste] || 0
-          const bCutoff = b.branches[selectedBranch]?.lastYearCutoff[selectedCaste] || 0
-          return aCutoff - bCutoff
-        })
-        break
-      case "cutoffHighToLow":
-        sortedColleges.sort((a, b) => {
-          const aCutoff = a.branches[selectedBranch]?.lastYearCutoff[selectedCaste] || 0
-          const bCutoff = b.branches[selectedBranch]?.lastYearCutoff[selectedCaste] || 0
-          return bCutoff - aCutoff
-        })
-        break
-      case "distance":
-        sortedColleges.sort((a, b) => a.distance - b.distance)
-        break
-      default:
-        break
-    }
-
-    setFilteredColleges(sortedColleges)
-
-    // Add to active filters if not already there
-    if (order && !activeFilters.some((filter) => filter.type === "sort")) {
-      setActiveFilters([...activeFilters, { type: "sort", value: getSortLabel(order), id: "sort" }])
-    } else if (order) {
-      setActiveFilters(
-        activeFilters.map((filter) => (filter.type === "sort" ? { ...filter, value: getSortLabel(order) } : filter)),
-      )
-    }
-  }
-
-  const getSortLabel = (sortType) => {
-    switch (sortType) {
-      case "popularity":
-        return "Popularity"
-      case "ratingHighToLow":
-        return "Rating: High to Low"
-      case "cutoffLowToHigh":
-        return "Cutoff: Low to High"
-      case "cutoffHighToLow":
-        return "Cutoff: High to Low"
-      case "distance":
-        return "Distance"
-      default:
-        return sortType
-    }
-  }
-
-  const handleCollegeTypeChange = (type) => {
-    setCollegeType(type)
-
-    // Add to active filters
-    if (type && !activeFilters.some((filter) => filter.type === "collegeType")) {
-      setActiveFilters([...activeFilters, { type: "collegeType", value: `Type: ${type}`, id: "collegeType" }])
-    } else if (type) {
-      setActiveFilters(
-        activeFilters.map((filter) => (filter.type === "collegeType" ? { ...filter, value: `Type: ${type}` } : filter)),
-      )
-    }
-  }
-
-  const handleRatingChange = (rating) => {
-    setRatingFilter(rating)
-
-    // Add to active filters
-    if (rating && !activeFilters.some((filter) => filter.type === "rating")) {
-      setActiveFilters([...activeFilters, { type: "rating", value: `Rating: ${rating}`, id: "rating" }])
-    } else if (rating) {
-      setActiveFilters(
-        activeFilters.map((filter) => (filter.type === "rating" ? { ...filter, value: `Rating: ${rating}` } : filter)),
-      )
-    }
-  }
-
-  const handleCutoffRangeChange = (min, max) => {
-    setCutoffRange({ min, max })
-
-    // Add to active filters
-    if ((min || max) && !activeFilters.some((filter) => filter.type === "cutoff")) {
-      setActiveFilters([
-        ...activeFilters,
-        {
-          type: "cutoff",
-          value: `Cutoff: ${min || "0"}-${max || "100"}%`,
-          id: "cutoff",
-        },
-      ])
-    } else if (min || max) {
-      setActiveFilters(
-        activeFilters.map((filter) =>
-          filter.type === "cutoff"
-            ? {
-                ...filter,
-                value: `Cutoff: ${min || "0"}-${max || "100"}%`,
-              }
-            : filter,
-        ),
-      )
-    }
-  }
-
-  const applyAllFilters = (initialColleges = null) => {
-    let filteredColleges = initialColleges || (selectedDistrict ? (selectedEducation === "10th" ? localCollegeData[selectedDistrict] : higherLevelCollegeData[selectedDistrict]) : [])
-
-    // Apply college type filter
-    if (collegeType) {
-      filteredColleges = filteredColleges.filter((college) => college.type === collegeType)
-    }
-
-    // Apply rating filter
-    if (ratingFilter) {
-      const minRating = Number.parseInt(ratingFilter.split("+")[0])
-      filteredColleges = filteredColleges.filter((college) => college.rating >= minRating)
-    }
-
-    // Apply cutoff range filter
-    if (cutoffRange.min || cutoffRange.max) {
-      filteredColleges = filteredColleges.filter((college) => {
-        const cutoff = selectedEducation === "10th" ? college.cutoff[selectedCaste] : college.branches[selectedBranch]?.lastYearCutoff[selectedCaste] || 0;
-        const min = cutoffRange.min ? Number.parseInt(cutoffRange.min) : 0
-        const max = cutoffRange.max ? Number.parseInt(cutoffRange.max) : 100
-        return cutoff >= min && cutoff <= max
-      })
-    }
-
-    // Apply current sort
-    if (sortOrder) {
-      handleSortChange(sortOrder, filteredColleges)
-    } else {
-      setFilteredColleges(filteredColleges)
-    }
-  }
-
-  const handleRemoveFilter = (filterId) => {
-    // Remove from active filters
-    setActiveFilters(activeFilters.filter((filter) => filter.id !== filterId))
-
-    // Reset the corresponding filter state
-    switch (filterId) {
-      case "sort":
-        setSortOrder("")
-        break
-      case "collegeType":
-        setCollegeType("")
-        break
-      case "rating":
-        setRatingFilter("")
-        break
-      case "cutoff":
-        setCutoffRange({ min: "", max: "" })
-        break
-      default:
-        break
-    }
-  }
-
-  const handleClearAll = () => {
-    setSortOrder("")
-    setCollegeType("")
-    setRatingFilter("")
-    setCutoffRange({ min: "", max: "" })
-    setActiveFilters([])
-
-    if (selectedDistrict) {
-      setFilteredColleges(localCollegeData[selectedDistrict] || [])
-    }
-  }
-
-  const handleFilterToggle = () => {
-    setShowFilter(!showFilter)
-  }
-
-  const handleCloseFilter = () => {
-    setShowFilter(false)
-  }
-
-  const handleApplyFilters = () => {
-    applyAllFilters()
-    setShowFilter(false)
-  }
-
-  // Handle OTP actions
   const handleGetOtp = () => {
-    setIsOtpSent(true)
-  }
+    // Simulate sending OTP (you can replace this with an actual API call)
+    if (phoneNumber) {
+      setIsOtpSent(true);
+      alert(`OTP sent to ${phoneNumber}`);
+    } else {
+      alert("Please enter a valid phone number.");
+    }
+  };
 
   const handleVerifyOtp = () => {
-    if (otp === "1234") {
-      setIsOtpVerified(true)
+    // Simulate OTP verification (you can replace this with an actual API call)
+    if (otp === "1234") { // Replace "1234" with the actual OTP logic
+      setIsOtpVerified(true);
     } else {
-      alert("Invalid OTP")
+      alert("Invalid OTP");
     }
-  }
+  };
+
+  const applyAllFilters = () => {
+    // Your filter logic here
+  };
 
   return (
     <div className="p-8 flex justify-center items-center">
@@ -448,7 +218,8 @@ const MyEligibility = () => {
             className="w-full border rounded-lg px-4 py-2"
           >
             <option value="">Select District</option>
-            {Object.keys(localCollegeData).map((district, i) => (
+            {/* Replace with actual district options from your API */}
+            {["District 1", "District 2", "District 3"].map((district, i) => (
               <option key={i} value={district}>
                 {district}
               </option>
@@ -461,7 +232,7 @@ const MyEligibility = () => {
             className="w-full border rounded-lg px-4 py-2"
           >
             <option value="">Select Caste</option>
-            {casteOptions.map((caste, i) => (
+            {["Open", "OBC", "SC", "ST"].map((caste, i) => (
               <option key={i} value={caste}>
                 {caste}
               </option>
@@ -470,28 +241,32 @@ const MyEligibility = () => {
         </div>
 
         {/* Branch Selection */}
-        {selectedEducation && selectedDistrict && percentage && filteredColleges.length > 0 && selectedEducation !== "10th" && (
-          <div className="flex flex-col md:flex-row gap-4">
-            <select
-              value={selectedBranch}
-              onChange={(e) => setSelectedBranch(e.target.value)}
-              className="w-full border rounded-lg px-4 py-2"
-            >
-              <option value="">Select Branch</option>
-              {Object.keys(filteredColleges[0].branches).map((branch, index) => (
-                <option key={index} value={branch}>
-                  {branch}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+        {selectedEducation &&
+          selectedDistrict &&
+          percentage &&
+          filteredColleges.length > 0 &&
+          selectedEducation !== "10th" && (
+            <div className="flex flex-col md:flex-row gap-4">
+              <select
+                value={selectedBranch}
+                onChange={(e) => setSelectedBranch(e.target.value)}
+                className="w-full border rounded-lg px-4 py-2"
+              >
+                <option value="">Select Branch</option>
+                {Object.keys(filteredColleges[0].branches).map((branch, index) => (
+                  <option key={index} value={branch}>
+                    {branch}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
         {/* Filter and Sort Controls */}
         <div className="flex justify-between items-center">
           {/* Filter Button */}
           <button
-            onClick={handleFilterToggle}
+            onClick={() => setShowFilter(!showFilter)}
             className="cursor-pointer flex items-center justify-center gap-2 bg-indigo-500 text-white rounded-lg px-4 py-2 hover:bg-indigo-600"
           >
             <FiFilter /> Filter
@@ -513,7 +288,10 @@ const MyEligibility = () => {
                 </button>
               </div>
             ))}
-            <button onClick={handleClearAll} className="cursor-pointer text-indigo-500 hover:text-indigo-700 text-sm ml-2 font-medium">
+            <button
+              onClick={handleClearAll}
+              className="cursor-pointer text-indigo-500 hover:text-indigo-700 text-sm ml-2 font-medium"
+            >
               Clear All
             </button>
           </div>
@@ -526,7 +304,10 @@ const MyEligibility = () => {
               {/* Header */}
               <div className="flex justify-between items-center p-4 border-b">
                 <h3 className="text-xl font-medium">Filters</h3>
-                <button onClick={handleCloseFilter} className="hover:bg-red-600 cursor-pointer text-gray-600 hover:text-white">
+                <button
+                  onClick={() => setShowFilter(false)}
+                  className="hover:bg-red-600 cursor-pointer text-gray-600 hover:text-white"
+                >
                   <FiX size={20} />
                 </button>
               </div>
@@ -537,18 +318,20 @@ const MyEligibility = () => {
                 <div>
                   <div className="text-lg font-medium mb-2">Sort by</div>
                   <div className="flex space-x-4">
-                    {["popularity", "ratingHighToLow", "cutoffLowToHigh", "cutoffHighToLow", "distance"].map((sort, index) => (
-                      <label key={index} className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="sort"
-                          className="w-4 h-4 text-red-500 focus:ring-red-500"
-                          checked={sortOrder === sort}
-                          onChange={() => handleSortChange(sort)}
-                        />
-                        <span>{sort.replace(/([A-Z])/g, ' $1').trim()}</span>
-                      </label>
-                    ))}
+                    {["popularity", "ratingHighToLow", "cutoffLowToHigh", "cutoffHighToLow", "distance"].map(
+                      (sort, index) => (
+                        <label key={index} className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="sort"
+                            className="w-4 h-4 text-red-500 focus:ring-red-500"
+                            checked={sortOrder === sort}
+                            onChange={() => handleSortChange(sort)}
+                          />
+                          <span>{sort.replace(/([A-Z])/g, " $1").trim()}</span>
+                        </label>
+                      ),
+                    )}
                   </div>
                 </div>
 
@@ -556,7 +339,7 @@ const MyEligibility = () => {
                 <div>
                   <div className="text-lg font-medium mb-2">College Type</div>
                   <div className="flex space-x-4">
-                    {collegeTypes.map((type, index) => (
+                    {["Government", "Private", "Deemed", "Autonomous"].map((type, index) => (
                       <label key={index} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="radio"
@@ -575,7 +358,7 @@ const MyEligibility = () => {
                 <div>
                   <div className="text-lg font-medium mb-2">Rating</div>
                   <div className="flex space-x-4">
-                    {ratingOptions.map((rating, index) => (
+                    {["4+ Stars", "3+ Stars", "2+ Stars"].map((rating, index) => (
                       <label key={index} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="radio"
@@ -633,10 +416,13 @@ const MyEligibility = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {selectedEducation && percentage && filteredColleges.length > 0 ? (
             filteredColleges.map((college, i) => (
-              <div key={i} className="border rounded-lg shadow-md hover:shadow-lg transition-shadow relative overflow-hidden">
+              <div
+                key={i}
+                className="border rounded-lg shadow-md hover:shadow-lg transition-shadow relative overflow-hidden"
+              >
                 {/* Filter button on card */}
                 <button
-                  onClick={handleFilterToggle}
+                  onClick={() => setShowFilter(!showFilter)}
                   className="absolute top-2 right-2 cursor-pointer bg-gray-100 hover:bg-gray-200 p-1 rounded-full z-10"
                 >
                   <FiFilter size={16} />
@@ -644,7 +430,12 @@ const MyEligibility = () => {
 
                 {/* Full-size College Image */}
                 <img
-                  src={college.image || "https://media.glassdoor.com/l/a5/4a/cc/32/jecc.jpg?signature=83117c2acc85cc1adaff4f3a1bf8203738d3dff1960dc9cd332df6c614edb15d"}
+                  src={
+                    college.image ||
+                    "https://media.glassdoor.com/l/a5/4a/cc/32/jecc.jpg?signature=83117c2acc85cc1adaff4f3a1bf8203738d3dff1960dc9cd332df6c614edb15d" ||
+                    "/placeholder.svg" ||
+                    "/placeholder.svg"
+                  }
                   alt={college.name}
                   className="w-full h-55 object-cover"
                 />
@@ -659,12 +450,50 @@ const MyEligibility = () => {
                   </div>
 
                   <div className="mt-2 space-y-1 text-sm text-gray-600">
-                    <p><strong>Location:</strong> {college.location}</p>
-                    <p><strong>Type:</strong> {college.type}</p>
-                    <p><strong>Branch:</strong> {selectedBranch || "N/A"}</p>
-                    <p><strong>Last Year Cutoff:</strong> {selectedEducation === "10th" ? college.cutoff[selectedCaste] : college.branches[selectedBranch]?.lastYearCutoff[selectedCaste] || "N/A"}</p>
-                    <p><strong>Distance:</strong> {college.distance} km</p>
-                    <p><strong>Popularity:</strong> {college.popularity}%</p>
+                    <p>
+                      <strong>Location:</strong> {college.location}
+                    </p>
+                    <p>
+                      <strong>Type:</strong> {college.type}
+                    </p>
+                    <p>
+                      <strong>Branch:</strong> {selectedBranch || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Last Year Cutoff:</strong>{" "}
+                      {selectedEducation === "10th"
+                        ? college.cutoff[selectedCaste]
+                        : college.branches[selectedBranch]?.lastYearCutoff[selectedCaste] || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Distance:</strong> {college.distance} km
+                    </p>
+                    <p>
+                      <strong>Popularity:</strong> {college.popularity}%
+                    </p>
+                  </div>
+
+                  {/* Cutoff Card */}
+                  <div className="mt-4 border-t pt-4">
+                    <h3 className="font-semibold mb-2">Branch Cutoffs</h3>
+                    <div className="grid grid-cols-1 gap-2">
+                      {cutoffs.map((cutoff, index) => (
+                        <div key={index} className="bg-gray-50 p-3 rounded-lg">
+                          <div className="flex justify-between">
+                            <span className="font-medium">{cutoff.branch_name}</span>
+                            <span className="text-gray-500 text-sm">Year: {cutoff.year}</span>
+                          </div>
+                          <div className="mt-2 grid grid-cols-2 gap-2">
+                            {Object.entries(cutoff.cutoff.marks).map(([caste, mark], idx) => (
+                              <div key={idx} className="flex justify-between">
+                                <span>{caste}:</span>
+                                <span className="font-medium">{mark}%</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -673,9 +502,61 @@ const MyEligibility = () => {
             <p className="col-span-2 text-center py-8">No colleges found</p>
           )}
         </div>
+
+        {/* Standalone Cutoff Cards */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4 text-center">Branch Cutoffs</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {isCutoffsLoading ? (
+              <div className="col-span-2 flex justify-center items-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+              </div>
+            ) : cutoffs.length > 0 ? (
+              cutoffs.map((cutoff, index) => (
+                <div key={index} className="border rounded-lg shadow-md overflow-hidden">
+                  <div className="bg-indigo-600 text-white p-3">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-xl font-bold">{cutoff.branch_name}</h3>
+                      <span className="bg-white text-indigo-800 px-2 py-1 rounded text-sm font-medium">
+                        Year: {cutoff.year}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <div className="grid grid-cols-2 gap-y-3">
+                      {Object.entries(cutoff.cutoff.marks).map(([caste, mark], idx) => (
+                        <div
+                          key={idx}
+                          className={`flex justify-between items-center p-2 rounded ${
+                            selectedCaste === caste ? "bg-indigo-50 border border-indigo-200" : ""
+                          }`}
+                        >
+                          <span className="font-medium">{caste}:</span>
+                          <span
+                            className={`font-bold text-lg ${
+                              Number(mark) >= 85
+                                ? "text-red-600"
+                                : Number(mark) >= 75
+                                  ? "text-orange-600"
+                                  : "text-green-600"
+                            }`}
+                          >
+                            {mark}%
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="col-span-2 text-center py-8">No cutoff data available</p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default MyEligibility
+export default MyEligibility;
