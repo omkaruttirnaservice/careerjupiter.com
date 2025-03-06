@@ -3,7 +3,7 @@ import AppLayout from "../Layouts/AppLayout.jsx";
 
 import HeroSection from "../Layouts/HeroSection";
 import Dashboard from "../Pages/Dashboard";
-import IQTest from "../Pages/IQTest";
+import IQTest from "./TestComp/IQTest.jsx";
 import LoginPage from "../Pages/Login/LoginPage";
 import MultiStepForm from "../Pages/SignIn/MultiStepForm";
 import CardDetails from "../components/CardDetails";
@@ -17,6 +17,8 @@ import ReviewPage from "../components/navComp/ReviewPage";
 import ProfileDetails from "./ProfileDashboard/ProfileDetails.jsx";
 import ProfileLayout from "./ProfileDashboard/ProfileLayout.jsx";
 import MyEligibility from "./eligibility/MyEligibility.jsx";
+import TestCard from "./TestComp/TestCard.jsx";
+import QueryBasedComponent from "./TestComp/QueryBasedComponent.jsx";
 // import ClassesList from './InstituteComp/ClassesList.jsx';
 
 export const router = createBrowserRouter([
@@ -43,9 +45,10 @@ export const router = createBrowserRouter([
 
   { path: "/dashboard", element: <Dashboard /> },
 
-  { path: "/login", element: <LoginPage /> },
+  { path: "/signin", element: <LoginPage /> },
   { path: "/sign", element: <MultiStepForm /> },
   { path: "/roadmap", element: <Roadmap /> },
+  { path: "/iq", element: <IQTest /> },
 
   { path: "/myeligibility", element: <MyEligibility /> },
 
@@ -57,7 +60,7 @@ export const router = createBrowserRouter([
         path: "personal-details",
         element: <ProfileDetails />,
       },
-      { path: "test", element: <IQTest /> },
+      { path: "test", element: <QueryBasedComponent /> },
     ],
   },
 ]);

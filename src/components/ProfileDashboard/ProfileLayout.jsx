@@ -1,47 +1,32 @@
 import React, { useState } from "react";
-
-import {
-  FaBars,
-  FaCalendarAlt,
-  FaChartBar,
-  FaFolder,
-  FaHome,
-  FaInbox,
-  FaTimes,
-} from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa";
 import { LuNotebookPen } from "react-icons/lu";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { FaUserLarge } from "react-icons/fa6";
 
 function ProfileLayout() {
+  const location = useLocation();
+
   const navigation = [
     {
       name: "My Profile",
       href: "/profile/personal-details",
-      icon: FaHome,
-      current: true,
+      icon: FaUserLarge,
     },
     {
       name: "Test",
       href: "/profile/test",
       icon: LuNotebookPen,
-      current: false,
     },
   ];
 
-  const userNavigation = [
-    { name: "Your Profile", href: "#" },
-    { name: "Settings", href: "#" },
-    { name: "Sign out", href: "#" },
-  ];
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
   return (
     <>
       {/* Mobile Sidebar */}
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 flex md:hidden">
+        <div className="fixed inset-0 bg-opacity-0 z-40 flex md:hidden">
           <div className="bg-blue-600 w-64 p-5 relative border-r border-gray-300 text-white">
             <button
               className="absolute top-2 right-2 text-white"
@@ -54,10 +39,12 @@ function ProfileLayout() {
                 <NavLink
                   key={item.name}
                   to={item.href}
-                  className={classNames(
-                    item.current ? "bg-blue-500" : "hover:bg-blue-500",
-                    "flex items-center p-2 rounded-md"
-                  )}
+                  className={({ isActive }) =>
+                    `flex items-center p-2 rounded-md ${
+                      isActive ? "bg-blue-500" : "hover:bg-blue-500"
+                    }`
+                  }
+                  onClick={() => setSidebarOpen(false)}
                 >
                   <item.icon className="mr-3 w-6 h-6" />
                   {item.name}
@@ -75,10 +62,11 @@ function ProfileLayout() {
             <NavLink
               key={item.name}
               to={item.href}
-              className={classNames(
-                item.current ? "bg-blue-300" : "hover:bg-blue-300",
-                "flex items-center p-2 rounded-md"
-              )}
+              className={({ isActive }) =>
+                `flex items-center p-2 rounded-md ${
+                  isActive ? "bg-blue-300" : "hover:bg-blue-300"
+                }`
+              }
             >
               <item.icon className="mr-3 w-6 h-6" />
               {item.name}
@@ -87,19 +75,13 @@ function ProfileLayout() {
         </nav>
       </div>
 
-      <div>
-        {/* Main Content */}
-        <div className="md:pl-64">
-          <div className="flex items-center justify-between p-4 border-b border-gray-300 bg-white">
-            <button className="md:hidden" onClick={() => setSidebarOpen(true)}>
-              <FaBars className="w-6 h-6 text-gray-600" />
-            </button>
-          </div>
-          <main className="p-6">
-            <div className="mt-6 h-96 border-0.5 ">
-              <Outlet />
-            </div>
-          </main>
+      {/* Main Content */}
+      <div className="md:pl-64">
+        <button className="md:hidden p-2" onClick={() => setSidebarOpen(true)}>
+          <FaBars className="w-6 h-6 text-gray-600" />
+        </button>
+        <div className="h-auto border-0.5">
+          <Outlet />
         </div>
       </div>
     </>

@@ -5,7 +5,7 @@ import { BASE_URL } from '../../utils/constansts';
 // });
 
 export const userSignUp = (data) => {
-	return axios.post(`${BASE_URL}/api/auth/signin`, data);
+	return axios.post(`${BASE_URL}/api/auth/login`, data);
 };
 
 export const getCollege = async (id) => {

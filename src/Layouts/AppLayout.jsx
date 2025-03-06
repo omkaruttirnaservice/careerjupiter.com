@@ -11,19 +11,19 @@ const AppLayout = () => {
 	const authState = useSelector((state) => state.auth);
 
 	return (
-		<>
-			{authState.isLoggedIn ? (
-				<SearchContextProvider>
-					<Nav />
-					<SearchComponent />
-					<Outlet />
-					<Footer />
-				</SearchContextProvider>
-			) : (
-				<Navigate to="/signin" replace />
-			)}
-		</>
-	);
+    <>
+      {authState.isLoggedIn ? (
+        <SearchContextProvider>
+          <Nav />
+          <SearchComponent />
+          <Outlet />
+          <Footer />
+        </SearchContextProvider>
+      ) : (
+        <Navigate to="/signin" replace />
+      )}
+    </>
+  );
 };
 
 export default AppLayout;

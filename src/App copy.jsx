@@ -56,7 +56,7 @@ function App() {
         { path: "/institute", element: <InstituteMultiCard /> },
         { path: "/university", element: <UniversityMultiCard /> },
         { path: "/university/:id", element: <UniversityDetail /> },
-        {path: "/institute", element: <ReviewPage />}
+        { path: "/institute", element: <ReviewPage /> },
       ],
     },
 
@@ -74,7 +74,7 @@ function App() {
       element: <LocationPage />,
     },
     {
-      path: "/login",
+      path: "/signin",
       element: <LoginPage />,
     },
     {
@@ -96,7 +96,7 @@ function App() {
     },
 
     // Public Routes
-    { path: "/login", element: <LoginPage /> },
+    { path: "/signin", element: <LoginPage /> },
     { path: "/sign", element: <MultiStepForm /> },
     { path: "/roadmap", element: <Roadmap /> },
     { path: "/nav", element: <Nav /> },

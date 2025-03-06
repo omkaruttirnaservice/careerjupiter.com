@@ -9,7 +9,7 @@ import { cityData } from "../../Constant/constantData";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const educationOptions = ["SSC", "HSC", "ITI", "Graduation", "Post Graduation", "BA", "MBA"];
+const educationOptions = ["SSC", "HSC", "ITI","Diploma", "Graduation", "Post Graduation", "MBA"];
 
 const LocationMarker = ({ setLocation, location }) => {
 
@@ -38,7 +38,7 @@ const MultiStepForm = () => {
     mutationFn: userSignUp,
     onSuccess: (data) => {
       toast.success("Form submitted successfully!");
-      navigate("/login");
+      navigate("/signin");
     },
     onError: (error) => {
       const status = error?.response?.status;

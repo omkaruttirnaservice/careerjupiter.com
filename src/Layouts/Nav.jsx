@@ -220,7 +220,7 @@ const Nav = () => {
                             <Menu.Item>
                               {({ active }) => (
                                 <NavLink
-                                  to="/profile"
+                                  to="/profile/personal-details"
                                   className={`block px-4 py-2 text-sm ${active ? "bg-gray-100" : ""}`}
                                 >
                                   Profile
@@ -243,7 +243,7 @@ const Nav = () => {
                   ) : (
                     <div className="flex gap-2">
                       <NavLink
-                        to="/login"
+                        to="/signin"
                         className="px-4 py-2 border border-indigo-600 rounded-md text-indigo-600 hover:bg-gray-50"
                       >
                         Log in
@@ -303,7 +303,7 @@ const Nav = () => {
                           className="h-10 w-10 rounded-full"
                         />
                         <NavLink
-                          to="/profile"
+                          to="/profile/personal-details"
                           className="text-gray-700 hover:text-gray-900"
                         >
                           Profile
