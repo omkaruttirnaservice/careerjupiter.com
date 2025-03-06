@@ -3,9 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { FaMapMarkerAlt, FaPhoneAlt, FaCalendarAlt } from 'react-icons/fa'; // Added calendar icon
 import { fetchUniversityById } from './Api'; // API call
-import UniversityRanking from './UniversityRanking';
-import OfferedCourse from './OfferedCourse';
+// import UniversityRanking from './UniversityRanking';
+// import OfferedCourse from './OfferedCourse';
 import PlacementOpportunities from './PlacementOpportunities';
+import UniversityCourses from './OfferedCourse';
 
 
 const UniversityDetail = () => {
@@ -99,7 +100,7 @@ const UniversityDetail = () => {
 
 					{/* Ranking & Courses */}
 					{/* <UniversityRanking university={uni} /> */}
-					<OfferedCourse courses={courses} />
+					<UniversityCourses courses={courses} />
 					<PlacementOpportunities university={uni} />
 
 					{/* Entrance Exam and Inquiry Form side by side */}

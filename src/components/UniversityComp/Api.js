@@ -32,3 +32,11 @@ export const fetchUniversityById = async (id) => {
 		throw error;
 	}
 };
+
+// Fetch courses by university ID
+export const fetchCoursesByUniversityId = async (universityId) => {
+	if (!universityId) throw new Error('University ID is required');
+	const response = await axios.get(`${BASE_URL}/api/university/course/${universityId}`);
+	return response.data?.data?.courses || [];
+};
+
