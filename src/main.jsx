@@ -8,8 +8,8 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { Provider as OldStoreProvider } from "react-redux";
-import store from "./redux/Store.js";
-import { Provider as AuthProvider } from "react-redux";
+import store from "./store-redux/Store.js";
+import { Provider as ProviderRedux } from "react-redux";
 import AuthStore from "./store-redux/store.js";
 import { AxiosError } from "axios";
 
@@ -42,11 +42,11 @@ createRoot(document.getElementById("root")).render(
   // <StrictMode>
   <>
     <OldStoreProvider store={store}>
-      <AuthProvider store={AuthStore}>
+      <ProviderRedux store={AuthStore}>
         <QueryClientProvider client={queryClient}>
           <App />
         </QueryClientProvider>
-      </AuthProvider>
+      </ProviderRedux>
     </OldStoreProvider>
     <ToastContainer position="top-right" autoClose={3000} />
   </>
