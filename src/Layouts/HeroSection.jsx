@@ -9,34 +9,7 @@ import Carousel from "./Carousel";
 import CheckEligibility from "./CheckEligibility";
 
 const Data = [
-  {
-    id: 1,
-    image: "https://images.unsplash.com/photo-1562774053-701939374585?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y29sbGVnZXxlbnwwfHwwfHx8MA%3D%3D",
-    name: "first",
-    description: "A leading institution offering world-class education in various fields.",
-    rating: 4.5,
-  },
-  {
-    id: 2,
-    image: "https://media.istockphoto.com/id/472942802/photo/madras-university.webp?a=1&b=1&s=612x612&w=0&k=20&c=fXhlM6GIBVUNwb4Bxs7MWxL9wLgeiM-cw_Mr6MWdb3g=",
-    name: "second",
-    description: "A leading institution offering world-class education in various fields.",
-    rating: 4.5,
-  },
-  {
-    id: 3,
-    image: "https://images.unsplash.com/photo-1562774053-701939374585?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y29sbGVnZXxlbnwwfHwwfHx8MA%3D%3D",
-    name: "third",
-    description: "A leading institution offering world-class education in various fields.",
-    rating: 4.5,
-  },
-  {
-    id: 4,
-    image: "https://media.istockphoto.com/id/472942802/photo/madras-university.webp?a=1&b=1&s=612x612&w=0&k=20&c=fXhlM6GIBVUNwb4Bxs7MWxL9wLgeiM-cw_Mr6MWdb3g=",
-    name: "forth",
-    description: "A leading institution offering world-class education in various fields.",
-    rating: 4.5,
-  },
+  
 ];
 
 const HeroSection = () => {
@@ -48,7 +21,7 @@ const HeroSection = () => {
         <div className="relative bg-gray-50 overflow-hidden">
           <div className="fixed flex items-center justify-center top-1/2 right-4 transform -translate-y-1/2 w-[80px] h-[45px] bg-white rounded-full rounded-bl-[50%] z-50 shadow-lg animate-bounce">
             <NavLink
-              to="/iq"
+              to="/profile/test"
               className="text-white hover:text-green-800 flex flex-row gap-2"
             >
               <div className="flex items-center justify-center">
@@ -61,13 +34,21 @@ const HeroSection = () => {
               </div>
             </NavLink>
           </div>
-
+{/* 
           <div className="relative pt-14 pb-16 sm:pb-14 sm:pt-4 md:pt-0">
             <main className="mx-auto max-w-7xl px-4 sm:mt-14">
               <div className="text-center">
-                <div className="flex flex-row justify-center gap-3 sm:gap-4 md:gap-5 text-xl font-bold sm:text-3xl md:text-4xl">
+                <div className="flex flex-row justify-center gap-3 sm:gap-4 md:gap-5 text-xl font-bold sm:text-3xl md:text-5xl">
                   <h1 className="text-gray-900">FIND YOUR</h1>
-                  <span className="text-red-600">
+                  {/* <span className=" font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+                    <TypewriterComponent
+                      strings={["Best College", "Best School", "Best Class"]}
+                      autoStart={true}
+                      loop={true}
+                    />
+
+                  </span> */}
+                  {/* <span className="font-extrabold text-transparent bg-clip-text animate-gradient bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-[length:200%_200%]">
                     <TypewriterComponent
                       strings={["Best College", "Best School", "Best Class"]}
                       autoStart={true}
@@ -82,15 +63,15 @@ const HeroSection = () => {
                   AND BUILD THE CAREER OF YOUR DREAMS!" 🌟
                 </p>
               </div>
-            </main>
-          </div>
+            </main> */}
+          {/* </div> */} 
         </div>
         <div>
-        <Carousel />
+          <Carousel />
         </div>
-        <br/>
+        <br />
       </cardDataProvider.Provider>
-      
+
       <CheckEligibility />
     </>
   );

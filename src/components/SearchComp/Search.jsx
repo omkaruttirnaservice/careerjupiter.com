@@ -123,26 +123,25 @@ const SearchComponent = () => {
   };
 
   return (
-    <div className="w-full bg-gray-50 flex items-center justify-center">
-      <div className=" mt-25">
-        <div className="flex border-2 border-gray-200 rounded-lg overflow-hidden">
-          <input
-            type="text"
-            className="px-1 py-1 w-40 md:px-3 md:py-2 sm:w-60 md:w-120 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Search..."
-            value={query}
-            onChange={handleInputChange}
-          />
-          <button className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <IoSearchOutline />
-          </button>
-        </div>
-        {/* <SearchSuggestions
-          suggestions={data?.data?.map((college) => college.collegeName) || []}
-          query={query}
-        /> */}
-      </div>
+    <div className="w-full bg-gray-50 flex items-center justify-center ">
+  <div className="mt-25 mb-8 w-full max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl mx-3 ">
+    <div className="flex border-2 border-gray-200 rounded-full overflow-hidden w-full ">
+      <input
+        type="text"
+        className="px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Search..."
+        value={query}
+        onChange={handleInputChange}
+      />
+      <button className="px-5 py-3 bg-blue-500 text-white hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <IoSearchOutline className="text-xl" />
+      </button>
     </div>
+  </div>
+</div>
+
+  
+
   );
 };
 
