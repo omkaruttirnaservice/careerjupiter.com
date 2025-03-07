@@ -17,8 +17,6 @@ function TestCard() {
     queryFn: () => getTest(type),
   });
 
-  console.log("title iq test__---", testId);
-
   if (isPending) return <div className="text-center text-lg">Loading...</div>;
   if (isError)
     return (
