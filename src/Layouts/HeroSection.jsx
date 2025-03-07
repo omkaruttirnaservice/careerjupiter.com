@@ -7,6 +7,7 @@ import Nav from "./Nav";
 import { LuNotebookPen } from "react-icons/lu";
 import Carousel from "./Carousel";
 import CheckEligibility from "./CheckEligibility";
+import Carouseldiv from "./Coraseldiv";
 
 const Data = [
   
@@ -73,6 +74,7 @@ const HeroSection = () => {
       </cardDataProvider.Provider>
 
       <CheckEligibility />
+      <Carouseldiv/>
     </>
   );
 };

@@ -21,7 +21,7 @@ return (
           fill="currentFill"
         />
       </svg>
-      <p>Searching.......</p>
+      <p>Search...</p>
     </div>
   </>
 );
