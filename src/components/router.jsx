@@ -50,7 +50,7 @@ export const router = createBrowserRouter([
   { path: "/roadmap", element: <Roadmap /> },
   { path: "/iq", element: <IQTest /> },
 
-  { path: "/myeligibility", element: <MyEligibility /> },
+  { path: "/my-eligibility", element: <MyEligibility /> },
 
   {
     path: "profile",
