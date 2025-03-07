@@ -33,7 +33,7 @@ const ImageGallery = () => {
   }
 
   const images = institute?.class?.imageGallery || [];
-  console.log( "institute images",images)
+  // console.log( "institute images",images)
 
   if (!images.length) {
     return <p className="text-center text-gray-600 mt-8">No images available.</p>;

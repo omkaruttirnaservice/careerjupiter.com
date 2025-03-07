@@ -1,6 +1,4 @@
 import { BASE_URL } from '../../utils/constansts';
-import axios from 'axios';
-
 
 export const fetchInstitutesData = async () => {
 	try {
@@ -35,32 +33,5 @@ export const fetchInstitutesData = async () => {
 	} catch (error) {
 		console.error('Error fetching institutes:', error);
 		throw error;
-	}
-};
-export const handleReviews = async (action, payload = {}) => {
-	try {
-		let response;
-
-		if (action === 'fetch') {
-			const { id } = payload;
-			if (!id) throw new Error('class ID is required to fetch reviews.');
-			response = await axios.get(`${BASE_URL}/api/reviews/${id}?type=class`);
-		} else if (action === 'submit') {
-			response = await axios.post(
-				`${BASE_URL}/api/reviews/create?type=class`,
-				payload,
-				{ headers: { 'Content-Type': 'application/json' } }
-			);
-		} else {
-			throw new Error("Invalid action. Use 'fetch' or 'submit'.");
-		}
-
-		if (![200, 201].includes(response.data?.statusCode)) {
-			throw new Error(response.data?.message || 'Request failed.');
-		}
-
-		return action === 'fetch' ? response.data.data || '[]' : response.data;
-	} catch (error) {
-		throw error.response?.data || error.message;
 	}
 };
