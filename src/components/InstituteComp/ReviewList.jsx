@@ -1,10 +1,7 @@
-
-
 import React from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { fetchReviews } from "./Api"; // ✅ Ensure correct import
-
+import { handleReviews } from "./institute-api";
 // Star rating component with golden stars
 const StarRating = ({ rating }) => {
   const fullStars = Math.floor(rating);
@@ -27,7 +24,7 @@ const StarRating = ({ rating }) => {
   );
 };
 
-// Function to calculate time ago for reviews
+// Calculate "time ago" for reviews
 const timeAgo = (date) => {
   const now = new Date();
   const reviewDate = new Date(date);
@@ -48,17 +45,13 @@ const timeAgo = (date) => {
   return `${diffInYears} years ago`;
 };
 
-// Component to display reviews
 const ShowReviews = () => {
   const { id } = useParams();
-  const { pathname } = useLocation();
-  const reviewType = pathname.split('/')[1];
 
-  // Fetch reviews using React Query
   const { data: reviews = [], isLoading, isError } = useQuery({
     queryKey: ["reviews", id],
-    queryFn: () => fetchReviews({ id, type: reviewType }), 
-    enabled: !!id, // Only fetch if ID exists
+    queryFn: () => handleReviews("fetch", { id }),
+    enabled: !!id,
   });
 
   if (isLoading) {
@@ -71,7 +64,7 @@ const ShowReviews = () => {
 
   return (
     <div className="mt-10 bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
-      <h2 className="text-3xl font-extrabold text-gray-800 mb-8 text-center"> Reviews</h2>
+      <h2 className="text-3xl font-extrabold text-gray-800 mb-8 text-center">📚 College Reviews</h2>
 
       {reviews.length > 0 ? (
         reviews.map((review) => (
@@ -98,7 +91,7 @@ const ShowReviews = () => {
           </div>
         ))
       ) : (
-        <p className="text-gray-500 text-center text-lg">No reviews available for this yet.</p>
+        <p className="text-gray-500 text-center text-lg">No reviews available for this college yet.</p>
       )}
     </div>
   );

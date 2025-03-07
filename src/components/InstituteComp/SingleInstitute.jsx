@@ -4,6 +4,12 @@ import { BASE_URL } from '../../utils/constansts';
 import { BACKEND_SERVER_IP } from '../../Constant/constantData';
 import ImageGallery from './ImageGallery';
 import FacultyDetails from './FacultyDetails';
+import ReviewPage from '../navComp/ReviewPage';
+import { AiOutlineBook } from "react-icons/ai";
+import { BiTimeFive } from "react-icons/bi";
+import { FaRupeeSign } from "react-icons/fa";
+import { MdOutlineDiscount } from "react-icons/md";
+
 
 const fetchInstitute = async (id) => {
 	const response = await fetch(`${BASE_URL}/api/class/${id}`);
@@ -51,7 +57,7 @@ const SingleInstitute = () => {
 		queryFn: () => fetchCourses(id),
 	});
 
-	console.log('Courses Data:', courses); // Debugging
+	// console.log('Courses Data:', courses); // Debugging
 
 	// if (isLoading || coursesLoading) {
 	//   return <p className="text-center text-gray-600 mt-8">Loading class details...</p>;
@@ -79,11 +85,14 @@ const SingleInstitute = () => {
 				<div className="w-full relative">
 					<div
 						className="w-full h-[70vh] bg-cover bg-center relative"
+						// style={{
+						// 	backgroundImage: `url(${BACKEND_SERVER_IP}${institute?.class?.image})`,
+						// }}
 						style={{
-							backgroundImage: `url(${BACKEND_SERVER_IP}${institute.class.image})`,
+							backgroundImage: `url(${BASE_URL}${institute?.class?.image})`,
 						}}
 					>
-						{console.log(institute?.class?.image)}
+						{console.log(institute?.class?.image ,'class image')}
 						<div className="flex justify-center">
 							<h1 className="mt-20 text-white text-4xl font-bold">
 								{institute.class.className || 'Class Name'}
@@ -156,49 +165,51 @@ const SingleInstitute = () => {
 				</div>
 			</div>
 
-			<section className="mt-20 p-4 bg-gray-50 rounded-lg">
-				<h2 className="text-2xl font-bold mb-8 text-center">
-					Courses Available
-				</h2>
-				{Array.isArray(courses) && courses.length > 0 ? (
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-						{courses.map((course) => (
-							<div
-								key={course._id}
-								className="p-6 border rounded-lg bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1"
-							>
-								<h3 className="text-xl font-semibold mb-2">
-									{course.courseName}
-								</h3>
-								<p className="text-gray-600 mb-1">
-									<span className="font-medium">Type:</span> {course.courseType}
-								</p>
-								<p className="text-gray-600 mb-1">
-									<span className="font-medium">Duration:</span>{' '}
-									{course.duration}
-								</p>
-								<p className="text-gray-600 mb-1">
-									<span className="font-medium">Fee:</span> ₹
-									{course.feeStructure?.amount} ({course.feeStructure?.type})
-								</p>
-								<p className="text-gray-600 mb-1">
-									<span className="font-medium">Scholarship:</span>{' '}
-									{course.scholarshipOrDiscounts || 'N/A'}
-								</p>
-								<p className="text-gray-600">
-									<span className="font-medium">Study Material Provided:</span>{' '}
-									{course.studyMaterialProvided ? 'Yes' : 'No'}
-								</p>
-							</div>
-						))}
-					</div>
-				) : (
-					<p className="text-center text-gray-600">No courses available.</p>
-				)}
-			</section>
+			
+<section className="mt-20 p-6 bg-gradient-to-r from-blue-50 to-gray-100 rounded-lg shadow-lg">
+	<h2 className="text-3xl font-extrabold mb-8 text-center text-gray-800">
+		🚀 Courses Available
+	</h2>
+	{Array.isArray(courses) && courses.length > 0 ? (
+		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			{courses.map((course) => (
+				<div
+					key={course._id}
+					className="p-6 rounded-lg bg-gray-50 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105"
+				>
+					<h3 className="text-xl font-semibold mb-3 flex items-center">
+						<AiOutlineBook className="mr-2 text-blue-600" />
+						{course.courseName}
+					</h3>
+					<p className="text-gray-700 mb-1 flex items-center">
+						<span className="font-medium">Type:</span> {course.courseType}
+					</p>
+					<p className="text-gray-700 mb-1 flex items-center">
+						<BiTimeFive className="mr-2 text-green-600" />
+						<span className="font-medium">Duration:</span> {course.duration}
+					</p>
+					<p className="text-gray-700 mb-1 flex items-center">
+						<FaRupeeSign className="mr-2 text-yellow-600" />
+						<span className="font-medium">Fee:</span> ₹{course.feeStructure?.amount} ({course.feeStructure?.type})
+					</p>
+					<p className="text-gray-700 mb-1 flex items-center">
+						<MdOutlineDiscount className="mr-2 text-red-600" />
+						<span className="font-medium">Scholarship:</span> {course.scholarshipOrDiscounts || 'N/A'}
+					</p>
+					<p className="text-gray-700 flex items-center">
+						<span className="font-medium">Study Material Provided:</span> {course.studyMaterialProvided ? 'Yes' : 'No'}
+					</p>
+				</div>
+			))}
+		</div>
+	) : (
+		<p className="text-center text-gray-700">No courses available.</p>
+	)}
+</section>
 
 			<ImageGallery />
 			<FacultyDetails />
+			<ReviewPage/>
 		</>
 	);
 };

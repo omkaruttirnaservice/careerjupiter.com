@@ -8,6 +8,7 @@ import OfferedCourse from './OfferedCourse';
 import PlacementOpportunities from './PlacementOpportunities';
 import EntranceExam from './EntranceExam';
 import InquiryForm from './InquiryForm';
+import ReviewPage from '../navComp/ReviewPage';
 
 const UniversityDetail = () => {
 	const { id } = useParams();
@@ -102,6 +103,7 @@ const UniversityDetail = () => {
 					<UniversityRanking university={uni} />
 					<OfferedCourse courses={courses} />
 					<PlacementOpportunities university={uni} />
+					<ReviewPage />
 
 					{/* Entrance Exam and Inquiry Form side by side */}
 					{/* <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">

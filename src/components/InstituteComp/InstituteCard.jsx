@@ -20,22 +20,7 @@ const InstituteCard = ({ institute, onClick }) => {
 					{institute.className || 'Institute Name'}
 				</h2>
 
-				{/* Rank & Success Ratio */}
-				<div className="flex justify-between items-center mb-4 text-sm text-gray-700">
-					<div className="flex items-center space-x-2">
-						<FaTrophy className="text-yellow-500" />
-						<p>
-							<strong>Rank:</strong> {institute.rank || 'N/A'}
-						</p>
-					</div>
-					<div className="flex items-center space-x-2">
-						<FaChartLine className="text-green-500" />
-						<p>
-							<strong>Success Ratio:</strong>{' '}
-							{institute.studentSuccessRatio || 'N/A'}
-						</p>
-					</div>
-				</div>
+				
 
 				{/* Category */}
 				<div className="flex items-center space-x-2 text-sm text-gray-700 mb-3">

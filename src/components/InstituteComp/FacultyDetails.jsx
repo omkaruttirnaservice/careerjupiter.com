@@ -18,7 +18,7 @@ const fetchInstitute = async (id) => {
 const FacultyDetails = () => {
   const { id } = useParams();
   
-  const { data: institute, error, isLoading } = useQuery({
+  const { data, institute, error, isLoading } = useQuery({
     queryKey: ["institute", id],
     queryFn: () => fetchInstitute(id),
   });
@@ -32,7 +32,9 @@ const FacultyDetails = () => {
   }
 
   const faculty = institute?.class?.faculty_Details || [];
-  console.log( " faculty details",faculty)
+  // const staf_profile = institute?.class?.staff_profile || [];
+  // console.log("profile",staf_profile)
+  console.log( " faculty details......",data.class.faculty_Details )
 
   if (!faculty.length) {
     return <p className="text-center text-gray-600 mt-8">No faculty details available.</p>;
@@ -53,10 +55,11 @@ const FacultyDetails = () => {
         >
           <div className="relative">
             <img
-              src={`${BASE_URL}${member.image}`}
+              src={`${BASE_URL}${member.staff_Profile}`}
               alt={member.name}
               className="w-28 h-28 rounded-full object-cover mb-4 border-4 border-indigo-300 shadow-lg"
             />
+            {console.log('staff image',member.staff_Profile)}
             <div className="absolute inset-0 bg-indigo-500 opacity-10 rounded-full"></div>
           </div>
           <h3 className="text-lg font-semibold text-gray-800">{member.staff_Name}</h3>

@@ -25,7 +25,7 @@ const InstituteMultiCard = () => {
 					<h1 className="text-red-500 text-center mt-5">No data found.</h1>
 				)}
 				{!isLoading && instituteData?.length !== 0 && (
-					<div className="cursor-pointer grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 m-5">
+					<div className="cursor-pointer grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-5 m-5">
 						{instituteData?.map((each) => (
 							<InstituteCard
 								institute={each}
