@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import Carousel from './Carousel';
 import CheckEligibility from './CheckEligibility';
 import Carouseldiv from './Coraseldiv';
+import LogoPage from './logopage';
 
 const Data = [];
 
@@ -61,12 +62,14 @@ const HeroSection = () => {
 				{/* </div> */}
 			</div>
 			<div>
-				<Carousel />
+			<Carouseldiv />
+			<LogoPage/>
+				{/* <Carousel /> */}
 			</div>
 			<br />
 
 			<CheckEligibility />
-			<Carouseldiv />
+			
 		</>
 	);
 };

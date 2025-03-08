@@ -87,7 +87,7 @@ const Carousel = () => {
         {/* Navigation Buttons */}
         <button
           onClick={prevSlide}
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 lg:bg-black sm:bg-none bg-opacity-10 text-white p-3 rounded-full hover:bg-opacity-80 z-50 "
+          className="absolute top-1/2 left-4 transform -translate-y-1/2  sm:bg-none bg-opacity-10 text-white p-3 rounded-full hover:bg-opacity-80 z-50 "
         >
           &#9665;
         </button>

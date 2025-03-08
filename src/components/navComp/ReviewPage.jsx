@@ -114,7 +114,7 @@ const ReviewPage = ({ reviewCollegeName }) => {
             </span>
           ))}
         </div>
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <textarea
             name="comment"
             placeholder="Your Review"
@@ -125,7 +125,7 @@ const ReviewPage = ({ reviewCollegeName }) => {
           {formik.touched.comment && formik.errors.comment && (
             <div className="text-red-500 text-sm">{formik.errors.comment}</div>
           )}
-        </div>
+        </div> */}
         <button
           type="submit"
           className={`w-full p-2 rounded text-white ${

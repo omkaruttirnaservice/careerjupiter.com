@@ -6,6 +6,7 @@ import SearchComponent from '../components/SearchComp/Search';
 import SearchContextProvider from '../store/SearchContext';
 import { useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
+import ScrollToTop from './ScrollToTop';
 
 const AppLayout = () => {
 	const authState = useSelector((state) => state.auth);
@@ -14,6 +15,7 @@ const AppLayout = () => {
     <>
       {authState.isLoggedIn ? (
         <SearchContextProvider>
+          <ScrollToTop/>
           <Nav />
           <SearchComponent />
           <Outlet />

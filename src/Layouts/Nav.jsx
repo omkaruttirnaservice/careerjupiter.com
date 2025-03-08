@@ -154,7 +154,7 @@ import { useSelector } from 'react-redux';
 
 const Nav = () => {
 	const { isLoggedIn, userId } = useSelector((state) => state.auth);
-	console.log(isLoggedIn, userId);
+	// console.log(isLoggedIn, userId);
 
 	const { setTagName, setQuery, setIsLoading } = useSearchContext();
 	const profilePic =

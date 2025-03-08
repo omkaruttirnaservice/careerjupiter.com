@@ -62,7 +62,7 @@ const MultiCards = () => {
 						learning opportunities.
 					</p>
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-						{collegesData?.map((college, index) => (
+						{collegesData?.results?.map((college, index) => (
 							<div
 								key={index}
 								className="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-transform duration-200 cursor-pointer"

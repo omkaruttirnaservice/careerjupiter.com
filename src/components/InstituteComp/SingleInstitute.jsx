@@ -17,12 +17,14 @@ const fetchInstitute = async (id) => {
 		throw new Error('Failed to fetch class details');
 	}
 	const result = await response.json();
+
 	if (result.success && result.data) {
 		return result.data; // Parse the nested JSON string
 	}
 	throw new Error(result.errMsg || 'Failed to fetch class details');
 };
 
+console.log(fetchInstitute.response , 'response')
 const fetchCourses = async (id) => {
 	const response = await fetch(`${BASE_URL}/api/class/course/${id}`);
 	if (!response.ok) {
