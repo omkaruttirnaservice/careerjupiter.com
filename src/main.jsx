@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import {
@@ -8,8 +8,8 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { Provider as OldStoreProvider } from "react-redux";
-import store from "./store-redux/Store.js";
-import { Provider as ProviderRedux } from "react-redux";
+
+import { Provider as AuthProvider } from "react-redux";
 import AuthStore from "./store-redux/store.js";
 import { AxiosError } from "axios";
 
@@ -41,13 +41,13 @@ function handleError(error) {
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
   <>
-    <OldStoreProvider store={store}>
-      <ProviderRedux store={AuthStore}>
+    {/* <OldStoreProvider store={store}> */}
+      <AuthProvider store={AuthStore}>
         <QueryClientProvider client={queryClient}>
           <App />
         </QueryClientProvider>
-      </ProviderRedux>
-    </OldStoreProvider>
+      </AuthProvider>
+    {/* </OldStoreProvider> */}
     <ToastContainer position="top-right" autoClose={3000} />
   </>
   // </StrictMode>
