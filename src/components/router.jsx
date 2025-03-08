@@ -20,53 +20,58 @@ import MyEligibility from './eligibility/MyEligibility.jsx';
 import TestCard from './TestComp/TestCard.jsx';
 import QueryBasedComponent from './TestComp/QueryBasedComponent.jsx';
 import Logout from '../Pages/Logout.jsx';
+import SignupPopup from '../Pages/SignIn/SignupPopup.jsx';
 // import ClassesList from './InstituteComp/ClassesList.jsx';
 
 export const router = createBrowserRouter([
-	{
-		path: '/',
-		element: <AppLayout />,
-		children: [
-			{ path: '', element: <HeroSection /> },
-			{ path: 'college', element: <MultiCards /> },
-			{ path: 'college/:id', element: <CardDetails /> },
+  {
+    path: "/",
+    element: <AppLayout />,
+    children: [
+      { path: "", element: <HeroSection /> },
+      { path: "college", element: <MultiCards /> },
+      { path: "college/:id", element: <CardDetails /> },
 
-			{ path: 'university', element: <UniversityMultiCard /> },
-			{ path: 'university/:id', element: <UniversityDetail /> },
+      { path: "university", element: <UniversityMultiCard /> },
+      { path: "university/:id", element: <UniversityDetail /> },
 
-			{ path: 'class', element: <InstituteMultiCard /> },
-			{ path: 'class/:id', element: <SingleInstitute /> },
+      { path: "class", element: <InstituteMultiCard /> },
+      { path: "class/:id", element: <SingleInstitute /> },
 
-			{ path: 'reviews/:id', element: <ReviewPage /> },
+      { path: "reviews/:id", element: <ReviewPage /> },
 
-			{ path: 'university', element: <UniversityMultiCard /> },
-			{ path: 'university/:id', element: <UniversityDetail /> },
-		],
-	},
+      { path: "university", element: <UniversityMultiCard /> },
+      { path: "university/:id", element: <UniversityDetail /> },
+    ],
+  },
 
-	{ path: '/dashboard', element: <Dashboard /> },
+  { path: "/dashboard", element: <Dashboard /> },
 
-	{ path: '/signin', element: <LoginPage /> },
-	{ path: '/sign', element: <MultiStepForm /> },
-	{ path: '/roadmap', element: <Roadmap /> },
-	{ path: '/iq', element: <IQTest /> },
+  { path: "/signin", element: <LoginPage /> },
+  { path: "/sign", element: <MultiStepForm /> },
+  { path: "/roadmap", element: <Roadmap /> },
+  { path: "/iq", element: <IQTest /> },
 
-	{ path: '/my-eligibility', element: <MyEligibility /> },
+  { path: "/my-eligibility", element: <MyEligibility /> },
 
-	{
-		path: 'profile',
-		element: <ProfileLayout />,
-		children: [
-			{
-				path: 'personal-details',
-				element: <ProfileDetails />,
-			},
-			{ path: 'test', element: <QueryBasedComponent /> },
-		],
-	},
+  {
+    path: "profile",
+    element: <ProfileLayout />,
+    children: [
+      {
+        path: "personal-details",
+        element: <ProfileDetails />,
+      },
+      { path: "test", element: <QueryBasedComponent /> },
+    ],
+  },
 
-	{
-		path: '/signout',
-		element: <Logout />,
-	},
+  {
+    path: "/signout",
+    element: <Logout />,
+  },
+  {
+    path: "/popup",
+    element: <SignupPopup />,
+  },
 ]);

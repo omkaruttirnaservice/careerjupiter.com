@@ -1,27 +1,32 @@
-import Nav from './Nav';
+import Nav from "./Nav";
 
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
-import Footer from '../components/Footer';
-import SearchComponent from '../components/SearchComp/Search';
-import SearchContextProvider from '../store/SearchContext';
-import { useLayoutEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
+import SearchComponent from "../components/SearchComp/Search";
+import SearchContextProvider from "../store/SearchContext";
+import { useEffect, useLayoutEffect } from "react";
+import { useSelector } from "react-redux";
+import SignupPopup from "./../Pages/SignIn/SignupPopup";
 
 const AppLayout = () => {
-	const authState = useSelector((state) => state.auth);
+  const authState = useSelector((state) => state.auth);
 
-	return (
+  // useEffect(() => {
+  //   window.addEventListener('scroll', ()=>{
+
+  //   })
+  // }, [authState.isLoggedIn]);
+
+  return (
     <>
-      {authState.isLoggedIn ? (
-        <SearchContextProvider>
-          <Nav />
-          <SearchComponent />
-          <Outlet />
-          <Footer />
-        </SearchContextProvider>
-      ) : (
-        <Navigate to="/signin" replace />
-      )}
+      <SearchContextProvider>
+        <Nav />
+        <SearchComponent />
+        <Outlet />
+        <Footer />
+      </SearchContextProvider>
+
+      
     </>
   );
 };
