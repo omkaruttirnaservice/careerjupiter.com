@@ -2,19 +2,19 @@
 
 import { useState, useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
-import { FiFilter, FiStar, FiX } from "react-icons/fi"
-
-// Create an Axios instance
-const axiosInstance = axios.create({
-  baseURL: "http://192.168.1.5:5000/api", // Your API base URL
-})
+import { fetchCutoffs, fetchEligibleColleges } from './Api'; // Import the API functions
+import { FiFilter, FiX } from "react-icons/fi"
+import { useLocation } from "react-router-dom";
 
 const MyEligibility = () => {
+
+  const location = useLocation();
+  const [percentage, setPercentage] = useState(location.state?.percentage || '');
+
+
   const [selectedEducation, setSelectedEducation] = useState("")
   const [examOptions, setExamOptions] = useState([])
   const [selectedExam, setSelectedExam] = useState("")
-  const [percentage, setPercentage] = useState("")
   const [selectedDistrict, setSelectedDistrict] = useState("")
   const [selectedCaste, setSelectedCaste] = useState("")
   const [sortOrder, setSortOrder] = useState("")
@@ -31,11 +31,6 @@ const MyEligibility = () => {
   const [casteOptions, setCasteOptions] = useState([])
   const [isSearching, setIsSearching] = useState(false)
 
-  const [phoneNumber, setPhoneNumber] = useState("")
-  const [otp, setOtp] = useState("")
-  const [isOtpSent, setIsOtpSent] = useState(false)
-  const [isOtpVerified, setIsOtpVerified] = useState(false)
-
   // Define education options
   const educationOptions = {
     "10th": [],
@@ -45,10 +40,7 @@ const MyEligibility = () => {
   // Fetch cutoffs using TanStack Query
   const { data: cutoffsData, isLoading: isCutoffsLoading } = useQuery({
     queryKey: ["cutoffs"],
-    queryFn: async () => {
-      const response = await axiosInstance.get("/cutoff/all")
-      return response.data.usrMsg
-    },
+    queryFn: fetchCutoffs, // Use the imported function
   })
 
   // Extract unique districts and castes from cutoff data
@@ -69,7 +61,7 @@ const MyEligibility = () => {
   }, [cutoffsData])
 
   // Fetch eligible colleges based on filters
-  const fetchEligibleColleges = async () => {
+  const fetchEligibleCollegesData = async () => {
     if (!selectedEducation || !percentage || !selectedCaste) {
       return
     }
@@ -77,19 +69,17 @@ const MyEligibility = () => {
     setIsSearching(true)
     try {
       const district = selectedDistrict || ""
-      const response = await axiosInstance.get(`/eligibility/colleges`, {  
-        params: {
-          education: selectedEducation,
-          percentage: percentage,
-          caste: selectedCaste,
-          district: district,
-          year:2012
-        },
-      })
+      const response = await fetchEligibleColleges({
+        education: selectedEducation,
+        percentage: percentage,
+        caste: selectedCaste,
+        district: district,
+        year: 2012
+      });
 
-      if (response.data.success && response.data.data) {
-        setColleges(response.data.data)
-        setFilteredColleges(response.data.data)
+      if (response.success && response.data) {
+        setColleges(response.data)
+        setFilteredColleges(response.data)
       } else {
         setColleges([])
         setFilteredColleges([])
@@ -105,7 +95,7 @@ const MyEligibility = () => {
 
   // Handle search button click
   const handleSearch = () => {
-    fetchEligibleColleges()
+    fetchEligibleCollegesData()
   }
 
   useEffect(() => {
@@ -127,26 +117,6 @@ const MyEligibility = () => {
 
   const handleCasteChange = (caste) => {
     setSelectedCaste(caste)
-  }
-
-  const handleGetOtp = () => {
-    // Simulate sending OTP (you can replace this with an actual API call)
-    if (phoneNumber) {
-      setIsOtpSent(true)
-      alert(`OTP sent to ${phoneNumber}`)
-    } else {
-      alert("Please enter a valid phone number.")
-    }
-  }
-
-  const handleVerifyOtp = () => {
-    // Simulate OTP verification (you can replace this with an actual API call)
-    if (otp === "1234") {
-      // Replace "1234" with the actual OTP logic
-      setIsOtpVerified(true)
-    } else {
-      alert("Invalid OTP")
-    }
   }
 
   const applyAllFilters = () => {
@@ -296,46 +266,6 @@ const MyEligibility = () => {
       <div className="w-full max-w-4xl space-y-8">
         <h1 className="text-3xl font-bold text-center text-gray-800">Check Your Eligibility</h1>
 
-        {/* Phone Number + OTP */}
-        <div className="flex flex-col md:flex-row justify-center gap-4">
-          <input
-            type="number"
-            placeholder="Enter your phone number"
-            className="w-full md:w-[60%] border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            disabled={isOtpVerified}
-          />
-          {!isOtpSent ? (
-            <button
-              onClick={handleGetOtp}
-              className="bg-indigo-500 cursor-pointer text-white rounded-lg px-4 py-2 hover:bg-indigo-600"
-              disabled={isOtpVerified}
-            >
-              Get OTP
-            </button>
-          ) : (
-            <>
-              <input
-                type="text"
-                placeholder="Enter OTP"
-                className="w-full md:w-[30%] border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-              />
-              <button
-                onClick={handleVerifyOtp}
-                className="bg-indigo-500 cursor-pointer text-white rounded-lg px-4 py-2 hover:bg-indigo-600"
-              >
-                Verify
-              </button>
-            </>
-          )}
-        </div>
-
-        {/* OTP Status */}
-        {isOtpVerified && <p className="text-green-500 text-center">OTP Verified Successfully!</p>}
-
         {/* Education + Exam + Percentage */}
         <div className="flex flex-col md:flex-row gap-4">
           <select
@@ -368,6 +298,7 @@ const MyEligibility = () => {
           )}
 
           <input
+          
             type="number"
             value={percentage}
             onChange={(e) => setPercentage(e.target.value)}
@@ -464,83 +395,68 @@ const MyEligibility = () => {
           </div>
         )}
 
-        {/* Filter Popup */}
-        {showFilter && (
-          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-lg shadow-lg w-[90%] max-w-4xl flex flex-col overflow-hidden">
-              {/* Header */}
-              <div className="flex justify-between items-center p-4 border-b">
-                <h3 className="text-xl font-medium">Filters</h3>
-                <button
-                  onClick={() => setShowFilter(false)}
-                  className="hover:bg-red-600 cursor-pointer text-gray-600 hover:text-white"
-                >
-                  <FiX size={20} />
-                </button>
-              </div>
 
-              {/* Horizontal Layout */}
-              <div className="flex flex-col space-y-6 p-4 overflow-y-auto">
-                {/* Sort by Section */}
-                <div>
-                  <div className="text-lg font-medium mb-2">Sort by</div>
-                  <div className="flex flex-wrap gap-4">
-                    {["cutoffLowToHigh", "cutoffHighToLow"].map((sort, index) => (
-                      <label key={index} className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="sort"
-                          className="w-4 h-4 text-red-500 focus:ring-red-500"
-                          checked={sortOrder === sort}
-                          onChange={() => handleSortChange(sort)}
-                        />
-                        <span>{sort === "cutoffLowToHigh" ? "Cutoff: Low to High" : "Cutoff: High to Low"}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+{/* Filter Popup */}
+{showFilter && (
+  <div className="fixed top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 to-black/50 backdrop-blur-xs flex justify-center items-center">
 
-                {/* College Type Section */}
-                <div>
-                  <div className="text-lg font-medium mb-2">College Type</div>
-                  <div className="flex flex-wrap gap-4">
-                    {["Government", "Private", "Deemed", "Autonomous"].map((type, index) => (
-                      <label key={index} className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="collegeType"
-                          className="w-4 h-4 text-red-500 focus:ring-red-500"
-                          checked={collegeType === type}
-                          onChange={() => handleCollegeTypeChange(type)}
-                        />
-                        <span>{type}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+    <div className="bg-white rounded-2xl shadow-2xl w-[40%] max-w-4xl flex flex-col overflow-hidden transform transition-all duration-300 scale-105">
+      {/* Header */}
+      <div className="flex justify-between items-center p-5 border-b border-gray-200">
+        <h3 className="text-2xl font-semibold text-gray-800">Filters</h3>
+        <button
+          onClick={() => setShowFilter(false)}
+          className="p-2 rounded-full cursor-pointer bg-gray-200 hover:bg-red-500 hover:text-white transition"
+        >
+          <FiX size={24} />
+        </button>
+      </div>
 
-                {/* Cutoff Range Section */}
-                <div>
-                  <div className="text-lg font-medium mb-2">Cutoff Range</div>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      placeholder="Min"
-                      className="border rounded-lg px-4 py-2 w-1/2"
-                      value={cutoffRange.min}
-                      onChange={(e) => handleCutoffRangeChange(e.target.value, cutoffRange.max)}
-                    />
-                    <span>-</span>
-                    <input
-                      type="number"
-                      placeholder="Max"
-                      className="border rounded-lg px-4 py-2 w-1/2"
-                      value={cutoffRange.max}
-                      onChange={(e) => handleCutoffRangeChange(cutoffRange.min, e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
+      {/* Filter Content */}
+      <div className="flex flex-col space-y-8 p-6 overflow-y-auto max-h-[70vh]">
+        
+        {/* Sort by Section */}
+        <div>
+          <h4 className="text-lg font-semibold text-gray-700 mb-3">Sort by</h4>
+          <div className="flex flex-wrap gap-4">
+            {["cutoffLowToHigh", "cutoffHighToLow"].map((sort, index) => (
+              <label key={index} className="flex items-center gap-3 cursor-pointer text-gray-600 hover:text-red-500 transition">
+                <input
+                  type="radio"
+                  name="sort"
+                  className="w-5 h-5 text-red-500 accent-red-500"
+                  checked={sortOrder === sort}
+                  onChange={() => handleSortChange(sort)}
+                />
+                <span className="text-base">
+                  {sort === "cutoffLowToHigh" ? "Cutoff: Low to High" : "Cutoff: High to Low"}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* College Type Section */}
+        <div>
+          <h4 className="text-lg font-semibold text-gray-700 mb-3">College Type</h4>
+          <div className="flex flex-wrap gap-4">
+            {["Government", "Private", "Deemed", "Autonomous"].map((type, index) => (
+              <label key={index} className="flex items-center gap-3 cursor-pointer text-gray-600 hover:text-red-500 transition">
+                <input
+                  type="radio"
+                  name="collegeType"
+                  className="w-5 h-5 text-red-500 accent-red-500"
+                  checked={collegeType === type}
+                  onChange={() => handleCollegeTypeChange(type)}
+                />
+                <span className="text-base">{type}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+      </div>
+
 
               {/* Footer */}
               <div className="flex justify-between items-center p-4 border-t">
@@ -558,179 +474,63 @@ const MyEligibility = () => {
           </div>
         )}
 
-        {/* College List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* College card */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 ">
           {isSearching ? (
-            <div className="col-span-2 flex justify-center items-center py-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+            <div className="col-span-full flex justify-center items-center py-16">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-500"></div>
             </div>
           ) : filteredColleges.length > 0 ? (
             filteredColleges.map((college, i) => (
               <div
                 key={i}
-                className="border rounded-lg shadow-md hover:shadow-lg transition-shadow relative overflow-hidden"
+                className="shadow-md hover:shadow-2xl transition-transform p-4 bg-white flex flex-col overflow-hidden rounded-lg hover:scale-105 duration-300"
               >
-                {/* College Image */}
                 <img
-                  src={college.image || "/placeholder.svg?height=200&width=400"}
-                  alt={college.collegeName}
-                  className="w-full h-48 object-cover"
+                  src="https://www.shutterstock.com/image-photo/group-students-digital-tablet-laptop-600nw-2347371743.jpg"
+                  alt="No Found"
+                  className="h-34 object-cover "
                 />
 
-                <div className="p-4">
-                  <div className="flex justify-between items-start">
-                    <h2 className="text-xl font-bold">{college.collegeName}</h2>
-                    <div className="flex items-center gap-1 bg-green-100 text-green-800 px-2 py-1 rounded">
-                      <FiStar className="fill-current" />
-                      <span>{college.accreditation || "N/A"}</span>
-                    </div>
-                  </div>
-
-                  <div className="mt-2 space-y-1 text-sm text-gray-600">
-                    <p>
-                      <strong>Location:</strong> {college.address?.dist}, {college.address?.state}
-                    </p>
-                    <p>
-                      <strong>Type:</strong> {college.collegeType}
-                    </p>
-                    <p>
-                      <strong>University:</strong> {college.affiliatedUniversity}
-                    </p>
-                    <p>
-                      <strong>Established:</strong> {college.establishedYear}
-                    </p>
-
-                    {/* Display cutoff for selected caste and branch */}
-                    {selectedCaste && (
-                      <p>
-                        <strong>Cutoff ({selectedCaste}):</strong>{" "}
-                        {getCutoffForCollege(college._id, selectedBranch, selectedCaste) || "N/A"}%
-                      </p>
-                    )}
-                  </div>
-
-                  {/* College-specific cutoffs */}
-                  {cutoffs.filter(
-                    (cutoff) =>
-                      cutoff.collegeId?._id === college._id &&
-                      (!selectedBranch || cutoff.branch_name === selectedBranch),
-                  ).length > 0 && (
-                    <div className="mt-4 border-t pt-4">
-                      <h3 className="font-semibold mb-2">Branch Cutoffs</h3>
-                      <div className="grid grid-cols-1 gap-2">
-                        {cutoffs
-                          .filter(
-                            (cutoff) =>
-                              cutoff.collegeId?._id === college._id &&
-                              (!selectedBranch || cutoff.branch_name === selectedBranch),
-                          )
-                          .map((cutoff, index) => (
-                            <div key={index} className="bg-gray-50 p-3 rounded-lg">
-                              <div className="flex justify-between">
-                                <span className="font-medium">{cutoff.branch_name}</span>
-                                <span className="text-gray-500 text-sm">Year: {cutoff.year}</span>
-                              </div>
-                              <div className="mt-2 grid grid-cols-2 gap-2">
-                                {Object.entries(cutoff.cutoff.marks)
-                                  .filter(([caste]) => !selectedCaste || caste === selectedCaste)
-                                  .map(([caste, mark], idx) => (
-                                    <div key={idx} className="flex justify-between">
-                                      <span>{caste}:</span>
-                                      <span className="font-medium">{mark}%</span>
-                                    </div>
-                                  ))}
-                              </div>
-                            </div>
-                          ))}
-                      </div>
-                    </div>
+                <div className="p-3 flex-1 flex flex-col gap-2">
+                  <h2 className="text-base font-bold text-gray-800 truncate">{college.collegeName}</h2>
+                  <p className="text-xs text-gray-600">📍 {college.address?.dist}, {college.address?.state}</p>
+                  <p className="text-xs text-gray-600">🏫 {college.affiliatedUniversity}</p>
+                  <p className="text-xs">🏷️ <strong>Type:</strong> {college.collegeType}</p>
+                  <p className="text-xs">📅 <strong>Established:</strong> {college.establishedYear}</p>
+                  {selectedCaste && (
+                    <p className="text-xs">📊 <strong>Cutoff ({selectedCaste}):</strong> {getCutoffForCollege(college._id, selectedBranch, selectedCaste) || 'N/A'}%</p>
                   )}
+                  {cutoffs
+                    .filter(cutoff => cutoff.collegeId?._id === college._id && (!selectedBranch || cutoff.branch_name === selectedBranch))
+                    .map((cutoff, index) => (
+                      <p key={index} className="text-xs">🌿 <strong>Branch:</strong> {cutoff.branch_name} <br/>  📅 <strong>Year:</strong> {cutoff.year}</p>
+                    ))}
+                </div>
 
-                  {/* Contact and Apply buttons */}
-                  <div className="mt-4 flex gap-2">
-                    <a
-                      href={`tel:${college.contactDetails}`}
-                      className="flex-1 bg-indigo-100 text-indigo-700 text-center py-2 rounded-lg hover:bg-indigo-200"
-                    >
-                      Contact
-                    </a>
-                    <a
-                      href={college.applicationFormURL || college.websiteURL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 bg-indigo-600 text-white text-center py-2 rounded-lg hover:bg-indigo-700"
-                    >
-                      Apply
-                    </a>
-                  </div>
+                <div className="flex gap-2 mt-auto">
+                  <a
+                    href={`tel:${college.contactDetails}`}
+                    className="flex-1 bg-indigo-100 text-indigo-700 text-center py-2 rounded-md text-xs flex items-center justify-center gap-1 hover:bg-indigo-200"
+                  >
+                    📞 Contact
+                  </a>
+                  <a
+                    href={college.applicationFormURL || college.websiteURL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-indigo-600 text-white text-center py-2 rounded-md text-xs flex items-center justify-center gap-1 hover:bg-indigo-700"
+                  >
+                    📝 Apply
+                  </a>
                 </div>
               </div>
             ))
           ) : (
-            <p className="col-span-2 text-center py-8">
-              {selectedEducation && percentage && selectedCaste
-                ? "No colleges found matching your criteria"
-                : "Select education, percentage, and caste to search for colleges"}
+            <p className="col-span-full text-center py-16 text-gray-500">
+              {selectedEducation && percentage && selectedCaste ? 'No colleges found matching your criteria.' : 'Select education, percentage, and caste to search for colleges.'}
             </p>
           )}
-        </div>
-
-        {/* Standalone Cutoff Cards */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4 text-center">Branch Cutoffs</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {isCutoffsLoading ? (
-              <div className="col-span-2 flex justify-center items-center py-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-              </div>
-            ) : cutoffs.length > 0 ? (
-              cutoffs
-                .filter((cutoff) => !selectedBranch || cutoff.branch_name === selectedBranch)
-                .slice(0, 6) // Limit to 6 cutoffs for better display
-                .map((cutoff, index) => (
-                  <div key={index} className="border rounded-lg shadow-md overflow-hidden">
-                    <div className="bg-indigo-600 text-white p-3">
-                      <div className="flex justify-between items-center">
-                        <h3 className="text-xl font-bold">{cutoff.branch_name}</h3>
-                        <span className="bg-white text-indigo-800 px-2 py-1 rounded text-sm font-medium">
-                          Year: {cutoff.year}
-                        </span>
-                      </div>
-                      <p className="text-sm mt-1">{cutoff.collegeId?.collegeName}</p>
-                    </div>
-                    <div className="p-4">
-                      <div className="grid grid-cols-2 gap-y-3">
-                        {Object.entries(cutoff.cutoff.marks)
-                          .filter(([caste]) => !selectedCaste || caste === selectedCaste)
-                          .map(([caste, mark], idx) => (
-                            <div
-                              key={idx}
-                              className={`flex justify-between items-center p-2 rounded ${
-                                selectedCaste === caste ? "bg-indigo-50 border border-indigo-200" : ""
-                              }`}
-                            >
-                              <span className="font-medium">{caste}:</span>
-                              <span
-                                className={`font-bold text-lg ${
-                                  Number(mark) >= 85
-                                    ? "text-red-600"
-                                    : Number(mark) >= 75
-                                      ? "text-orange-600"
-                                      : "text-green-600"
-                                }`}
-                              >
-                                {mark}%
-                              </span>
-                            </div>
-                          ))}
-                      </div>
-                    </div>
-                  </div>
-                ))
-            ) : (
-              <p className="col-span-2 text-center py-8">No cutoff data available</p>
-            )}
-          </div>
         </div>
       </div>
     </div>

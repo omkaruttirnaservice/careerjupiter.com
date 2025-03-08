@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import TypewriterComponent from "../components/Typewriter";
-import MultiCards from "../components/MultiCards";
+// import MultiCards from "../components/MultiCards";
 import { cardDataProvider } from "../store/DashbordData";
-import Nav from "./Nav";
+// import Nav from "./Nav";
 import { LuNotebookPen } from "react-icons/lu";
-import Carousel from "./Carousel";
+// import Carousel from "./Carousel";
 import CheckEligibility from "./CheckEligibility";
+import BestCollege from "./BestCollege";
+import BestClass from "./BestClass";
+import BestUniversity from "./BestUniversity";
+import Carouseldiv from "./CarouselDiv";
 
 const Data = [
   {
@@ -86,12 +90,23 @@ const HeroSection = () => {
           </div>
         </div>
         <div>
-        <Carousel />
-        </div>
+          <br/>
+        <Carouseldiv />
         <br/>
+        <CheckEligibility />
+        <br/>
+        <BestCollege />
+        <br/>
+        <BestClass />
+        <br/>
+        <BestUniversity />
+      
+        </div>
+        
       </cardDataProvider.Provider>
       
-      <CheckEligibility />
+     
+      
     </>
   );
 };
