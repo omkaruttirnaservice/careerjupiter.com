@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import TypewriterComponent from '../components/Typewriter';
-import MultiCards from '../components/MultiCards';
-import Nav from './Nav';
 import { LuNotebookPen } from 'react-icons/lu';
+import { NavLink } from 'react-router-dom';
 import Carousel from './Carousel';
 import CheckEligibility from './CheckEligibility';
+import Carouseldiv from './Coraseldiv';
 
 const Data = [];
 
@@ -68,6 +66,7 @@ const HeroSection = () => {
 			<br />
 
 			<CheckEligibility />
+			<Carouseldiv />
 		</>
 	);
 };
