@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getTest } from "./Api";
 import { FaBrain } from "react-icons/fa";
 import IQTest from "./IQTest";
+import { setTestResult } from "../../store-redux/testResultSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function TestCard() {
   const [selectedTest, setSelectedTest] = useState(null);
@@ -10,7 +12,13 @@ function TestCard() {
   const [testDuration, setTestDuration] = useState(0);
   const [testName, setTestName] = useState("");
   const [testId , setTestId] = useState(null);
-  const type = "Diploma";
+  const dispatch = useDispatch();
+
+  const currentEducation = useSelector(
+    (state) => state.education.currentEducation
+  );
+
+  const type = currentEducation;
 
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["getTest", type],
@@ -39,7 +47,11 @@ function TestCard() {
         ) : null}
         {!startTest ? (
           <button
-            onClick={() => setStartTest(true)}
+            onClick={() =>{
+               setStartTest(true)
+               dispatch(setTestResult([]));   
+            }
+               }
             className="mb-4 ml-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
           >
             Start Test

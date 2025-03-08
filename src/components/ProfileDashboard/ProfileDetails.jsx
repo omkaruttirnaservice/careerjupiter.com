@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./Api";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -9,14 +9,23 @@ import {
   FaGraduationCap,
   FaMapMarkerAlt,
 } from "react-icons/fa";
+import { useEffect } from "react";
+import { setCurrentEducation } from "../../store-redux/educationSlice";
 
 const ProfileDetails = () => {
+  const dispatch = useDispatch();
   const { userId } = useSelector((state) => state.auth);
 
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["userData", userId],
     queryFn: () => getUser(userId),
   });
+
+  useEffect(() => {
+    if (data?.data?.info?.current_education) {
+      dispatch(setCurrentEducation(data.data.info.current_education));
+    }
+  }, [data, dispatch]);
 
   if (isPending)
     return (
