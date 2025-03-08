@@ -1,54 +1,54 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App.jsx";
-import {
-  MutationCache,
-  QueryCache,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
-import { Provider as OldStoreProvider } from "react-redux";
-import store from "./redux/Store.js";
-import { Provider as AuthProvider } from "react-redux";
-import AuthStore from "./store-redux/store.js";
-import { AxiosError } from "axios";
+import { createRoot } from 'react-dom/client';
+import App from './App.jsx';
 
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// tanstack
+import {
+	MutationCache,
+	QueryCache,
+	QueryClient,
+	QueryClientProvider,
+} from '@tanstack/react-query';
+
+// Redux
+import { Provider } from 'react-redux';
+import reduxStore from './store-redux/store.js';
+
+// axios
+import { AxiosError } from 'axios';
+
+// toastify
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient({
-  queryCache: new QueryCache({
-    onError(error) {
-      handleError(error);
-    },
-  }),
-  mutationCache: new MutationCache({
-    onError(error) {
-      handleError(error);
-    },
-  }),
+	queryCache: new QueryCache({
+		onError(error) {
+			handleError(error);
+		},
+	}),
+	mutationCache: new MutationCache({
+		onError(error) {
+			handleError(error);
+		},
+	}),
 });
 
 function handleError(error) {
-  const errorMessage =
-    error instanceof AxiosError
-      ? error.response?.data?.message || "Something went wrong"
-      : error.message || "An unexpected error occurred";
+	const errorMessage =
+		error instanceof AxiosError
+			? error.response?.data?.message || 'Something went wrong'
+			: error.message || 'An unexpected error occurred';
 
-  console.error("Query Error:", errorMessage);
+	console.error('Query Error:', errorMessage);
 }
 
-createRoot(document.getElementById("root")).render(
-  // <StrictMode>
-  <>
-    <OldStoreProvider store={store}>
-      <AuthProvider store={AuthStore}>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </AuthProvider>
-    </OldStoreProvider>
-    <ToastContainer position="top-right" autoClose={3000} />
-  </>
-  // </StrictMode>
+createRoot(document.getElementById('root')).render(
+	<>
+		<QueryClientProvider client={queryClient}>
+			<Provider store={reduxStore}>
+				<App />
+			</Provider>
+		</QueryClientProvider>
+		<ToastContainer position="top-right" autoClose={3000} />
+	</>
 );

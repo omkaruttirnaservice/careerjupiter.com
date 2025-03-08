@@ -9,14 +9,13 @@ function TestCard() {
   const [startTest, setStartTest] = useState(false);
   const [testDuration, setTestDuration] = useState(0);
   const [testName, setTestName] = useState("");
-  const type = "10th";
+  const [testId , setTestId] = useState(null);
+  const type = "Diploma";
 
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["getTest", type],
     queryFn: () => getTest(type),
   });
-
-  console.log("title", data?.data?.title);
 
   if (isPending) return <div className="text-center text-lg">Loading...</div>;
   if (isError)
@@ -50,6 +49,7 @@ function TestCard() {
             questions={selectedTest}
             testDuration={testDuration}
             title={testName}
+            testId={testId}
           />
         )}
       </div>
@@ -66,6 +66,7 @@ function TestCard() {
             setSelectedTest(test.questions);
             setTestDuration(test.testDuration);
             setTestName(test.title);
+            setTestId(test._id);
           }}
         >
           <div className="flex items-center space-x-3 mb-4">
