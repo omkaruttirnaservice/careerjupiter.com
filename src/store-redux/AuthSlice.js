@@ -2,21 +2,6 @@ import Cookie from 'js-cookie';
 // src/store/authSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
-function getCookie(name) {
-	const cookies = document.cookie.split('; ');
-	for (let cookie of cookies) {
-		const [key, value] = cookie.split('=');
-		if (key === name) {
-			try {
-				return decodeURIComponent(value);
-			} catch (error) {
-				console.error('Error parsing cookie:', error);
-			}
-		}
-	}
-	return null;
-}
-
 function _isLoggedIn() {
 	const _token = Cookie.get('token');
 	const _userId = Cookie.get('userId');
@@ -36,7 +21,7 @@ const authSlice = createSlice({
 			state.isLoggedIn = true;
 			state.userId = action.payload;
 		},
-		logout: (state) => {
+		logout: (state, action) => {
 			state.isLoggedIn = false;
 			state.userData = null;
 		},
