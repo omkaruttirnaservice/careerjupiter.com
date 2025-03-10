@@ -7,6 +7,7 @@ import { useSearchContext } from '../store/SearchContext';
 import { navigation } from '../Constant/constantData';
 import { useSelector } from 'react-redux';
 
+
 const Nav = () => {
 	const { isLoggedIn, userId } = useSelector((state) => state.auth);
 	// console.log(isLoggedIn, userId);
@@ -39,7 +40,7 @@ const Nav = () => {
 									<b>CAREER NITI </b>
 								</span>
 
-								<div className="hidden md:flex md:space-x-8">
+								<div className="hidden md:flex md:space-x-6">
 								
 									{navigation.map((item) => (
 										<NavLink
