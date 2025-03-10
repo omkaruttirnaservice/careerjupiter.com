@@ -2,7 +2,7 @@ const Loader = () => {
   return (
     <div
       role="status"
-      className="h-4 mt-10 w-full flex flex-row gap-3 items-center justify-center"
+      className="h-4 mt-10 mb-10 w-full flex flex-row gap-3 items-center justify-center"
     >
       <svg
         aria-hidden="true"

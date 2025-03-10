@@ -3,20 +3,27 @@ import { useQuery } from "@tanstack/react-query";
 import { getTest } from "./Api";
 import { FaBrain } from "react-icons/fa";
 import IQTest from "./IQTest";
+import { setTestResult } from "../../store-redux/testResultSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function TestCard() {
   const [selectedTest, setSelectedTest] = useState(null);
   const [startTest, setStartTest] = useState(false);
   const [testDuration, setTestDuration] = useState(0);
   const [testName, setTestName] = useState("");
-  const type = "10th";
+  const [testId , setTestId] = useState(null);
+  const dispatch = useDispatch();
+
+  const currentEducation = useSelector(
+    (state) => state.education.currentEducation
+  );
+
+  const type = currentEducation;
 
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["getTest", type],
     queryFn: () => getTest(type),
   });
-
-  console.log("title", data?.data?.title);
 
   if (isPending) return <div className="text-center text-lg">Loading...</div>;
   if (isError)
@@ -40,7 +47,11 @@ function TestCard() {
         ) : null}
         {!startTest ? (
           <button
-            onClick={() => setStartTest(true)}
+            onClick={() =>{
+               setStartTest(true)
+               dispatch(setTestResult([]));   
+            }
+               }
             className="mb-4 ml-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
           >
             Start Test
@@ -50,6 +61,7 @@ function TestCard() {
             questions={selectedTest}
             testDuration={testDuration}
             title={testName}
+            testId={testId}
           />
         )}
       </div>
@@ -66,6 +78,7 @@ function TestCard() {
             setSelectedTest(test.questions);
             setTestDuration(test.testDuration);
             setTestName(test.title);
+            setTestId(test._id);
           }}
         >
           <div className="flex items-center space-x-3 mb-4">

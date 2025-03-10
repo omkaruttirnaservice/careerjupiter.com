@@ -34,13 +34,13 @@ const UniversityMultiCard = () => {
           </p>
           {isLoading && <Loader />}
 
-          {!isLoading && UniversityData?.length === 0 && (
+          {/* {!isLoading && UniversityData?.length === 0 && (
             <h1 className="text-red-500 text-center mt-5">No data found.</h1>
-          )}
+          )} */}
 
-          {!isLoading && UniversityData?.length !== 0 && (
+          {!isLoading && UniversityData?.results?.length !== 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {UniversityData?.map((uni) => (
+              {UniversityData.results?.map((uni) => (
                 <UniversityCard
                   key={uni._id}
                   university={{

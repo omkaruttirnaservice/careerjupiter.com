@@ -1,20 +1,25 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
+
+// tanstack
 import {
   MutationCache,
   QueryCache,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { Provider as OldStoreProvider } from "react-redux";
-import store from "./redux/Store.js";
-import { Provider as AuthProvider } from "react-redux";
-import AuthStore from "./store-redux/store.js";
+
+// Redux
+import { Provider } from "react-redux";
+import reduxStore from "./store-redux/store.js";
+
+// axios
 import { AxiosError } from "axios";
 
+// toastify
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import SignupPopup from "./Pages/SignIn/SignupPopup.jsx";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -39,16 +44,13 @@ function handleError(error) {
 }
 
 createRoot(document.getElementById("root")).render(
-  // <StrictMode>
   <>
-    <OldStoreProvider store={store}>
-      <AuthProvider store={AuthStore}>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </AuthProvider>
-    </OldStoreProvider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={reduxStore}>
+        <App />
+        <SignupPopup />
+      </Provider>
+    </QueryClientProvider>
     <ToastContainer position="top-right" autoClose={3000} />
   </>
-  // </StrictMode>
 );
