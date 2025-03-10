@@ -28,6 +28,9 @@ export const router = createBrowserRouter([
 		element: <AppLayout />,
 		children: [
 			{ path: '', element: <HeroSection /> },
+
+			
+
 			{ path: 'college', element: <MultiCards /> },
 			{ path: 'college/:id', element: <CardDetails /> },
 
