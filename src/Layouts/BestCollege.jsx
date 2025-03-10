@@ -39,8 +39,10 @@ const BestCollege = () => {
   }
 
   return (
-    <div className="w-full h-[80vh] flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-12">
+    <div id='search-college' className="w-full h-[80vh] flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-12">
       {/* Left Side - Image */}
+
+      
       <div className="w-full md:w-1/2 flex justify-center">
         <img 
           src="https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29sbGVnZSUyMGNhbXB1c3xlbnwwfHwwfHx8MA%3D%3D" 

@@ -3,7 +3,7 @@ import { Popover, Transition, Menu } from '@headlessui/react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import { Fragment, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useSearchContext } from '../store/SearchContext';
+// import { useSearchContext } from '../store/SearchContext';
 import { navigation } from '../Constant/constantData';
 import { useSelector } from 'react-redux';
 
@@ -11,18 +11,42 @@ const Nav = () => {
 	const { isLoggedIn, userId } = useSelector((state) => state.auth);
 	// console.log(isLoggedIn, userId);
 
-	const { setTagName, setQuery, setIsLoading } = useSearchContext();
+	// const { setTagName, setQuery, setIsLoading } = useSearchContext();
 	const profilePic =
 		'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsEJHmI0MlIGvH9CYkbsLEWQ5_ee8Qtl5V-Q&s';
 
 	const handleNavClick = () => {
 		setTagName('All');
-		setQuery('');
+		setQuery('');	
 		setIsLoading(true);
 	};
 
+	
+	const handleClick = (e, href) => {
+		if (href.startsWith('#')) {
+			e.preventDefault();
+			const targetId = href.substring(1); // Remove '#' to get ID
+			const targetElement = document.getElementById(targetId);
+
+			if (targetElement) { // Check if element exists
+				const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+				const navbarElement = document.getElementById("navbar");
+				const navbarHeight = navbarElement ? navbarElement.offsetHeight : 0;
+
+				window.scrollTo({
+					top: targetPosition - navbarHeight,
+					behavior: 'smooth',
+				});
+
+				console.log(`Scrolled to: #${targetId}`);
+			} else {
+				console.error(`Element with ID '${targetId}' not found.`);
+			}
+		}
+	};
+
 	return (
-		<div className="p-2 bg-gray-50 fixed top-0 left-0 w-full shadow-md z-50">
+		<div id='navbar' className="p-2 bg-gray-50 fixed top-0 left-0 w-full shadow-md z-50">
 			<Popover>
 				{({ open }) => (
 					<>
@@ -39,25 +63,39 @@ const Nav = () => {
 									<b>CAREER NITI </b>
 								</span>
 
+
+
 								<div className="hidden md:flex md:space-x-8">
-								
 									{navigation.map((item) => (
-										<NavLink
-											key={item.name}
-											to={item.href}
-											onClick={handleNavClick}
-											className={({ isActive }) =>
-												`font-medium hover:text-gray-900 ${
-													isActive
-														? 'text-blue-600 font-semibold'
-														: 'text-gray-500'
-												}`
-											}
-										>
-											{item.name}
-										</NavLink>
+										<div key={item.name} className="relative group">
+											<NavLink
+												to={item.href}
+												onClick={(e) => handleClick(e, item.href)}
+												className={({ isActive }) =>
+													`font-medium hover:text-gray-900 ${isActive ? 'text-blue-600 font-semibold' : 'text-gray-500'
+													}`
+												}
+											>
+												{item.name}
+											</NavLink>
+											{item.children && (
+												<div className="absolute left-0 mt-2 w-58 bg-black shadow-lg rounded-md opacity-0 scale-95 transform transition-all duration-300 group-hover:opacity-100 group-hover:scale-100 group-focus-within:opacity-100 group-focus-within:scale-100">
+													{item.children.map((child) => (
+														<a
+															key={child.name}
+															href={child.href}
+															onClick={(e) => handleClick(e, child.href)}
+															className="block px-4 py-2 text-white hover:bg-gray-100 hover:text-blue-600"
+														>
+															{child.name}
+														</a>
+													))}
+												</div>
+											)}
+										</div>
 									))}
 								</div>
+
 
 								<div className="hidden md:flex items-center gap-4">
 									{isLoggedIn ? (

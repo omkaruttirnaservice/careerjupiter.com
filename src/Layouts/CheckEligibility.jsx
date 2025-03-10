@@ -17,11 +17,15 @@ const CheckEligibility = () => {
 			navigate('/my-eligibility', { state: { percentage } }); // Pass percentage to next page
 		}, 600);
 	};
+	// console.log(handleCheckEligibility,".................................");
+	
 
 	return (
+
+		<div id='check-eligibility-section'>
 		<motion.div
-			id="container"
-			className="relative flex flex-col items-center justify-center min-h-[40vh] bg-cover bg-center transition-all duration-500 p-8 gap-6 rounded-lg shadow-2xl"
+			
+			className="relative flex flex-col items-center justify-center min-h-[70vh] bg-cover bg-center transition-all duration-500 p-8 gap-6 rounded-lg shadow-2xl"
 			style={{
 				backgroundImage:
 					"url('https://media.istockphoto.com/id/963192098/photo/exam-with-school-student-having-a-educational-test-thinking-hard-writing-answer-in-classroom.jpg?s=612x612&w=0&k=20&c=sxRP5p66TLsonilgf4rlF8n7IxmraPVFpS5f5h-KEu0=')",
@@ -51,6 +55,7 @@ const CheckEligibility = () => {
 			/>
 
 			<motion.button
+			id='container'
 				onClick={handleCheckEligibility}
 				className="cursor-pointer px-8 py-3 text-white bg-pink-500 rounded-full font-bold text-lg shadow-2xl flex justify-center items-center gap-2 hover:bg-purple-700 transition-all tracking-wider"
 				whileHover={{ scale: 1.1 }}
@@ -66,6 +71,7 @@ const CheckEligibility = () => {
 				</motion.span>
 			</motion.button>
 		</motion.div>
+		</div>
 	);
 };
 

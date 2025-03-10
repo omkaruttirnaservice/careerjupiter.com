@@ -39,7 +39,7 @@ const BestClass = () => {
   }
 
   return (
-    <div className="w-full h-[80vh] flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-green-400 via-teal-500 to-blue-400 p-12">
+    <div id='search-class' className="w-full h-[80vh] flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-green-400 via-teal-500 to-blue-400 p-12">
       {/* Right Side - Content */}
       <div className="w-full md:w-1/2 text-white text-center md:text-left p-8">
         <h1 className="text-4xl font-bold mb-6 flex items-center gap-3">

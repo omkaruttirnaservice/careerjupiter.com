@@ -39,7 +39,7 @@ const BestUniversity = () => {
   }
 
   return (
-    <div className="w-full h-[70vh] flex flex-col items-center justify-center bg-cover bg-center relative p-8" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHVuaXZlcnNpdHl8ZW58MHx8fHwxNjc4MDMwMjUw&ixlib=rb-1.2.1&q=80&w=1080')" }}>
+    <div id='search-university' className="w-full h-[70vh] flex flex-col items-center justify-center bg-cover bg-center relative p-8" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHVuaXZlcnNpdHl8ZW58MHx8fHwxNjc4MDMwMjUw&ixlib=rb-1.2.1&q=80&w=1080')" }}>
       <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
 
       <div className="z-10 text-center text-white max-w-2xl">

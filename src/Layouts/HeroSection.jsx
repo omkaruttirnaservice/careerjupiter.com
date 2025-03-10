@@ -6,13 +6,14 @@ import BestClass from './BestClass';
 import BestUniversity from './BestUniversity';
 import Carouseldiv from './CarouselDiv';
 import Typewriter from 'typewriter-effect';
+import Logopage from './logopage';
 const HeroSection = () => {
 	return (
 		<>
 			<div className="relative bg-gray-50 overflow-hidden">
 				<div className="fixed flex items-center justify-center top-1/2 right-4 transform -translate-y-1/2 w-[80px] h-[45px] bg-white rounded-full rounded-bl-[50%] z-50 shadow-lg animate-bounce">
 					<NavLink
-						to="/iq"
+						to="/iqTest"
 						className="text-white hover:text-green-800 flex flex-row gap-2"
 					>
 						<div className="flex items-center justify-center">
@@ -29,7 +30,7 @@ const HeroSection = () => {
 					<main className="mx-auto max-w-7xl px-4 sm:mt-14">
 						<div className="text-center">
 							<div className="flex flex-row justify-center gap-3 sm:gap-4 md:gap-5 text-xl font-bold sm:text-3xl md:text-4xl">
-								<h1 className="text-gray-900">FIND YOUR</h1>
+								<h1 className="text-gray-900 font-extrabold">FIND YOUR</h1>
 								<span className="font-extrabold text-transparent bg-clip-text animated-gradient">
 									<Typewriter
 										options={{
@@ -41,8 +42,7 @@ const HeroSection = () => {
 								</span>
 							</div>
 							<p className="mt-3 max-w-md mx-auto text-base font-bold text-blue-600 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-								"EMPOWER YOUR FUTURE, UNLOCK YOUR POTENTIAL, AND BUILD THE
-								CAREER OF YOUR DREAMS!" :star2:
+							"EMPOWER YOUR FUTURE, UNLOCK YOUR POTENTIAL, AND BUILD THE CAREER OF YOUR DREAMS! ✨"
 							</p>
 						</div>
 					</main>
@@ -51,6 +51,8 @@ const HeroSection = () => {
 			<div>
 				<br />
 				<Carouseldiv />
+				<br />
+				<Logopage />
 				<br />
 				<CheckEligibility />
 				<br />

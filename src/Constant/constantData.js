@@ -880,11 +880,22 @@ export const cityData = [
 
 export const navigation = [
   { name: "Home", href: "/" },
-  { name: "Student Corner", href: "/about-us" },
-  { name: "Serves Provider", href: "/contact-us" },
-  { name: "College", href: "/college" },
-  { name: "Class", href: "/class" },
-  { name: "University", href: "/university" },
+  {
+    name: "Students Corner", href: "#", children: [
+      { name: 'Student Check Eligibility', href: '#check-eligibility-section' },
+      { name: 'Search College', href: '#search-college' },
+      { name: 'Search Class', href: '#search-class' },
+      { name: 'Search University', href: '#search-university' },
+    ],
+    dropdownStyle: {
+      container: "absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg overflow-hidden transform transition-all duration-300 scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100",
+      item: "block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+    }
+  },
+  { name: "Service Providers", href: "/service-provider" },
+  { name: "About Us", href: "/about-us" },
+  { name: "Contact Us", href: "/contact-us" },
 ];
+
 
 export const BACKEND_SERVER_IP = import.meta.env.VITE_BACKEND_URL;

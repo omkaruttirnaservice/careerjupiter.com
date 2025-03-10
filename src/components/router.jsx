@@ -21,7 +21,10 @@ import TestCard from './TestComp/TestCard.jsx';
 import QueryBasedComponent from './TestComp/QueryBasedComponent.jsx';
 import Logout from '../Pages/Logout.jsx';
 import SignupPopup from '../Pages/SignIn/SignupPopup.jsx';
+import ContactUs from '../Legal/ContactUs.jsx';
+import AboutUs from '../Legal/AboutUs.jsx';
 // import ClassesList from './InstituteComp/ClassesList.jsx';
+
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +56,9 @@ export const router = createBrowserRouter([
   { path: "/iq", element: <IQTest /> },
 
   { path: "/my-eligibility", element: <MyEligibility /> },
+  { path: "/contact-us", element: <ContactUs /> },
+  { path: "/about-us", element: <AboutUs /> },
+  
 
   {
     path: "profile",
