@@ -26,13 +26,14 @@ const InstituteMultiCard = () => {
 				)}
 				{!isLoading && instituteData?.length !== 0 && (
 					<div className="cursor-pointer grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-5 m-5">
-						{instituteData?.results?.map((each) => (
-							<InstituteCard
-								institute={each}
-								key={each.id}
-								onClick={() => navigate(`/class/${each._id}`)}
-							/>
-						))}
+						{instituteData.length !== 0 &&
+							instituteData.results?.map((each) => (
+								<InstituteCard
+									institute={each}
+									key={each.id}
+									onClick={() => navigate(`/class/${each._id}`)}
+								/>
+							))}
 					</div>
 				)}
 			</div>
