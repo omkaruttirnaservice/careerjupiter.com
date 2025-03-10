@@ -40,7 +40,7 @@ const UniversityMultiCard = () => {
 
           {!isLoading && UniversityData?.results?.length !== 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {UniversityData?.map((uni) => (
+              {UniversityData.results?.map((uni) => (
                 <UniversityCard
                   key={uni._id}
                   university={{
