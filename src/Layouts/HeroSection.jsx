@@ -1,34 +1,34 @@
-import { useState } from 'react';
-import { LuNotebookPen } from 'react-icons/lu';
-import { NavLink } from 'react-router-dom';
-import Carousel from './Carousel';
-import CheckEligibility from './CheckEligibility';
-import Carouseldiv from './Coraseldiv';
+import { useState } from "react";
+import { LuNotebookPen } from "react-icons/lu";
+import { NavLink } from "react-router-dom";
+import Carousel from "./Carousel";
+import CheckEligibility from "./CheckEligibility";
+import Carouseldiv from "./Coraseldiv";
 
 const Data = [];
 
 const HeroSection = () => {
-	const [collegeData, setCollegeData] = useState(Data);
+  const [collegeData, setCollegeData] = useState(Data);
 
-	return (
-		<>
-			<div className="relative bg-gray-50 overflow-hidden">
-				<div className="fixed flex items-center justify-center top-1/2 right-4 transform -translate-y-1/2 w-[80px] h-[45px] bg-white rounded-full rounded-bl-[50%] z-50 shadow-lg animate-bounce">
-					<NavLink
-						to="/profile/test"
-						className="text-white hover:text-green-800 flex flex-row gap-2"
-					>
-						<div className="flex items-center justify-center">
-							<h1 className="font-bold text-2xl text-green-500">
-								<LuNotebookPen />
-							</h1>
-						</div>
-						<div className="flex items-center justify-center w-[35px] h-[35px] bg-green-500 rounded-br-[50%] rounded-tl-[50%] rounded-tr-[50%] mr-1">
-							<h1 className="font-bold text-2xl">Q</h1>
-						</div>
-					</NavLink>
-				</div>
-				{/* 
+  return (
+    <>
+      <div className="relative bg-gray-50 overflow-hidden">
+        <div className="fixed flex items-center justify-center top-1/2 right-4 transform -translate-y-1/2 w-[80px] h-[45px] bg-white rounded-full rounded-bl-[50%] z-50 shadow-lg animate-bounce">
+          <NavLink
+            to="/profile/test"
+            className="text-white hover:text-green-800 flex flex-row gap-2"
+          >
+            <div className="flex items-center justify-center">
+              <h1 className="font-bold text-2xl text-green-500">
+                <LuNotebookPen />
+              </h1>
+            </div>
+            <div className="flex items-center justify-center w-[35px] h-[35px] bg-green-500 rounded-br-[50%] rounded-tl-[50%] rounded-tr-[50%] mr-1">
+              <h1 className="font-bold text-2xl">Q</h1>
+            </div>
+          </NavLink>
+        </div>
+        {/* 
           <div className="relative pt-14 pb-16 sm:pb-14 sm:pt-4 md:pt-0">
             <main className="mx-auto max-w-7xl px-4 sm:mt-14">
               <div className="text-center">
@@ -42,7 +42,7 @@ const HeroSection = () => {
                     />
 
                   </span> */}
-				{/* <span className="font-extrabold text-transparent bg-clip-text animate-gradient bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-[length:200%_200%]">
+        {/* <span className="font-extrabold text-transparent bg-clip-text animate-gradient bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-[length:200%_200%]">
                     <TypewriterComponent
                       strings={["Best College", "Best School", "Best Class"]}
                       autoStart={true}
@@ -58,17 +58,15 @@ const HeroSection = () => {
                 </p>
               </div>
             </main> */}
-				{/* </div> */}
-			</div>
-			<div>
-				<Carousel />
-			</div>
-			<br />
+        {/* </div> */}
+      </div>
+      <div>{/* <Carousel /> */}</div>
+      <br />
 
-			<CheckEligibility />
-			<Carouseldiv />
-		</>
-	);
+      <CheckEligibility />
+      <Carouseldiv />
+    </>
+  );
 };
 
 export default HeroSection;

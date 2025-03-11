@@ -62,7 +62,7 @@ const HandleNavComp = ({
         setNavComp(<Gallery imageGallery={imageGallery} />);
         break;
       case navItem[4]:
-        setNavComp(<ReviewPage reviewCollegeName={review} />);
+        setNavComp(<ReviewPage reviewCollegeName={review} reviewUniversityName={review} />);
         break;
       // case navItem[9]:
       //   setNavComp(<News />);
