@@ -212,6 +212,7 @@ const SingleInstitute = () => {
 			<ImageGallery />
 			<FacultyDetails />
 			<ReviewPage/>
+			
 		</>
 	);
 };

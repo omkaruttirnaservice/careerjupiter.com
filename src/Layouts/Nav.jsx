@@ -11,36 +11,35 @@ const Nav = () => {
 	const { isLoggedIn, userId } = useSelector((state) => state.auth);
 	// console.log(isLoggedIn, userId);
 
-	const { setTagName, setQuery, setIsLoading } = useSearchContext();
-	const profilePic =
-		'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsEJHmI0MlIGvH9CYkbsLEWQ5_ee8Qtl5V-Q&s';
+  const { setTagName, setQuery, setIsLoading } = useSearchContext();
+  const profilePic =
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsEJHmI0MlIGvH9CYkbsLEWQ5_ee8Qtl5V-Q&s";
 
-	const handleNavClick = () => {
-		setTagName('All');
-		setQuery('');
-		setIsLoading(true);
-	};
+  const handleNavClick = () => {
+    setTagName("All");
+    setQuery("");
+    setIsLoading(true);
+  };
 
-	return (
-		<div className="p-2 bg-gray-50 fixed top-0 left-0 w-full shadow-md z-50">
-			<Popover>
-				{({ open }) => (
-					<>
-						<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-							<nav className="relative flex items-center justify-between h-12">
-								{/* <div className="flex items-center">
+  return (
+    <div className="p-2 bg-gray-50 fixed top-0 left-0 w-full shadow-md z-50">
+      <Popover>
+        {({ open }) => (
+          <>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <nav className="relative flex items-center justify-between h-12">
+                {/* <div className="flex items-center">
 									<b>CAREER NITI</b>
 								</div> */}
-								{/* <span className=" font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+                {/* <span className=" font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
                     करियर निती
                   </span> */}
 
-								<span className=" font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
-									<b>CAREER NITI </b>
-								</span>
+                <span className=" font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+                  <b>CAREER NITI </b>
+                </span>
 
 								<div className="hidden md:flex md:space-x-8">
-								
 									{navigation.map((item) => (
 										<NavLink
 											key={item.name}
@@ -59,129 +58,129 @@ const Nav = () => {
 									))}
 								</div>
 
-								<div className="hidden md:flex items-center gap-4">
-									{isLoggedIn ? (
-										<Menu as="div" className="relative">
-											<Menu.Button className="flex items-center text-sm focus:outline-none">
-												<img
-													src={profilePic}
-													alt="Profile"
-													className="h-8 w-8 rounded-full"
-												/>
-											</Menu.Button>
-											<Transition
-												as={Fragment}
-												enter="transition ease-out duration-100"
-												enterFrom="transform opacity-0 scale-95"
-												enterTo="transform opacity-100 scale-100"
-												leave="transition ease-in duration-75"
-												leaveFrom="transform opacity-100 scale-100"
-												leaveTo="transform opacity-0 scale-95"
-											>
-												<Menu.Items className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-													<div className="p-2">
-														<Menu.Item>
-															{({ active }) => (
-																<NavLink
-																	to="/profile/personal-details"
-																	className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100' : ''}`}
-																>
-																	Profile
-																</NavLink>
-															)}
-														</Menu.Item>
-														<Menu.Item>
-															{({ active }) => (
-																<button
-																	className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100' : ''}`}
-																>
-																	Sign Out
-																</button>
-															)}
-														</Menu.Item>
-													</div>
-												</Menu.Items>
-											</Transition>
-										</Menu>
-									) : (
-										<div className="flex gap-2">
-											<NavLink
-												to="/signin"
-												className="px-4 py-2 border border-indigo-600 rounded-md text-indigo-600 hover:bg-gray-50"
-											>
-												Log in
-											</NavLink>
-											<NavLink
-												to="/sign"
-												className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-											>
-												Sign Up
-											</NavLink>
-										</div>
-									)}
-								</div>
+                <div className="hidden md:flex items-center gap-4">
+                  {isLoggedIn ? (
+                    <Menu as="div" className="relative">
+                      <Menu.Button className="flex items-center text-sm focus:outline-none">
+                        <img
+                          src={profilePic}
+                          alt="Profile"
+                          className="h-8 w-8 rounded-full"
+                        />
+                      </Menu.Button>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <div className="p-2">
+                            <Menu.Item>
+                              {({ active }) => (
+                                <NavLink
+                                  to="/profile/personal-details"
+                                  className={`block px-4 py-2 text-sm ${active ? "bg-gray-100" : ""}`}
+                                >
+                                  Profile
+                                </NavLink>
+                              )}
+                            </Menu.Item>
+                            <Menu.Item>
+                              {({ active }) => (
+                                <button
+                                  className={`block w-full text-left px-4 py-2 text-sm ${active ? "bg-gray-100" : ""}`}
+                                >
+                                  Sign Out
+                                </button>
+                              )}
+                            </Menu.Item>
+                          </div>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
+                  ) : (
+                    <div className="flex gap-2">
+                      <NavLink
+                        to="/signin"
+                        className="px-4 py-2 border border-indigo-600 rounded-md text-indigo-600 hover:bg-gray-50"
+                      >
+                        Log in
+                      </NavLink>
+                      <NavLink
+                        to="/sign"
+                        className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                      >
+                        Sign Up
+                      </NavLink>
+                    </div>
+                  )}
+                </div>
 
-								<div className="md:hidden">
-									<Popover.Button className="bg-gray-50 rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
-										<span className="sr-only">Open menu</span>
-										{open ? (
-											<XIcon className="h-6 w-6" aria-hidden="true" />
-										) : (
-											<MenuIcon className="h-6 w-6" aria-hidden="true" />
-										)}
-									</Popover.Button>
-								</div>
-							</nav>
-						</div>
+                <div className="md:hidden">
+                  <Popover.Button className="bg-gray-50 rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
+                    <span className="sr-only">Open menu</span>
+                    {open ? (
+                      <XIcon className="h-6 w-6" aria-hidden="true" />
+                    ) : (
+                      <MenuIcon className="h-6 w-6" aria-hidden="true" />
+                    )}
+                  </Popover.Button>
+                </div>
+              </nav>
+            </div>
 
-						<Transition
-							as={Fragment}
-							enter="duration-150 ease-out"
-							enterFrom="opacity-0 scale-95"
-							enterTo="opacity-100 scale-100"
-							leave="duration-100 ease-in"
-							leaveFrom="opacity-100 scale-100"
-							leaveTo="opacity-0 scale-95"
-						>
-							<Popover.Panel className="absolute top-16 inset-x-0 p-2 transition transform origin-top-right md:hidden">
-								<div className="rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 divide-y-2 divide-gray-50">
-									<div className="px-5 pt-5 pb-6">
-										<div className="flex flex-col space-y-4">
-											{navigation.map((item) => (
-												<NavLink
-													key={item.name}
-													to={item.href}
-													onClick={handleNavClick}
-													className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-												>
-													{item.name}
-												</NavLink>
-											))}
-										</div>
-										{isLoggedIn && (
-											<div className="mt-4 flex items-center gap-4">
-												<img
-													src={profilePic}
-													alt="Profile"
-													className="h-10 w-10 rounded-full"
-												/>
-												<NavLink
-													to="/profile/personal-details"
-													className="text-gray-700 hover:text-gray-900"
-												>
-													Profile
-												</NavLink>
-											</div>
-										)}
-									</div>
-								</div>
-							</Popover.Panel>
-						</Transition>
-					</>
-				)}
-			</Popover>
-		</div>
-	);
+            <Transition
+              as={Fragment}
+              enter="duration-150 ease-out"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="duration-100 ease-in"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <Popover.Panel className="absolute top-16 inset-x-0 p-2 transition transform origin-top-right md:hidden overflow-auto">
+                <div className="rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 divide-y-2 divide-gray-50">
+                  <div className="px-5 pt-5 pb-6">
+                    <div className="flex flex-col space-y-4">
+                      {navigation.map((item) => (
+                        <NavLink
+                          key={item.name}
+                          to={item.href}
+                          onClick={handleNavClick}
+                          className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                        >
+                          {item.name}
+                        </NavLink>
+                      ))}
+                    </div>
+                    {isLoggedIn && (
+                      <div className="mt-4 flex items-center gap-4">
+                        <img
+                          src={profilePic}
+                          alt="Profile"
+                          className="h-10 w-10 rounded-full"
+                        />
+                        <NavLink
+                          to="/profile/personal-details"
+                          className="text-gray-700 hover:text-gray-900"
+                        >
+                          Profile
+                        </NavLink>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </Popover.Panel>
+            </Transition>
+          </>
+        )}
+      </Popover>
+    </div>
+  );
 };
 
 export default Nav;
