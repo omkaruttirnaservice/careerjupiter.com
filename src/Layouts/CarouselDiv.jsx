@@ -35,7 +35,7 @@ function Carouseldiv() {
   }, []);
 
   return (
-    <div className="relative w-full max-w-6xl mx-auto overflow-hidden flex justify-center items-center" style={{ height: "70vh" }}>
+    <div className="relative w-full max-w-7xl mx-auto overflow-hidden flex justify-center items-center" style={{ height: "70vh" }}>
       <div className="relative flex w-full h-full justify-center items-center">
         {slides.map((slide, index) => {
           let position = "hidden";

@@ -48,7 +48,9 @@ const MultiCards = () => {
 
       {/* No Data Found */}
       {!isLoading && collegesData?.length === 0 && (
-        <h1 className="text-red-500 text-center mt-5">No data found.</h1>
+         <div className="flex flex-col items-center justify-center">
+         <img src="public\no-data-found.png" alt="Not Found" className="w-1/2 max-w-md" />
+         </div>
       )}
 
       {/* College Cards */}

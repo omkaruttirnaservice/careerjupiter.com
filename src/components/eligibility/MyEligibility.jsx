@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { fetchCutoffs, fetchEligibleColleges } from './Api'; // Import the API functions
+import { fetchCutoffs , fetchEligibleColleges } from "./Api" // Import the API functions
 import { FiFilter, FiX } from "react-icons/fi"
 import { useLocation } from "react-router-dom";
 

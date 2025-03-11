@@ -5,7 +5,7 @@ import { FaSearch, FaCrown } from 'react-icons/fa'
 const BestUniversity = () => {
   const navigate = useNavigate()
   const [text, setText] = useState('')
-  const fullText = 'FIND YOUR DREAM UNIVERSITY'
+  const fullText = 'SEARCH BEST UNIVERSITY'
   const typingSpeed = 100
   const erasingSpeed = 50
   const delayBeforeErase = 1500
@@ -39,12 +39,12 @@ const BestUniversity = () => {
   }
 
   return (
-    <div id='search-university' className="w-full h-[70vh] flex flex-col items-center justify-center bg-cover bg-center relative p-8" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHVuaXZlcnNpdHl8ZW58MHx8fHwxNjc4MDMwMjUw&ixlib=rb-1.2.1&q=80&w=1080')" }}>
-      <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
+    <div id='search-university' className="  w-full h-[70vh] flex flex-col items-center justify-center bg-cover bg-center relative p-8" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHVuaXZlcnNpdHl8ZW58MHx8fHwxNjc4MDMwMjUw&ixlib=rb-1.2.1&q=80&w=1080')" }}>
+      <div className="rounded-lg absolute inset-0 bg-black opacity-60 z-0"></div>
 
       <div className="z-10 text-center text-white max-w-2xl">
-        <h1 className="text-4xl font-bold tracking-wide mb-6 flex items-center justify-center gap-3">
-          <FaCrown className="text-yellow-400 animate-pulse" /> {text}
+        <h1 className="text-2xl md:text-4xl font-bold tracking-wide mb-6 flex items-center justify-center gap-3">
+          <FaCrown className="text-yellow-400 animate-pulse"  /> {text}
         </h1>
         <p className="text-base mb-8 leading-relaxed">
           Unleash your potential by exploring top universities designed to match your aspirations and build a successful future.

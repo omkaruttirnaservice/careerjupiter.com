@@ -6,7 +6,7 @@ import { BASE_URL } from "../../utils/constansts";
 // const axiosInstance = axios.create({
 //   baseURL: "http://192.168.1.20:5000", // Your API base URL
 // });
-
+ 
 // Fetch cutoffs
 export const fetchCutoffs = async () => {
   const response = await axios.get(`${BASE_URL}/api/cutoff/all`);
