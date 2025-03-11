@@ -86,11 +86,11 @@ const ProfileDetails = () => {
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							<div className="flex items-center gap-4">
 								<div className="p-3 bg-purple-50 rounded-xl">
-									<FaBirthdayCake className="text-purple-600 w-6 h-6" />
+									<FaBirthdayCake className="text-purple-600 w-6 h-6"/>
 								</div>
 								<div>
 									<p className="text-sm text-gray-500">Date of Birth</p>
-									<p className="font-semibold text-gray-800">{user?.dob}</p>
+									<p className="font-semibold text-gray-800">{user?.dob || "N/A"}</p>
 								</div>
 							</div>
 							<div className="flex items-center gap-4">
@@ -99,7 +99,7 @@ const ProfileDetails = () => {
 								</div>
 								<div>
 									<p className="text-sm text-gray-500">Age</p>
-									<p className="font-semibold text-gray-800">{user?.age}</p>
+									<p className="font-semibold text-gray-800">{user?.age || "N/A"}</p>
 								</div>
 							</div>
 							<div className="flex items-center gap-4">
@@ -109,7 +109,7 @@ const ProfileDetails = () => {
 								<div>
 									<p className="text-sm text-gray-500">Current Education</p>
 									<p className="font-semibold text-gray-800">
-										{user?.info?.current_education}
+										{user?.info?.current_education || "N/A"}
 									</p>
 								</div>
 							</div>
@@ -127,12 +127,12 @@ const ProfileDetails = () => {
 							</div>
 							<div className="break-words">
 								<p className="font-medium text-gray-800">
-									{user?.address?.line1}, {user?.address?.line2}
+									{user?.address?.line1 || "N/A"} {user?.address?.line2}
 								</p>
 								<p className="text-gray-600 mt-2">
-									{user?.address?.dist}, {user?.address?.state}
+									{user?.address?.dist || "N/A"}, {user?.address?.state}
 								</p>
-								<p className="text-gray-600">PIN: {user?.address?.pincode}</p>
+								<p className="text-gray-600">PIN: {user?.address?.pincode || "N/A"}</p>
 							</div>
 						</div>
 					</div>
@@ -151,7 +151,7 @@ const ProfileDetails = () => {
 								/>
 							</div>
 							<h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-								{user?.f_name} {user?.m_name} {user?.l_name}
+								{user?.f_name || "N/A"} {user?.m_name} {user?.l_name}
 							</h2>
 							<div className="w-full space-y-3">
 								<div className="flex items-center gap-2 text-gray-700">

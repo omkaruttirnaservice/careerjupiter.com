@@ -30,10 +30,10 @@ const Logopage = () => {
   }, [inView]);
 
   return (
-    <div className="w-full bg-gray-100 py-10 px-5">
+    <div className="w-full bg-gray-100 py-10 px-5 ">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
       <div ref={ref} className="w-full md:w-1/4 flex flex-wrap justify-center md:block text-center md:text-left mb-6 md:mb-0">
-  <div className="flex w-full md:block justify-between items-center md:items-start">
+  <div className="flex w-full md:block justify-between items-center md:items-start md:ml-20">
     <div className="text-center md:text-left">
       <h2 className="text-5xl sm:text-6xl text-red-500 font-bold">{totalCount}+</h2>
       <p className="text-lg sm:text-xl">Total</p>
@@ -71,7 +71,7 @@ const Logopage = () => {
             animate={{ x: "-100%" }}
             transition={{ ease: "linear", duration: 20, repeat: Infinity }}
           >
-            {[...Array(8)].map((_, index) => (
+            {[...Array(10)].map((_, index) => (
               <div
                 key={index + 8}
                 className="w-18 sm:w-26 md:w-30 h-18 sm:h-26 md:h-30 m bg-white rounded-full shadow-lg flex items-center justify-center text-lg sm:text-xl m-2 font-semibold"
