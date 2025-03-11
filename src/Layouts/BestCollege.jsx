@@ -39,23 +39,25 @@ const BestCollege = () => {
   }
 
   return (
-    <div className="w-full h-[80vh] flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-12">
+    <div id='search-college' className="w-full h-[85vh] flex flex-col md:flex-row items- rounded-lg  justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-12">
       {/* Left Side - Image */}
-      <div className="w-full md:w-1/2 flex justify-center">
+
+      
+      <div className="w-full md:w-2/4 mt-2 flex justify-center">
         <img 
           src="https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29sbGVnZSUyMGNhbXB1c3xlbnwwfHwwfHx8MA%3D%3D" 
           alt="College Illustration" 
-          className=" cursor-pointer rounded-lg shadow-lg w-full max-w-md transition-transform duration-500 hover:scale-105"
+          className=" md:mt-10 cursor-pointer rounded-lg shadow-lg w-full max-w-md transition-transform duration-500 hover:scale-105"
         />
       </div>
 
       {/* Right Side - Content */}
-      <div className="w-full md:w-1/2 text-white text-center md:text-left p-8">
-        <h1 className="text-4xl font-bold mb-6 flex items-center gap-3">
+      <div className="w-full md:w-1/2 text-white text-center md:text-left md:mt-30 ">
+        <h1 className="text-2xl font-bold mr-4 md:text-5xl   flex items-center gap-3">
           <FaUniversity /> {text}
-          <span className="animate-blink">|</span>
+      
         </h1>
-        <p className="text-lg mb-8 leading-relaxed">
+        <p className="text-lg mb-8 leading-relaxed md:mt-5">
           Discover top colleges that match your dreams and goals. Your future starts with the right choice.
         </p>
         <button 

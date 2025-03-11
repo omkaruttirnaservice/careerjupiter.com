@@ -4,7 +4,7 @@ import UniversityCard from './UniversityCard';
 import TagsSection from '../TagsSection';
 import { useSearchContext } from '../../store/SearchContext';
 import toast from 'react-hot-toast';
-import Loader from '../Loader';
+// import Loader from '../Loader';
 
 const UniversityMultiCard = () => {
 	const navigate = useNavigate();
@@ -32,11 +32,17 @@ const UniversityMultiCard = () => {
             Discover the world's top universities with outstanding programs,
             cutting-edge research, and vibrant campus communities.
           </p>
-          {isLoading && <Loader />}
+          
 
-          {/* {!isLoading && UniversityData?.length === 0 && (
-            <h1 className="text-red-500 text-center mt-5">No data found.</h1>
-          )} */}
+          {!isLoading && UniversityData?.length === 0 && (
+  <div className="flex flex-col items-center justify-center">
+    <img src="public\no-data-found.png" alt="Not Found" className="w-1/2 max-w-md" />
+  </div>
+)}
+
+
+
+
 
           {!isLoading && UniversityData?.results?.length !== 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

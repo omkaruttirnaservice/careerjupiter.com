@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import InstituteCard from './InstituteCard';
 import TagsSection from './../TagsSection';
 import { useSearchContext } from '../../store/SearchContext';
-import Loader from '../Loader';
+// import Loader from '../Loader';
 
 const InstituteMultiCard = () => {
 	const navigate = useNavigate();
@@ -18,11 +18,13 @@ const InstituteMultiCard = () => {
 		<>
 			<TagsSection tags={tags} />
 
-			<div className="mt-10">
-				{isLoading && <Loader />}
+			<div className="">
+				{/* {isLoading && <Loader />} */}
 
 				{!isLoading && instituteData?.length === 0 && (
-					<h1 className="text-red-500 text-center mt-5">No data found.</h1>
+					 <div className="flex flex-col items-center justify-center">
+					 <img src="public\no-data-found.png" alt="Not Found" className="w-1/2 max-w-md" />
+				   </div>
 				)}
 				{!isLoading && instituteData?.length !== 0 && (
 					<div className="cursor-pointer grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-5 m-5">
