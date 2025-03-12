@@ -10,22 +10,22 @@ import Logopage from './logopage';
 const HeroSection = () => {
 	return (
 		<>
-			<div className="relative bg-gray-50 overflow-hidden">
-				<div className="fixed flex items-center justify-center right-4 top-1/2 transform -translate-y-1/2 w-[60px] h-[60px] bg-white rounded-full z-50 shadow-lg animate-bounce">
-					<NavLink
-						to="/profile/test"
-						className="text-white hover:text-green-800 flex flex-row gap-2"
-					>
-						<div className="flex items-center justify-center">
-							<h1 className="font-bold text-xl text-green-500">
-								<LuNotebookPen />
-							</h1>
-						</div>
-						<div className="flex items-center justify-center w-[30px] h-[30px] bg-green-500 rounded-full">
-							<h1 className="font-bold text-lg">Q</h1>
-						</div>
-					</NavLink>
-				</div>
+			<div className="relative bg-green-200 overflow-hidden">
+			<div className="fixed flex items-center justify-center top-1/2 right-4 transform -translate-y-1/2 w-[80px] h-[45px] bg-white rounded-full rounded-bl-[50%] z-50 shadow-lg animate-bounce">
+            <NavLink
+              to="profile/test"
+              className="  text-white hover:text-green-800 flex flex-row gap-2"
+            >
+              <div className="flex items-center justify-center">
+                <h1 className="font-bold text-2xl text-green-500">
+                  <LuNotebookPen />
+                </h1>
+              </div>
+              <div className=" flex items-center justify-center w-[35px] h-[35px]  bg-green-500 rounded-br-[50%] rounded-tl-[50%] rounded-tr-[50%] mr-1">
+                <h1 className="font-bold text-2xl">Q</h1>
+              </div>
+            </NavLink>
+          </div>
 
 				<div className="pt-2 pb-2 sm:pt-4 sm:pb-4 md:pt-6 md:pb-6">
 					<main className="mx-auto max-w-7xl px-4">
@@ -52,6 +52,7 @@ const HeroSection = () => {
 					</main>
 				</div>
 			</div>
+			<br/>
 
 			<Carouseldiv />
 			<br />

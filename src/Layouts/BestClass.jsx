@@ -39,7 +39,7 @@ const BestClass = () => {
   }
 
   return (
-    <div id='search-class' className="w-full rounded-lg h-[80vh] flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-green-400 via-teal-500 to-blue-400 p-12">
+    <div id='search-class' className="w-full rounded-lg h-[80vh] flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-blue-400 via-teal-500 to-green-400 p-12">
       {/* Right Side - Content */}
       <div className="w-full md:w-1/2 text-white text-center md:text-left p-8">
         <h1 className="text-2xl font-bold mr-4 md:text-5xl   flex items-center gap-3">
@@ -51,7 +51,7 @@ const BestClass = () => {
         </p>
         <button 
           onClick={handleSearch} 
-          className="cursor-pointer  flex items-center w-full justify-center gap-3 bg-yellow-400 text-gray-900 px-8 py-3 rounded-full font-semibold text-lg hover:bg-yellow-500 transition-transform duration-300 hover:scale-110"
+          className="cursor-pointer  flex items-center w-full justify-center gap-3 bg-pink-400 text-gray-900 px-8 py-3 rounded-full font-semibold text-lg hover:bg-pink-500 transition-transform duration-300 hover:scale-110"
         
         >
           <FaSearch />

@@ -5,7 +5,24 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { navigation } from '../Constant/constantData';
 
+
 const Nav = () => {
+
+	const handleScrollToSection = () => {
+		const section = document.getElementById('check-eligibility-section');
+		if (section) {
+			const offset = 100; // Sectioncha top kiti gap thevaycha tya sathi
+			const sectionPosition = section.getBoundingClientRect().top + window.scrollY - offset;
+
+			window.scrollTo({
+				top: sectionPosition,
+				behavior: 'smooth',
+			});
+		}
+	};
+
+
+
 	const { isLoggedIn } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -18,7 +35,28 @@ const Nav = () => {
 		navigate('/signout');
 	};
 
-	const handleNavClick = () => {};
+	const handleNavClick = () => { };
+
+
+	const handleClick = (e, href) => {
+		e.preventDefault();
+		const targetElement = document.querySelector(href);
+
+		if (targetElement) {
+
+			const offset = 100;
+			const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - offset;
+
+			window.scrollTo({
+				top: targetPosition,
+				behavior: "smooth",
+			});
+			targetElement.classList.add('highlight');
+			setTimeout(() => {
+				targetElement.classList.remove('highlight');
+			}, 1500);
+		}
+	};
 
 	return (
 		<div className="p-2 bg-gray-50 fixed top-0 left-0 w-full shadow-md z-50">
@@ -32,40 +70,51 @@ const Nav = () => {
 							>
 								CAREER NITI
 							</a>
-
-							<div className="hidden md:flex md:space-x-8">
+							<div className="hidden md:flex md:items-center md:space-x-8">
 								{navigation.map((item) => (
 									<div key={item.name} className="relative group">
-										<NavLink
-											to={item.href}
-											onClick={(e) => handleClick(e, item.href)}
-											className={({ isActive }) =>
-												`font-medium hover:text-gray-900 ${
-													isActive
-														? 'text-blue-600 font-semibold'
-														: 'text-gray-500'
-												}`
-											}
-										>
-											{item.name}
-										</NavLink>
+										{item.name === "Home" ? (
+											<NavLink
+												to={item.to}
+												className={({ isActive }) =>
+													isActive ? "text-blue-600 font-bold" : "text-gray-700"
+												}
+											>
+												{item.name}
+											</NavLink>
+										) : (
+											<NavLink to={item.to} className="text-gray-700 hover:text-blue-600">
+												{item.name}
+											</NavLink>
+										)}
 										{item.children && (
-											<div className="absolute left-0 mt-2 w-58 bg-black shadow-lg rounded-md opacity-0 scale-95 transform transition-all duration-300 group-hover:opacity-100 group-hover:scale-100 group-focus-within:opacity-100 group-focus-within:scale-100">
+											<div className="absolute left-0 mt-2 w-58 bg-white shadow-lg rounded-md opacity-0 scale-20 transform transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
 												{item.children.map((child) => (
 													<a
 														key={child.name}
 														href={child.href}
 														onClick={(e) => handleClick(e, child.href)}
-														className="block px-4 py-2 text-white hover:bg-gray-100 hover:text-blue-600"
-													>
+														className="block px-4 py-2 text-black hover:bg-gray-300  hover:border hover:border-black transition-all	"
+														>
 														{child.name}
 													</a>
 												))}
 											</div>
 										)}
+
 									</div>
 								))}
+								<button
+									onClick={handleScrollToSection}
+									className="bg-pink-600 cursor-pointer text-white font-bold py-2 px-4 rounded-lg"
+								>
+									Check Eligibility ➡️
+								</button>
 							</div>
+
+
+
+
 
 							<div className="hidden md:flex items-center gap-4">
 								{isLoggedIn && (

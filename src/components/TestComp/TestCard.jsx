@@ -88,18 +88,18 @@ function TestCard() {
 						</h2>
 					</div>
 					<p className="text-gray-600">
-						Test Level: <span className="font-medium">{test.testLevel}</span>
+						Test Level: <span className="font-medium">{test.testLevel || "N/A"}</span>
 					</p>
 					<p className="text-gray-600">
 						Duration:{' '}
-						<span className="font-medium">{test.testDuration} min</span>
+						<span className="font-medium">{test.testDuration || "N/A"} min</span>
 					</p>
 					<p className="text-gray-600">
-						Total Marks: <span className="font-medium">{test.totalMarks}</span>
+						Total Marks: <span className="font-medium">{test.totalMarks || "N/A"}</span>
 					</p>
 					<p className="text-gray-600">
 						Passing Marks:{' '}
-						<span className="font-medium">{test.passingMarks}</span>
+						<span className="font-medium">{test.passingMarks || "N/A"}</span>
 					</p>
 				</div>
 			))}
