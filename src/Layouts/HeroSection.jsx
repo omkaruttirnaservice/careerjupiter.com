@@ -10,10 +10,10 @@ import Typewriter from 'typewriter-effect';
 import Logopage from './logopage';
 
 const HeroSection = () => {
-  // Auto-scroll to top on page load or route change
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+	// Auto-scroll to top on page load or route change
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
 
   return (
     <>
@@ -37,45 +37,46 @@ const HeroSection = () => {
         
         
 
-        <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 md:pt-6 md:pb-6">
-          <main className="mx-auto max-w-7xl px-4">
-            <div className="text-center">
-              <div className="flex flex-row justify-center gap-2 sm:gap-4 md:gap-5 text-lg sm:text-3xl md:text-4xl font-bold">
-                <h1 className="text-gray-900 font-extrabold text-base sm:text-xl md:text-3xl">
-                  FIND YOUR
-                </h1>
-                <span className="font-extrabold text-transparent bg-clip-text animated-gradient text-base sm:text-xl md:text-3xl">
-                  <Typewriter
-                    options={{
-                      strings: ['Best College', 'Best School', 'Best Class'],
-                      autoStart: true,
-                      loop: true,
-                    }}
-                  />
-                </span>
-              </div>
-              <p className="mt-1 sm:mt-2 max-w-xs sm:max-w-md md:max-w-3xl mx-auto text-sm sm:text-lg md:text-xl font-bold text-blue-600">
-                "EMPOWER YOUR FUTURE, UNLOCK YOUR POTENTIAL, AND BUILD THE CAREER OF YOUR DREAMS! ✨"
-              </p>
-            </div>
-          </main>
-        </div>
-      </div>
-      <br />
+				<div className="pt-2 pb-2 sm:pt-4 sm:pb-4 md:pt-6 md:pb-6">
+					<main className="mx-auto max-w-7xl px-4">
+						<div className="text-center">
+							<div className="flex flex-row justify-center gap-2 sm:gap-4 md:gap-5 text-lg sm:text-3xl md:text-4xl font-bold">
+								<h1 className="text-gray-900 font-extrabold text-base sm:text-xl md:text-3xl">
+									FIND YOUR
+								</h1>
+								<span className="font-extrabold text-transparent bg-clip-text animated-gradient text-base sm:text-xl md:text-3xl">
+									<Typewriter
+										options={{
+											strings: ['Best College', 'Best School', 'Best Class'],
+											autoStart: true,
+											loop: true,
+										}}
+									/>
+								</span>
+							</div>
+							<p className="mt-1 sm:mt-2 max-w-xs sm:max-w-md md:max-w-3xl mx-auto text-sm sm:text-lg md:text-xl font-bold text-blue-600">
+								"EMPOWER YOUR FUTURE, UNLOCK YOUR POTENTIAL, AND BUILD THE
+								CAREER OF YOUR DREAMS! ✨"
+							</p>
+						</div>
+					</main>
+				</div>
+			</div>
+			<br />
 
-      <Carouseldiv />
-      <br />
-      <Logopage />
-      <br />
-      <CheckEligibility />
-      <br />
-      <BestCollege />
-      <br />
-      <BestClass />
-      <br />
-      <BestUniversity />
-    </>
-  );
+			<Carouseldiv />
+			<br />
+			<Logopage />
+			<br />
+			<CheckEligibility />
+			<br />
+			<BestCollege />
+			<br />
+			<BestClass />
+			<br />
+			<BestUniversity />
+		</>
+	);
 };
 
 export default HeroSection;
