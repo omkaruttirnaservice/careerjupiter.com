@@ -5,14 +5,13 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { navigation } from '../Constant/constantData';
 
-
 const Nav = () => {
-
 	const handleScrollToSection = () => {
 		const section = document.getElementById('check-eligibility-section');
 		if (section) {
 			const offset = 100; // Sectioncha top kiti gap thevaycha tya sathi
-			const sectionPosition = section.getBoundingClientRect().top + window.scrollY - offset;
+			const sectionPosition =
+				section.getBoundingClientRect().top + window.scrollY - offset;
 
 			window.scrollTo({
 				top: sectionPosition,
@@ -20,8 +19,6 @@ const Nav = () => {
 			});
 		}
 	};
-
-
 
 	const { isLoggedIn } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
@@ -35,21 +32,20 @@ const Nav = () => {
 		navigate('/signout');
 	};
 
-	const handleNavClick = () => { };
-
+	const handleNavClick = () => {};
 
 	const handleClick = (e, href) => {
 		e.preventDefault();
 		const targetElement = document.querySelector(href);
 
 		if (targetElement) {
-
 			const offset = 100;
-			const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - offset;
+			const targetPosition =
+				targetElement.getBoundingClientRect().top + window.scrollY - offset;
 
 			window.scrollTo({
 				top: targetPosition,
-				behavior: "smooth",
+				behavior: 'smooth',
 			});
 			targetElement.classList.add('highlight');
 			setTimeout(() => {
@@ -73,17 +69,20 @@ const Nav = () => {
 							<div className="hidden md:flex md:items-center md:space-x-8">
 								{navigation.map((item) => (
 									<div key={item.name} className="relative group">
-										{item.name === "Home" ? (
+										{item.name === 'Home' ? (
 											<NavLink
 												to={item.to}
 												className={({ isActive }) =>
-													isActive ? "text-blue-600 font-bold" : "text-gray-700"
+													isActive ? 'text-blue-600 font-bold' : 'text-gray-700'
 												}
 											>
 												{item.name}
 											</NavLink>
 										) : (
-											<NavLink to={item.to} className="text-gray-700 hover:text-blue-600">
+											<NavLink
+												to={item.to}
+												className="text-gray-700 hover:text-blue-600"
+											>
 												{item.name}
 											</NavLink>
 										)}
@@ -95,13 +94,12 @@ const Nav = () => {
 														href={child.href}
 														onClick={(e) => handleClick(e, child.href)}
 														className="block px-4 py-2 text-black hover:bg-gray-300  hover:border hover:border-black transition-all	"
-														>
+													>
 														{child.name}
 													</a>
 												))}
 											</div>
 										)}
-
 									</div>
 								))}
 								<button
@@ -111,10 +109,6 @@ const Nav = () => {
 									Check Eligibility ➡️
 								</button>
 							</div>
-
-
-
-
 
 							<div className="hidden md:flex items-center gap-4">
 								{isLoggedIn && (
