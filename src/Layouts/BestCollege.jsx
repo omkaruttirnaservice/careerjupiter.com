@@ -53,8 +53,8 @@ const BestCollege = () => {
 
       {/* Right Side - Content */}
       <div className="w-full md:w-1/2 text-white text-center md:text-left md:mt-30 ">
-        <h1 className="text-2xl font-bold mr-4 md:text-5xl   flex items-center gap-3">
-          <FaUniversity /> {text}
+        <h1 className="text-xl mt-5 font-bold mr-4 md:text-5xl   flex items-center gap-3">
+          <FaUniversity className='md:text-5xl text-3xl' /> {text}
       
         </h1>
         <p className="text-lg mb-8 leading-relaxed md:mt-5">

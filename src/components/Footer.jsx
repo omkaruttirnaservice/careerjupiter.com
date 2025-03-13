@@ -1,11 +1,20 @@
 import React from 'react';
-import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+  FaLinkedin,
+  FaWhatsapp,
+} from 'react-icons/fa';
 
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white mt-6">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+        
+        {/* Grid layout with 2 columns on mobile and 4 columns on larger screens */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8">
 
           {/* Company Info */}
           <div>
@@ -49,10 +58,10 @@ const Footer = () => {
               <li>Phone: <a href="tel:+1234567890" className="hover:text-blue-400 transition-colors">+1 234 567 890</a></li>
               <li>Address: 123 Street, City, Country</li>
             </ul>
-            
-            {/* Follow Us with Real Colors */}
-            <h2 className="text-lg font-bold mt-6 mb-4">Follow Us</h2>
-            <div className="flex space-x-4">
+
+            {/* Follow Us (center on mobile) */}
+            <h2 className="text-lg font-bold mt-6 mb-4 text-center"></h2>
+            <div className="flex justify-center md:mr-23  md:gap-4 gap-3">
               <a href="#" className="text-xl text-blue-600 hover:opacity-75 transition-opacity"><FaFacebookF /></a>
               <a href="#" className="text-xl text-pink-500 hover:opacity-75 transition-opacity"><FaInstagram /></a>
               <a href="#" className="text-xl text-sky-400 hover:opacity-75 transition-opacity"><FaTwitter /></a>
@@ -64,6 +73,7 @@ const Footer = () => {
 
         </div>
 
+        {/* Bottom copyright text */}
         <div className="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-400">
           © {new Date().getFullYear()} <span className="text-white font-semibold">UTTIRNA Services</span>. All rights reserved.
         </div>

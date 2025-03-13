@@ -35,7 +35,7 @@ const CheckEligibility = () => {
 				exit={{ opacity: 0 }}
 			>
 				<motion.h1
-					className="font-extrabold text-black mb-4 text-center text-4xl md:text-5xl drop-shadow-2xl tracking-wide"
+					className="font-extrabold text-black mb-4 text-center  text-3xl md:text-5xl drop-shadow-2xl tracking-wide"
 					initial={{ scale: 0.8, opacity: 0 }}
 					animate={{ scale: 1, opacity: 1 }}
 					transition={{ duration: 0.5 }}

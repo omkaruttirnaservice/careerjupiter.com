@@ -4,6 +4,7 @@ import UniversityCard from './UniversityCard';
 import TagsSection from '../TagsSection';
 import { useSearchContext } from '../../store/SearchContext';
 import toast from 'react-hot-toast';
+import { BounceLoader } from 'react-spinners';
 // import Loader from '../Loader';
 
 const UniversityMultiCard = () => {
@@ -34,21 +35,15 @@ const UniversityMultiCard = () => {
           </p>
           
 
-          {isLoading ? (
-  <div className="flex flex-col items-center justify-center h-64">
-    <div className="w-16 h-16 border-8 border-t-blue-500 border-b-blue-500 border-r-transparent border-l-transparent rounded-full animate-spin"></div>
-    <p className="mt-4 text-lg font-medium text-gray-600">Searching...</p>
-  </div>
-) : UniversityData?.length === 0 ? (
-  <div className="flex flex-col items-center justify-center">
-    <img src="public/no-data-found.png" alt="Not Found" className="w-1/2 max-w-md" />
-  </div>
-) : (
-  <div>
-    {/* Display university data here */}
-  </div>
-)}
-
+          {
+				isLoading ? (
+					<div className="flex flex-col items-center justify-center h-64">
+						{/* <div className="w-16 h-16 border-8 border-t-blue-500 border-b-blue-500 border-r-transparent border-l-transparent rounded-full animate-spin"></div> */}
+						<BounceLoader color='#36d7b7' />
+						<p className="mt-4 text-lg font-medium text-gray-600">Loading...</p>
+					</div>
+				) : null
+			}
 
 
 

@@ -5,6 +5,8 @@ import toast from 'react-hot-toast';
 import { useEffect } from 'react';
 import { BACKEND_SERVER_IP } from '../Constant/constantData';
 import { FaMapMarkerAlt } from 'react-icons/fa';
+import { BounceLoader } from 'react-spinners';
+
 
 const MultiCards = () => {
 	const navigate = useNavigate();
@@ -23,23 +25,21 @@ const MultiCards = () => {
 			{/* Tags Section */}
 			<TagsSection tags={tags} />
 
-			
 
 
-{isLoading ? (
-  <div className="flex flex-col items-center justify-center h-64">
-    <div className="w-16 h-16 border-8 border-t-blue-500 border-b-blue-500 border-r-transparent border-l-transparent rounded-full animate-spin"></div>
-    <p className="mt-4 text-lg font-medium text-gray-600">Searching...</p>
-  </div>
-) : collegesData?.length === 0 ? (
-  <div className="flex flex-col items-center justify-center">
-    <img src="public/no-data-found.png" alt="Not Found" className="w-1/2 max-w-md" />
-  </div>
-) : (
-  <div>
-    {/* Display university data here */}
-  </div>
-)}
+
+			{
+				isLoading ? (
+					<div className="flex flex-col items-center justify-center h-64">
+						{/* <div className="w-16 h-16 border-8 border-t-blue-500 border-b-blue-500 border-r-transparent border-l-transparent rounded-full animate-spin"></div> */}
+						<BounceLoader color='#36d7b7' />
+						<p className="mt-4 text-lg font-medium text-gray-600">Loading...</p>
+					</div>
+				) : null
+			}
+
+
+
 
 			{/* College Cards */}
 			{!isLoading && collegesData.results?.length > 0 && (
@@ -58,14 +58,25 @@ const MultiCards = () => {
 								className="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-transform duration-200 cursor-pointer"
 								onClick={() => navigate(`/college/${college._id}`)}
 							>
-								{college.image && (
+								<div className="relative w-full h-48 overflow-hidden rounded-t-lg">
 									<img
-										src={`${BACKEND_SERVER_IP}${college.image}`}
-										alt={college.collegeName || 'College Image'}
-										className="w-full h-48 object-cover"
+										src={college.image ? `${BACKEND_SERVER_IP}${college.image}` : "https://cdn.pixabay.com/photo/2017/09/01/13/56/university-2704306_640.jpg"}
+										alt={college.collegeName || "College Image"}
+										className={`w-full h-full object-cover ${college.image ? "" : "opacity-70"
+											}`}
 										loading="lazy"
 									/>
-								)}
+
+									{/* Overlay for dummy image with college name */}
+									{!college.image && (
+										<div className="absolute inset-0 flex items-center justify-center  bg-opacity-200">
+											<h3 className="text-white  text-3xl font-bold text-center px-4">
+												{college.collegeName || "Unknown College"}
+											</h3>
+										</div>
+									)}
+								</div>
+
 								<div className="p-5">
 									<h3 className="text-xl font-semibold">
 										{college.collegeName}

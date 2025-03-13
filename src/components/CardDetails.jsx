@@ -5,6 +5,8 @@ import HandleNavComp from "./HandleNavComp";
 import { useQuery } from "@tanstack/react-query";
 import { getCollege } from "./Api";
 import { BACKEND_SERVER_IP } from "../Constant/constantData";
+import { FaPhoneAlt } from 'react-icons/fa'; // Contact icon
+
 
 const CardDetails = () => {
   const navItem = [
@@ -87,96 +89,120 @@ const CardDetails = () => {
 
   return (
     <>
-      <button className="fixed bottom-6 right-6 z-10 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition duration-300">
-        <NavLink to="/review"> 📝 Review</NavLink>
-      </button>
-      <div className="max-w-7xl mx-auto p-4 mt-5">
-        <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col md:flex-row gap-6 relative max-w-4xl mx-auto">
-          <div className="md:w-2/3 space-y-4">
-            <h1 className="text-2xl font-bold text-gray-900">
-              {college.collegeName}
-            </h1>
-            <div className="flex items-center text-gray-600">
-              <span className="bg-yellow-400 text-white px-2 py-1 rounded text-sm font-semibold">
-                {data.rating} ⭐
-              </span>
-            </div>
-            <p className="text-gray-700 text-sm leading-relaxed">
-              {college.info?.description}
-            </p>
+      <a
+      href="tel:+1234567890" // Replace with your phone number
+      className="fixed bottom-6 right-6 z-5 flex items-center gap-3 bg-green-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-green-700 transition-all duration-300 hover:scale-100 animate-bounce"
+    >
+      <FaPhoneAlt className="text-2xl animate-wiggle" /> {/* Animated icon */}
+      <span className="font-bold text-lg">Call Now</span>
+    </a>
+    <div className="max-w-7xl mx-auto p-4 mt-5">
+  {/* College Name at the Top */}
+  <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
+    {college.collegeName}
+  </h1>
 
-            {/* Contact Details */}
-            <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-              <div className="flex items-center text-gray-700">
-                <FaPhone className="text-blue-500 mr-3" size={18} />
-                <p>{college.contactDetails}</p>
-              </div>
-              <div className="flex items-center text-gray-700">
-                <FaEnvelope className="text-blue-500 mr-3" size={18} />
-                <p>{college.email_id}</p>
-              </div>
-              <div className="flex items-center text-gray-700">
-                <FaGlobe className="text-blue-500 mr-3" size={18} />
-                <a
-                  href={college.websiteURL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  {college.websiteURL}
-                </a>
-              </div>
-              <div className="flex items-center text-gray-700">
-                <FaMapMarkerAlt className="text-blue-500 mr-3" size={18} />
-                <p>{`${college.address.dist}, ${college.address.state}`}</p>
-              </div>
-            </div>
+  {/* Image and Gallery Section */}
+  <div className="w-full flex flex-col md:flex-row gap-8">
+    {/* Main College Image */}
+    <div className="w-full md:w-1/2">
+      <img
+        src={college.image ? `${BACKEND_SERVER_IP}${college.image}` : "https://cdn.pixabay.com/photo/2017/09/01/13/56/university-2704306_640.jpg"}
+        alt={college.collegeName || "College Building"}
+        className="rounded-lg w-full h-72 object-cover shadow-lg hover:scale-105 transition-transform duration-300"
+        loading="lazy"
+      />
+    </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-                Download Brochure
-              </button>
-              <button className="border border-blue-600 text-blue-600 px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white transition">
-                Show Reviews
-              </button>
-            </div>
+    {/* Image Gallery */}
+    <div className="w-full md:w-1/2 grid grid-cols-2 gap-4">
+      {college.imageGallery?.slice(0, 4).map((img, index) => (
+        <img
+          key={index}
+          src={`${BACKEND_SERVER_IP}${img}`}
+          alt={`Gallery Image ${index + 1}`}
+          className="rounded-lg w-full h-32 object-cover shadow-md hover:scale-105 transition-transform duration-300"
+        />
+      ))}
+    </div>
+  </div>
+  <div className="bg-gray-50 p-8 rounded-lg w-full mt-8 shadow-md grid grid-cols-1 md:grid-cols-2 gap-8">
+  {/* Left Side - Contact Details */}
+  <div className="space-y-4">
+    <h2 className="text-2xl font-bold text-gray-800">Contact Details</h2>
+    <div className="flex items-center text-gray-800">
+      📞 <p className="ml-3 font-medium">{college.contactDetails}</p>
+    </div>
+    <div className="flex items-center text-gray-800">
+      ✉️ <p className="ml-3 font-medium">{college.email_id}</p>
+    </div>
+    <div className="flex items-center text-gray-800">
+      🌐
+      <a
+        href={college.websiteURL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="ml-3 text-indigo-600 hover:text-indigo-800 font-medium underline"
+      >
+        {college.websiteURL}
+      </a>
+    </div>
+    <div className="flex items-center text-gray-800">
+      📍 <p className="ml-3 font-medium">{`${college.address.dist}, ${college.address.state}`}</p>
+    </div>
+  </div>
+
+  {/* Right Side - College Information */}
+  <div className="space-y-6">
+    <h2 className="text-2xl font-bold text-gray-800">College Information</h2>
+    <p className="text-gray-700 text-base leading-relaxed">
+      {college.info?.description}
+    </p>
+  </div>
+</div>
+
+{/* Action Buttons */}
+{/* <div className="flex flex-col sm:flex-row gap-6 justify-center mt-8">
+  <button className="cursor-pointer bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-8 py-3 rounded-full hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg text-lg font-semibold">
+    📥 Download Brochure
+  </button>
+  <button className="cursor-pointer border-2 border-indigo-600 text-indigo-600 px-8 py-3 rounded-full hover:bg-indigo-600 hover:text-white transition-all shadow-lg text-lg font-semibold">
+    ⭐ Show Reviews
+  </button>
+</div> */}
+
+
+
+  {/* Tabs Section */}
+  <div className="relative mt-10 border-b text-gray-600 text-sm">
+  <div className="flex justify-center">
+    <div className="flex items-center overflow-x-auto scrollbar-hide scroll-smooth w-full max-w-3xl justify-center md:space-x-4">
+      <div className="flex space-x-6 px-4 md:px-0 overflow-x-auto scrollbar-hide">
+        {navItem.map((each) => (
+          <div
+            key={each}
+            ref={(el) => (tabRefs.current[each] = el)}
+            onClick={(e) => {
+              e.preventDefault(); // Prevent scrolling to top
+              handleNavName(each);
+            }}
+            className={`cursor-pointer h-8 px-6 rounded-md transition-all duration-300 font-bold flex items-center justify-center ${
+              each === navName
+                ? "text-blue-600 bg-gray-200"
+                : "text-gray-600 hover:text-blue-600 hover:bg-gray-300 hover:h-12"
+            }`}
+          >
+            {each}
           </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
 
-          {/* Image Section */}
-          <div className="w-full flex justify-center items-center mt-10">
-            <img
-              src={`${BACKEND_SERVER_IP}${college.image}`}
-              alt="College Building"
-              className="rounded-lg w-full h-auto max-w-3xl object-cover shadow-md"
-            />
-          </div>
-        </div>
 
-        {/* Tabs Section */}
 
-        <div className="relative mt-6 border-b text-gray-600 text-sm">
-          <div className="flex justify-center">
-            <div className="flex items-center overflow-x-auto scrollbar-hide scroll-smooth w-full max-w-3xl justify-center md:space-x-2">
-              <div className="flex space-x-4 md:space-x-6 px-4 md:px-0 overflow-x-auto scrollbar-hide">
-                {navItem.map((each) => (
-                  <div
-                    key={each}
-                    ref={(el) => (tabRefs.current[each] = el)}
-                    onClick={() => handleNavName(each)}
-                    className={`cursor-pointer h-10 px-4 whitespace-nowrap transition-all rounded-md snap-start ${
-                      each === navName
-                        ? "text-blue-600 hover:bg-gray-200 border-b-2 border-blue-600 font-semibold"
-                        : "text-gray-600 hover:bg-gray-200"
-                    }`}
-                  >
-                    {each}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+
 
         <div ref={sectionRef} className="mt-4">
           <HandleNavComp
