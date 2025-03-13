@@ -884,6 +884,7 @@ export const navigation = [
   { name: "Home", to: "/" },
   {
     name: "Students Corner",  children: [
+      { name: 'Search Eligibility', href: '#check-eligibility-section' },
       { name: 'Search College', href: '#search-college' },
       { name: 'Search Class', href: '#search-class' },
       { name: 'Search University', href: '#search-university' },

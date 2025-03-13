@@ -32,7 +32,10 @@ const HeroSection = () => {
               <h1 className="font-bold text-2xl">Q</h1>
             </div>
           </NavLink>
+          
         </div>
+        
+        
 
         <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 md:pt-6 md:pb-6">
           <main className="mx-auto max-w-7xl px-4">

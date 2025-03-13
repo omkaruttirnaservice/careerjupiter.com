@@ -4,6 +4,7 @@ import { Fragment } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { navigation } from '../Constant/constantData';
+import { motion } from 'framer-motion';
 
 
 const Nav = () => {
@@ -108,7 +109,14 @@ const Nav = () => {
 									onClick={handleScrollToSection}
 									className="bg-pink-600 cursor-pointer text-white font-bold py-2 px-4 rounded-lg"
 								>
-									Check Eligibility ➡️
+									Check Eligibility 
+									<motion.span
+						className=" ml-2"
+						animate={{ x: [0, 10, 0] }}
+						transition={{ repeat: Infinity, duration: 1 }}
+					>
+						➡️
+					</motion.span>
 								</button>
 							</div>
 
