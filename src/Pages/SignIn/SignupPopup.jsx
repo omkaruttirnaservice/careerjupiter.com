@@ -1,306 +1,306 @@
-import { useEffect, useState } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import { userSignUp } from './Api';
-import { useMutation } from '@tanstack/react-query';
-import { loginUser } from '../Login/Api';
-import Cookies from 'js-cookie';
-import { login } from '../../store-redux/AuthSlice';
+import { useEffect, useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { userSignUp } from "./Api";
+import { useMutation } from "@tanstack/react-query";
+import { loginUser } from "../Login/Api";
+import Cookies from "js-cookie";
+import { login } from "../../store-redux/AuthSlice";
 
 const validationSchema = Yup.object().shape({
-	firstName: Yup.string()
-		.min(2, 'Too Short!')
-		.max(50, 'Too Long!')
-		.required('First Name is required'),
-	lastName: Yup.string()
-		.min(2, 'Too Short!')
-		.max(50, 'Too Long!')
-		.required('Last Name is required'),
-	contactNumber: Yup.string()
-		.matches(/^[0-9]{10}$/, 'Contact number must be 10 digits')
-		.required('Contact number is required'),
-	email: Yup.string().email('Invalid email').required('Email is required'),
-	password: Yup.string()
-		.min(8, 'Password must be at least 8 characters')
-		.matches(/[A-Z]/, 'Must contain at least one uppercase letter')
-		.matches(/[a-z]/, 'Must contain at least one lowercase letter')
-		.matches(/[0-9]/, 'Must contain at least one number')
-		.matches(/[@$!%*?&#]/, 'Must contain at least one special character')
-		.required('Password is required'),
-	confirmPassword: Yup.string()
-		.oneOf([Yup.ref('password'), null], 'Passwords must match')
-		.required('Confirm Password is required'),
+  firstName: Yup.string()
+    .min(2, "Too Short!")
+    .max(50, "Too Long!")
+    .required("First Name is required"),
+  lastName: Yup.string()
+    .min(2, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Last Name is required"),
+  contactNumber: Yup.string()
+    .matches(/^[0-9]{10}$/, "Contact number must be 10 digits")
+    .required("Contact number is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .matches(/[A-Z]/, "Must contain at least one uppercase letter")
+    .matches(/[a-z]/, "Must contain at least one lowercase letter")
+    .matches(/[0-9]/, "Must contain at least one number")
+    .matches(/[@$!%*?&#]/, "Must contain at least one special character")
+    .required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .required("Confirm Password is required"),
 });
 const SignupPopup = () => {
-	const [isOpen, setIsOpen] = useState(true);
-	const [loginData, setLoginData] = useState({
-		email_id: null,
-		password: null,
-	});
-	const dispatch = useDispatch();
-	const authState = useSelector((state) => state.auth);
+  const [isOpen, setIsOpen] = useState(true);
+  const [loginData, setLoginData] = useState({
+    email_id: null,
+    password: null,
+  });
+  const dispatch = useDispatch();
+  const authState = useSelector((state) => state.auth);
 
-	const [showLogin, setShowLogin] = useState(true);
+  const [showLogin, setShowLogin] = useState(true);
 
-	const handleShowLogin = () => {
-		setShowLogin(!showLogin);
-	};
+  const handleShowLogin = () => {
+    setShowLogin(!showLogin);
+  };
 
-	const mutation = useMutation({
-		mutationFn: userSignUp,
-		onSuccess: (data) => {
-			toast.success('Form submitted successfully!');
+  const mutation = useMutation({
+    mutationFn: userSignUp,
+    onSuccess: (data) => {
+      toast.success("Form submitted successfully!");
 
-			// loginMutation.mutate(loginData);
-		},
-		onError: (error) => {
-			const errorData = error?.response?.data;
-			console.error('Error details:', errorData);
-		},
-	});
+      // loginMutation.mutate(loginData);
+    },
+    onError: (error) => {
+      const errorData = error?.response?.data;
+      console.error("Error details:", errorData);
+    },
+  });
 
-	// login api call
+  // login api call
 
-	const loginMutation = useMutation({
-		mutationFn: loginUser,
-		onSuccess: (data) => {
-			let parsedData = typeof data.data === 'string' ? data.data : data.data;
-			const userId =
-				parsedData._id || parsedData.user_id || parsedData.user?._id;
-			Cookies.set('token', parsedData.token, { expires: 1 });
-			Cookies.set('userId', parsedData.user_id, { expires: 1 });
-			dispatch(login(parsedData.user_id));
-		},
-	});
+  const loginMutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (data) => {
+      let parsedData = typeof data.data === "string" ? data.data : data.data;
+      const userId =
+        parsedData._id || parsedData.user_id || parsedData.user?._id;
+      Cookies.set("token", parsedData.token, { expires: 1 });
+      Cookies.set("userId", parsedData.user_id, { expires: 1 });
+      dispatch(login(parsedData.user_id));
+    },
+  });
 
-	useEffect(() => {
-		const handleScroll = () => {
-			setIsOpen(!authState.isLoggedIn);
-			console.log('log....', authState.isLoggedIn);
-		};
-		window.addEventListener('scroll', handleScroll);
-		return () => window.removeEventListener('scroll', handleScroll);
-	}, [authState.isLoggedIn]);
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsOpen(!authState.isLoggedIn);
+      // console.log('log....', authState.isLoggedIn);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [authState.isLoggedIn]);
 
-	useEffect(() => {
-		setIsOpen(!authState.isLoggedIn);
-	}, [authState.isLoggedIn]);
+  useEffect(() => {
+    setIsOpen(!authState.isLoggedIn);
+  }, [authState.isLoggedIn]);
 
-	return (
-		<div>
-			{isOpen && (
-				<div className="fixed z-50 top-0 left-0 w-full h-full bg-black/50 backdrop-blur-sm flex justify-center items-center">
-					<div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
-						<button
-							onClick={() => setIsOpen(false)}
-							className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-						>
-							✕
-						</button>
-						<h2 className="text-2xl font-bold mb-6 text-gray-800">
-							Get started
-						</h2>
-						<Formik
-							initialValues={{
-								firstName: '',
-								lastName: '',
-								contactNumber: '',
-								email: '',
-								password: '',
-								confirmPassword: '',
-							}}
-							validationSchema={!showLogin ? validationSchema : null} // Apply validation only for signup
-							onSubmit={(values, { setSubmitting }) => {
-								if (showLogin) {
-									// Login Form Submission
-									loginMutation.mutate({
-										email_id: values.email,
-										password: values.password,
-									});
-								} else {
-									// Sign Up Form Submission
-									const finalData = {
-										f_name: values.firstName,
-										l_name: values.lastName,
-										mobile_no: values.contactNumber,
-										email_id: values.email,
-										password: values.password,
-									};
-									mutation.mutate(finalData);
-								}
-							}}
-						>
-							{({ isSubmitting }) => (
-								<Form className="space-y-4">
-									{showLogin ? (
-										<>
-											<div>
-												<Field
-													name="email"
-													type="email"
-													placeholder="Email"
-													className="w-full p-2 border rounded"
-												/>
-												<ErrorMessage
-													name="email"
-													component="div"
-													className="text-red-500 text-sm mt-1"
-												/>
-											</div>
-											<div>
-												<Field
-													name="password"
-													type="password"
-													placeholder="Password"
-													className="w-full p-2 border rounded"
-												/>
-												<ErrorMessage
-													name="password"
-													component="div"
-													className="text-red-500 text-sm mt-1"
-												/>
-											</div>
-											<button
-												type="submit"
-												className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
-											>
-												Login
-											</button>
-										</>
-									) : (
-										<>
-											<div className="grid grid-cols-2 gap-4">
-												<div>
-													<label className="block text-sm font-medium text-gray-700">
-														First Name
-													</label>
-													<Field
-														name="firstName"
-														type="text"
-														placeholder="First Name"
-														className="mt-1 block w-full rounded-md border p-2"
-													/>
-													<ErrorMessage
-														name="firstName"
-														component="div"
-														className="text-red-500 text-sm mt-1"
-													/>
-												</div>
-												<div>
-													<label className="block text-sm font-medium  text-gray-700">
-														Last Name
-													</label>
-													<Field
-														name="lastName"
-														type="text"
-														placeholder="Last Name"
-														className="mt-1 block w-full rounded-md border p-2"
-													/>
-													<ErrorMessage
-														name="lastName"
-														component="div"
-														className="text-red-500 text-sm mt-1"
-													/>
-												</div>
-											</div>
-											<div>
-												<label className="block text-sm font-medium text-gray-700">
-													Contact Number
-												</label>
-												<Field
-													name="contactNumber"
-													type="tel"
-													placeholder="Contact Number"
-													className="mt-1 block w-full rounded-md border p-2"
-												/>
-												<ErrorMessage
-													name="contactNumber"
-													component="div"
-													className="text-red-500 text-sm mt-1"
-												/>
-											</div>
-											<div>
-												<label className="block text-sm font-medium text-gray-700">
-													Email
-												</label>
-												<Field
-													name="email"
-													type="email"
-													placeholder="Email"
-													className="mt-1 block w-full rounded-md border p-2"
-												/>
-												<ErrorMessage
-													name="email"
-													component="div"
-													className="text-red-500 text-sm mt-1"
-												/>
-											</div>
-											<div className="grid grid-cols-2 gap-4">
-												<div>
-													<label className="block text-sm font-medium text-gray-700">
-														Password
-													</label>
-													<Field
-														name="password"
-														type="password"
-														placeholder="Password"
-														className="mt-1 block w-full rounded-md border p-2"
-													/>
-													<ErrorMessage
-														name="password"
-														component="div"
-														className="text-red-500 text-sm mt-1"
-													/>
-												</div>
-												<div>
-													<label className="block text-sm font-medium text-gray-700">
-														Confirm Password
-													</label>
-													<Field
-														name="confirmPassword"
-														type="password"
-														placeholder="Confirm Password"
-														className="mt-1 block w-full rounded-md border p-2"
-													/>
-													<ErrorMessage
-														name="confirmPassword"
-														component="div"
-														className="text-red-500 text-sm mt-1"
-													/>
-												</div>
-											</div>
-											<button
-												type="submit"
-												disabled={isSubmitting}
-												className="w-full block bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
-											>
-												Sign Up
-											</button>
-										</>
-									)}
+  return (
+    <div>
+      {isOpen && (
+        <div className="fixed z-50 top-0 left-0 w-full h-full bg-black/50 backdrop-blur-sm flex justify-center items-center">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+            <button
+              onClick={() => setIsOpen(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+            >
+              ✕
+            </button>
+            <h2 className="text-2xl font-bold mb-6 text-gray-800">
+              Get started
+            </h2>
+            <Formik
+              initialValues={{
+                firstName: "",
+                lastName: "",
+                contactNumber: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+              }}
+              validationSchema={!showLogin ? validationSchema : null} // Apply validation only for signup
+              onSubmit={(values, { setSubmitting }) => {
+                if (showLogin) {
+                  // Login Form Submission
+                  loginMutation.mutate({
+                    email_id: values.email,
+                    password: values.password,
+                  });
+                } else {
+                  // Sign Up Form Submission
+                  const finalData = {
+                    f_name: values.firstName,
+                    l_name: values.lastName,
+                    mobile_no: values.contactNumber,
+                    email_id: values.email,
+                    password: values.password,
+                  };
+                  mutation.mutate(finalData);
+                }
+              }}
+            >
+              {({ isSubmitting }) => (
+                <Form className="space-y-4">
+                  {showLogin ? (
+                    <>
+                      <div>
+                        <Field
+                          name="email"
+                          type="email"
+                          placeholder="Email"
+                          className="w-full p-2 border rounded"
+                        />
+                        <ErrorMessage
+                          name="email"
+                          component="div"
+                          className="text-red-500 text-sm mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Field
+                          name="password"
+                          type="password"
+                          placeholder="Password"
+                          className="w-full p-2 border rounded"
+                        />
+                        <ErrorMessage
+                          name="password"
+                          component="div"
+                          className="text-red-500 text-sm mt-1"
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
+                      >
+                        Login
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            First Name
+                          </label>
+                          <Field
+                            name="firstName"
+                            type="text"
+                            placeholder="First Name"
+                            className="mt-1 block w-full rounded-md border p-2"
+                          />
+                          <ErrorMessage
+                            name="firstName"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium  text-gray-700">
+                            Last Name
+                          </label>
+                          <Field
+                            name="lastName"
+                            type="text"
+                            placeholder="Last Name"
+                            className="mt-1 block w-full rounded-md border p-2"
+                          />
+                          <ErrorMessage
+                            name="lastName"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Contact Number
+                        </label>
+                        <Field
+                          name="contactNumber"
+                          type="tel"
+                          placeholder="Contact Number"
+                          className="mt-1 block w-full rounded-md border p-2"
+                        />
+                        <ErrorMessage
+                          name="contactNumber"
+                          component="div"
+                          className="text-red-500 text-sm mt-1"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Email
+                        </label>
+                        <Field
+                          name="email"
+                          type="email"
+                          placeholder="Email"
+                          className="mt-1 block w-full rounded-md border p-2"
+                        />
+                        <ErrorMessage
+                          name="email"
+                          component="div"
+                          className="text-red-500 text-sm mt-1"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Password
+                          </label>
+                          <Field
+                            name="password"
+                            type="password"
+                            placeholder="Password"
+                            className="mt-1 block w-full rounded-md border p-2"
+                          />
+                          <ErrorMessage
+                            name="password"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Confirm Password
+                          </label>
+                          <Field
+                            name="confirmPassword"
+                            type="password"
+                            placeholder="Confirm Password"
+                            className="mt-1 block w-full rounded-md border p-2"
+                          />
+                          <ErrorMessage
+                            name="confirmPassword"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full block bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
+                      >
+                        Sign Up
+                      </button>
+                    </>
+                  )}
 
-									<p>
-										{showLogin
-											? "You Haven't registered? "
-											: 'Already registered? '}
-										<button
-											type="button"
-											onClick={handleShowLogin}
-											className="text-blue-500 underline"
-										>
-											{showLogin ? 'Sign Up' : 'Login'}
-										</button>
-									</p>
-								</Form>
-							)}
-						</Formik>
-					</div>
-				</div>
-			)}
-		</div>
-	);
+                  <p>
+                    {showLogin
+                      ? "You Haven't registered? "
+                      : "Already registered? "}
+                    <button
+                      type="button"
+                      onClick={handleShowLogin}
+                      className="text-blue-500 underline"
+                    >
+                      {showLogin ? "Sign Up" : "Login"}
+                    </button>
+                  </p>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 export default SignupPopup;
 

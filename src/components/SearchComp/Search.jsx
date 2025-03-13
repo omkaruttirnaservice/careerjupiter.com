@@ -19,7 +19,7 @@ const SearchComponent = () => {
 	} = useSearchContext();
 
 	const { pathname } = useLocation();
-	console.log(pathname, '--pathname');
+	// console.log(pathname, '--pathname');
 
 	const [searchParams, setSearchParams] = useState({
 		searchKey: '',

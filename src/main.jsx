@@ -20,6 +20,7 @@ import { AxiosError } from "axios";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SignupPopup from "./Pages/SignIn/SignupPopup.jsx";
+import ScrollToTop from "./Layouts/ScrollToTop.jsx";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -47,6 +48,7 @@ createRoot(document.getElementById("root")).render(
   <>
     <QueryClientProvider client={queryClient}>
       <Provider store={reduxStore}>
+        
         <App />
         <SignupPopup />
       </Provider>
