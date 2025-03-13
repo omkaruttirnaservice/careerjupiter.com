@@ -10,6 +10,7 @@ import EntranceExam from "./EntranceExam";
 import InquiryForm from "./InquiryForm";
 import ReviewPage from "../navComp/ReviewPage";
 import UniversityCourses from "./OfferedCourse";
+import { motion } from "framer-motion";
 
 const UniversityDetail = () => {
   const { id } = useParams();
@@ -64,66 +65,71 @@ const UniversityDetail = () => {
       </div>
 
       {/* Info Section */}
-      <div className="container mx-auto mt-4 px-4">
-        <div className="bg-white shadow-md rounded-lg p-2">
+      <div className="container mx-auto mt-6 px-4">
+        <motion.div
+          className="bg-white shadow-md rounded-lg p-4"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           {/* Location */}
-          <div className="flex items-center mb-6">
-            <FaMapMarkerAlt className="text-red-500 text-3xl mr-2 p-2" />
+          <motion.div
+            className="flex items-center mb-6"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <FaMapMarkerAlt className="text-green-500 text-3xl mr-2" />
             <h2 className="text-3xl font-bold text-gray-800">Location</h2>
-          </div>
+          </motion.div>
           <p className="text-lg text-gray-600 mb-4">
             {`${uni.address.line1}, ${uni.address.line2}, ${uni.address.dist}, ${uni.address.state} - ${uni.address.pincode}`}
           </p>
 
           {/* Establishment Year */}
-          <div className="flex items-center mb-6">
+          <motion.div
+            className="flex items-center mb-6"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
             <FaCalendarAlt className="text-blue-600 text-2xl mr-2" />
             <h2 className="text-3xl font-bold text-gray-800">Established in</h2>
-          </div>
+          </motion.div>
           <p className="text-lg text-gray-600 mb-4">
             {uni.establishedYear || "Not Available"}
           </p>
 
           {/* About */}
-          <div className="flex items-center mb-6">
+          <motion.div
+            className="flex items-center mb-6"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+          >
             <h2 className="text-3xl font-bold text-gray-800">About</h2>
-          </div>
+          </motion.div>
           <p className="text-lg text-gray-700 leading-relaxed mb-4">
             {uni.info?.description || "No description provided."}
           </p>
 
           {/* Contact Number */}
-          <div className="flex items-center mb-8">
+          <motion.div
+            className="flex items-center mb-8"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
+          >
             <FaPhoneAlt className="text-green-600 text-xl mr-2" />
             <p className="text-lg text-gray-700">
               {uni.contactDetails?.phoneNumber || "+91-123 123 123 123"}
             </p>
-          </div>
-
-          {/* Ranking & Courses */}
-          {/* <UniversityRanking university={uni} /> */}
-          <UniversityCourses courses={courses} />
-          <PlacementOpportunities university={uni} />
-          <ReviewPage />
-
-          {/* Entrance Exam and Inquiry Form side by side */}
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-						<div className="bg-gray-100 p-4 rounded-lg">
-							<EntranceExam university={uni} />
-						</div>
-						<div className="bg-gray-100 p-4 rounded-lg">
-							<InquiryForm university={uni} />
-						</div>
-					</div> */}
-
-          <button
-            onClick={() => navigate("/")}
-            className=" cursor-pointer mt-6 px-6 py-2 bg-blue-600 text-white text-lg font-medium rounded-lg hover:bg-blue-700 transition duration-300"
-          >
-            Back to Home
-          </button>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
+      <UniversityCourses courses={courses} />
+      <PlacementOpportunities university={uni} />
+      <ReviewPage />
     </div>
   );
 };

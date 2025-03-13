@@ -24,7 +24,7 @@ function ProfileLayout() {
 			icon: LuLogOut,
 		},
 	];
-
+s
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 
 	return (
