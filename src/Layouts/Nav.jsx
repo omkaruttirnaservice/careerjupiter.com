@@ -1,6 +1,6 @@
 import { Popover, Transition, Menu } from '@headlessui/react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { navigation } from '../Constant/constantData';
@@ -22,18 +22,19 @@ const Nav = () => {
 	};
 
 	const { isLoggedIn } = useSelector((state) => state.auth);
-	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const [showConfirm, setShowConfirm] = useState(false);
 
 	const profilePic =
 		'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsEJHmI0MlIGvH9CYkbsLEWQ5_ee8Qtl5V-Q&s';
 
 	const handleSignOut = () => {
-		dispatch({ type: 'LOGOUT' });
 		navigate('/signout');
 	};
 
-	const handleNavClick = () => {};
+	const confirmSignOut = () => {
+		setShowConfirm(true);
+	};
 
 	const handleClick = (e, href) => {
 		e.preventDefault();
@@ -151,7 +152,7 @@ const Nav = () => {
 												<Menu.Item>
 													{({ active }) => (
 														<button
-															onClick={handleSignOut}
+															onClick={confirmSignOut}
 															className={`block w-full text-left px-4 py-2 text-red-600 ${active ? 'bg-gray-100' : ''}`}
 														>
 															Sign Out
@@ -197,10 +198,10 @@ const Nav = () => {
 												<Menu.Item>
 													{({ active }) => (
 														<button
-															onClick={handleSignOut}
+															onClick={confirmSignOut}
 															className={`block w-full text-left px-4 py-2 text-red-600 ${active ? 'bg-gray-100' : ''}`}
 														>
-															Sign Out
+															Sign Out1
 														</button>
 													)}
 												</Menu.Item>
@@ -208,45 +209,32 @@ const Nav = () => {
 										</Transition>
 									</Menu>
 								)}
-
-								<Popover.Button className="p-2 rounded-md bg-gray-50 hover:bg-gray-100">
-									{open ? (
-										<XIcon className="h-6 w-6" />
-									) : (
-										<MenuIcon className="h-6 w-6" />
-									)}
-								</Popover.Button>
 							</div>
 						</nav>
 
-						<Transition
-							as={Fragment}
-							enter="duration-150 ease-out"
-							enterFrom="opacity-0 scale-95"
-							enterTo="opacity-100 scale-100"
-							leave="duration-100 ease-in"
-							leaveFrom="opacity-100 scale-100"
-							leaveTo="opacity-0 scale-95"
-						>
-							<Popover.Panel className="absolute top-16 inset-x-0 p-2 transition transform origin-top-right md:hidden">
-								<div className="rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 divide-y-2 divide-gray-50">
-									<div className="px-5 pt-5 pb-6">
-										<div className="flex flex-col space-y-4">
-											{navigation.map((item) => (
-												<NavLink
-													key={item.name}
-													to={item.href}
-													onClick={handleNavClick}
-													className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-												>
-													{item.name}
-												</NavLink>
-											))}
-										</div>
+						{showConfirm && (
+							<div className="fixed inset-0 flex items-center justify-center backdrop-blur-md">
+								<div className="bg-white p-6 border block rounded-lg shadow-lg">
+									<p className="text-lg font-medium">
+										Are you sure you want to sign out?
+									</p>
+									<div className="mt-4 flex justify-end space-x-4">
+										<button
+											onClick={() => setShowConfirm(false)}
+											className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+										>
+											Cancel
+										</button>
+										<button
+											onClick={handleSignOut}
+											className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+										>
+											Sign Out
+										</button>
 									</div>
 								</div>
-							</Popover.Panel>
-						</Transition>
+							</div>
+						)}
 					</>
 				)}
 			</Popover>
