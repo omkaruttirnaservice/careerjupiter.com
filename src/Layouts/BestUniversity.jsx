@@ -51,7 +51,7 @@ const BestUniversity = () => {
         </p>
         <button
           onClick={handleSearch}
-          className="cursor-pointer w-full flex items-center justify-center gap-3 bg-blue-500 text-white px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:bg-blue-600 transition-all duration-300 transform hover:scale-105"
+          className="cursor-pointer border-2 w-full flex items-center justify-center gap-3 bg-blue-500 text-white px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:bg-blue-600 transition-all duration-300 transform hover:scale-105"
         >
           <FaSearch /> Search Universities
         </button>
