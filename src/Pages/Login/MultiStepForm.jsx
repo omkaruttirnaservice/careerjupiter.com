@@ -2,18 +2,24 @@ import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
-import { userSignUp } from "./Api";
+import { userSignUp } from "../SignIn/Api";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { cityData } from "../../Constant/constantData";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const educationOptions = ["SSC", "HSC", "ITI","Diploma", "Graduation", "Post Graduation", "MBA"];
+const educationOptions = [
+  "SSC",
+  "HSC",
+  "ITI",
+  "Diploma",
+  "Graduation",
+  "Post Graduation",
+  "MBA",
+];
 
 const LocationMarker = ({ setLocation, location }) => {
-
-  
   const map = useMapEvents({
     click(e) {
       setLocation({ lat: e.latlng.lat, lng: e.latlng.lng });
@@ -27,7 +33,7 @@ const LocationMarker = ({ setLocation, location }) => {
 };
 
 const MultiStepForm = () => {
-  let totalFormSteps = 15
+  let totalFormSteps = 15;
   const [step, setStep] = useState(0);
   const [location, setLocation] = useState({ lat: null, lng: null });
   const [districtOptions, setDistrictOptions] = useState([]);
@@ -48,7 +54,10 @@ const MultiStepForm = () => {
 
       if (status === 400 && errorData?.field) {
         // Handle specific field errors
-        formik.setFieldError(errorData.field, errorData?.message || "Invalid input.");
+        formik.setFieldError(
+          errorData.field,
+          errorData?.message || "Invalid input."
+        );
       } else if (status === 409) {
         // Conflict error (like existing email or mobile)
         toast.error(errorData?.usrMsg || "This account already exists.");
@@ -57,11 +66,13 @@ const MultiStepForm = () => {
         toast.error("Internal server error. Please try again later.");
       } else {
         // General error fallback
-        toast.error(errorData?.usrMsg || "Something went wrong. Please check your details.");
+        toast.error(
+          errorData?.usrMsg ||
+            "Something went wrong. Please check your details."
+        );
       }
     },
   });
-
 
   const formik = useFormik({
     initialValues: {
@@ -255,7 +266,6 @@ const MultiStepForm = () => {
   return (
     <>
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4 sm:p-8">
-
         <form
           onSubmit={formik.handleSubmit}
           className="w-full max-w-lg sm:max-w-2xl bg-white shadow-2xl rounded-2xl sm:rounded-3xl p-6 sm:p-12 border-t-4 sm:border-t-8 border-indigo-600 transition-transform transform hover:scale-105 duration-300"
@@ -276,7 +286,6 @@ const MultiStepForm = () => {
             {Math.round((step / totalFormSteps) * 100)}% Completed
           </h2>
 
-
           {steps[step].name === "location" ? (
             <div className="mb-6 sm:mb-10 text-center">
               <label className="block text-lg sm:text-2xl font-semibold text-gray-800 mb-4 sm:mb-6">
@@ -296,7 +305,10 @@ const MultiStepForm = () => {
                   style={{ height: "100%", width: "100%" }}
                 >
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                  <LocationMarker setLocation={setLocation} location={location} />
+                  <LocationMarker
+                    setLocation={setLocation}
+                    location={location}
+                  />
                 </MapContainer>
               </div>
               {location.lat && location.lng && (
@@ -315,14 +327,20 @@ const MultiStepForm = () => {
                   {...formik.getFieldProps(steps[step].name)}
                   onChange={(e) => {
                     if (steps[step].name === "state") handleStateChange(e);
-                    else if (steps[step].name === "district") handleDistrictChange(e);
-                    else if (steps[step].name === "education") handleEducationChange(e);
+                    else if (steps[step].name === "district")
+                      handleDistrictChange(e);
+                    else if (steps[step].name === "education")
+                      handleEducationChange(e);
                   }}
                   className="border-2 border-indigo-400 p-3 sm:p-4 w-full rounded-lg sm:rounded-xl text-sm sm:text-lg focus:ring-4 focus:ring-indigo-500 outline-none transition-shadow shadow-md hover:shadow-lg"
                 >
                   <option value="">Select {steps[step].label}</option>
                   {steps[step].options.map((option) => (
-                    <option key={option} value={option} className="text-sm sm:text-lg">
+                    <option
+                      key={option}
+                      value={option}
+                      className="text-sm sm:text-lg"
+                    >
                       {option}
                     </option>
                   ))}
@@ -334,11 +352,12 @@ const MultiStepForm = () => {
                   className="border-2 border-indigo-400 p-3 sm:p-4 w-full rounded-lg sm:rounded-xl text-sm sm:text-lg focus:ring-4 focus:ring-indigo-500 outline-none transition-shadow shadow-md hover:shadow-lg"
                 />
               )}
-              {formik.touched[steps[step].name] && formik.errors[steps[step].name] && (
-                <p className="text-red-600 mt-2 sm:mt-4 text-sm sm:text-lg">
-                  {formik.errors[steps[step].name]}
-                </p>
-              )}
+              {formik.touched[steps[step].name] &&
+                formik.errors[steps[step].name] && (
+                  <p className="text-red-600 mt-2 sm:mt-4 text-sm sm:text-lg">
+                    {formik.errors[steps[step].name]}
+                  </p>
+                )}
             </div>
           )}
 
