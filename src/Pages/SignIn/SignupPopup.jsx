@@ -147,12 +147,12 @@ const SignupPopup = () => {
       {isOpen && (
         <div className="fixed z-50 top-0 left-0 w-full h-full bg-black/50 backdrop-blur-sm flex justify-center items-center">
           <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
-            <button
+            {/* <button
               onClick={() => setIsOpen(false)}
               className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
             >
               ✕
-            </button>
+            </button> */}
 
             <h2 className="text-2xl font-bold mb-6 text-gray-800">
               {showLogin ? "Sign In to Continue" : "Create New Account"}
@@ -269,7 +269,7 @@ const SignupPopup = () => {
                     </div>
 
                     {!showLogin && (
-                      <div className="w-full md:w-1/2">
+                      <div className="w-full ">
                         <Field
                           name="confirmPassword"
                           type="password"
