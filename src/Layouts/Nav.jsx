@@ -66,7 +66,7 @@ const Nav = () => {
 								href="/"
 								className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600"
 							>
-								CAREER NITI
+								CAREER JUPITER
 							</a>
 							<div className="hidden md:flex md:items-center md:space-x-8">
 								{navigation.map((item) => (
