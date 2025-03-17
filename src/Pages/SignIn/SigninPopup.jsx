@@ -1,3 +1,117 @@
+import { useEffect, useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../Login/Api";
+import { login } from "../../store-redux/AuthSlice";
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string().required("Password is required"),
+});
+
+const SignInPopup = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
+  const authState = useSelector((state) => state.auth);
+
+  const loginMutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (data) => {
+      let parsedData =
+        typeof data.data === "string" ? JSON.parse(data.data) : data.data;
+      Cookies.set("token", parsedData.token, { expires: 1 });
+      Cookies.set("userId", parsedData.user_id, { expires: 1 });
+      dispatch(login(parsedData.user_id));
+      toast.success("Login successful!");
+      setIsOpen(false);
+    },
+    onError: (error) => {
+      toast.error("Invalid credentials. Please try again.");
+      console.error("Login error:", error.response?.data || error.message);
+    },
+  });
+
+  useEffect(() => {
+    setIsOpen(!authState.isLoggedIn);
+  }, [authState.isLoggedIn]);
+
+  return (
+    <div>
+      {isOpen && (
+        <div className="fixed z-50 top-0 left-0 w-full h-full bg-black/50 backdrop-blur-sm flex justify-center items-center">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+            <button
+              onClick={() => setIsOpen(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+            >
+              ✕
+            </button>
+            <h2 className="text-2xl font-bold mb-6 text-gray-800">Sign In</h2>
+            <Formik
+              initialValues={{ email: "", password: "" }}
+              validationSchema={validationSchema}
+              onSubmit={(values) => {
+                loginMutation.mutate(values);
+              }}
+            >
+              {({ isSubmitting }) => (
+                <Form className="space-y-4">
+                  {/* Email */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Email
+                    </label>
+                    <Field
+                      name="email"
+                      type="email"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                    />
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+                  {/* Password */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Password
+                    </label>
+                    <Field
+                      name="password"
+                      type="password"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                    />
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
+                  >
+                    Sign In
+                  </button>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default SignInPopup;
+
 // import { useEffect, useState } from "react";
 // import { Formik, Form, Field, ErrorMessage } from "formik";
 // import * as Yup from "yup";
@@ -145,134 +259,135 @@
 // };
 
 // export default SignupPopup;
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import { useMutation } from "@tanstack/react-query";
-import { loginUser } from "./Api";
-import Cookies from "js-cookie";
-import { useDispatch } from "react-redux";
-import { login } from "../../store-redux/AuthSlice";
-import { toast } from "react-toastify";
 
-// ✅ Validation Schema
-const signinValidationSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  password: Yup.string().required("Password is required"),
-});
+// import { Formik, Form, Field, ErrorMessage } from "formik";
+// import * as Yup from "yup";
+// import { useMutation } from "@tanstack/react-query";
+// import { loginUser } from "./Api";
+// import Cookies from "js-cookie";
+// import { useDispatch } from "react-redux";
+// import { login } from "../../store-redux/AuthSlice";
+// import { toast } from "react-toastify";
 
-const SigninPopup = ({ setShowSignup, setShowPopup }) => {
-  const dispatch = useDispatch();
+// // ✅ Validation Schema
+// const signinValidationSchema = Yup.object().shape({
+//   email: Yup.string().email("Invalid email").required("Email is required"),
+//   password: Yup.string().required("Password is required"),
+// });
 
-  const mutation = useMutation({
-    mutationFn: loginUser,
-    onSuccess: (data) => {
-      console.log("✅ Login Success:", data);
+// const SigninPopup = ({ setShowSignup, setShowPopup }) => {
+//   const dispatch = useDispatch();
 
-      if (data?.data?.token) {
-        Cookies.set("token", data.data.token, { expires: 1 });
-        dispatch(login(data.data.user_id));
-        toast.success("Login successful! 🎉");
+//   const mutation = useMutation({
+//     mutationFn: loginUser,
+//     onSuccess: (data) => {
+//       console.log("✅ Login Success:", data);
 
-        // ✅ Close the popup after login success
-        setShowPopup(false);
-      } else {
-        toast.error("Login failed! Invalid response.");
-      }
-    },
-    onError: (error) => {
-      console.error("❌ Login Error:", error);
-      toast.error(error?.response?.data?.message || "Invalid credentials! 🚫");
-    },
-  });
+//       if (data?.data?.token) {
+//         Cookies.set("token", data.data.token, { expires: 1 });
+//         dispatch(login(data.data.user_id));
+//         toast.success("Login successful! 🎉");
 
-  return (
-    <div className="fixed z-50 top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center">
-      <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md relative">
-        {/* Close Button */}
-        <button
-          onClick={() => setShowPopup(false)}
-          className="absolute top-4 right-4 text-lg font-bold"
-        >
-          ✕
-        </button>
+//         // ✅ Close the popup after login success
+//         setShowPopup(false);
+//       } else {
+//         toast.error("Login failed! Invalid response.");
+//       }
+//     },
+//     onError: (error) => {
+//       console.error("❌ Login Error:", error);
+//       toast.error(error?.response?.data?.message || "Invalid credentials! 🚫");
+//     },
+//   });
 
-        <h2 className="text-2xl font-bold mb-6">Sign In</h2>
+//   return (
+//     <div className="fixed z-50 top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center">
+//       <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md relative">
+//         {/* Close Button */}
+//         <button
+//           onClick={() => setShowPopup(false)}
+//           className="absolute top-4 right-4 text-lg font-bold"
+//         >
+//           ✕
+//         </button>
 
-        {/* Formik Form */}
-        <Formik
-          initialValues={{ email: "", password: "" }}
-          validationSchema={signinValidationSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            console.log("📤 Submitting Form:", values);
-            mutation.mutate(values, {
-              onSettled: () => setSubmitting(false),
-            });
-          }}
-        >
-          {({ isSubmitting }) => (
-            <Form className="space-y-4">
-              {/* Email Field */}
-              <div>
-                <Field
-                  name="email"
-                  type="email"
-                  placeholder="Email"
-                  className="w-full p-2 border rounded"
-                />
-                <ErrorMessage
-                  name="email"
-                  component="div"
-                  className="text-red-500 text-sm mt-1"
-                />
-              </div>
+//         <h2 className="text-2xl font-bold mb-6">Sign In</h2>
 
-              {/* Password Field */}
-              <div>
-                <Field
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                  className="w-full p-2 border rounded"
-                />
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  className="text-red-500 text-sm mt-1"
-                />
-              </div>
+//         {/* Formik Form */}
+//         <Formik
+//           initialValues={{ email: "", password: "" }}
+//           validationSchema={signinValidationSchema}
+//           onSubmit={(values, { setSubmitting }) => {
+//             console.log("📤 Submitting Form:", values);
+//             mutation.mutate(values, {
+//               onSettled: () => setSubmitting(false),
+//             });
+//           }}
+//         >
+//           {({ isSubmitting }) => (
+//             <Form className="space-y-4">
+//               {/* Email Field */}
+//               <div>
+//                 <Field
+//                   name="email"
+//                   type="email"
+//                   placeholder="Email"
+//                   className="w-full p-2 border rounded"
+//                 />
+//                 <ErrorMessage
+//                   name="email"
+//                   component="div"
+//                   className="text-red-500 text-sm mt-1"
+//                 />
+//               </div>
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`w-full py-2 rounded-md transition ${
-                  isSubmitting
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 text-white"
-                }`}
-              >
-                {isSubmitting ? "Signing In..." : "Sign In"}
-              </button>
-            </Form>
-          )}
-        </Formik>
+//               {/* Password Field */}
+//               <div>
+//                 <Field
+//                   name="password"
+//                   type="password"
+//                   placeholder="Password"
+//                   className="w-full p-2 border rounded"
+//                 />
+//                 <ErrorMessage
+//                   name="password"
+//                   component="div"
+//                   className="text-red-500 text-sm mt-1"
+//                 />
+//               </div>
 
-        {/* Signup Redirect */}
-        <p className="mt-4 text-center">
-          Haven't registered?{" "}
-          <button
-            onClick={() => {
-              setShowSignup(true);
-              setShowPopup(false); // ✅ Close Sign-in popup
-            }}
-            className="text-blue-600 underline"
-          >
-            Sign Up
-          </button>
-        </p>
-      </div>
-    </div>
-  );
-};
+//               {/* Submit Button */}
+//               <button
+//                 type="submit"
+//                 disabled={isSubmitting}
+//                 className={`w-full py-2 rounded-md transition ${
+//                   isSubmitting
+//                     ? "bg-gray-400 cursor-not-allowed"
+//                     : "bg-blue-600 hover:bg-blue-700 text-white"
+//                 }`}
+//               >
+//                 {isSubmitting ? "Signing In..." : "Sign In"}
+//               </button>
+//             </Form>
+//           )}
+//         </Formik>
 
-export default SigninPopup;
+//         {/* Signup Redirect */}
+//         <p className="mt-4 text-center">
+//           Haven't registered?{" "}
+//           <button
+//             onClick={() => {
+//               setShowSignup(true);
+//               setShowPopup(false); // ✅ Close Sign-in popup
+//             }}
+//             className="text-blue-600 underline"
+//           >
+//             Sign Up
+//           </button>
+//         </p>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default SigninPopup;
