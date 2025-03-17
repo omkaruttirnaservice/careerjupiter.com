@@ -171,11 +171,11 @@ const SearchComponent = () => {
 			{/* Card on the right */}
 			<div className="flex items-center justify-center p-4 mt-4 md:mt-0">
 				{/* Card */}
-				<div className="bg-green-500 p-2 rounded-xl w-full md:w-96 max-w-sm">
+				<div className="bg-gradient-to-tr from-green-500/80 to-green-600 p-4 rounded-xl w-full md:w-96 max-w-sm">
 					{/* Header */}
 					<div className="flex items-center mb-3 space-x-3">
 						<FaBrain className="text-4xl text-white" />
-						<h2 className="text-3xl font-bold text-gray-800">𝓘𝓠 𝓣𝓮𝓼𝓽</h2>
+						<h2 className="text-3xl font-bold text-white">𝓘𝓠 𝓣𝓮𝓼𝓽</h2>
 					</div>
 					<p className="text-gray-100 font-bold mb-6 leading-relaxed">
 						Test your intelligence and problem-solving skills with this quick IQ
@@ -185,14 +185,23 @@ const SearchComponent = () => {
 					{/* Time and Button */}
 					<div className="flex items-center justify-between">
 						{/* Animated Button */}
-						<NavLink
+						{/* <NavLink
 							to="profile/test"
 							className="text-white hover:text-green-800 flex flex-row gap-2 ml-auto"
 						>
-							<button className="bg-blue-500 cursor-pointer text-white px-6 py-3 rounded-md text-md font-medium flex items-center space-x-2 transition-all duration-300 ease-in-out group">
+							<button className="bg-blue-500 shadow-lg w-full cursor-pointer text-white px-6 py-3 rounded-md text-md font-medium flex items-center space-x-2 transition-all duration-300 ease-in-out group">
 								<span>Give Test</span>
 								<IoArrowForwardOutline className="text-xl transition-transform duration-300 ease-in-out group-hover:translate-x-2" />
 							</button>
+						</NavLink> */}
+
+						<NavLink
+							to="profile/test"
+							className="text-white flex-row gap-2 ml-auto animate-pulse hover:animate-none border-white border hover:border-green-700
+							hover:bg-green-700 shadow-lg w-full cursor-pointer px-6 py-3 rounded-md text-md font-medium flex items-center text-xl space-x-2 transition-all duration-300 ease-in-out group justify-center"
+						>
+							<span>Give Test</span>
+							<IoArrowForwardOutline className="text-xl transition-transform duration-300 ease-in-out group-hover:translate-x-2" />
 						</NavLink>
 					</div>
 				</div>
