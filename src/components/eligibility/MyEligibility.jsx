@@ -15,6 +15,7 @@ const MyEligibility = () => {
   const [selectedEducation, setSelectedEducation] = useState("")
   const [examOptions, setExamOptions] = useState([])
   const [selectedExam, setSelectedExam] = useState("")
+  const [percentage, setPercentage] = useState(0);
   const [selectedDistrict, setSelectedDistrict] = useState("")
   const [selectedCaste, setSelectedCaste] = useState("")
   const [sortOrder, setSortOrder] = useState("")
