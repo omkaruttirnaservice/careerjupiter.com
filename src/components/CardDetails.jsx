@@ -1,146 +1,219 @@
-import { useEffect, useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { NavLink, useParams, useSearchParams } from "react-router-dom";
 import { FaPhone, FaEnvelope, FaGlobe, FaMapMarkerAlt } from "react-icons/fa";
 import HandleNavComp from "./HandleNavComp";
+import { useQuery } from "@tanstack/react-query";
+import { getCollege } from "./Api";
+import { BACKEND_SERVER_IP } from "../Constant/constantData";
+import { FaPhoneAlt } from 'react-icons/fa'; // Contact icon
+
 
 const CardDetails = () => {
-
   const navItem = [
-    "Overview",
+    // "Overview",
     "Courses & Fees",
-    "Scholarship",
+    // "Scholarship",
     "Placements",
-    "CutOffs",
-    "Ranking",
-    "Campus",
+    // "CutOffs",
+    // "Ranking",
+    "Infrastructure",
     "Gallery",
     "Reviews",
-    "News",
-    "QnA",
+    // "News",
+    // "QnA",
   ];
-
-  const [navName, setNavName] = useState("Overview");
-
-  const handleNavName = (e)=>{
-    setNavName(e.target.innerText);
-  }
-
 
   const { id } = useParams();
 
-  const cards = [
-    {
-      id: 1,
-      image:
-        "https://images.unsplash.com/photo-1562774053-701939374585?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y29sbGVnZXxlbnwwfHwwfHx8MA%3D%3D", // Replace with your image URL
-      name: "first",
-      description:
-        "A leading institution offering world-class education in various fields A leading institution offering world-class education in various fields .A leading institution offering world-class education in various fields",
-      rating: 4.5,
-    },
-  ];
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const card = cards.find((c)=>c.id === parseInt(id));
+  const initialTab = searchParams.get("tab") || "Overview";
+  const [navName, setNavName] = useState(initialTab);
+
+  const sectionRef = useRef(null);
+  const tabRefs = useRef({});
+
+  const [isManualClick, setIsManualClick] = useState(false);
+
+  const handleNavName = (tabName) => {
+    setNavName(tabName);
+    setSearchParams({ tab: tabName });
+    setIsManualClick(true);
+
+    setTimeout(() => {
+      sectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      tabRefs.current[tabName]?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }, 100);
+  };
+
+  useEffect(() => {
+    if (isManualClick) {
+      sectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      tabRefs.current[navName]?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+      setIsManualClick(false);
+    }
+  }, [navName]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [card]);
+  }, [id]);
 
-  if (!card) {
+  const { data } = useQuery({
+    queryKey: ["college", id],
+    queryFn: () => getCollege(id),
+  });
+
+  const college = data?.college;
+  const courses = data?.courses;
+  const infrastructure = data?.infrastructure;
+  const placements = data?.placements;
+  const imageGallery = data?.college?.imageGallery;
+
+  if (!college) {
     return <p className="text-center text-gray-600 mt-8">No data found.</p>;
   }
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition duration-300"
+      <a
+      href="tel:+1234567890" // Replace with your phone number
+      className="fixed bottom-6 right-6 z-5 flex items-center gap-3 bg-green-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-green-700 transition-all duration-300 hover:scale-100 animate-bounce"
+    >
+      <FaPhoneAlt className="text-2xl animate-wiggle" /> {/* Animated icon */}
+      <span className="font-bold text-lg">Call Now</span>
+    </a>
+    <div className="max-w-7xl mx-auto p-4 mt-5">
+  {/* College Name at the Top */}
+  <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
+    {college.collegeName}
+  </h1>
+
+  {/* Image and Gallery Section */}
+  <div className="w-full flex flex-col md:flex-row gap-8">
+    {/* Main College Image */}
+    <div className="w-full md:w-1/2">
+      <img
+        src={college.image ? `${BACKEND_SERVER_IP}${college.image}` : "https://cdn.pixabay.com/photo/2017/09/01/13/56/university-2704306_640.jpg"}
+        alt={college.collegeName || "College Building"}
+        className="rounded-lg w-full h-72 object-cover shadow-lg hover:scale-105 transition-transform duration-300"
+        loading="lazy"
+      />
+    </div>
+
+    {/* Image Gallery */}
+    <div className="w-full md:w-1/2 grid grid-cols-2 gap-4">
+      {college.imageGallery?.slice(0, 4).map((img, index) => (
+        <img
+          key={index}
+          src={`${BACKEND_SERVER_IP}${img}`}
+          alt={`Gallery Image ${index + 1}`}
+          className="rounded-lg w-full h-32 object-cover shadow-md hover:scale-105 transition-transform duration-300"
+        />
+      ))}
+    </div>
+  </div>
+  <div className="bg-gray-50 p-8 rounded-lg w-full mt-8 shadow-md grid grid-cols-1 md:grid-cols-2 gap-8">
+  {/* Left Side - Contact Details */}
+  <div className="space-y-4">
+    <h2 className="text-2xl font-bold text-gray-800">Contact Details</h2>
+    <div className="flex items-center text-gray-800">
+      📞 <p className="ml-3 font-medium">{college.contactDetails}</p>
+    </div>
+    <div className="flex items-center text-gray-800">
+      ✉️ <p className="ml-3 font-medium">{college.email_id}</p>
+    </div>
+    <div className="flex items-center text-gray-800">
+      🌐
+      <a
+        href={college.websiteURL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="ml-3 text-indigo-600 hover:text-indigo-800 font-medium underline"
       >
-        <NavLink to="/review"> 📝 Review</NavLink>
-      </button>
-      <div className="max-w-7xl mx-auto p-4 mt-15">
-        <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col md:flex-row relative">
-          <div className="md:w-2/3 p-4">
-            <h1 className="text-2xl font-bold">
-              IIT Madras - Admission 2025 {card.name}
-            </h1>
-            <div className="flex items-center mt-2 text-gray-600">
-              <span className="bg-yellow-400 text-white px-2 py-1 rounded text-sm">
-                {card.rating} ⭐
-              </span>
-            </div>
-            <p className="mt-2 text-gray-700 text-sm">{card.description}</p>
-            <div className=" mx-auto bg-white mt-5">
-              {/* Contact Information */}
-              <div className="flex items-center">
-                <FaPhone className="text-blue-500 mr-4" size={15} />
-                <div>
-                  <p className="text-gray-800 ">+91 12345 67890</p>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <FaEnvelope className="text-blue-500 mr-4" size={15} />
-                <div>
-                  <p className="text-gray-800 ">info@example.com</p>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <FaGlobe className="text-blue-500 mr-4" size={15} />
-                <div>
-                  <a
-                    href="https://example.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline"
-                  >
-                    https://example.com
-                  </a>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <FaMapMarkerAlt className="text-blue-500 mr-4" size={15} />
-                <div>
-                  <p className="text-gray-800 ">
-                    123 Main Street, Chennai, India
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="mt-4 flex space-x-4">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                Download Brochure
-              </button>
-              <button className="border border-blue-600 text-blue-600 px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white">
-                Show Reviews
-              </button>
-            </div>
-          </div>
+        {college.websiteURL}
+      </a>
+    </div>
+    <div className="flex items-center text-gray-800">
+      📍 <p className="ml-3 font-medium">{`${college.address.dist}, ${college.address.state}`}</p>
+    </div>
+  </div>
 
-          {/* Right Side - Image & Badges */}
-          <div className="md:w-1/3 flex justify-center relative">
-            <img
-              src={card.image}
-              alt="College Building"
-              className="rounded-lg"
-            />
-          </div>
-        </div>
+  {/* Right Side - College Information */}
+  <div className="space-y-6">
+    <h2 className="text-2xl font-bold text-gray-800">College Information</h2>
+    <p className="text-gray-700 text-base leading-relaxed">
+      {college.info?.description}
+    </p>
+  </div>
+</div>
 
-        {/* Navigation Tabs */}
-        <div className="mt-6 border-b flex items-center justify-start md:justify-center space-x-6 text-gray-600 text-sm overflow-x-auto">
-          {navItem.map((each) => {
-            return (
-              <span
-                key={each}
-                onClick={handleNavName}
-                className={`cursor-pointer ${each === navName ? " text-blue-600 border-b-2 border-blue-600 pb-2" : ""}`}
-              >
-                {each}
-              </span>
-            );
-          })}
+{/* Action Buttons */}
+{/* <div className="flex flex-col sm:flex-row gap-6 justify-center mt-8">
+  <button className="cursor-pointer bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-8 py-3 rounded-full hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg text-lg font-semibold">
+    📥 Download Brochure
+  </button>
+  <button className="cursor-pointer border-2 border-indigo-600 text-indigo-600 px-8 py-3 rounded-full hover:bg-indigo-600 hover:text-white transition-all shadow-lg text-lg font-semibold">
+    ⭐ Show Reviews
+  </button>
+</div> */}
+
+
+
+  {/* Tabs Section */}
+  <div className="relative mt-10 border-b text-gray-600 text-sm">
+  <div className="flex justify-center">
+    <div className="flex items-center overflow-x-auto scrollbar-hide scroll-smooth w-full max-w-3xl justify-center md:space-x-4">
+      <div className="flex space-x-6 px-4 md:px-0 overflow-x-auto scrollbar-hide">
+        {navItem.map((each) => (
+          <div
+            key={each}
+            ref={(el) => (tabRefs.current[each] = el)}
+            onClick={(e) => {
+              e.preventDefault(); // Prevent scrolling to top
+              handleNavName(each);
+            }}
+            className={`cursor-pointer h-8 px-6 rounded-md transition-all duration-300 font-bold flex items-center justify-center ${
+              each === navName
+                ? "text-blue-600 bg-gray-200"
+                : "text-gray-600 hover:text-blue-600 hover:bg-gray-300 hover:h-12"
+            }`}
+          >
+            {each}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+        <div ref={sectionRef} className="mt-4">
+          <HandleNavComp
+            navName={navName}
+            courses={courses}
+            infrastructure={infrastructure}
+            placementData={placements}
+            imageGallery={imageGallery}
+            review={college.collegeName}
+          />
         </div>
-        <HandleNavComp navName={navName} />
       </div>
     </>
   );

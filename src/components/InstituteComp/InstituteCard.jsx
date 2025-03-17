@@ -1,21 +1,48 @@
+import { FaTrophy, FaChartLine, FaTags, FaMapMarkerAlt } from "react-icons/fa";
+import { BACKEND_SERVER_IP } from "../../Constant/constantData";
+
 const InstituteCard = ({ institute, onClick }) => {
   return (
-    <>
-      <div className="max-w-sm rounded overflow-hidden shadow-lg m-4" onClick={onClick}>
-        <img
-          className="w-full h-48 object-cover"
-          src={institute.image}
-          alt={institute.name}
-        />
-        <div className="px-6 py-4">
-          <div className="font-bold text-xl mb-2">{institute.name}</div>
-          <p className="text-gray-700 text-base">Rank: {institute.rank}</p>
-          <p className="text-gray-700 text-base">
-            Success Ratio: {institute.successRatio}%
+    <div
+      className="max-w-2xl mt-5 rounded-lg overflow-hidden shadow-lg cursor-pointer hover:shadow-xl transition duration-300 transform hover:-translate-y-1 bg-white"
+      onClick={onClick}
+    >
+      {/* Image */}
+      <img
+        className="w-full h-60 object-cover"
+        src={`${BACKEND_SERVER_IP}${institute.image}`}
+        alt={institute.className || "Institute Image"}
+      />
+
+      {/* Content */}
+      <div className="p-6">
+        <h2 className="text-xl font-bold text-gray-800 mb-3">
+          {institute.className || "Institute Name"}
+        </h2>
+
+        {/* Category */}
+        <div className="flex items-center space-x-2 text-sm text-gray-700 mb-3">
+          <FaTags className="text-blue-500" />
+          <p>
+            <strong>Category:</strong> {institute.Category || "N/A"}
           </p>
         </div>
+
+        {/* Location */}
+        <div className="flex items-center space-x-2 text-sm text-gray-700">
+          <FaMapMarkerAlt className="text-red-500" />
+          <p>
+            <strong>Location:</strong>{" "}
+            {`${institute.address.dist}, ${institute.address.state}` || "N/A"}
+          </p>
+        </div>
+
+        {/* Description */}
+        <p className="text-gray-600 text-sm mt-4 line-clamp-3">
+          {institute.info.description || "No description available."}
+        </p>
       </div>
-    </>
+    </div>
   );
 };
 

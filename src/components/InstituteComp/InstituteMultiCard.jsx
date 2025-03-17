@@ -1,60 +1,51 @@
-import { useNavigate } from "react-router-dom";
-import InstituteCard from "./InstituteCard";
+import { useNavigate } from 'react-router-dom';
+import InstituteCard from './InstituteCard';
+import TagsSection from './../TagsSection';
+import { useSearchContext } from '../../store/SearchContext';
+import { BounceLoader } from 'react-spinners';
+// import Loader from '../Loader';
 
 const InstituteMultiCard = () => {
+	const navigate = useNavigate();
 
-    const navigate = useNavigate();
+	let { errorMsg, isLoading, instituteData } = useSearchContext();
 
-  const institutes = [
-    {
-      id: 1,
-      name: "Institute A",
-      rank: 5,
-      successRatio: 95,
-      image:
-        "https://images.unsplash.com/photo-1592069915234-2a5c74fbd347?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGluc3RpdHV0ZXxlbnwwfHwwfHx8MA%3D%3D",
-    },
-    {
-      id: 2,
-      name: "Institute B",
-      rank: 5,
-      successRatio: 90,
-      image:
-        "https://plus.unsplash.com/premium_photo-1676892435585-d29aee82ad6d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGluc3RpdHV0ZXxlbnwwfHwwfHx8MA%3D%3D",
-    },
-    {
-      id: 3,
-      name: "Institute C",
-      rank: 5,
-      successRatio: 85,
-      image:
-        "https://images.unsplash.com/photo-1592069915234-2a5c74fbd347?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGluc3RpdHV0ZXxlbnwwfHwwfHx8MA%3D%3D",
-    },
-    {
-      id: 4,
-      name: "Institute D",
-      rank: 5,
-      successRatio: 80,
-      image:
-        "https://plus.unsplash.com/premium_photo-1676892435585-d29aee82ad6d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGluc3RpdHV0ZXxlbnwwfHwwfHx8MA%3D%3D",
-    },
-  ];
+	const tags = ['All', 'Diploma', 'Engineering'];
 
-  return (
-    <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 m-5">
-        {institutes.map((each , index) => {
-          return (
-            <InstituteCard
-              institute={each}
-              key={index}
-              onClick={() => navigate(`/institute/${each.id}`)}
-            />
-          );
-        })}
-      </div>
-    </>
-  );
+	console.log('instituteData ........', instituteData);
+	console.log('error in class search : ========', errorMsg.message);
+
+	return (
+		<>
+			<TagsSection tags={tags} />
+
+			<div className="">
+				{/* {isLoading && <Loader />} */}
+
+				{
+				isLoading ? (
+					<div className="flex flex-col items-center justify-center h-64">
+						{/* <div className="w-16 h-16 border-8 border-t-blue-500 border-b-blue-500 border-r-transparent border-l-transparent rounded-full animate-spin"></div> */}
+						<BounceLoader color='#36d7b7' />
+						<p className="mt-4 text-lg font-medium text-gray-600">Loading...</p>
+					</div>
+				) : null
+			}
+				{!isLoading && instituteData?.length !== 0 && (
+					<div className="cursor-pointer grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-5 m-5">
+						{instituteData.length !== 0 &&
+							instituteData.results?.map((each) => (
+								<InstituteCard
+									institute={each}
+									key={each.id}
+									onClick={() => navigate(`/class/${each._id}`)}
+								/>
+							))}
+					</div>
+				)}
+			</div>
+		</>
+	);
 };
 
 export default InstituteMultiCard;
