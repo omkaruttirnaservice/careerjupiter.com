@@ -1,10 +1,13 @@
+'use client';
+
 import { useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
-import { IoSearchOutline } from 'react-icons/io5';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { IoArrowForwardOutline, IoSearchOutline } from 'react-icons/io5';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useSearchContext } from '../../store/SearchContext';
 import { searchCollege } from './Api';
-import { navigation } from '../../Constant/constantData';
+import { FaBrain } from 'react-icons/fa';
+import Typewriter from 'typewriter-effect';
 
 const SearchComponent = () => {
 	const {
@@ -19,7 +22,7 @@ const SearchComponent = () => {
 	} = useSearchContext();
 
 	const { pathname } = useLocation();
-	// console.log(pathname, '--pathname');
+	console.log(pathname, '--pathname');
 
 	const [searchParams, setSearchParams] = useState({
 		searchKey: '',
@@ -124,9 +127,10 @@ const SearchComponent = () => {
 	};
 
 	return (
-		<div className="w-full  flex items-center justify-center bg-green-200 ">
-			<div className="mt-25 mb-8 w-full max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl mx-3 ">
-				<div className="flex border-2 border-gray-400 rounded-full overflow-hidden w-full ">
+		<div className="w-full flex flex-col md:flex-row items-center justify-between mt-8 md:mt-16 bg-green-200 p-4">
+			{/* Search Bar */}
+			<div className="w-full md:max-w-lg lg:max-w-xl xl:max-w-3xl">
+				<div className="flex border-2 border-gray-400 rounded-full overflow-hidden w-full mx-auto md:ml-8">
 					<input
 						type="text"
 						className="px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -137,6 +141,60 @@ const SearchComponent = () => {
 					<button className="px-5 py-3 bg-blue-500 text-white hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500">
 						<IoSearchOutline className="text-xl" />
 					</button>
+				</div>
+				<div className="pt-2 pb-2 sm:pt-4 sm:pb-4 md:pt-6 md:pb-6">
+					<main className="mx-auto max-w-7xl px-4">
+						<div className="text-center">
+							<div className="flex flex-row justify-center gap-2 sm:gap-4 md:gap-5 text-lg sm:text-3xl md:text-4xl font-bold">
+								<h1 className="text-gray-900 font-extrabold text-base sm:text-xl md:text-3xl">
+									FIND YOUR
+								</h1>
+								<span className="font-extrabold text-transparent bg-clip-text animated-gradient text-base sm:text-xl md:text-3xl">
+									<Typewriter
+										options={{
+											strings: ['Best College', 'Best School', 'Best Class'],
+											autoStart: true,
+											loop: true,
+										}}
+									/>
+								</span>
+							</div>
+							<p className="mt-1 sm:mt-2 max-w-xs sm:max-w-md md:max-w-3xl mx-auto text-sm sm:text-lg md:text-xl font-bold text-blue-600">
+								"EMPOWER YOUR FUTURE, UNLOCK YOUR POTENTIAL, AND BUILD THE
+								CAREER OF YOUR DREAMS! ✨"
+							</p>
+						</div>
+					</main>
+				</div>
+			</div>
+
+			{/* Card on the right */}
+			<div className="flex items-center justify-center p-4 mt-4 md:mt-0">
+				{/* Card */}
+				<div className="bg-green-500 p-2 rounded-xl w-full md:w-96 max-w-sm">
+					{/* Header */}
+					<div className="flex items-center mb-3 space-x-3">
+						<FaBrain className="text-4xl text-white" />
+						<h2 className="text-3xl font-bold text-gray-800">𝓘𝓠 𝓣𝓮𝓼𝓽</h2>
+					</div>
+					<p className="text-gray-100 font-bold mb-6 leading-relaxed">
+						Test your intelligence and problem-solving skills with this quick IQ
+						test.
+					</p>
+
+					{/* Time and Button */}
+					<div className="flex items-center justify-between">
+						{/* Animated Button */}
+						<NavLink
+							to="profile/test"
+							className="text-white hover:text-green-800 flex flex-row gap-2 ml-auto"
+						>
+							<button className="bg-blue-500 cursor-pointer text-white px-6 py-3 rounded-md text-md font-medium flex items-center space-x-2 transition-all duration-300 ease-in-out group">
+								<span>Give Test</span>
+								<IoArrowForwardOutline className="text-xl transition-transform duration-300 ease-in-out group-hover:translate-x-2" />
+							</button>
+						</NavLink>
+					</div>
 				</div>
 			</div>
 		</div>

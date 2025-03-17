@@ -52,7 +52,7 @@ const BestCollege = () => {
       </div>
 
       {/* Right Side - Content */}
-      <div className="w-full md:w-1/2 text-white text-center md:text-left md:mt-30 ">
+      <div className="w-full md:w-1/2 text-white text-center  md:text-left md:mt-30 ">
         <h1 className="text-xl mt-5 font-bold mr-4 md:text-5xl   flex items-center gap-3">
           <FaUniversity className='md:text-5xl text-3xl' /> {text}
       
@@ -62,7 +62,7 @@ const BestCollege = () => {
         </p>
         <button 
           onClick={handleSearch} 
-          className="cursor-pointer flex items-center w-full justify-center gap-3 bg-green-400 text-gray-900 px-8 py-3 rounded-full font-semibold text-lg hover:bg-gren-500 transition-transform duration-300 hover:scale-110"
+          className="cursor-pointer text-white  border-2 flex items-center w-full justify-center gap-3 bg-green-400  px-8 py-3 rounded-full font-semibold text-lg hover:bg-gren-500 transition-transform duration-300 hover:scale-110"
         >
           <FaSearch />
           Search College

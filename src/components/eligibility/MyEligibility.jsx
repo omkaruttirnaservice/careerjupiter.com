@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 const MyEligibility = () => {
 
   const location = useLocation();
-  const [percentage, setPercentage] = useState(location.state?.percentage || '');
+    const [inputValue, setInputValue] = useState(location.state?.inputValue || ''); // Automatically pre-fill input
 
 
   const [selectedEducation, setSelectedEducation] = useState("")
@@ -273,7 +273,7 @@ const MyEligibility = () => {
             onChange={(e) => handleEducationChange(e.target.value)}
             className="w-full border rounded-lg px-4 py-2"
           >
-            <option value="">Select Education</option>
+            <option value="">Select Current Education</option>
             {Object.keys(educationOptions).map((education, index) => (
               <option key={index} value={education}>
                 {education}
@@ -300,8 +300,8 @@ const MyEligibility = () => {
           <input
           
             type="number"
-            value={percentage}
-            onChange={(e) => setPercentage(e.target.value)}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
             placeholder="Enter percentage"
             className="w-full border rounded-lg px-4 py-2"
           />
@@ -327,7 +327,7 @@ const MyEligibility = () => {
             onChange={(e) => handleCasteChange(e.target.value)}
             className="w-full border rounded-lg px-4 py-2"
           >
-            <option value="">Select Caste</option>
+            <option value="">Select category</option>
             {casteOptions.map((caste, i) => (
               <option key={i} value={caste}>
                 {caste}

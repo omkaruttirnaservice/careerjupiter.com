@@ -3,11 +3,18 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 import { LuLogOut, LuNotebookPen } from 'react-icons/lu';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { FaUserLarge } from 'react-icons/fa6';
+import { AiOutlineHome } from 'react-icons/ai'; // Minimalist outline icon
+
 
 function ProfileLayout() {
-	const location = useLocation();
+	// const location = useLocation();
 
 	const navigation = [
+		{
+			name: 'Home',
+			href: '/',
+			icon: AiOutlineHome,
+		},
 		{
 			name: 'My Profile',
 			href: '/profile/personal-details',

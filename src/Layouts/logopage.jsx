@@ -72,7 +72,8 @@ const Logopage = () => {
         <div className="w-full flex justify-between items-center">
           <div className="text-center">
             <h2 className="text-4xl sm:text-5xl text-red-500 font-bold">{totalCount}+</h2>
-            <p className="text-lg font-bold">Total</p>
+            <br/>
+            <p className="text-lg font-bold">Total Registrations</p>
           </div>
           
 
@@ -118,6 +119,7 @@ const Logopage = () => {
         </div>
         <div className="text-center">
             <h2 className="text-4xl sm:text-5xl text-red-500 font-bold">{partyCount}+</h2>
+            <br/>
             <p className="text-lg font-bold">Partner</p>
           </div>
         </div>

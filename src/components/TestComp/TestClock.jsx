@@ -15,26 +15,43 @@ function TestClock({ testDuration, handleSubmit }) {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
+  // Progress bar width calculation
+  const progressWidth = (timeLeft / (testDuration * 60)) * 100;
+
   return (
-    <>
-      <div className="w-1/2 bg-gray-300 rounded-full h-4 overflow-hidden">
+    <div className="w-full flex flex-col sm:flex-row items-center sm:justify-between px-4 sm:px-0">
+      {/* Clock & Progress Bar Container */}
+      <div className="relative w-full max-w-lg flex flex-col items-center">
+        {/* Clock Icon - Moves with Progress */}
         <div
-          className="h-4 rounded-full transition-all duration-300"
+          className="absolute -top-3 transition-all duration-300"
           style={{
-            width: `${(timeLeft / (1 * 60)) * 100}%`,
-            background: `linear-gradient(to right, 
-      red ${(timeLeft / (1 * 60)) * 0}%, 
-      orange ${(timeLeft / (1 * 60)) * 50}%, 
-      green 100%)`,
+            left: `${progressWidth}%`,
+            transform: `translate(-50%, 0)`,
           }}
-        ></div>
+        >
+          <FcAlarmClock className="text-4xl sm:text-4xl md:ml-38" />
+        </div>
+
+        {/* Responsive Progress Bar */}
+        <div className="w-full bg-gray-300 rounded-full h-4 md:ml-42 sm:h-6 overflow-hidden mt-6 relative">
+          {/* Progress Bar with Gradient */}
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{
+              width: `${progressWidth}%`,
+              background: `linear-gradient(to right, red 0%, yellow 50%, green 100%)`,
+            }}
+          ></div>
+        </div>
       </div>
-      <p className="text-lg flex flex-row items-center font-semibold">
-        <FcAlarmClock className="text-xl mr-2 font-bold" />
-        {Math.floor(timeLeft / 60)}:
+
+      {/* Timer Display - Mobile Center, Desktop Right */}
+      <p className="text-lg font-semibold mt-2 sm:mt-0 sm:text-xl sm:ml-auto">
+        ⏳ Time: {Math.floor(timeLeft / 60)}:
         {(timeLeft % 60).toString().padStart(2, "0")}
       </p>
-    </>
+    </div>
   );
 }
 
