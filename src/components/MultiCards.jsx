@@ -18,7 +18,7 @@ const MultiCards = () => {
 		}
 	}, [errorMsg]);
 
-	console.log('inside college data:---------', collegesData);
+	// console.log('inside college data:---------', collegesData);
 
 	return (
 		<>
@@ -59,23 +59,30 @@ const MultiCards = () => {
 								onClick={() => navigate(`/college/${college._id}`)}
 							>
 								<div className="relative w-full h-48 overflow-hidden rounded-t-lg">
-									<img
-										src={college.image ? `${BACKEND_SERVER_IP}${college.image}` : "https://cdn.pixabay.com/photo/2017/09/01/13/56/university-2704306_640.jpg"}
-										alt={college.collegeName || "College Image"}
-										className={`w-full h-full object-cover ${college.image ? "" : "opacity-70"
-											}`}
-										loading="lazy"
-									/>
+  <img
+    src={college.image ? `${BACKEND_SERVER_IP}${college.image}` : ""}
+    alt={college.collegeName || "College Image"}
+    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+    onError={(e) => {
+      e.target.onerror = null; // Prevent infinite loop
+      e.target.style.display = "none"; // Hide broken image
 
-									{/* Overlay for dummy image with college name */}
-									{!college.image && (
-										<div className="absolute inset-0 flex items-center justify-center  bg-opacity-200">
-											<h3 className="text-white  text-3xl font-bold text-center px-4">
-												{college.collegeName || "Unknown College"}
-											</h3>
-										</div>
-									)}
-								</div>
+      // Set gradient background dynamically
+      e.target.parentNode.style.background =
+        "linear-gradient(to right, #667eea, #764ba2)";
+    }}
+  />
+
+  {/* Overlay for text if image fails */}
+  {!college.image && (
+    <div className="absolute inset-0 flex items-center justify-center">
+      <h3 className="text-white text-3xl font-bold text-center px-4">
+        {college.collegeName || "Unknown College"}
+      </h3>
+    </div>
+  )}
+</div>
+
 
 								<div className="p-5">
 									<h3 className="text-xl font-semibold">

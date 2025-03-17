@@ -2,17 +2,51 @@ import { FaTrophy, FaChartLine, FaTags, FaMapMarkerAlt } from "react-icons/fa";
 import { BACKEND_SERVER_IP } from "../../Constant/constantData";
 
 const InstituteCard = ({ institute, onClick }) => {
+  // Check if the image is available
+  const imageUrl = institute.image ? `${BACKEND_SERVER_IP}${institute.image}` : null;
+
   return (
     <div
       className="max-w-2xl mt-5 rounded-lg overflow-hidden shadow-lg cursor-pointer hover:shadow-xl transition duration-300 transform hover:-translate-y-1 bg-white"
       onClick={onClick}
     >
-      {/* Image */}
-      <img
-        className="w-full h-60 object-cover"
-        src={`${BACKEND_SERVER_IP}${institute.image}`}
-        alt={institute.className || "Institute Image"}
-      />
+      {/* Image / Default Gradient */}
+      <div
+  className="w-full h-60 relative flex items-center justify-center text-white text-lg font-bold"
+  style={{
+    backgroundImage: imageUrl
+      ? `url(${imageUrl})`
+      : "linear-gradient(to right, #667eea, #764ba2)", // Apply gradient if image is null
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  }}
+>
+  {imageUrl && (
+    <img
+      src={imageUrl}
+      alt={institute?.className || "Institute Image"}
+      className="absolute inset-0 w-full h-full object-cover"
+      onError={(e) => {
+        e.target.style.display = "none"; // Hide broken image
+        e.target.parentNode.style.backgroundImage =
+          "linear-gradient(to right, #667eea, #764ba2)"; // Apply gradient
+      }}
+    />
+  )}
+  {/* Class Name Overlay */}
+  <span className="absolute z-10">{institute?.className || "No Image Available"}</span>
+</div>
+
+
+
+
+      {/* Gradient Background (Initially Hidden) */}
+      {/* <div className="w-full h-full hidden items-center justify-center text-white font-bold text-lg bg-gradient-to-r from-blue-500 to-purple-500">
+          {institute?.className || "No Image Available"}
+        </div>
+      </div> */}
+
+
 
       {/* Content */}
       <div className="p-6">
@@ -33,13 +67,15 @@ const InstituteCard = ({ institute, onClick }) => {
           <FaMapMarkerAlt className="text-red-500" />
           <p>
             <strong>Location:</strong>{" "}
-            {`${institute.address.dist}, ${institute.address.state}` || "N/A"}
+            {institute.address?.dist && institute.address?.state
+              ? `${institute.address.dist}, ${institute.address.state}`
+              : "N/A"}
           </p>
         </div>
 
         {/* Description */}
         <p className="text-gray-600 text-sm mt-4 line-clamp-3">
-          {institute.info.description || "No description available."}
+          {institute.info?.description || "No description available."}
         </p>
       </div>
     </div>

@@ -48,21 +48,25 @@ const UniversityDetail = () => {
   return (
     <div className="min-h-screen pb-3 mt-1">
       {/* Banner Section */}
-      <div className="relative">
-        <img
-          src={uni.image || "https://via.placeholder.com/800"}
-          alt={uni.universityName || "University"}
-          className="w-full h-80 object-cover rounded-lg"
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center">
-          <h1 className="text-5xl font-bold text-white">
-            {uni.universityName || "Unknown University"}
-          </h1>
-          <p className="text-lg text-white mt-2">
-            Category: {uni.Category || "N/A"}
-          </p>
+      <div className="relative w-full h-80 rounded-lg overflow-hidden">
+        {/* Default Gradient Background (Always Present) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 flex flex-col items-center justify-center text-center px-4">
+          <h1 className="text-white text-5xl font-bold">{uni.universityName || "Unknown University"}</h1>
+          <p className="text-white text-3xl  mt-2">{uni.Category || "N/A"}</p>
         </div>
+
+        {/* University Image (Loads Above Gradient, Hidden if Error) */}
+        <img
+          src={uni.image}
+          alt={uni.universityName}
+          className="absolute inset-0 w-full h-full object-cover"
+          onError={(e) => {
+            e.target.onerror = null; // Prevent infinite loop
+            e.target.style.display = "none"; // Hide broken image
+          }}
+        />
       </div>
+
 
       {/* Info Section */}
       <div className="container mx-auto mt-6 px-4">

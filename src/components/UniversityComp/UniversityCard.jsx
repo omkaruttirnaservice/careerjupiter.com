@@ -1,3 +1,5 @@
+
+
 import React from "react";
 import { MapPin, Medal } from "lucide-react"; // Importing icons
 
@@ -10,13 +12,25 @@ const UniversityCard = ({ university, onClick }) => {
                  cursor-pointer"
     >
       {/* Image Container */}
-      <div className="h-48 overflow-hidden">
+      <div className="h-48 overflow-hidden relative">
         <img
           src={university.image}
           alt={university.name}
-          className="w-full h-full object-cover
-                     transition-transform duration-500
-                     hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+          onError={(e) => {
+            e.target.onerror = null; // Prevent infinite loop
+
+            // Encode university name for SVG URL
+            const encodedName = encodeURIComponent(university.name || "No Image");
+
+            // Set a custom SVG with the university name
+            e.target.src = `data:image/svg+xml;charset=UTF-8,
+              %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'%3E
+                %3Crect width='100%25' height='100%25' fill='%23667eea'/%3E
+                %3Ctext x='50%25' y='50%25' dominant-baseline='middle'
+                  text-anchor='middle' font-size='20' fill='white'%3E${encodedName}%3C/text%3E
+              %3C/svg%3E`;
+          }}
         />
       </div>
 
