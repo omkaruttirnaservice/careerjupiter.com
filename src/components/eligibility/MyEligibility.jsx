@@ -100,7 +100,7 @@ const MyEligibility = () => {
 
   useEffect(() => {
     applyAllFilters()
-  }, [collegeType, ratingFilter, cutoffRange.min, cutoffRange.max, sortOrder, selectedBranch, colleges])
+  }, [collegeType, ratingFilter,  cutoffRange.min, cutoffRange.max, sortOrder, selectedBranch, colleges])
 
   const handleEducationChange = (education) => {
     setSelectedEducation(education)
