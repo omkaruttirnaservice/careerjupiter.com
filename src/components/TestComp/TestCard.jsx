@@ -4,8 +4,9 @@ import { getTest } from "./Api";
 import { FaBrain } from "react-icons/fa";
 import IQTest from "./IQTest";
 import { setTestResult } from "../../store-redux/testResultSlice";
-import { useDispatch, useSelector } from "react-redux";
-import Swal from "sweetalert2"; // ✅ Import SweetAlert
+import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
+import { BounceLoader } from "react-spinners"; // Import BounceLoader
 
 function TestCard() {
   const [selectedTest, setSelectedTest] = useState(null);
@@ -14,28 +15,18 @@ function TestCard() {
   const [testName, setTestName] = useState("");
   const [testId, setTestId] = useState(null);
   const [selectedEducation, setSelectedEducation] = useState("All");
+  const [completedTests, setCompletedTests] = useState(new Map()); // Stores completed test results
   const dispatch = useDispatch();
 
-  const currentEducation = useSelector(
-    (state) => state.education.currentEducation
-  );
-
+  // Fetch tests from API
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["getTest", currentEducation],
-    queryFn: () => getTest(currentEducation),
+    queryKey: ["getTest", selectedEducation],
+    queryFn: () => getTest(selectedEducation === "All" ? "" : selectedEducation),
   });
 
-  if (isPending) return <div className="text-center text-lg">Loading...</div>;
-  if (isError)
-    return (
-      <div className="text-center text-red-500">Error: {error.message}</div>
-    );
+  const filteredTests = data?.data;
 
-  const filteredTests =
-    selectedEducation === "All"
-      ? data?.data
-      : data?.data?.filter((test) => test.educationType === selectedEducation);
-
+  // If a test is selected, show the test screen
   if (selectedTest) {
     return (
       <div className="p-4">
@@ -50,6 +41,7 @@ function TestCard() {
             ⬅ Back to Tests
           </button>
         ) : null}
+
         {!startTest ? (
           <button
             onClick={() => {
@@ -87,12 +79,20 @@ function TestCard() {
             testDuration={testDuration}
             title={testName}
             testId={testId}
+            onComplete={(result) => {
+              setCompletedTests((prev) => {
+                const newMap = new Map(prev);
+                newMap.set(testId, result); // Save test result
+                return newMap;
+              });
+            }}
           />
         )}
       </div>
     );
   }
 
+  // Main test selection screen
   return (
     <div className="p-4">
       {/* Dropdown for selecting education type */}
@@ -116,46 +116,76 @@ function TestCard() {
         </select>
       </div>
 
+      {/* Loader below filter while fetching data */}
+      {isPending && (
+  <div className="flex flex-col justify-center items-center my-6">
+    <BounceLoader color="#36d7b7" size={60} />
+    <span className=" text-gray-600 text-lg font-semibold">Loading...</span>
+  </div>
+)}
+
+
+      {/* Show error if fetching fails */}
+      {isError && (
+        <div className="text-center text-red-500">
+          Error: {error.message}
+        </div>
+      )}
+
       {/* Grid for test cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredTests?.map((test) => (
-          <div
-            key={test._id}
-            className="bg-white shadow-lg rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition duration-300 cursor-pointer"
-            onClick={() => {
-              setSelectedTest(test.questions);
-              setTestDuration(test.testDuration);
-              setTestName(test.title);
-              setTestId(test._id);
-            }}
-          >
-            <div className="flex items-center space-x-3 mb-4">
-              <FaBrain className="text-blue-500 text-3xl" />
-              <h2 className="text-xl font-semibold text-gray-800">
-                {test.title}
-              </h2>
-            </div>
-            <p className="text-gray-600">
-              Test Level:{" "}
-              <span className="font-medium">{test.testLevel || "N/A"}</span>
-            </p>
-            <p className="text-gray-600">
-              Duration:{" "}
-              <span className="font-medium">
-                {test.testDuration || "N/A"} min
-              </span>
-            </p>
-            <p className="text-gray-600">
-              Total Marks:{" "}
-              <span className="font-medium">{test.totalMarks || "N/A"}</span>
-            </p>
-            <p className="text-gray-600">
-              Passing Marks:{" "}
-              <span className="font-medium">{test.passingMarks || "N/A"}</span>
-            </p>
-          </div>
-        ))}
-      </div>
+      {!isPending && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredTests?.map((test) => {
+            const isCompleted = completedTests.has(test._id);
+            const result = completedTests.get(test._id); // Get result if completed
+
+            return (
+              <div
+                key={test._id}
+                className={`shadow-lg rounded-2xl p-6 border border-gray-200 transition duration-300 cursor-pointer 
+                  ${isCompleted ? 'bg-green-500 text-white' : 'bg-white hover:shadow-xl'}`}
+                onClick={() => {
+                  if (isCompleted) {
+                    Swal.fire({
+                      icon: "info",
+                      title: "Test Already Taken",
+                      text: `You have already completed this test.\n\n🎯 Score: ${result?.score || "N/A"} / ${test.totalMarks}`,
+                      confirmButtonText: "OK",
+                    });
+                    return;
+                  }
+                  setSelectedTest(test.questions);
+                  setTestDuration(test.testDuration);
+                  setTestName(test.title);
+                  setTestId(test._id);
+                }}
+              >
+                <div className="flex items-center space-x-3 mb-4">
+                  <FaBrain className="text-blue-500 text-3xl" />
+                  <h2 className="text-xl font-semibold">{test.title}</h2>
+                </div>
+                <p>
+                  Test Level: <span className="font-medium">{test.testLevel || "N/A"}</span>
+                </p>
+                <p>
+                  Duration: <span className="font-medium">{test.testDuration || "N/A"} min</span>
+                </p>
+                <p>
+                  Total Marks: <span className="font-medium">{test.totalMarks || "N/A"}</span>
+                </p>
+                <p>
+                  Passing Marks: <span className="font-medium">{test.passingMarks || "N/A"}</span>
+                </p>
+                {isCompleted && (
+                  <p className="font-bold text-white mt-2">
+                    🎯 Your Score: {result?.score || "N/A"} / {test.totalMarks}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

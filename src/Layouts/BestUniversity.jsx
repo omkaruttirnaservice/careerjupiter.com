@@ -10,7 +10,7 @@ const BestUniversity = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center bg-cover bg-center relative p-6 rounded-lg"
+    <div id='search-university' className="w-full min-h-screen flex flex-col items-center justify-center bg-cover bg-center relative p-6 rounded-lg"
       style={{ backgroundImage: "url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHVuaXZlcnNpdHl8ZW58MHx8fHwxNjc4MDMwMjUw&ixlib=rb-1.2.1&q=80&w=1080')" }}>
       
       {/* Overlay */}

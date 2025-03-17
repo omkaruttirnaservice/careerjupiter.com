@@ -10,7 +10,7 @@ const BestClass = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 p-6 md:p-12 rounded-lg">
+    <div id='search-class' className="w-full min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 p-6 md:p-12 rounded-lg">
       {/* Right Side - Content */}
       <div className="w-full md:w-1/2 text-white text-center md:text-left p-6">
         <h1 className="text-2xl md:text-4xl font-bold flex items-center gap-3">

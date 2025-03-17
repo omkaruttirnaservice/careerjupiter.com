@@ -9,8 +9,7 @@ import { useLocation } from "react-router-dom";
 const MyEligibility = () => {
 
   const location = useLocation();
-    const [inputValue, setInputValue] = useState(location.state?.inputValue || ''); // Automatically pre-fill in
-    
+    const percentage1 = location.state?.percentage || 0; // Default value 0
 
   const [selectedEducation, setSelectedEducation] = useState("")
   const [examOptions, setExamOptions] = useState([])
@@ -77,6 +76,8 @@ const MyEligibility = () => {
         district: district,
         year: 2012
       });
+      console.log("API Response:", response);
+
 
       if (response.success && response.data) {
         setColleges(response.data)
@@ -301,8 +302,8 @@ const MyEligibility = () => {
           <input
           
             type="number"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            value={percentage1}
+            onChange={(e) => setPercentage(e.target.value)}
             placeholder="Enter percentage"
             className="w-full border rounded-lg px-4 py-2"
           />
