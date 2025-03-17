@@ -24,7 +24,8 @@ import SignupPopup from "../Pages/SignIn/SignupPopup.jsx";
 import ContactUs from "../Legal/ContactUs.jsx";
 import AboutUs from "../Legal/AboutUs.jsx";
 // import ClassesList from './InstituteComp/ClassesList.jsx';
-import SigninPopup from "./../Pages/SignIn/SigninPopup";
+import Coming from "../Pages/Coming-soon.jsx";
+
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,8 @@ export const router = createBrowserRouter([
 
       { path: "university", element: <UniversityMultiCard /> },
       { path: "university/:id", element: <UniversityDetail /> },
+
+      { path: "coming", element: <Coming/> },
     ],
   },
 

@@ -10,17 +10,15 @@ import { FaPhoneAlt } from 'react-icons/fa'; // Contact icon
 
 const CardDetails = () => {
   const navItem = [
-    // "Overview",
+   
     "Courses & Fees",
-    // "Scholarship",
+    
     "Placements",
-    // "CutOffs",
-    // "Ranking",
+    
     "Infrastructure",
     "Gallery",
     "Reviews",
-    // "News",
-    // "QnA",
+    
   ];
 
   const { id } = useParams();
@@ -76,12 +74,18 @@ const CardDetails = () => {
     queryKey: ["college", id],
     queryFn: () => getCollege(id),
   });
+  console.log("API Response:", data); // Check what data is coming
+
+ 
 
   const college = data?.college;
   const courses = data?.courses;
   const infrastructure = data?.infrastructure;
   const placements = data?.placements;
   const imageGallery = data?.college?.imageGallery;
+
+   
+  console.log("College Data:", college);
 
   if (!college) {
     return <p className="text-center text-gray-600 mt-8">No data found.</p>;
@@ -106,12 +110,12 @@ const CardDetails = () => {
   <div className="w-full flex flex-col md:flex-row gap-8">
     {/* Main College Image */}
     <div className="w-full md:w-1/2">
-      <img
-        src={college.image ? `${BACKEND_SERVER_IP}${college.image}` : "https://cdn.pixabay.com/photo/2017/09/01/13/56/university-2704306_640.jpg"}
-        alt={college.collegeName || "College Building"}
-        className="rounded-lg w-full h-72 object-cover shadow-lg hover:scale-105 transition-transform duration-300"
-        loading="lazy"
-      />
+    <img
+  src={college.image?.trim() || "https://cdn.pixabay.com/photo/2017/09/01/13/56/university-2704306_640.jpg"}
+  alt={college.collegeName || "College Image"}
+  className="rounded-lg w-full h-72 object-cover shadow-lg hover:scale-105 transition-transform duration-300"
+  loading="lazy"
+/>
     </div>
 
     {/* Image Gallery */}
