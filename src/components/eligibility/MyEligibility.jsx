@@ -10,7 +10,7 @@ const MyEligibility = () => {
 
   const location = useLocation();
     const [inputValue, setInputValue] = useState(location.state?.inputValue || ''); // Automatically pre-fill in
-    const [percentage, setPercentage] = useState(0); // Default value
+    
 
   const [selectedEducation, setSelectedEducation] = useState("")
   const [examOptions, setExamOptions] = useState([])
