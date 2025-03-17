@@ -27,11 +27,18 @@ import AboutUs from '../Legal/AboutUs.jsx';
 import SigninPopup from './../Pages/SignIn/SigninPopup';
 import ComingSoon from '../Pages/CommingSoom.jsx';
 import Nav from '../Layouts/Nav.jsx';
+import ScrollToTop from '../Layouts/ScrollToTop.jsx';
+
 
 export const router = createBrowserRouter([
 	{
 		path: '/',
-		element: <AppLayout />,
+		element : (
+		<>
+		<ScrollToTop/> {/* ✅ Scrolls to top on every route change */}
+		<AppLayout />,
+		</>
+		),
 		children: [
 			{ path: '', element: <HeroSection /> },
 			{ path: 'college', element: <MultiCards /> },

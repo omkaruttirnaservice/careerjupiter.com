@@ -54,11 +54,11 @@ const Logopage = () => {
   ]
 
   const nextLogo = () => {
-    setCurrentLogo((prev) => (prev >= logos.length - (isMobile ? 1 : 4) ? 0 : prev + (isMobile ? 1 : 4)))
+    setCurrentLogo((prev) => (prev >= logos.length - (isMobile ? 2 : 4) ? 0 : prev + (isMobile ? 2 : 4)))
   }
 
   const prevLogo = () => {
-    setCurrentLogo((prev) => (prev === 0 ? logos.length - (isMobile ? 1 : 4) : prev - (isMobile ? 1 : 4)))
+    setCurrentLogo((prev) => (prev === 0 ? logos.length - (isMobile ? 2 : 4) : prev - (isMobile ? 2 : 4)))
   }
 
   const handleMouseEnter = () => setIsPaused(true)
@@ -68,60 +68,47 @@ const Logopage = () => {
     <div className="w-full bg-gray-100 py-10 px-5 overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-8 md:space-y-0">
         
-        {/* Counters: Row on mobile, sides on desktop */}
-        <div className="w-full flex justify-between items-center">
-          <div className="text-center">
-            <h2 className="text-4xl sm:text-5xl text-red-500 font-bold">{totalCount}+</h2>
-            <br/>
+        {/* Counters & Logo Carousel */}
+        <div className="w-full flex flex-col md:flex-row items-center justify-between">
+
+          {/* Total Registrations (Left Side) */}
+          <div className="text-center mb-6 md:mb-0  md:ml-17">
+            <h2 className="text-6xl sm:text-5xl text-red-500 font-bold">{totalCount}+</h2>
             <p className="text-lg font-bold">Total Registrations</p>
           </div>
-          
 
-        {/* Logo Carousel */}
-        <div 
-          className="w-full md:w-1/2 relative"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <div className="flex items-center justify-center space-x-4 overflow-hidden">
-            {logos.slice(currentLogo, currentLogo + (isMobile ? 1 : 4)).map((logo, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.5 }}
-                className="w-40 h-40 bg-white rounded-lg shadow-lg flex items-center justify-center"
-              >
-                <img 
-                  src={logo || "/placeholder.svg"} 
-                  alt="Partner logo" 
-                  className="w-36 h-36 object-contain"
-                />
-              </motion.div>
-            ))}
+          {/* Logo Carousel */}
+          <div 
+            className="w-full md:w-1/2 relative"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div className="flex items-center justify-center space-x-4 overflow-hidden">
+              {logos.slice(currentLogo, currentLogo + (isMobile ? 2 : 4)).map((logo, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: 100 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-40 h-40 bg-white rounded-lg shadow-lg flex items-center justify-center"
+                >
+                  <img 
+                    src={logo || "/placeholder.svg"} 
+                    alt="Partner logo" 
+                    className="w-36 h-36 object-contain"
+                  />
+                </motion.div>
+              ))}
+            </div>
           </div>
 
-          <div className="flex justify-center mt-4 space-x-2">
-            {Array.from({ length: Math.ceil(logos.length / (isMobile ? 1 : 4)) }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentLogo(index * (isMobile ? 1 : 4))}
-                className={`h-2 w-2 rounded-full transition-all ${
-                  currentLogo === index * (isMobile ? 1 : 4) ? "bg-red-500 w-6" : "bg-gray-300"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
+          {/* Partner Count (Right Side) */}
+          <div className="text-center mt-6 md:mt-0 md:mr-17 ">
+            <h2 className="text-6xl sm:text-5xl text-red-500 font-bold">{partyCount}+</h2>
+            <p className="text-lg font-bold">Partners</p>
           </div>
 
-          
-        </div>
-        <div className="text-center">
-            <h2 className="text-4xl sm:text-5xl text-red-500 font-bold">{partyCount}+</h2>
-            <br/>
-            <p className="text-lg font-bold">Partner</p>
-          </div>
         </div>
       </div>
     </div>

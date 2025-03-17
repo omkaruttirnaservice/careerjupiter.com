@@ -127,23 +127,23 @@ const SearchComponent = () => {
 	};
 
 	return (
-		<div className="w-full flex flex-col md:flex-row items-center justify-between mt-8 md:mt-16 bg-green-200 p-4">
+		<div className="w-full gap-2 flex flex-col md:flex-row md:gap-6 items-center justify-between md:mt-16 bg-blue-200 p-4 mt-[60px]">
 			{/* Search Bar */}
-			<div className="w-full md:max-w-lg lg:max-w-xl xl:max-w-3xl">
-				<div className="flex border-2 border-gray-400 rounded-full overflow-hidden w-full mx-auto md:ml-8">
+			<div className="w-full m-2 md:max-w-lg lg:max-w-xl xl:max-w-3xl">
+				<div className="flex w-full mx-auto md:ml-8">
 					<input
 						type="text"
-						className="px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-600"
+						className="px-4 rounded-l-full py-2 w-full focus:outline-none focus:ring-1 focus:ring-blue-400 border-gray-400 border-1"
 						placeholder="Search..."
 						value={query}
 						onChange={handleInputChange}
 					/>
-					<button className="px-5 py-3 bg-blue-500 text-white hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500">
+					<button className="rounded-r-full px-5 py-3 bg-blue-500 text-white hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500">
 						<IoSearchOutline className="text-xl" />
 					</button>
 				</div>
-				<div className="pt-2 pb-2 sm:pt-4 sm:pb-4 md:pt-6 md:pb-6">
-					<main className="mx-auto max-w-7xl px-4">
+				<div className="m-4">
+					<main className="mx-auto max-w-7xl">
 						<div className="text-center">
 							<div className="flex flex-row justify-center gap-2 sm:gap-4 md:gap-5 text-lg sm:text-3xl md:text-4xl font-bold">
 								<h1 className="text-gray-900 font-extrabold text-base sm:text-xl md:text-3xl">
@@ -159,7 +159,7 @@ const SearchComponent = () => {
 									/>
 								</span>
 							</div>
-							<p className="mt-1 sm:mt-2 max-w-xs sm:max-w-md md:max-w-3xl mx-auto text-sm sm:text-lg md:text-xl font-bold text-blue-600">
+							<p className="mt-2 mb-0 sm:mt-2 max-w-xs sm:max-w-md md:max-w-3xl mx-auto text-sm sm:text-lg md:text-xl font-bold text-blue-600">
 								"EMPOWER YOUR FUTURE, UNLOCK YOUR POTENTIAL, AND BUILD THE
 								CAREER OF YOUR DREAMS! ✨"
 							</p>
@@ -169,7 +169,7 @@ const SearchComponent = () => {
 			</div>
 
 			{/* Card on the right */}
-			<div className="flex items-center justify-center p-4 mt-4 md:mt-0">
+			<div className="flex items-center justify-center p-2">
 				{/* Card */}
 				<div className="bg-gradient-to-tr from-green-500/80 to-green-600 p-4 rounded-xl w-full md:w-96 max-w-sm">
 					{/* Header */}
