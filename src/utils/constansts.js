@@ -7,3 +7,5 @@ export const OPTIONS_ENUMS = {
   OPTION_D: "D",
   OPTION_E: "E",
 };
+
+export const SET_TIME = 5000;
