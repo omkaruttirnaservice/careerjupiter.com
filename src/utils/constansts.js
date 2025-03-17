@@ -9,3 +9,18 @@ export const OPTIONS_ENUMS = {
 };
 
 export const SET_TIME = 5000;
+
+export const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
