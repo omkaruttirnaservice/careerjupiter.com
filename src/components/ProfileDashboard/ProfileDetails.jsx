@@ -13,40 +13,28 @@ import { useEffect, useState } from 'react';
 import { setCurrentEducation } from '../../store-redux/educationSlice';
 import EducationFormModal from './EducationFormModal';
 import { VscAdd } from "react-icons/vsc";
+import { MdEdit } from "react-icons/md";
+import EditEductionDetails from './EditEductionDetails';
 
 const ProfileDetails = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const dispatch = useDispatch();
 	const { userId } = useSelector((state) => state.auth);
 	const [isListVisible, setIsListVisible] = useState(false);
+      const [isOpenEdit, setIsOpenEdit] = useState(false);
+      const [selectedEducation, setSelectedEducation] = useState(null);
+  
+      const openEditModal = (edu) => {
+        setSelectedEducation(edu);
+        setIsOpenEdit(true);
+      };
 
-	const educationList = [
-    {
-      school: "Harvard University",
-      fieldOfStudy: "Computer Science",
-      startDate: "Sep 2018",
-      endDate: "Jun 2022",
-    },
-    {
-      school: "Stanford University",
-      fieldOfStudy: "Software Engineering",
-      startDate: "Aug 2019",
-      endDate: "May 2023",
-    },
-    {
-      school: "MIT",
-      fieldOfStudy: "Artificial Intelligence",
-      startDate: "Jan 2020",
-      endDate: "Dec 2024",
-    },
-  ];
-
-	const { data, isPending, isError, error } = useQuery({
+	const { data, isPending, isError, error ,refetch:getProfileRefetch } = useQuery({
 		queryKey: ['userData', userId],
 		queryFn: () => getUser(userId),
 	});
 
-	console.log("user profile :",data);
+	console.log("user profile :", data?.data?.info?.education);
 
 	useEffect(() => {
 		console.log(data, '--data');
@@ -72,10 +60,21 @@ const ProfileDetails = () => {
 		);
 
 	const user = data?.data;
+  const educationList = data?.data?.info?.education;
 
 	return (
     <>
-      <EducationFormModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      <EducationFormModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        getProfileRefetch={getProfileRefetch}
+      />
+      <EditEductionDetails
+        isOpenEdit={isOpenEdit}
+        selectedEducation={selectedEducation}
+        setIsOpenEdit={setIsOpenEdit}
+        getProfileRefetch={getProfileRefetch}
+      />
       <div className="max-w-6xl mx-auto p-4 md:p-6 bg-gradient-to-br from-indigo-50 to-purple-50 min-h-screen">
         {/* Mobile Header (shown only on small screens) */}
         <div className="md:hidden w-full flex flex-col items-center text-center space-y-4 mb-6">
@@ -86,7 +85,7 @@ const ProfileDetails = () => {
               className="w-24 h-24 rounded-full object-cover border-4 border-white"
             />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text ">
             {user?.f_name} {user?.m_name} {user?.l_name}
           </h2>
           <div className="flex flex-col space-y-2">
@@ -135,17 +134,6 @@ const ProfileDetails = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-blue-50 rounded-xl">
-                    <FaGraduationCap className="text-blue-600 w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Current Education</p>
-                    <p className="font-semibold text-gray-800">
-                      {user?.info?.current_education || "N/A"}
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
             {/* Address Card */}
@@ -176,19 +164,6 @@ const ProfileDetails = () => {
             </div> */}
 
             {/* Add Eduction Card */}
-            {/* <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-              <div className="flex justify-between">
-                <h3 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                  Eduction
-                </h3>
-                <button
-                  onClick={() => setIsOpen(true)}
-                  className="bg-blue-500 text-white px-4 rounded-md cursor-pointer"
-                >
-                  Add Eduction
-                </button>
-              </div>
-            </div> */}
 
             <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 max-w-3xl mx-auto">
               <div className="flex justify-between">
@@ -197,16 +172,32 @@ const ProfileDetails = () => {
                 </h3>
                 <button
                   onClick={() => setIsOpen(true)}
-                  className="bg-blue-500 text-white px-4 rounded-md cursor-pointer"
+                  className="bg-blue-500 text-white px-3 h-8 rounded-md cursor-pointer"
                 >
-                  Add Eduction
+                  <p className="flex flex-row gap-2 items-center">
+                    <VscAdd />
+                    <span>Add Education</span>
+                  </p>
                 </button>
               </div>
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-blue-50 rounded-xl">
+                  <FaGraduationCap className="text-blue-600 w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Current Education</p>
+                  <p className="font-semibold text-gray-800">
+                    {user?.info?.current_education || "N/A"}
+                  </p>
+                </div>
+              </div>
+
               {/* View List Button */}
-              <div className="flex justify-center mb-4">
+
+              <div className="flex justify-start mt-3">
                 <button
                   onClick={() => setIsListVisible(!isListVisible)}
-                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md shadow-md hover:bg-gray-300 transition"
+                  className="bg-gray-200 text-gray-700 px-4 h-8 rounded-md shadow-md hover:bg-gray-300 transition cursor-pointer"
                 >
                   {isListVisible
                     ? "Hide Education List"
@@ -220,14 +211,22 @@ const ProfileDetails = () => {
                   {educationList.map((edu, index) => (
                     <div
                       key={index}
-                      className="p-4 border rounded-lg shadow-sm bg-gray-50"
+                      className="relative p-4 border rounded-lg shadow-sm bg-gray-50"
                     >
+                      <button
+                        className="absolute top-2 right-2 text-blue-500 hover:text-blue-700"
+                        onClick={() => openEditModal(edu)}
+                      >
+                        <MdEdit className="text-2xl cursor-pointer" />
+                      </button>
+
                       <h4 className="text-lg font-semibold">
-                        {edu.fieldOfStudy}
+                        {edu.education_name}
                       </h4>
                       <p className="text-gray-700">{edu.school}</p>
                       <p className="text-gray-500 text-sm">
-                        {edu.startDate} - {edu.endDate}
+                        {`${edu.start_year.month} ${edu.start_year.year}`} -{" "}
+                        {`${edu.end_year.month} ${edu.end_year.year}`}
                       </p>
                     </div>
                   ))}
