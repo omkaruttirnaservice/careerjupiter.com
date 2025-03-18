@@ -6,6 +6,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { navigation } from '../Constant/constantData';
 import { motion } from 'framer-motion';
+import Swal from 'sweetalert2';
 
 const Nav = () => {
 	const navigate = useNavigate();
@@ -17,7 +18,19 @@ const Nav = () => {
 		'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsEJHmI0MlIGvH9CYkbsLEWQ5_ee8Qtl5V-Q&s';
 
 	const handleSignOut = () => {
-		navigate('/signout');
+		Swal.fire({
+			title: 'Are you sure?',
+			text: 'You will be logged out of your account!',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#d33',
+			cancelButtonColor: '#3085d6',
+			confirmButtonText: 'Yes, Sign Out!',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				navigate('/signout');
+			}
+		});
 	};
 
 	const confirmSignOut = () => {
@@ -106,7 +119,7 @@ const Nav = () => {
 												</NavLink>
 											</Menu.Item>
 											<Menu.Item>
-												<button onClick={confirmSignOut} className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
+												<button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-red-600 cursor-pointer hover:bg-gray-100">
 													Sign Out
 												</button>
 											</Menu.Item>
@@ -123,67 +136,56 @@ const Nav = () => {
 
 						{/* Mobile & Tablet Menu */}
 						{isMobileMenuOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
-    <div className="bg-white w-3/4 max-w-sm h-full shadow-lg flex flex-col px-6 py-8 space-y-4 relative">
+							<div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
+								<div className="bg-white w-3/4 max-w-sm h-full shadow-lg flex flex-col px-6 py-8 space-y-4 relative">
 
-      {/* Close Button */}
-      <button 
-        onClick={() => setIsMobileMenuOpen(false)}
-        className="absolute top-4 right-4 text-gray-800 text-3xl"
-      >
-        ✕
-      </button>
+									{/* Close Button */}
+									<button
+											onClick={() => setIsMobileMenuOpen(false)}
+										className="absolute top-4 right-4 text-gray-800 text-3xl"
+									>
+										✕
+									</button>
 
-      {/* Navigation Items */}
-      {navigation.map((item) => (
-        <div key={item.name} className="text-lg relative group">
-          <NavLink
-            to={item.to}
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block px-4 py-3 text-xl font-semibold text-gray-900 hover:text-gray-600 transition-all"
-          >
-            {item.name}
-          </NavLink>
+									{/* Navigation Items */}
+									{navigation.map((item) => (
+										<div key={item.name} className="text-lg relative group">
+											<NavLink
+												to={item.to}
+												onClick={() => setIsMobileMenuOpen(false)}
+												className="block px-4 py-3 text-xl font-semibold text-gray-900 hover:text-gray-600 transition-all"
+											>
+												{item.name}
+											</NavLink>
 
-          {/* Students Corner Dropdown */}
-          {item.name === 'Students Corner' && item.children && (
-            <div className="mt-1 ml-4 space-y-2">
-              {item.children.map((child) => (
-                <a 
-                  key={child.name} 
-                  href={child.href} 
-                  onClick={(e) => handleClick(e, child.href)} 
-                  className="block px-4 py-2 text-lg text-gray-700 hover:text-gray-500 transition-all"
-                >
-                  {child.name}
-                </a>
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
+											{/* Students Corner Dropdown */}
+											{item.name === 'Students Corner' && item.children && (
+												<div className="mt-1 ml-4 space-y-2">
+													{item.children.map((child) => (
+														<a
+															key={child.name}
+															href={child.href}
+															onClick={(e) => handleClick(e, child.href)}
+															className="block px-4 py-2 text-lg text-gray-700 hover:text-gray-500 transition-all"
+														>
+															{child.name}
+														</a>
+													))}
+												</div>
+											)}
+										</div>
+									))}
 
-      {/* Profile Section */}
-      {isLoggedIn && (
-        <div className="mt-6 w-full border-t border-gray-300 pt-4">
-          <NavLink 
-            to="/profile/personal-details" 
-            className="block px-4 py-3 text-xl font-semibold text-gray-900 hover:text-gray-600 transition-all"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            Profile
-          </NavLink>
-          <button 
-            onClick={confirmSignOut} 
-            className="block w-full text-left px-4 py-3 text-xl font-semibold text-red-600 hover:text-red-500 transition-all"
-          >
-            Sign Out
-          </button>
-        </div>
-      )}
-    </div>
-  </div>
-)}
+									{/* Profile Section */}
+									{isLoggedIn && (
+										<div className="mt-6 w-full border-t border-gray-300 pt-4">
+											<NavLink to="/profile/personal-details" className="block px-4 py-3 text-xl font-semibold text-gray-900 hover:text-gray-600 transition-all" onClick={() => setIsMobileMenuOpen(false)}>Profile</NavLink>
+											<button onClick={handleSignOut} className="block w-full text-left px-4 py-3 text-xl font-semibold text-red-600 hover:text-red-500 transition-all">Sign Out</button>
+										</div>
+									)}
+								</div>
+							</div>
+						)}
 
 					</>
 				)}
