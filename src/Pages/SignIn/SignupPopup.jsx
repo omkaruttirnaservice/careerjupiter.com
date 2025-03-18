@@ -290,7 +290,7 @@ const SignupPopup = () => {
                     disabled={isSubmitting}
                     className={`w-full ${
                       showLogin ? "bg-blue-600" : "bg-green-600"
-                    } text-white py-2 px-4 rounded-md hover:opacity-90 transition-opacity`}
+                    } text-white py-2 px-4 cursor-pointer rounded-md hover:opacity-90 transition-opacity`}
                   >
                     {showLogin ? "Sign In" : "Sign Up"}
                   </button>
@@ -300,7 +300,7 @@ const SignupPopup = () => {
                     <button
                       type="button"
                       onClick={() => setShowLogin(!showLogin)}
-                      className="text-blue-600 hover:underline font-medium"
+                      className="text-blue-600 cursor-pointer hover:underline  font-medium"
                     >
                       {showLogin ? "Create Account" : "Login Here"}
                     </button>

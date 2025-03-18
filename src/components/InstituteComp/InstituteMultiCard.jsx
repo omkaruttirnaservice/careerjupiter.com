@@ -12,7 +12,7 @@ const InstituteMultiCard = () => {
 
 	const tags = ['All', 'Diploma', 'Engineering'];
 
-	// console.log('instituteData ........', instituteData);
+	console.log('instituteData ........', instituteData);
 	// console.log('error in class search : ========', errorMsg.message);
 
 	return (

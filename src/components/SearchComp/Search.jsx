@@ -130,10 +130,10 @@ const SearchComponent = () => {
 		<div className="w-full flex flex-col md:flex-row items-center justify-between mt-8 md:mt-16 bg-green-200 p-4">
 			{/* Search Bar */}
 			<div className="w-full md:max-w-lg lg:max-w-xl xl:max-w-3xl">
-				<div className="flex border-2 border-gray-400 rounded-full overflow-hidden w-full mx-auto md:ml-8">
+				<div className="flex border-2 border-gray-400 bg-white mt-8 rounded-full overflow-hidden w-full mx-auto md:ml-8">
 					<input
 						type="text"
-						className="px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-600"
+						className="px-3 py-2  w-full focus:outline-none focus:ring-2 focus:ring-blue-600"
 						placeholder="Search..."
 						value={query}
 						onChange={handleInputChange}

@@ -36,17 +36,11 @@ const InstituteCard = ({ institute, onClick }) => {
   {/* Class Name Overlay */}
   <span className="absolute z-10">{institute?.className || "No Image Available"}</span>
 </div>
-
-
-
-
       {/* Gradient Background (Initially Hidden) */}
       {/* <div className="w-full h-full hidden items-center justify-center text-white font-bold text-lg bg-gradient-to-r from-blue-500 to-purple-500">
           {institute?.className || "No Image Available"}
         </div>
       </div> */}
-
-
 
       {/* Content */}
       <div className="p-6">

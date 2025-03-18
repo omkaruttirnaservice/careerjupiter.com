@@ -33,11 +33,11 @@ import ScrollToTop from '../Layouts/ScrollToTop.jsx';
 export const router = createBrowserRouter([
 	{
 		path: '/',
-		element : (
-		<>
-		<ScrollToTop/> {/* ✅ Scrolls to top on every route change */}
-		<AppLayout />,
-		</>
+		element: (
+			<>
+				<ScrollToTop /> {/* ✅ Scrolls to top on every route change */}
+				<AppLayout />,
+			</>
 		),
 		children: [
 			{ path: '', element: <HeroSection /> },
@@ -59,6 +59,7 @@ export const router = createBrowserRouter([
 				path: '/coming-soon',
 				element: <ComingSoon />,
 			},
+			
 		],
 	},
 
@@ -70,11 +71,22 @@ export const router = createBrowserRouter([
 	{ path: '/iq', element: <IQTest /> },
 
 	{ path: '/my-eligibility', element: <MyEligibility /> },
-	{ path: '/contact-us', element: <ContactUs /> },
-	{ path: '/about-us', element: <AboutUs /> },
+	{
+		path: '/contact-us', element: <>
+
+			<ScrollToTop />
+			<ContactUs />
+		</>
+	},
+	{
+		path: '/about-us', element: <>
+			<ScrollToTop />
+			<AboutUs />
+		</>
+	},
 
 	{
-		path: 'profile',
+		path: '/profile',
 		element: <ProfileLayout />,
 		children: [
 			{

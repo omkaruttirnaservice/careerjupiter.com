@@ -61,7 +61,7 @@ const SingleInstitute = () => {
 
 	// if (isLoading || coursesLoading) {
 	//   return <p className="text-center text-gray-600 mt-8">Loading class details...</p>;
-	// }
+	// }dssdk
 
 	if (error) {
 		return (
