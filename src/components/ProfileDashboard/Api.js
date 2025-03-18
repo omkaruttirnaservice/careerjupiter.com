@@ -8,6 +8,14 @@ export const getUser = async (userId) => {
 };
 
 export const setEducation = async (data) => {
-  const response = await axios.post(`${BASE_URL}/api/auth`, data);
+  const response = await axios.post(`${BASE_URL}/api/education/add`, data);
+  return response.data;
+};
+
+export const updateEducation = async (data) => {
+  const response = await axios.put(
+    `${BASE_URL}/api/education/${data.user_id}`,
+    data.educationData
+  );
   return response.data;
 };
