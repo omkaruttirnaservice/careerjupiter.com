@@ -9,6 +9,7 @@ import { AiOutlineBook } from "react-icons/ai";
 import { BiTimeFive } from "react-icons/bi";
 import { FaRupeeSign } from "react-icons/fa";
 import { MdOutlineDiscount } from "react-icons/md";
+import Nav from '../../Layouts/Nav';
 
 
 const fetchInstitute = async (id) => {
@@ -83,6 +84,7 @@ const SingleInstitute = () => {
 
 	return (
 		<>
+		<Nav/>
 			<div className="flex items-center justify-center bg-gray-100 relative">
 				<div className="w-full relative">
 					<div
