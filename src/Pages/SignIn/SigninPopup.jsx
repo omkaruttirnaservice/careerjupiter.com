@@ -26,7 +26,7 @@ const SignInPopup = () => {
       Cookies.set("token", parsedData.token, { expires: 1 });
       Cookies.set("userId", parsedData.user_id, { expires: 1 });
       dispatch(login(parsedData.user_id));
-      toast.success("Login successful!");
+      // toast.success("Login successful!");
       setIsOpen(false);
     },
     onError: (error) => {

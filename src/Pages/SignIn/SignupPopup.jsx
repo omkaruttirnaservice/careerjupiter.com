@@ -58,7 +58,7 @@ const SignupPopup = () => {
     mutationFn: userSignUp,
     onSuccess: (data) => {
       console.log(data, "signup data");
-      toast.success("Signup successful!");
+      // toast.success("Signup successful!");
       setShowLogin(true);
     },
 
@@ -81,7 +81,7 @@ const SignupPopup = () => {
       Cookies.set("userId", parsedData.user_id, { expires: 1 });
       dispatch(login(parsedData.user_id));
       setIsOpen(false);
-      toast.success("Login successful!");
+      // toast.success("Login successful!");
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Login failed");
