@@ -10,7 +10,7 @@ const BestCollege = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-6 md:p-12 rounded-lg">
+    <div id='search-college' className="w-full min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-6 md:p-12 rounded-lg">
       {/* Left Side - Image */}
       <div className="w-full md:w-1/2 flex justify-center">
         <img

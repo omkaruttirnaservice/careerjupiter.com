@@ -9,17 +9,26 @@ const CheckEligibility = () => {
 
 	const handleCheckEligibility = () => {
 		if (!inputValue.trim()) {
-			setError('Please Enter Percentage / SPGE ');
+			setError('Please Enter Percentage ');
 			return;
 		}
-
+	
 		setError(''); // Clear error if input is valid
 		document.getElementById('container').classList.add('fade-out');
-
+	
+		// SPGE madhun percentage calculate karne (Assume SPGE / 10 formula)
+		let percentage = parseFloat(inputValue); 
+		if (percentage > 10) {
+			percentage = percentage; // Already percentage
+		} else {
+			percentage = percentage * 10; // Convert SPGE to Percentage
+		}
+	
 		setTimeout(() => {
-			navigate('/my-eligibility', { state: { inputValue } });
+			navigate('/my-eligibility', { state: { percentage } });
 		}, 600);
 	};
+	
 
 	return (
 		<div id='check-eligibility-section' className="relative h-130 flex justify-center items-center">
@@ -61,7 +70,7 @@ const CheckEligibility = () => {
 							setError(''); // Clear error when user starts typing
 						}
 					}}
-					placeholder="Enter your Percentage / SPGE"
+					placeholder="Enter your Percentage"
 					className="w-full max-w-md p-3 text-lg rounded-lg border-2 border-gray-300 bg-white text-indigo-900 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-purple-500 shadow-lg"
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
