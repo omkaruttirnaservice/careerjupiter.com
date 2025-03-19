@@ -22,7 +22,7 @@ const SearchComponent = () => {
 	} = useSearchContext();
 
 	const { pathname } = useLocation();
-	console.log(pathname, '--pathname');
+	// console.log(pathname, '--pathname');
 
 	const [searchParams, setSearchParams] = useState({
 		searchKey: '',
@@ -129,11 +129,11 @@ const SearchComponent = () => {
 	return (
 		<div className="w-full gap-2 flex flex-col md:flex-row md:gap-6 items-center justify-between md:mt-16 bg-blue-200 p-4 mt-[60px]">
 			{/* Search Bar */}
-			<div className="w-full m-2 md:max-w-lg lg:max-w-xl xl:max-w-3xl">
-				<div className="flex w-full mx-auto md:ml-8">
+			<div className="w-full md:max-w-lg lg:max-w-xl xl:max-w-3xl">
+				<div className="flex border-2 border-gray-400 bg-white mt-8 rounded-full overflow-hidden w-full mx-auto md:ml-8">
 					<input
 						type="text"
-						className="px-4 rounded-l-full py-2 w-full focus:outline-none focus:ring-1 focus:ring-blue-400 border-gray-400 border-1"
+						className="px-3 py-2  w-full focus:outline-none focus:ring-2 focus:ring-blue-600"
 						placeholder="Search..."
 						value={query}
 						onChange={handleInputChange}

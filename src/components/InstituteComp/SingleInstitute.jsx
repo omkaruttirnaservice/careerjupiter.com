@@ -25,15 +25,13 @@ const fetchInstitute = async (id) => {
 	throw new Error(result.errMsg || 'Failed to fetch class details');
 };
 
-console.log(fetchInstitute.response , 'response')
+// console.log(fetchInstitute.response, 'response')
 const fetchCourses = async (id) => {
 	const response = await fetch(`${BASE_URL}/api/class/course/${id}`);
-	if (!response.ok) {
-		throw new Error('Failed to fetch courses');
-	}
+	
 	const result = await response.json();
 
-	console.log('Raw API Response:', result); // Debugging
+	// console.log('Raw API Response:', result); // Debugging
 
 	return result.success && result.data ? result.data : []; // Ensure it's an array
 };
@@ -64,7 +62,7 @@ const SingleInstitute = () => {
 
 	// if (isLoading || coursesLoading) {
 	//   return <p className="text-center text-gray-600 mt-8">Loading class details...</p>;
-	// }
+	// }dssdk
 
 	if (error) {
 		return (
@@ -87,27 +85,34 @@ const SingleInstitute = () => {
 		<Nav/>
 			<div className="flex items-center justify-center bg-gray-100 relative">
 				<div className="w-full relative">
-					<div
-						className="w-full h-[70vh] bg-cover bg-center relative"
-						// style={{
-						// 	backgroundImage: `url(${BACKEND_SERVER_IP}${institute?.class?.image})`,
-						// }}
-						style={{
-							backgroundImage: `url(${BASE_URL}${institute?.class?.image})`,
-						}}
-					>
-						{console.log(institute?.class?.image ,'class image')}
-						<div className="flex justify-center">
-							<h1 className="mt-20 text-white text-4xl font-bold">
-								{institute.class.className || 'Class Name'}
+					<div className="w-full h-[70vh] relative">
+						{/* Background Image with Fallback */}
+						<img
+							src={institute?.class?.image ? `${BACKEND_SERVER_IP}${institute.class.image}` : "https://cdn.pixabay.com/photo/2017/09/01/13/56/university-2704306_640.jpg"}
+							alt={institute?.class?.className || "Class Image"}
+							className="w-full h-full object-cover"
+							onError={(e) => {
+								e.target.onerror = null; // Prevent infinite loop
+								e.target.src = "https://cdn.pixabay.com/photo/2017/09/01/13/56/university-2704306_640.jpg"; // Set default image on error
+							}}
+						/>
+
+						{/* Overlay */}
+						<div className="absolute inset-0 bg-black opacity-70"></div>
+
+						{/* Class Name (Centered) */}
+						<div className="absolute inset-0 flex justify-center items-center px-4 text-center">
+							<h1 className="text-white text-2xl sm:text-3xl md:text-4xl mb-30 font-bold">
+								{institute?.class?.className || "Class Name"}
 							</h1>
 						</div>
 					</div>
+
 					<div className="absolute w-[95%] sm:w-[90%] md:w-[80%] lg:w-[70%] left-1/2 -translate-x-1/2 bottom-[-50px] bg-white shadow-lg rounded-xl p-4 md:p-6 flex flex-col space-y-4 animate-fadeIn">
 						{/* Title */}
-						<h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 text-center">
+						{/* <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 text-center">
 							{institute.class.className}
-						</h2>
+						</h2> */}
 
 						{/* Info Grid */}
 						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 text-gray-700">
@@ -169,52 +174,52 @@ const SingleInstitute = () => {
 				</div>
 			</div>
 
-			
-<section className="mt-20 p-6 bg-gradient-to-r from-blue-50 to-gray-100 rounded-lg shadow-lg">
-	<h2 className="text-3xl font-extrabold mb-8 text-center text-gray-800">
-		🚀 Courses Available
-	</h2>
-	{Array.isArray(courses) && courses.length > 0 ? (
-		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-			{courses.map((course) => (
-				<div
-					key={course._id}
-					className="p-6 rounded-lg bg-gray-50 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105"
-				>
-					<h3 className="text-xl font-semibold mb-3 flex items-center">
-						<AiOutlineBook className="mr-2 text-blue-600" />
-						{course.courseName}
-					</h3>
-					<p className="text-gray-700 mb-1 flex items-center">
-						<span className="font-medium">Type:</span> {course.courseType}
-					</p>
-					<p className="text-gray-700 mb-1 flex items-center">
-						<BiTimeFive className="mr-2 text-green-600" />
-						<span className="font-medium">Duration:</span> {course.duration}
-					</p>
-					<p className="text-gray-700 mb-1 flex items-center">
-						<FaRupeeSign className="mr-2 text-yellow-600" />
-						<span className="font-medium">Fee:</span> ₹{course.feeStructure?.amount} ({course.feeStructure?.type})
-					</p>
-					<p className="text-gray-700 mb-1 flex items-center">
-						<MdOutlineDiscount className="mr-2 text-red-600" />
-						<span className="font-medium">Scholarship:</span> {course.scholarshipOrDiscounts || 'N/A'}
-					</p>
-					<p className="text-gray-700 flex items-center">
-						<span className="font-medium">Study Material Provided:</span> {course.studyMaterialProvided ? 'Yes' : 'No'}
-					</p>
-				</div>
-			))}
-		</div>
-	) : (
-		<p className="text-center text-gray-700">No courses available.</p>
-	)}
-</section>
+
+			<section className="mt-20 p-6 bg-gradient-to-r from-blue-50 to-gray-100 rounded-lg shadow-lg">
+				<h2 className="text-3xl font-extrabold mb-8 text-center text-gray-800">
+					🚀 Courses Available
+				</h2>
+				{Array.isArray(courses) && courses.length > 0 ? (
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						{courses.map((course) => (
+							<div
+								key={course._id}
+								className="p-6 rounded-lg bg-gray-50 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105"
+							>
+								<h3 className="text-xl font-semibold mb-3 flex items-center">
+									<AiOutlineBook className="mr-2 text-blue-600" />
+									{course.courseName}
+								</h3>
+								<p className="text-gray-700 mb-1 flex items-center">
+									<span className="font-medium">Type:</span> {course.courseType}
+								</p>
+								<p className="text-gray-700 mb-1 flex items-center">
+									<BiTimeFive className="mr-2 text-green-600" />
+									<span className="font-medium">Duration:</span> {course.duration}
+								</p>
+								<p className="text-gray-700 mb-1 flex items-center">
+									<FaRupeeSign className="mr-2 text-yellow-600" />
+									<span className="font-medium">Fee:</span> ₹{course.feeStructure?.amount} ({course.feeStructure?.type})
+								</p>
+								<p className="text-gray-700 mb-1 flex items-center">
+									<MdOutlineDiscount className="mr-2 text-red-600" />
+									<span className="font-medium">Scholarship:</span> {course.scholarshipOrDiscounts || 'N/A'}
+								</p>
+								<p className="text-gray-700 flex items-center">
+									<span className="font-medium">Study Material Provided:</span> {course.studyMaterialProvided ? 'Yes' : 'No'}
+								</p>
+							</div>
+						))}
+					</div>
+				) : (
+					<p className="text-center text-gray-700">No courses available.</p>
+				)}
+			</section>
 
 			<ImageGallery />
 			<FacultyDetails />
-			<ReviewPage/>
-			
+			<ReviewPage />
+
 		</>
 	);
 };

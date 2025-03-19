@@ -29,70 +29,69 @@ import ComingSoon from '../Pages/CommingSoom.jsx';
 import Nav from '../Layouts/Nav.jsx';
 import ScrollToTop from '../Layouts/ScrollToTop.jsx';
 
-
 export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <>
-        <ScrollToTop /> {/* ✅ Scrolls to top on every route change */}
-        <AppLayout />,
-      </>
-    ),
-    children: [
-      { path: "", element: <HeroSection /> },
-      { path: "college", element: <MultiCards /> },
+	{
+		path: '/',
+		element: (
+			<>
+				<ScrollToTop /> {/* ✅ Scrolls to top on every route change */}
+				<AppLayout />,
+			</>
+		),
+		children: [
+			{ path: '', element: <HeroSection /> },
+			{ path: 'college', element: <MultiCards /> },
 
-      { path: "university", element: <UniversityMultiCard /> },
+			{ path: 'university', element: <UniversityMultiCard /> },
 
-      { path: "class", element: <InstituteMultiCard /> },
+			{ path: 'class', element: <InstituteMultiCard /> },
 
-      { path: "reviews/:id", element: <ReviewPage /> },
+			{ path: 'reviews/:id', element: <ReviewPage /> },
 
-      { path: "university", element: <UniversityMultiCard /> },
+			{ path: 'university', element: <UniversityMultiCard /> },
 
-      {
-        path: "/coming-soon",
-        element: <ComingSoon />,
-      },
-    ],
-  },
+			{
+				path: '/coming-soon',
+				element: <ComingSoon />,
+			},
+		],
+	},
 
-  { path: "college/:id", element: <CardDetails /> },
-  { path: "university/:id", element: <UniversityDetail /> },
-  { path: "class/:id", element: <SingleInstitute /> },
+	{ path: 'college/:id', element: <CardDetails /> },
+	{ path: 'university/:id', element: <UniversityDetail /> },
+	{ path: 'class/:id', element: <SingleInstitute /> },
 
-  { path: "/dashboard", element: <Dashboard /> },
+	{ path: '/dashboard', element: <Dashboard /> },
 
-  { path: "/signin", element: <LoginPage /> },
-  { path: "/sign", element: <MultiStepForm /> },
-  { path: "/roadmap", element: <Roadmap /> },
-  { path: "/iq", element: <IQTest /> },
+	{ path: '/signin', element: <LoginPage /> },
+	{ path: '/sign', element: <MultiStepForm /> },
+	{ path: '/roadmap', element: <Roadmap /> },
+	{ path: '/iq', element: <IQTest /> },
 
-  { path: "/my-eligibility", element: <MyEligibility /> },
-  { path: "/contact-us", element: <ContactUs /> },
-  { path: "/about-us", element: <AboutUs /> },
+	{ path: '/my-eligibility', element: <MyEligibility /> },
+	{ path: '/contact-us', element: <ContactUs /> },
+	{ path: '/about-us', element: <AboutUs /> },
 
-  {
-    path: "profile",
-    element: <ProfileLayout />,
-    children: [
-      {
-        path: "personal-details",
-        element: <ProfileDetails />,
-      },
-      { path: "test", element: <QueryBasedComponent /> },
-    ],
-    scrollRestoration: "manual",
-  },
+	{
+		path: 'profile',
+		element: <ProfileLayout />,
+		children: [
+			{
+				path: 'personal-details',
+				element: <ProfileDetails />,
+			},
+			{ path: 'test', element: <QueryBasedComponent /> },
+		],
+		scrollRestoration: 'manual',
+	},
 
-  {
-    path: "/signout",
-    element: <Logout />,
-  },
-  {
-    path: "/popup",
-    element: <SignupPopup />,
-  },
-  { path: "/SigninPopup", element: <SignupPopup /> },
+	{
+		path: '/signout',
+		element: <Logout />,
+	},
+	{
+		path: '/popup',
+		element: <SignupPopup />,
+	},
+	{ path: '/SigninPopup', element: <SignupPopup /> },
 ]);

@@ -11,8 +11,8 @@ const PlacementOpportunities = () => {
   return (
     <div>
       <section className="mb-8 mt-6">
-                              <h2 className="text-2xl font-bold mb-4 flex items-center gap-2"><FaBuilding /> Placement Opportunities</h2>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                              <h2 className="text-3xl font-bold m-4 flex items-center gap-2"><FaBuilding className='text-3xl' /> Placement Opportunities</h2>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 m-3 gap-5">
                                   {companies.map((company, index) => (
                                       <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-md">
                                           <img src={company.logo} alt={company.name} className="w-12 h-12 mb-2" />

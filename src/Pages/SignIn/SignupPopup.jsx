@@ -58,7 +58,7 @@ const SignupPopup = () => {
     mutationFn: userSignUp,
     onSuccess: (data) => {
       console.log(data, "signup data");
-      toast.success("Signup successful!");
+      // toast.success("Signup successful!");
       setShowLogin(true);
     },
 
@@ -81,7 +81,7 @@ const SignupPopup = () => {
       Cookies.set("userId", parsedData.user_id, { expires: 1 });
       dispatch(login(parsedData.user_id));
       setIsOpen(false);
-      toast.success("Login successful!");
+      // toast.success("Login successful!");
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Login failed");
@@ -290,7 +290,7 @@ const SignupPopup = () => {
                     disabled={isSubmitting}
                     className={`w-full ${
                       showLogin ? "bg-blue-600" : "bg-green-600"
-                    } text-white py-2 px-4 rounded-md hover:opacity-90 transition-opacity`}
+                    } text-white py-2 px-4 cursor-pointer rounded-md hover:opacity-90 transition-opacity`}
                   >
                     {showLogin ? "Sign In" : "Sign Up"}
                   </button>
@@ -300,7 +300,7 @@ const SignupPopup = () => {
                     <button
                       type="button"
                       onClick={() => setShowLogin(!showLogin)}
-                      className="text-blue-600 hover:underline font-medium"
+                      className="text-blue-600 cursor-pointer hover:underline  font-medium"
                     >
                       {showLogin ? "Create Account" : "Login Here"}
                     </button>

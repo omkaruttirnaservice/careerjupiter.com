@@ -41,7 +41,7 @@ function handleError(error) {
       ? error.response?.data?.message || "Something went wrong"
       : error.message || "An unexpected error occurred";
 
-  console.error("Query Error:", errorMessage);
+  // console.error("Query Error:", errorMessage);
 }
 
 createRoot(document.getElementById("root")).render(
