@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
 		path: '/',
 		element: (
 			<>
-				<ScrollToTop /> {/* ✅ Scrolls to top on every route change */}
+				<ScrollToTop />
 				<AppLayout />,
 			</>
 		),
@@ -47,14 +47,11 @@ export const router = createBrowserRouter([
 			{ path: 'class', element: <InstituteMultiCard /> },
 
 			{ path: 'reviews/:id', element: <ReviewPage /> },
-
-			{ path: 'university', element: <UniversityMultiCard /> },
-
-			{
-				path: '/coming-soon',
-				element: <ComingSoon />,
-			},
 		],
+	},
+	{
+		path: '/coming-soon',
+		element: <ComingSoon />,
 	},
 
 	{ path: 'college/:id', element: <CardDetails /> },
@@ -71,6 +68,38 @@ export const router = createBrowserRouter([
 	{ path: '/my-eligibility', element: <MyEligibility /> },
 	{ path: '/contact-us', element: <ContactUs /> },
 	{ path: '/about-us', element: <AboutUs /> },
+	{ path: '/my-eligibility', element: <MyEligibility /> },
+	{
+		path: '/contact-us',
+		element: (
+			<>
+				<ScrollToTop />
+				<ContactUs />
+			</>
+		),
+	},
+	{
+		path: '/about-us',
+		element: (
+			<>
+				<ScrollToTop />
+				<AboutUs />
+			</>
+		),
+	},
+
+	{
+		path: 'profile',
+		element: <ProfileLayout />,
+		children: [
+			{
+				path: 'personal-details',
+				element: <ProfileDetails />,
+			},
+			{ path: 'test', element: <QueryBasedComponent /> },
+		],
+		scrollRestoration: 'manual',
+	},
 
 	{
 		path: 'profile',
