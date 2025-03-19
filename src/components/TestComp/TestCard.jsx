@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getTest, getTestResult } from "./Api";
+import { getTest } from "./Api";
 import { FaBrain } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +21,8 @@ function TestCard() {
       const completedMap = new Map();
       data.data.forEach(async (test) => {
         if (test.attempted) {
-          const result = await getTestResult(test._id);
+          // const result = await getTestResult(test._id);
+          const result = []
           completedMap.set(test._id, result?.data || {}); // ✅ Store full result data
         }
       });
@@ -45,25 +46,35 @@ function TestCard() {
                 className={`p-4 rounded-lg shadow-lg border cursor-pointer ${
                   isCompleted ? "bg-green-100" : "bg-white hover:shadow-xl"
                 }`}
-                onClick={() => setSelectedTest(selectedTest === test._id ? null : test._id)}
+                onClick={() =>
+                  setSelectedTest(selectedTest === test._id ? null : test._id)
+                }
               >
                 <div className="flex items-center space-x-3 mb-4">
                   <FaBrain className="text-blue-500 text-4xl" />
                   <h2 className="text-xl font-semibold">{test.title}</h2>
                 </div>
                 <p>
-                  Test Level: <span className="font-medium">{test.testLevel || "N/A"}</span>
+                  Test Level:{" "}
+                  <span className="font-medium">{test.testLevel || "N/A"}</span>
                 </p>
                 <p>
-                  Duration: <span className="font-medium">{test.testDuration || "N/A"} min</span>
+                  Duration:{" "}
+                  <span className="font-medium">
+                    {test.testDuration || "N/A"} min
+                  </span>
                 </p>
                 <p>
-                  Total Marks: <span className="font-medium">{test.totalMarks || "N/A"}</span>
+                  Total Marks:{" "}
+                  <span className="font-medium">
+                    {test.totalMarks || "N/A"}
+                  </span>
                 </p>
-                
+
                 {isCompleted && (
                   <p className="text-green-700 font-semibold mt-2">
-                    ✅ Your Last Score: {previousScore.marksGained}/{previousScore.totalMarks}
+                    ✅ Your Last Score: {previousScore.marksGained}/
+                    {previousScore.totalMarks}
                   </p>
                 )}
 

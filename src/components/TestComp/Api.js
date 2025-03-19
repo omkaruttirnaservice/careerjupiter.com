@@ -14,3 +14,7 @@ export const getTest = async (testLevel) => {
 export const sendResult = (data) => {
   return axios.post(`${BASE_URL}/api/result/create`, data);
 };
+
+export const createGuestUser = async (data) => {
+  return await axios.post(`${BASE_URL}/api/auth/signup?type=guest`,data);
+};
