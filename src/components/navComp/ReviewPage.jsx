@@ -13,6 +13,7 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
   const [selectedRating, setSelectedRating] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [loggedInMobile, setLoggedInMobile] = useState("");
+  const [userNameValue, setUserNameValue] = useState(null);
 
   const { pathname } = useLocation();
   const reviewType = pathname.split("/")[1];
@@ -28,7 +29,8 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
             setLoggedInMobile(data.data.mobile_no);
             Cookies.set("userMobile", data.data.mobile_no);
           }
-          console.log(data, "data");
+          setUserNameValue(data?.data?.f_name);
+          // console.log(data?.data?.f_name, "data");
         })
         .catch((error) => console.error("Error fetching user details:", error));
     }
@@ -74,12 +76,15 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
         type: reviewType,
       };
       mutation.mutate(reviewData);
+
     },
+
+
   });
 
   return (
     <div className="max-w-full  ">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+      <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">
         Leave a Review
       </h2>
 
@@ -116,12 +121,16 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
                 placeholder="Your Mobile Number"
                 className="w-full p-2 border rounded"
                 {...formik.getFieldProps("studentMobile")}
+                readOnly
               />
+
               {formik.touched.studentMobile && formik.errors.studentMobile && (
                 <div className="text-red-500 text-sm">
                   {formik.errors.studentMobile}
                 </div>
               )}
+
+
             </div>
 
             {/* Star Rating */}
@@ -129,9 +138,8 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
               {[1, 2, 3, 4, 5].map((num) => (
                 <span
                   key={num}
-                  className={`cursor-pointer text-3xl ${
-                    num <= selectedRating ? "text-yellow-500" : "text-gray-400"
-                  }`}
+                  className={`cursor-pointer text-3xl ${num <= selectedRating ? "text-yellow-500" : "text-gray-400"
+                    }`}
                   onClick={() => setSelectedRating(num)}
                 >
                   ★
@@ -153,11 +161,10 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
             {/* Submit Button */}
             <button
               type="submit"
-              className={`w-full p-2 cursor-pointer rounded text-white ${
-                mutation.isLoading || selectedRating === null
+              className={`w-full p-2 cursor-pointer rounded text-white ${mutation.isLoading || selectedRating === null
                   ? "bg-gray-400"
                   : "bg-blue-600 hover:bg-blue-700"
-              }`}
+                }`}
               disabled={mutation.isLoading || selectedRating === null}
             >
               {mutation.isLoading ? "Submitting..." : "Submit Review"}
@@ -167,7 +174,7 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
 
         {/* Right Column - Reviews List */}
         <div className="bg-white shadow-lg rounded-lg h-full">
-          <ShowReviews />
+          <ShowReviews userName={userNameValue} />
         </div>
       </div>
     </div>

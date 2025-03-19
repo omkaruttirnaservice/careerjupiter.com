@@ -45,7 +45,7 @@ const ReviewSkeleton = () => (
   </div>
 );
 
-const ShowReviews = () => {
+const ShowReviews = ({userName}) => {
   const { id } = useParams();
   const { pathname } = useLocation();
   const reviewType = pathname.split("/")[1];
@@ -60,7 +60,6 @@ const ShowReviews = () => {
     queryFn: () => fetchReviews({ id, type: reviewType }),
     enabled: !!id, // Only fetch if ID exists
   });
-
   // Sort reviews by createdAt in descending order (latest first)
   const sortedReviews = [...reviews].sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -101,8 +100,8 @@ const ShowReviews = () => {
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="font-bold text-lg text-gray-800">
-                      {review.studentMobile.slice(0, 3)}****
-                      {review.studentMobile.slice(-2)}
+                    {userName ? ` ${userName}'s review` : "No reviews yet."}
+                      
                     </p>
                     <p className="text-sm text-gray-500">
                       {new Date(review.createdAt).toLocaleDateString()}

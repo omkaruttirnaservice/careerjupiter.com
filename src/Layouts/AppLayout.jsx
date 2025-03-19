@@ -57,7 +57,7 @@ const AppLayout = () => {
       <SearchContextProvider>
         <Nav />
         <SearchComponent />
-        <ScrollToTop />  {/* ✅ Added here */}
+        <ScrollToTop /> 
         <Outlet />
         <Footer />
       </SearchContextProvider>
