@@ -97,7 +97,7 @@ const UniversityDetail = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
           >
-            <FaCalendarAlt className="text-blue-600 text-2xl mr-2" />
+            <FaCalendarAlt className="text-blue-600 text-3xl mr-2" />
             <h2 className="text-3xl font-bold text-gray-800">Established in</h2>
           </motion.div>
           <p className="text-lg text-gray-600 mb-4">
@@ -124,7 +124,7 @@ const UniversityDetail = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.5 }}
           >
-            <FaPhoneAlt className="text-green-600 text-xl mr-2" />
+            <FaPhoneAlt className="text-green-600 text-3xl mr-2" />
             <p className="text-lg text-gray-700">
               {uni.contactDetails?.phoneNumber || "+91-123 123 123 123"}
             </p>

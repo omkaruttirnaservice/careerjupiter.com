@@ -22,8 +22,8 @@ const UniversityCourses = () => {
 
     return (
         <div className="mt-6 p-8 text-black">
-            <h3 className="text-4xl font-bold flex items-center gap-3 mb-8">
-                <FaBookOpen className="text-black text-5xl" /> Offered Courses
+            <h3 className="text-3xl font-bold flex items-center gap-3 mb-8">
+                <FaBookOpen className="text-black text-3xl" /> Offered Courses
             </h3>
             {courseCategories.length > 0 ? (
                 courseCategories.map((category) => (
