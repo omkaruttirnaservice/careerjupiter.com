@@ -22,6 +22,8 @@ import "react-toastify/dist/ReactToastify.css";
 import SignupPopup from "./Pages/SignIn/SignupPopup.jsx";
 import ScrollToTop from "./Layouts/ScrollToTop.jsx";
 import IQTestPopup from "./components/TestComp/IQTestPopup.jsx";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./components/router.jsx";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -49,11 +51,10 @@ createRoot(document.getElementById("root")).render(
   <>
     <QueryClientProvider client={queryClient}>
       <Provider store={reduxStore}>
-        
         <App />
         {/* <SignupPopup /> */}
-        <IQTestPopup/>
-      </Provider>
+        <IQTestPopup/> 
+      </Provider> 
     </QueryClientProvider>
     <ToastContainer position="top-right" autoClose={3000} />
   </>

@@ -64,185 +64,187 @@ const Nav = () => {
 	};
 
 	return (
-		<div className="p-2 bg-gray-50 fixed top-0 left-0 w-full shadow-md z-50">
-			<Popover>
-				{({ open }) => (
-					<>
-						{/* Navbar */}
-						<nav className="flex justify-between items-center h-12 max-w-7xl mx-auto px-4">
-							<a
-								href="/"
-								className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600"
-							>
-								CAREER JUPITER
-							</a>
+    <div className="p-2 bg-gray-50 fixed top-0 left-0 w-full shadow-md z-50">
+      <Popover>
+        {({ open }) => (
+          <>
+            {/* Navbar */}
+            <nav className="flex justify-between items-center h-12 max-w-7xl mx-auto px-4">
+              <a
+                href="/"
+                className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600"
+              >
+                CAREER JUPITER
+              </a>
 
-							{/* Desktop Navigation */}
-							<div className="hidden md:flex md:items-center md:space-x-8">
-								{navigation.map((item) => (
-									<div key={item.name} className="relative group">
-										<NavLink
-											to={item.to}
-											className="text-gray-700 hover:text-blue-600"
-										>
-											{item.name}
-										</NavLink>
+              {/* Desktop Navigation */}
+              <div className="hidden md:flex md:items-center md:space-x-8">
+                {navigation.map((item) => (
+                  <div key={item.name} className="relative group">
+                    <NavLink
+                      to={item.to}
+                      className="text-gray-700 hover:text-blue-600"
+                    >
+                      {item.name}
+                    </NavLink>
 
-										{/* Student Corner Dropdown */}
-										{item.name === 'Students Corner' && item.children && (
-											<div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md opacity-0 transform scale-95 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
-												{item.children.map((child) => (
-													<NavLink
-														key={child.name}
-														to={child.to}
-														onClick={(e) => handleClick(e, child.href)}
-														className="block px-4 py-2 text-black hover:bg-gray-300 transition-all"
-													>
-														{child.name}
-													</NavLink>
-												))}
-											</div>
-										)}
-									</div>
-								))}
+                    {/* Student Corner Dropdown */}
+                    {item.name === "Students Corner" && item.children && (
+                      <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md opacity-0 transform scale-95 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
+                        {item.children.map((child) => (
+                          <NavLink
+                            key={child.name}
+                            to={child.to}
+                            onClick={(e) => handleClick(e, child.href)}
+                            className="block px-4 py-2 text-black hover:bg-gray-300 transition-all"
+                          >
+                            {child.name}
+                          </NavLink>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
 
-								{/* Check Eligibility Button */}
-								<button
-									onClick={handleScrollToSection}
-									className="bg-pink-600 cursor-pointer text-white font-bold py-2 px-4 rounded-lg"
-								>
-									Check Eligibility
-									<motion.span
-										className="ml-2"
-										animate={{ x: [0, 10, 0] }}
-										transition={{ repeat: Infinity, duration: 1 }}
-									>
-										➡️
-									</motion.span>
-								</button>
-							</div>
+                {/* Check Eligibility Button */}
+                <button
+                  onClick={handleScrollToSection}
+                  className="bg-pink-600 cursor-pointer text-white font-bold py-2 px-4 rounded-lg"
+                >
+                  Check Eligibility
+                  <motion.span
+                    className="ml-2"
+                    animate={{ x: [0, 10, 0] }}
+                    transition={{ repeat: Infinity, duration: 1 }}
+                  >
+                    ➡️
+                  </motion.span>
+                </button>
+              </div>
 
-							{/* Desktop Profile Icon */}
-							{isLoggedIn && (
-								<Menu as="div" className="relative hidden md:block">
-									<Menu.Button className="flex items-center cursor-pointer">
-										<img
-											src={profilePic}
-											alt="Profile"
-											className="h-8 w-8 rounded-full"
-										/>
-									</Menu.Button>
-									<Transition
-										as={Fragment}
-										enter="transition ease-out duration-100"
-										enterFrom="opacity-0 scale-95"
-										enterTo="opacity-100 scale-100"
-										leave="transition ease-in duration-75"
-										leaveFrom="opacity-100 scale-100"
-										leaveTo="opacity-0 scale-95"
-									>
-										<Menu.Items className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
-											<Menu.Item>
-												<NavLink
-													to="/profile/personal-details"
-													className="block px-4 py-2 hover:bg-gray-100"
-												>
-													Profile
-												</NavLink>
-											</Menu.Item>
-											<Menu.Item>
-												<button
-													onClick={handleSignOut}
-													className="block w-full text-left px-4 py-2 text-red-600 cursor-pointer hover:bg-gray-100"
-												>
-													Sign Out
-												</button>
-											</Menu.Item>
-										</Menu.Items>
-									</Transition>
-								</Menu>
-							)}
+              {console.log("isLoggedIn", isLoggedIn)}
 
-							{/* Mobile & Tablet Toggle */}
-							<button
-								className="md:hidden ml-4"
-								onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-							>
-								{isMobileMenuOpen ? (
-									<XIcon className="w-8 h-8 text-gray-700" />
-								) : (
-									<MenuIcon className="w-8 h-8 text-gray-700" />
-								)}
-							</button>
-						</nav>
+              {/* Desktop Profile Icon */}
+              {isLoggedIn && (
+                <Menu as="div" className="relative hidden md:block">
+                  <Menu.Button className="flex items-center cursor-pointer">
+                    <img
+                      src={profilePic}
+                      alt="Profile"
+                      className="h-8 w-8 rounded-full"
+                    />
+                  </Menu.Button>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="opacity-0 scale-95"
+                    enterTo="opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="opacity-100 scale-100"
+                    leaveTo="opacity-0 scale-95"
+                  >
+                    <Menu.Items className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
+                      <Menu.Item>
+                        <NavLink
+                          to="/profile/personal-details"
+                          className="block px-4 py-2 hover:bg-gray-100"
+                        >
+                          Profile
+                        </NavLink>
+                      </Menu.Item>
+                      <Menu.Item>
+                        <button
+                          onClick={handleSignOut}
+                          className="block w-full text-left px-4 py-2 text-red-600 cursor-pointer hover:bg-gray-100"
+                        >
+                          Sign Out
+                        </button>
+                      </Menu.Item>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
+              )}
 
-						{/* Mobile & Tablet Menu */}
-						{isMobileMenuOpen && (
-							<div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
-								<div className="bg-white w-3/4 max-w-sm h-full shadow-lg flex flex-col px-6 py-8 space-y-4 relative">
-									{/* Close Button */}
-									<button
-										onClick={() => setIsMobileMenuOpen(false)}
-										className="absolute top-4 right-4 text-gray-800 text-3xl"
-									>
-										✕
-									</button>
+              {/* Mobile & Tablet Toggle */}
+              <button
+                className="md:hidden ml-4"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                {isMobileMenuOpen ? (
+                  <XIcon className="w-8 h-8 text-gray-700" />
+                ) : (
+                  <MenuIcon className="w-8 h-8 text-gray-700" />
+                )}
+              </button>
+            </nav>
 
-									{/* Navigation Items */}
-									{navigation.map((item) => (
-										<div key={item.name} className="text-lg relative group">
-											<NavLink
-												to={item.to}
-												onClick={() => setIsMobileMenuOpen(false)}
-												className="block px-4 py-3 text-xl font-semibold text-gray-900 hover:text-gray-600 transition-all"
-											>
-												{item.name}
-											</NavLink>
+            {/* Mobile & Tablet Menu */}
+            {isMobileMenuOpen && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
+                <div className="bg-white w-3/4 max-w-sm h-full shadow-lg flex flex-col px-6 py-8 space-y-4 relative">
+                  {/* Close Button */}
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="absolute top-4 right-4 text-gray-800 text-3xl"
+                  >
+                    ✕
+                  </button>
 
-											{/* Students Corner Dropdown */}
-											{item.name === 'Students Corner' && item.children && (
-												<div className="mt-1 ml-4 space-y-2">
-													{item.children.map((child) => (
-														<a
-															key={child.name}
-															href={child.href}
-															onClick={(e) => handleClick(e, child.href)}
-															className="block px-4 py-2 text-lg text-gray-700 hover:text-gray-500 transition-all"
-														>
-															{child.name}
-														</a>
-													))}
-												</div>
-											)}
-										</div>
-									))}
+                  {/* Navigation Items */}
+                  {navigation.map((item) => (
+                    <div key={item.name} className="text-lg relative group">
+                      <NavLink
+                        to={item.to}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="block px-4 py-3 text-xl font-semibold text-gray-900 hover:text-gray-600 transition-all"
+                      >
+                        {item.name}
+                      </NavLink>
 
-									{/* Profile Section */}
-									{isLoggedIn && (
-										<div className="mt-6 w-full border-t border-gray-300 pt-4">
-											<NavLink
-												to="/profile/personal-details"
-												className="block px-4 py-3 text-xl font-semibold text-gray-900 hover:text-gray-600 transition-all"
-												onClick={() => setIsMobileMenuOpen(false)}
-											>
-												Profile
-											</NavLink>
-											<button
-												onClick={handleSignOut}
-												className="block w-full text-left px-4 py-3 text-xl font-semibold text-red-600 hover:text-red-500 transition-all"
-											>
-												Sign Out
-											</button>
-										</div>
-									)}
-								</div>
-							</div>
-						)}
-					</>
-				)}
-			</Popover>
-		</div>
-	);
+                      {/* Students Corner Dropdown */}
+                      {item.name === "Students Corner" && item.children && (
+                        <div className="mt-1 ml-4 space-y-2">
+                          {item.children.map((child) => (
+                            <a
+                              key={child.name}
+                              href={child.href}
+                              onClick={(e) => handleClick(e, child.href)}
+                              className="block px-4 py-2 text-lg text-gray-700 hover:text-gray-500 transition-all"
+                            >
+                              {child.name}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Profile Section */}
+                  {isLoggedIn && (
+                    <div className="mt-6 w-full border-t border-gray-300 pt-4">
+                      <NavLink
+                        to="/profile/personal-details"
+                        className="block px-4 py-3 text-xl font-semibold text-gray-900 hover:text-gray-600 transition-all"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Profile
+                      </NavLink>
+                      <button
+                        onClick={handleSignOut}
+                        className="block w-full text-left px-4 py-3 text-xl font-semibold text-red-600 hover:text-red-500 transition-all"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </Popover>
+    </div>
+  );
 };
 
 export default Nav;

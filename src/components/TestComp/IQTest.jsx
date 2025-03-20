@@ -1,23 +1,22 @@
 "use client";
 import { useState, useEffect } from "react";
-import {
-  FaArrowRight,
-  FaArrowLeft,
-  FaCheckCircle,
-} from "react-icons/fa";
+import { FaArrowRight, FaArrowLeft, FaCheckCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { OPTIONS_ENUMS } from "../../utils/constansts";
 import TestClock from "./TestClock";
-import { useMutation } from "@tanstack/react-query";
-import { sendResult } from "./Api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getTest, getUserDetail, sendResult } from "./Api";
 import { setTestResult } from "../../store-redux/testResultSlice";
+import MobileNumberPopup from "./MobileNumberPopup";
 
 const IQTest = ({ questions, testDuration, title, testId }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState(Array(questions.length).fill(""));
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showMobileNumberPopup, setShowMobileNumberPopup] = useState(false);
+  const [showResult , setShowResult] = useState(false);
   const dispatch = useDispatch();
   const { userId } = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -55,7 +54,10 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
     setResultData({
       iqTestId: testId,
       userId: userId,
-      answers: questions.map((q) => ({ questionId: q._id, selectedOption: "" })),
+      answers: questions.map((q) => ({
+        questionId: q._id,
+        selectedOption: "",
+      })),
     });
   }, [questions, testId, userId]);
 
@@ -74,9 +76,29 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
     });
   };
 
+  //get user details api call
+
+  const { data, isPending, refetch } = useQuery({
+    queryKey: ["getUserDetail", userId],
+    queryFn: () => getUserDetail(userId),
+    enabled: false,
+    refetchOnMount: false,
+  });
+
+  console.log("user details: ....", data?.data?.data?.mobile_no);
+
+  useEffect(() => {
+    const mobileNumber = data?.data?.data?.mobile_no;
+    if (mobileNumber === "0000000000") {
+      setShowMobileNumberPopup(true);
+    }
+  }, [data]);
+
+  console.log("show Result: ========", showResult);
+  
+
   const handleSubmit = () => {
     const allAnswered = answers.every((ans) => ans !== "");
-
     if (!allAnswered) {
       Swal.fire({
         icon: "warning",
@@ -99,13 +121,23 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         setIsSubmitted(true);
-        mutation.mutate(resultData);
+        if (showResult){
+          mutation.mutate(resultData);
+        }
+          // mutation.mutate(resultData);
+          refetch();
       }
     });
   };
 
   return (
     <>
+      {showMobileNumberPopup && (
+        <MobileNumberPopup
+          setShowMobileNumberPopup={setShowMobileNumberPopup}
+          setShowResult={setShowResult}
+        />
+      )}
       {!isSubmitted && (
         <div className="w-full bg-gray-100 p-4 shadow-lg rounded-xl mb-4 flex justify-between items-center">
           <h1 className="text-xl font-bold">{title}</h1>
@@ -121,33 +153,40 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
           <p className="mb-4">{questions[currentQuestion].question}</p>
 
           <div className="space-y-2">
-            {[OPTIONS_ENUMS.OPTION_A, OPTIONS_ENUMS.OPTION_B, OPTIONS_ENUMS.OPTION_C, OPTIONS_ENUMS.OPTION_D, OPTIONS_ENUMS.OPTION_E]
-              .map((letter) => {
-                const optionValue = questions[currentQuestion][`option${letter}`];
-                if (!optionValue) return null;
+            {[
+              OPTIONS_ENUMS.OPTION_A,
+              OPTIONS_ENUMS.OPTION_B,
+              OPTIONS_ENUMS.OPTION_C,
+              OPTIONS_ENUMS.OPTION_D,
+              OPTIONS_ENUMS.OPTION_E,
+            ].map((letter) => {
+              const optionValue = questions[currentQuestion][`option${letter}`];
+              if (!optionValue) return null;
 
-                return (
-                  <label
-                    key={letter}
-                    className="flex items-center p-2 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer"
-                  >
-                    <input
-                      type="radio"
-                      name="option"
-                      value={letter}
-                      checked={answers[currentQuestion] === letter}
-                      onChange={() => handleOptionSelect(letter)}
-                      className="mr-2"
-                    />
-                    {letter}. {optionValue}
-                  </label>
-                );
-              })}
+              return (
+                <label
+                  key={letter}
+                  className="flex items-center p-2 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="option"
+                    value={letter}
+                    checked={answers[currentQuestion] === letter}
+                    onChange={() => handleOptionSelect(letter)}
+                    className="mr-2"
+                  />
+                  {letter}. {optionValue}
+                </label>
+              );
+            })}
           </div>
 
           <div className="flex justify-between mt-6">
             <button
-              onClick={() => setCurrentQuestion((prev) => Math.max(0, prev - 1))}
+              onClick={() =>
+                setCurrentQuestion((prev) => Math.max(0, prev - 1))
+              }
               className="cursor-pointer flex items-center bg-blue-500 text-white p-2 rounded"
             >
               <FaArrowLeft className="mr-2" /> Previous

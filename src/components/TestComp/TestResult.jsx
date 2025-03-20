@@ -1,10 +1,24 @@
 import React from "react";
 import { FaCheckCircle, FaTimesCircle, FaQuestionCircle, FaTrophy } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
-function TestResult({ resultData }) {
+
+function TestResult() {
+  const resultData = useSelector((state) => state.testResult?.resultData);
+
+  console.log("resultData....", resultData);
+  
+
   if (!resultData) return <div className="text-center text-xl font-semibold p-6">⏳ Loading results...</div>;
 
-  const { totalQuestions, correctAnswers, wrongAnswers, totalMarks, marksGained, passingMarks } = resultData;
+  const {
+    totalQuestions,
+    correctAnswers,
+    wrongAnswers,
+    totalMarks,
+    marksGained,
+    passingMarks,
+  } = resultData?.result;
 
   const percentage = (marksGained / totalMarks) * 100;
   let resultEmoji = "🤔";
@@ -46,8 +60,15 @@ function TestResult({ resultData }) {
       <p className="text-lg font-semibold">
         Score: {marksGained} / {totalMarks} ({percentage.toFixed(2)}%)
       </p>
-      <div className={`p-2 text-lg font-semibold ${isPassed ? "text-green-600" : "text-red-600"}`}>
+      <div
+        className={`p-2 text-lg font-semibold ${isPassed ? "text-green-600" : "text-red-600"}`}
+      >
         {resultIcon} {passFailMessage}
+      </div>
+      <div className="flex justify-center mt-4">
+        <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition">
+          Share Your Result
+        </button>
       </div>
     </div>
   );

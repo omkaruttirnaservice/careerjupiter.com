@@ -1,19 +1,27 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getTest } from "./Api";
+import { getTest, getTestResult } from "./Api";
 import { FaBrain } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import TestResult from "./TestResult"; // ✅ Import TestResult Component
+import { testOption } from "../../Constant/constantData";
+import IQTest from "./IQTest";
 
 function TestCard() {
-  const [selectedTest, setSelectedTest] = useState(null);
+  // const [selectedTest, setSelectedTest] = useState(null);
   const [completedTests, setCompletedTests] = useState(new Map());
+  const [testLevel, setTestLevel] = useState("all");
   const navigate = useNavigate();
+    const [selectedTest, setSelectedTest] = useState(null);
+    const [startTest, setStartTest] = useState(false);
+    const [testDuration, setTestDuration] = useState(0);
+    const [testName, setTestName] = useState("");
+    const [testId, setTestId] = useState(null);
 
   const { data, isPending } = useQuery({
-    queryKey: ["getTest"],
-    queryFn: getTest,
+    queryKey: ["getTest", testLevel], 
+    queryFn: () => getTest(testLevel), 
   });
 
   useEffect(() => {
@@ -21,8 +29,8 @@ function TestCard() {
       const completedMap = new Map();
       data.data.forEach(async (test) => {
         if (test.attempted) {
-          // const result = await getTestResult(test._id);
-          const result = []
+          const result = await getTestResult(test._id);
+          // const result = []
           completedMap.set(test._id, result?.data || {}); // ✅ Store full result data
         }
       });
@@ -30,8 +38,56 @@ function TestCard() {
     }
   }, [data]);
 
+  if (selectedTest) {
+    return (
+      <div className="p-4">
+        {!startTest ? (
+          <button
+            onClick={() => {
+              setSelectedTest(null);
+              setStartTest(false);
+            }}
+            className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            ⬅ Back to Tests
+          </button>
+        ) : null}
+        {!startTest ? (
+          <button
+            onClick={() => setStartTest(true)}
+            className="mb-4 ml-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          >
+            Start Test
+          </button>
+        ) : (
+          <IQTest
+            questions={selectedTest}
+            testDuration={testDuration}
+            title={testName}
+            testId={testId}
+          />
+        )}
+      </div>
+    );
+  }
+ 
+
   return (
     <div className="p-4">
+      <div className="mb-4">
+        <label className="block text-lg font-medium mb-2">
+          Select Test Level:
+        </label>
+        <select
+          className="p-2 w-full border rounded-lg"
+          value={testLevel}
+          onChange={(e) => setTestLevel(e.target.value)}
+        >
+          {testOption.map((testType)=>{
+             return <option value={testType}>{testType}</option>;
+          })}
+        </select>
+      </div>
       {isPending ? (
         <p>Loading...</p>
       ) : (
@@ -39,16 +95,25 @@ function TestCard() {
           {data?.data?.map((test) => {
             const isCompleted = completedTests.has(test._id);
             const previousScore = completedTests.get(test._id);
-
+            {
+              console.log("attempted",test?.attempted);
+            }
+        
             return (
               <div
                 key={test._id}
                 className={`p-4 rounded-lg shadow-lg border cursor-pointer ${
-                  isCompleted ? "bg-green-100" : "bg-white hover:shadow-xl"
+                  test?.attempted ? "bg-green-200" : "bg-white "
                 }`}
-                onClick={() =>
-                  setSelectedTest(selectedTest === test._id ? null : test._id)
-                }
+                // onClick={() =>
+                //   setSelectedTest(selectedTest === test._id ? null : test._id)
+                // }
+                onClick={() => {
+                  setSelectedTest(test.questions);
+                  setTestDuration(test.testDuration);
+                  setTestName(test.title);
+                  setTestId(test._id);
+                }}
               >
                 <div className="flex items-center space-x-3 mb-4">
                   <FaBrain className="text-blue-500 text-4xl" />

@@ -11,9 +11,23 @@ import Cookies from "js-cookie";
 import { login } from "../../store-redux/AuthSlice";
 
 const IQTestPopup = () => {
+
   const [isOpen, setIsOpen] = useState(false);
   const authState = useSelector((state) => state.auth);
-  const dispatch = useDispatch;
+  const dispatch = useDispatch();
+
+  const mutation = useMutation({
+    mutationFn: createGuestUser,
+    onSuccess: (data) => {
+      console.log(data, "signup data");
+      const parsedData = data?.data?.data;
+      Cookies.set("token", parsedData.token, { expires: 1 });
+      Cookies.set("userId", parsedData.userId, { expires: 1 });
+      dispatch(login(parsedData.userId));
+      window.location.href = '/profile/test'
+    },
+  });
+
 
   useEffect(() => {
     let timer;
@@ -35,23 +49,14 @@ const IQTestPopup = () => {
     const userId = Cookies.get("userId");
 
     if (token && userId) {
-      console.log("Guest user already exists.");
+      toast.success("User already exists.");
+      window.location.href = "/profile/test";
       return;
     }
 
-      const mutation = useMutation({
-        mutationFn: createGuestUser,
-        onSuccess: (data) => {
-          console.log(data, "signup data");
-          const parsedData = data?.data?.data;
-          Cookies.set("token", parsedData.token, { expires: 1 });
-          Cookies.set("userId", parsedData.userId, { expires: 1 });
-          dispatch(login(parsedData.userId));
-          //   <Navigate to={"/profile/test"} />;
-        },
-      });
-
-    mutation.mutate({});
+    mutation.mutate({
+      mobile_no:"0000000000",
+    });
   };
 
   return (
@@ -66,11 +71,8 @@ const IQTestPopup = () => {
               >
                 ✕
               </button>
-              {/* Card on the right */}
               <div className="flex items-center justify-center p-2">
-                {/* Card */}
                 <div className="bg-gradient-to-tr from-green-500/80 to-green-600 p-4 rounded-xl w-full md:w-96 max-w-sm">
-                  {/* Header */}
                   <div className="flex items-center mb-3 space-x-3">
                     <FaBrain className="text-4xl text-white" />
                     <h2 className="text-3xl font-bold text-white">IQ Test</h2>
@@ -80,16 +82,7 @@ const IQTestPopup = () => {
                     quick IQ test.
                   </p>
 
-                  {/* Time and Button */}
                   <div className="flex items-center justify-between">
-                    {/* <NavLink
-                      to="profile/test"
-                      className="text-white flex-row gap-2 ml-auto animate-pulse hover:animate-none border-white border hover:border-green-700
-                                        hover:bg-green-700 shadow-lg w-full cursor-pointer px-6 py-3 rounded-md text-md font-medium flex items-center text-xl space-x-2 transition-all duration-300 ease-in-out group justify-center"
-                    >
-                      <span>Give Test</span>
-                      <IoArrowForwardOutline className="text-xl transition-transform duration-300 ease-in-out group-hover:translate-x-2" />
-                    </NavLink> */}
                     <div
                       to="profile/test"
                       className="text-white flex-row gap-2 ml-auto animate-pulse hover:animate-none border-white border hover:border-green-700

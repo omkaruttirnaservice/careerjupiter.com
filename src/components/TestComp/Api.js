@@ -16,5 +16,21 @@ export const sendResult = (data) => {
 };
 
 export const createGuestUser = async (data) => {
-  return await axios.post(`${BASE_URL}/api/auth/signup?type=guest`,data);
+  return await axios.post(`${BASE_URL}/api/auth/signup?type=GUEST`, data);
+};
+
+export const getTestResult = (data) => {
+  return axios.get(`${BASE_URL}/api/iqtest/${data}`);
+};
+
+export const getUserDetail = (data) => {
+  return axios.get(`${BASE_URL}/api/auth/${data}`);
+};
+
+export const updateUserDetails = (data) => {
+  console.log({ data });
+
+  return axios.put(`${BASE_URL}/api/auth/${data.userId}`, {
+    mobile_no: data.mobile_no,
+  });
 };
