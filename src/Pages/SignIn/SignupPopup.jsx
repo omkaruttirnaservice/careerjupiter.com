@@ -1,15 +1,12 @@
-
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { userSignUp, updateUserProfile, fetchProfileStatusAPI } from "./Api";
 import { useMutation } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import { login } from "../../store-redux/AuthSlice";
-import { useSelector } from "react-redux";
-
+import { login, logout } from "../../store-redux/AuthSlice";
 
 const educationOptions = [
   "Diploma",
@@ -53,7 +50,6 @@ const getValidationSchema = (needsFirstName, needsLastName, needsPassword, needs
 
 const SignupPopup = () => {
   const authState = useSelector((state) => state.auth);
-
   const [isOpen, setIsOpen] = useState(false);
   const [needsFirstName, setNeedsFirstName] = useState(false);
   const [needsLastName, setNeedsLastName] = useState(false);
@@ -65,18 +61,18 @@ const SignupPopup = () => {
 
   const fetchProfileStatus = async (userId) => {
     const token = Cookies.get("token");
-  
+
     // Check if token is missing
     if (!token) {
-      console.log("[SignupPopup] Token missing, showing popup immediately");
+      // console.log("[SignupPopup] Token missing, showing popup immediately");
       setIsOpen(true); // Show popup immediately if token is missing
       return;
     }
-  
+
     try {
       const data = await fetchProfileStatusAPI(userId);
-      console.log("Profile Status API Response:", data);
-  
+      // console.log("Profile Status API Response:", data);
+
       if (data.usrMsg?.includes("First name")) {
         setNeedsFirstName(true);
         setNeedsLastName(false);
@@ -111,7 +107,7 @@ const SignupPopup = () => {
       }
     } catch (error) {
       console.error("Error fetching profile status:", error);
-  
+
       // If the API fails due to token invalidity, show the popup
       if (error.response?.status === 401) {
         console.log("[SignupPopup] Token invalid, showing popup immediately");
@@ -144,13 +140,16 @@ const SignupPopup = () => {
 
       setTimeout(() => fetchProfileStatus(userId), 10000);
     },
+    onError: (error) => {
+      console.error("Signup Error:", error?.response?.data);
+      toast.error("Signup failed! Please try again.");
+    },
   });
 
   const updateProfileMutation = useMutation({
     mutationFn: async (values) => {
-      // Create a payload with only the fields that need to be updated
       const payload = {};
-  
+
       if (needsFirstName) {
         payload.f_name = values.f_name;
       }
@@ -165,7 +164,7 @@ const SignupPopup = () => {
           current_education: values.info.current_education,
         };
       }
-  
+
       return updateUserProfile({ userId, values: payload });
     },
     onSuccess: () => {
@@ -179,6 +178,7 @@ const SignupPopup = () => {
     },
   });
 
+  // For first-time visitors or users without a token
   useEffect(() => {
     const token = Cookies.get("token");
     const storedUserId = Cookies.get("userId");
@@ -187,32 +187,43 @@ const SignupPopup = () => {
       console.log("[SignupPopup] No token found, showing popup in 10 seconds");
       setTimeout(() => setIsOpen(true), 10000);
     } else {
-      console.log("[SignupPopup] Token found, fetching profile status for user:", storedUserId);
+      // console.log("[SignupPopup] Token found, fetching profile status for user:", storedUserId);
       setUserId(storedUserId);
       setTimeout(() => fetchProfileStatus(storedUserId), 10000);
     }
-  }, []); 
+  }, []);
 
+  // For signed-out users
   useEffect(() => {
-    setIsOpen(!authState.isLoggedIn);
+    let timer;
+
+    if (!authState.isLoggedIn) {
+      timer = setTimeout(() => {
+        setIsOpen(true);
+      }, 10000); // 10,000 ms = 10 seconds
+    } else {
+      setIsOpen(false);
+    }
+
+    return () => clearTimeout(timer);
   }, [authState.isLoggedIn]);
 
+  // For profile status polling (only when logged in and profile is incomplete)
   useEffect(() => {
     let interval;
-  
-    if (!profileComplete && userId) {
-      // Start the interval only if the profile is not complete
+
+    if (authState.isLoggedIn && !profileComplete && userId) {
       interval = setInterval(() => {
         fetchProfileStatus(userId);
       }, 10000);
     }
+
     return () => {
       if (interval) {
         clearInterval(interval);
       }
     };
-  }, [profileComplete, userId]);
-
+  }, [authState.isLoggedIn, profileComplete, userId]);
 
   return (
     <div>
@@ -237,17 +248,16 @@ const SignupPopup = () => {
                 password: "",
                 mobile_no: "",
                 info: {
-                  current_education: "", // Initialize with empty value
+                  current_education: "",
                 },
               }}
               validationSchema={getValidationSchema(needsFirstName, needsLastName, needsPassword, needsEducation)}
               onSubmit={(values, { setSubmitting }) => {
-                console.log({values})
                 if (needsFirstName || needsLastName || needsPassword || needsEducation) {
                   console.log("Updating Profile...");
                   updateProfileMutation.mutate(values);
                 } else {
-                  console.log("Signing Up...");
+                  // console.log("Signing Up...");
                   mutation.mutate(values);
                 }
                 setSubmitting(false);
@@ -276,7 +286,7 @@ const SignupPopup = () => {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full block cursor-pointer bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
+                        className="w-full block bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
                       >
                         Sign Up
                       </button>
@@ -354,6 +364,7 @@ const SignupPopup = () => {
                               </option>
                             ))}
                           </Field>
+
                           <ErrorMessage
                             name="info.current_education"
                             component="div"
@@ -361,10 +372,11 @@ const SignupPopup = () => {
                           />
                         </div>
                       )}
+
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full block bg-green-600 cursor-pointer text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors disabled:bg-green-300"
+                        className="w-full block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors disabled:bg-green-300"
                       >
                         Save
                       </button>

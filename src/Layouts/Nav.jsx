@@ -129,7 +129,7 @@ const Nav = () => {
 							)}
 
 							{/* Mobile & Tablet Toggle */}
-							<button className="md:hidden ml-4" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+							<button className="md:hidden cursor-pointer ml-4" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
 								{isMobileMenuOpen ? <XIcon className="w-8 h-8 text-gray-700" /> : <MenuIcon className="w-8 h-8 text-gray-700" />}
 							</button>
 						</nav>
@@ -180,7 +180,7 @@ const Nav = () => {
 									{isLoggedIn && (
 										<div className="mt-6 w-full border-t border-gray-300 pt-4">
 											<NavLink to="/profile/personal-details" className="block px-4 py-3 text-xl font-semibold text-gray-900 hover:text-gray-600 transition-all" onClick={() => setIsMobileMenuOpen(false)}>Profile</NavLink>
-											<button onClick={handleSignOut} className="block w-full text-left px-4 py-3 text-xl font-semibold text-red-600 hover:text-red-500 transition-all">Sign Out</button>
+											<button onClick={handleSignOut} className="block w-full cursor-pointer text-left px-4 py-3 text-xl font-semibold text-red-600 hover:text-red-500 transition-all">Sign Out</button>
 										</div>
 									)}
 								</div>

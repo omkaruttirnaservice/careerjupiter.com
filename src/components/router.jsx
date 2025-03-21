@@ -47,12 +47,14 @@ export const router = createBrowserRouter([
 			{ path: 'class', element: <InstituteMultiCard /> },
 
 			{ path: 'reviews/:id', element: <ReviewPage /> },
+			{path : '/coming-soon', element: <ComingSoon/>}
+
 		],
 	},
-	{
-		path: '/coming-soon',
-		element: <ComingSoon />,
-	},
+	// {
+	// 	path: '/coming-soon',
+	// 	element: <ComingSoon />,
+	// },
 
 	{ path: 'college/:id', element: <CardDetails /> },
 	{ path: 'university/:id', element: <UniversityDetail /> },
