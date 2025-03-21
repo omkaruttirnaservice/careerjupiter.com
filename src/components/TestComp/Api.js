@@ -11,6 +11,14 @@ export const getTest = async (testLevel) => {
   return response.data;
 };
 
+export const getTestResult = async (testId) => {
+  const response = await axios.get(`${BASE_URL}/api/result/${testId}`, {
+    headers: {
+      Authorization: getAuthHeader(),
+    },
+  });
+  return response.data;
+};
 export const sendResult = (data) => {
   return axios.post(`${BASE_URL}/api/result/create`, data);
 };

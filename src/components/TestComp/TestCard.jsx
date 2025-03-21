@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getTest, getTestResult } from "./Api";
+import { getTest , getTestResult} from "./Api";
 import { FaBrain } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ function TestCard() {
       data.data.forEach(async (test) => {
         if (test.attempted) {
           const result = await getTestResult(test._id);
+          // const result =[];
           completedMap.set(test._id, result?.data || {}); // ✅ Store full result data
         }
       });
