@@ -6,7 +6,11 @@ import { updateUserDetails } from "./Api";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 
-const MobileNumberPopup = ({ setShowMobileNumberPopup, setShowResult }) => {
+const MobileNumberPopup = ({
+  setShowMobileNumberPopup,
+  resultGenerationMutation,
+  resultData,
+}) => {
   const [isOpen, setIsOpen] = useState(true); // Popup is open by default
   const { userId } = useSelector((state) => state.auth);
 
@@ -26,8 +30,8 @@ const MobileNumberPopup = ({ setShowMobileNumberPopup, setShowResult }) => {
         text: "Your Mobile Number was submitted successfully!",
         confirmButtonColor: "#28a745",
       }).then(() => {
+        resultGenerationMutation.mutate(resultData);
         setShowMobileNumberPopup(false);
-        setShowResult(true);
       });
     },
     onError: () => {

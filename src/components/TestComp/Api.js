@@ -23,8 +23,8 @@ export const getTestResult = (data) => {
   return axios.get(`${BASE_URL}/api/iqtest/${data}`);
 };
 
-export const getUserDetail = (data) => {
-  return axios.get(`${BASE_URL}/api/auth/${data}`);
+export const getUserDetail = (id) => {
+  return axios.get(`${BASE_URL}/api/auth/${id}`);
 };
 
 export const updateUserDetails = (data) => {
@@ -33,4 +33,8 @@ export const updateUserDetails = (data) => {
   return axios.put(`${BASE_URL}/api/auth/${data.userId}`, {
     mobile_no: data.mobile_no,
   });
+};
+
+export const sendShareState = (data) => {
+  return axios.post(`${BASE_URL}/api/result/updation`, data);
 };

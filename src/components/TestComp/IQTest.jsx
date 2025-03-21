@@ -10,18 +10,19 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getTest, getUserDetail, sendResult } from "./Api";
 import { setTestResult } from "../../store-redux/testResultSlice";
 import MobileNumberPopup from "./MobileNumberPopup";
+import { setIqTestId } from "../../store-redux/iqTestSlice";
 
 const IQTest = ({ questions, testDuration, title, testId }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState(Array(questions.length).fill(""));
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showMobileNumberPopup, setShowMobileNumberPopup] = useState(false);
-  const [showResult , setShowResult] = useState(false);
+  // const [showResult, setShowResult] = useState(false);
   const dispatch = useDispatch();
   const { userId } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  const mutation = useMutation({
+  const resultGenerationMutation = useMutation({
     mutationFn: sendResult,
     onSuccess: (response) => {
       Swal.fire({
@@ -49,6 +50,10 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
     userId: userId,
     answers: questions.map((q) => ({ questionId: q._id, selectedOption: "" })),
   });
+
+  dispatch(setIqTestId(testId));
+
+  // dispatch(clearIqTestId());
 
   useEffect(() => {
     setResultData({
@@ -85,17 +90,22 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
     refetchOnMount: false,
   });
 
-  console.log("user details: ....", data?.data?.data?.mobile_no);
-
   useEffect(() => {
     const mobileNumber = data?.data?.data?.mobile_no;
-    if (mobileNumber === "0000000000") {
-      setShowMobileNumberPopup(true);
+    console.log({ mobileNumber });
+    
+    // step 2 : check user present or not
+    if (data?.data) {
+      if (mobileNumber === "0000000000") {
+        setShowMobileNumberPopup(true);
+      } else {
+        
+        resultGenerationMutation.mutate(resultData);
+        setShowMobileNumberPopup(false);
+        // generate result mutation
+      }
     }
   }, [data]);
-
-  console.log("show Result: ========", showResult);
-  
 
   const handleSubmit = () => {
     const allAnswered = answers.every((ans) => ans !== "");
@@ -109,6 +119,8 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
       return;
     }
 
+    //step 1 : get user details
+
     Swal.fire({
       icon: "question",
       title: "Are you sure?",
@@ -120,12 +132,7 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
       cancelButtonColor: "#dc3545",
     }).then((result) => {
       if (result.isConfirmed) {
-        setIsSubmitted(true);
-        if (showResult){
-          mutation.mutate(resultData);
-        }
-          // mutation.mutate(resultData);
-          refetch();
+        refetch();
       }
     });
   };
@@ -135,7 +142,8 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
       {showMobileNumberPopup && (
         <MobileNumberPopup
           setShowMobileNumberPopup={setShowMobileNumberPopup}
-          setShowResult={setShowResult}
+          resultGenerationMutation={resultGenerationMutation}
+          resultData={resultData}
         />
       )}
       {!isSubmitted && (

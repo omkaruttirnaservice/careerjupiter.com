@@ -24,7 +24,7 @@ function TestClock({ testDuration, handleSubmit }) {
       <div className="relative w-full max-w-lg flex flex-col items-center">
         {/* Clock Icon - Moves with Progress */}
         <div
-          className="absolute -top-3 transition-all duration-300"
+          className="absolute z-1 -top-3 transition-all duration-300"
           style={{
             left: `${progressWidth}%`,
             transform: `translate(-50%, 0)`,
@@ -34,7 +34,7 @@ function TestClock({ testDuration, handleSubmit }) {
         </div>
 
         {/* Responsive Progress Bar */}
-        <div className="w-full bg-gray-300 rounded-full h-4 md:ml-42 sm:h-6 overflow-hidden mt-6 relative">
+        <div className="w-full z-0 bg-gray-300 rounded-full h-4 md:ml-42 sm:h-6 overflow-hidden mt-6 relative">
           {/* Progress Bar with Gradient */}
           <div
             className="h-full rounded-full transition-all duration-500"
