@@ -27,7 +27,7 @@ const SearchComponent = () => {
 	const [searchParams, setSearchParams] = useState({
 		searchKey: '',
 		category: '',
-		type: '',
+		type: null,
 	});
 
 	const getPathType = () => {
@@ -39,6 +39,7 @@ const SearchComponent = () => {
 		queryKey: ['colleges', searchParams],
 		queryFn: () => searchCollege(searchParams),
 		// enabled: false,
+		enabled: searchParams?.type ? true : false,
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,
 		retry: false,
