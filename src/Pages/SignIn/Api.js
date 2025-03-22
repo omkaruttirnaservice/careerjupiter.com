@@ -35,6 +35,16 @@ export const updateUserProfile = async ({ userId, values }) => {
   return response;
 };
 
+export const sendOTP = async (payload) => {
+  const response = await axios.post(`${BASE_URL}/api/auth/send-otp`, payload);
+  return response.data;
+};
+
+export const verifyOTP = async (payload) => {
+  const response = await axios.post(`${BASE_URL}/api/auth/verify-otp`, payload);
+  return response.data;
+};
+
 
 export const getCollege = async (id) => {
   const response = await axios.get(`/api/college/${id}`);

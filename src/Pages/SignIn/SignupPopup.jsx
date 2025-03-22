@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { userSignUp, updateUserProfile, fetchProfileStatusAPI } from "./Api";
+import { userSignUp, updateUserProfile, fetchProfileStatusAPI, sendOTP, verifyOTP } from "./Api";
 import { useMutation } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { login, logout } from "../../store-redux/AuthSlice";
@@ -57,21 +57,23 @@ const SignupPopup = () => {
   const [needsEducation, setNeedsEducation] = useState(false);
   const [userId, setUserId] = useState(null);
   const [profileComplete, setProfileComplete] = useState(false);
+  const [showOTP, setShowOTP] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [referenceId, setReferenceId] = useState(null);
+  const [otp, setOtp] = useState("");
+
   const dispatch = useDispatch();
 
   const fetchProfileStatus = async (userId) => {
     const token = Cookies.get("token");
 
-    // Check if token is missing
     if (!token) {
-      // console.log("[SignupPopup] Token missing, showing popup immediately");
-      setIsOpen(true); // Show popup immediately if token is missing
+      setIsOpen(true);
       return;
     }
 
     try {
       const data = await fetchProfileStatusAPI(userId);
-      // console.log("Profile Status API Response:", data);
 
       if (data.usrMsg?.includes("First name")) {
         setNeedsFirstName(true);
@@ -108,9 +110,7 @@ const SignupPopup = () => {
     } catch (error) {
       console.error("Error fetching profile status:", error);
 
-      // If the API fails due to token invalidity, show the popup
       if (error.response?.status === 401) {
-        console.log("[SignupPopup] Token invalid, showing popup immediately");
         setIsOpen(true);
       }
     }
@@ -178,29 +178,52 @@ const SignupPopup = () => {
     },
   });
 
-  // For first-time visitors or users without a token
+  const sendOTPMutation = useMutation({
+    mutationFn: sendOTP,
+    onSuccess: (data) => {
+      console.log("OTP Sent Successfully:", data);
+      setReferenceId(data.data.reference_id);
+      setShowOTP(true); // Automatically show OTP input field after OTP is sent
+      toast.success("OTP sent successfully!");
+    },
+    onError: (error) => {
+      console.error("OTP Send Error:", error?.response?.data);
+      toast.error("Failed to send OTP!");
+    },
+  });
+
+  const verifyOTPMutation = useMutation({
+    mutationFn: verifyOTP,
+    onSuccess: (data) => {
+      console.log("OTP Verified Successfully:", data);
+      setOtpVerified(true);
+      toast.success("OTP verified successfully!");
+    },
+    onError: (error) => {
+      console.error("OTP Verification Error:", error?.response?.data);
+      toast.error("Failed to verify OTP!");
+    },
+  });
+
   useEffect(() => {
     const token = Cookies.get("token");
     const storedUserId = Cookies.get("userId");
 
     if (!token) {
-      console.log("[SignupPopup] No token found, showing popup in 10 seconds");
       setTimeout(() => setIsOpen(true), 10000);
     } else {
-      // console.log("[SignupPopup] Token found, fetching profile status for user:", storedUserId);
       setUserId(storedUserId);
       setTimeout(() => fetchProfileStatus(storedUserId), 10000);
     }
   }, []);
 
-  // For signed-out users
   useEffect(() => {
     let timer;
 
     if (!authState.isLoggedIn) {
       timer = setTimeout(() => {
         setIsOpen(true);
-      }, 10000); // 10,000 ms = 10 seconds
+      }, 10000);
     } else {
       setIsOpen(false);
     }
@@ -208,7 +231,6 @@ const SignupPopup = () => {
     return () => clearTimeout(timer);
   }, [authState.isLoggedIn]);
 
-  // For profile status polling (only when logged in and profile is incomplete)
   useEffect(() => {
     let interval;
 
@@ -225,6 +247,17 @@ const SignupPopup = () => {
     };
   }, [authState.isLoggedIn, profileComplete, userId]);
 
+  const handleSendOTP = (mobileNumber) => {
+    sendOTPMutation.mutate({ mobile_no: mobileNumber });
+  };
+
+  const handleVerifyOTP = (otp, mobileNumber) => {
+    verifyOTPMutation.mutate({
+      reference_id: referenceId,
+      otp,
+      mobile_no: mobileNumber // Add mobile number to the payload
+    });
+  };
   return (
     <div>
       {isOpen && (
@@ -254,42 +287,84 @@ const SignupPopup = () => {
               validationSchema={getValidationSchema(needsFirstName, needsLastName, needsPassword, needsEducation)}
               onSubmit={(values, { setSubmitting }) => {
                 if (needsFirstName || needsLastName || needsPassword || needsEducation) {
-                  console.log("Updating Profile...");
                   updateProfileMutation.mutate(values);
                 } else {
-                  // console.log("Signing Up...");
-                  mutation.mutate(values);
+                  // Add OTP and reference_id to the signup payload
+                  const signupPayload = {
+                    ...values,
+                    otp, // Include the OTP
+                    reference_id: referenceId, // Include the reference_id
+                  };
+                  console.log("Signup Payload:", signupPayload); // Debugging log
+                  mutation.mutate(signupPayload);
                 }
                 setSubmitting(false);
               }}
             >
-              {({ isSubmitting }) => (
+              {({ isSubmitting, values }) => (
                 <Form className="space-y-4">
                   {!needsFirstName && !needsLastName && !needsPassword && !needsEducation ? (
                     <>
-                      <div>
+                      <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">
                           Mobile Number
                         </label>
-                        <Field
-                          name="mobile_no"
-                          type="tel"
-                          placeholder="Enter Mobile Number"
-                          className="mt-1 block w-full rounded-md border p-2"
-                        />
+                        <div className="flex gap-2">
+                          <Field
+                            name="mobile_no"
+                            type="tel"
+                            placeholder="Enter Mobile Number"
+                            className="mt-1 block w-full rounded-md border p-2"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleSendOTP(values.mobile_no)}
+                            className="mt-1 bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600"
+                          >
+                            Get OTP
+                          </button>
+                        </div>
                         <ErrorMessage
                           name="mobile_no"
                           component="div"
                           className="text-red-500 text-sm mt-1"
                         />
                       </div>
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full block bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
-                      >
-                        Sign Up
-                      </button>
+
+                      {showOTP && (
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Enter OTP
+                          </label>
+                          <div className="flex gap-2">
+                            <Field
+                              name="otp"
+                              type="text"
+                              placeholder="Enter OTP"
+                              className="mt-1 block w-full rounded-md border p-2"
+                              value={otp}
+                              onChange={(e) => setOtp(e.target.value)}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleVerifyOTP(otp, values.mobile_no)}
+                              className="mt-1 bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600"
+                            >
+                              Verify OTP
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {otpVerified && (
+                        <button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="w-full block cursor-pointer bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
+                        >
+                          Sign Up
+                        </button>
+                      )}
                     </>
                   ) : (
                     <>
@@ -376,7 +451,7 @@ const SignupPopup = () => {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors disabled:bg-green-300"
+                        className="w-full block cursor-pointer bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors disabled:bg-green-300"
                       >
                         Save
                       </button>

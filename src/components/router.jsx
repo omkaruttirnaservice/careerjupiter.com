@@ -28,6 +28,8 @@ import SigninPopup from './../Pages/SignIn/SigninPopup';
 import ComingSoon from '../Pages/CommingSoom.jsx';
 import Nav from '../Layouts/Nav.jsx';
 import ScrollToTop from '../Layouts/ScrollToTop.jsx';
+import ServiceProvide from '../Pages/service_provider.jsx';
+
 
 export const router = createBrowserRouter([
 	{
@@ -47,7 +49,8 @@ export const router = createBrowserRouter([
 			{ path: 'class', element: <InstituteMultiCard /> },
 
 			{ path: 'reviews/:id', element: <ReviewPage /> },
-			{path : '/coming-soon', element: <ComingSoon/>}
+			{path : '/serviceprovider', element: <ServiceProvide/>}
+
 
 		],
 	},

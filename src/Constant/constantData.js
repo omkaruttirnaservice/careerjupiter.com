@@ -889,7 +889,7 @@ export const navigation = [
 			{ name: 'Search University', href: '#search-university' },
 		],
 	},
-	{ name: 'Service Providers', to: '/coming-soon' },
+	{ name: 'Service Providers', to: '/serviceprovider' },
 	{ name: 'About Us', to: '/about-us' },
 	{ name: 'Contact Us', to: '/contact-us' },
 ];
