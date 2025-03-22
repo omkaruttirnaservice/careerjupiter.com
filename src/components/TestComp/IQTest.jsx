@@ -223,14 +223,14 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
 
         <div className="w-full md:w-1/4 h-[60vh] bg-white p-4 rounded-lg shadow-md">
           <h2 className="text-lg font-bold mb-4">Questions</h2>
-          <div className="grid grid-cols-4 h-[80%] overflow-auto gap-1 py-1.5">
+          <div className="grid grid-cols-4 h-[80%] overflow-auto gap-1 py-2">
             {questions.map((q, index) => (
               <button
                 key={q._id}
                 onClick={() => setCurrentQuestion(index)}
-                className={` rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300 cursor-pointer ${
+                className={`mt-1 rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300 cursor-pointer ${
                   currentQuestion === index
-                    ? "bg-blue-500 text-white ring-2 ring-blue-700"
+                    ? "bg-blue-500 text-white ring-2 ring-offset-2 ring-blue-700"
                     : answers[index]
                       ? "bg-green-500 text-white"
                       : "bg-red-500 text-white"

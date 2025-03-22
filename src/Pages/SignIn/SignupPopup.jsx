@@ -119,7 +119,7 @@ const SignupPopup = () => {
   const mutation = useMutation({
     mutationFn: userSignUp,
     onSuccess: (data) => {
-      console.log("Signup API Response:", data);
+      toast.success("SignUp successfully!");
       const parsedData = data.data.data;
       const token = parsedData.token;
       const userId = parsedData.userId || parsedData.data?.userId;
@@ -250,14 +250,32 @@ const SignupPopup = () => {
   const handleSendOTP = (mobileNumber) => {
     sendOTPMutation.mutate({ mobile_no: mobileNumber });
   };
-
+  
   const handleVerifyOTP = (otp, mobileNumber) => {
-    verifyOTPMutation.mutate({
-      reference_id: referenceId,
-      otp,
-      mobile_no: mobileNumber // Add mobile number to the payload
-    });
+    verifyOTPMutation.mutate(
+      {
+        reference_id: referenceId,
+        otp,
+        mobile_no: mobileNumber,
+      },
+      {
+        onSuccess: () => {
+          setOtpVerified(true);
+          const signupPayload = {
+            mobile_no: mobileNumber,
+            otp,
+            reference_id: referenceId,
+          };
+          mutation.mutate(signupPayload);
+        },
+        onError: (error) => {
+          console.error("OTP Verification Error:", error?.response?.data);
+          toast.error("Failed to verify OTP!");
+        },
+      }
+    );
   };
+
   return (
     <div>
       {isOpen && (
@@ -284,18 +302,27 @@ const SignupPopup = () => {
                   current_education: "",
                 },
               }}
-              validationSchema={getValidationSchema(needsFirstName, needsLastName, needsPassword, needsEducation)}
+              validationSchema={getValidationSchema(
+                needsFirstName,
+                needsLastName,
+                needsPassword,
+                needsEducation
+              )}
               onSubmit={(values, { setSubmitting }) => {
-                if (needsFirstName || needsLastName || needsPassword || needsEducation) {
+                if (
+                  needsFirstName ||
+                  needsLastName ||
+                  needsPassword ||
+                  needsEducation
+                ) {
                   updateProfileMutation.mutate(values);
                 } else {
-                  // Add OTP and reference_id to the signup payload
                   const signupPayload = {
                     ...values,
-                    otp, // Include the OTP
-                    reference_id: referenceId, // Include the reference_id
+                    otp,
+                    reference_id: referenceId,
                   };
-                  console.log("Signup Payload:", signupPayload); // Debugging log
+ 
                   mutation.mutate(signupPayload);
                 }
                 setSubmitting(false);
@@ -303,23 +330,26 @@ const SignupPopup = () => {
             >
               {({ isSubmitting, values }) => (
                 <Form className="space-y-4">
-                  {!needsFirstName && !needsLastName && !needsPassword && !needsEducation ? (
+                  {!needsFirstName &&
+                  !needsLastName &&
+                  !needsPassword &&
+                  !needsEducation ? (
                     <>
-                      <div className="mb-4">
+                      <div className="mb-4 w-full max-w-md mx-auto">
                         <label className="block text-sm font-medium text-gray-700">
                           Mobile Number
                         </label>
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2 mt-1">
                           <Field
                             name="mobile_no"
                             type="tel"
                             placeholder="Enter Mobile Number"
-                            className="mt-1 block w-full rounded-md border p-2"
+                            className="flex-1 w-full sm:w-full md:w-3/4 lg:w-1/2 rounded-md border p-2 focus:ring focus:ring-blue-300"
                           />
                           <button
                             type="button"
                             onClick={() => handleSendOTP(values.mobile_no)}
-                            className="mt-1 bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600"
+                            className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition-all w-full sm:w-auto"
                           >
                             Get OTP
                           </button>
@@ -333,37 +363,29 @@ const SignupPopup = () => {
 
                       {showOTP && (
                         <div className="mb-4">
-                          <label className="block text-sm font-medium text-gray-700">
-                            Enter OTP
-                          </label>
-                          <div className="flex gap-2">
+                          <div className="w-full max-w-md mx-auto">
+                            <label className="block text-sm font-medium text-gray-700">
+                              Enter OTP
+                            </label>
                             <Field
                               name="otp"
                               type="text"
                               placeholder="Enter OTP"
-                              className="mt-1 block w-full rounded-md border p-2"
+                              className="w-full rounded-md border p-2 focus:ring focus:ring-blue-300 mt-1"
                               value={otp}
                               onChange={(e) => setOtp(e.target.value)}
                             />
                             <button
                               type="button"
-                              onClick={() => handleVerifyOTP(otp, values.mobile_no)}
-                              className="mt-1 bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600"
+                              onClick={() =>
+                                handleVerifyOTP(otp, values.mobile_no)
+                              }
+                              className="mt-3 w-full bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600 transition-all"
                             >
                               Verify OTP
                             </button>
                           </div>
                         </div>
-                      )}
-
-                      {otpVerified && (
-                        <button
-                          type="submit"
-                          disabled={isSubmitting}
-                          className="w-full block cursor-pointer bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
-                        >
-                          Sign Up
-                        </button>
                       )}
                     </>
                   ) : (
