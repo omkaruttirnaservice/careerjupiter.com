@@ -81,7 +81,14 @@ const IQTestPopup = () => {
                     Test your intelligence and problem-solving skills with this
                     quick IQ test.
                   </p>
-
+                  <div className="flex items-center justify-center mb-5">
+                    <span className="text-gray-300 text-lg line-through mr-2">
+                      ₹1499
+                    </span>
+                    <span className="text-yellow-300 text-xl font-bold bg-black px-3 py-1 rounded-md">
+                      Free
+                    </span>
+                  </div>
                   <div className="flex items-center justify-between">
                     <div
                       to="profile/test"

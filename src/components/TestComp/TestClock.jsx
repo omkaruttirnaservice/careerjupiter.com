@@ -19,12 +19,12 @@ function TestClock({ testDuration, handleSubmit }) {
   const progressWidth = (timeLeft / (testDuration * 60)) * 100;
 
   return (
-    <div className="w-full flex flex-col sm:flex-row items-center sm:justify-between px-4 sm:px-0">
+    <div className="w-full flex z-0 flex-col sm:flex-row items-center sm:justify-between px-4 sm:px-0">
       {/* Clock & Progress Bar Container */}
-      <div className="relative w-full max-w-lg flex flex-col items-center">
+      <div className="relative z-0 w-full max-w-lg flex flex-col items-center">
         {/* Clock Icon - Moves with Progress */}
         <div
-          className="absolute z-1 -top-3 transition-all duration-300"
+          className="absolute z-0 -top-3 transition-all duration-300"
           style={{
             left: `${progressWidth}%`,
             transform: `translate(-50%, 0)`,

@@ -90,22 +90,22 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
     refetchOnMount: false,
   });
 
-  useEffect(() => {
-    const mobileNumber = data?.data?.data?.mobile_no;
-    console.log({ mobileNumber });
+  // useEffect(() => {
+  //   const mobileNumber = data?.data?.data?.mobile_no;
+  //   console.log({ mobileNumber });
     
     // step 2 : check user present or not
-    if (data?.data) {
-      if (mobileNumber === "0000000000") {
-        setShowMobileNumberPopup(true);
-      } else {
+  //   if (data?.data) {
+  //     if (mobileNumber === "0000000000") {
+  //       setShowMobileNumberPopup(true);
+  //     } else {
         
-        resultGenerationMutation.mutate(resultData);
-        setShowMobileNumberPopup(false);
-        // generate result mutation
-      }
-    }
-  }, [data]);
+  //       resultGenerationMutation.mutate(resultData);
+  //       setShowMobileNumberPopup(false);
+  //       // generate result mutation
+  //     }
+  //   }
+  // }, [data]);
 
   const handleSubmit = () => {
     const allAnswered = answers.every((ans) => ans !== "");
@@ -132,7 +132,8 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
       cancelButtonColor: "#dc3545",
     }).then((result) => {
       if (result.isConfirmed) {
-        refetch();
+        // refetch();
+        setShowMobileNumberPopup(true);
       }
     });
   };
@@ -222,15 +223,17 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
 
         <div className="w-full md:w-1/4 h-[60vh] bg-white p-4 rounded-lg shadow-md">
           <h2 className="text-lg font-bold mb-4">Questions</h2>
-          <div className="grid grid-cols-4 h-[80%] overflow-auto gap-2 py-1.5">
+          <div className="grid grid-cols-4 h-[80%] overflow-auto gap-1 py-1.5">
             {questions.map((q, index) => (
               <button
                 key={q._id}
                 onClick={() => setCurrentQuestion(index)}
-                className={`p-2 rounded-full w-10 h-10 flex items-center justify-center ${
-                  answers[index]
-                    ? "bg-green-500 text-white"
-                    : "bg-red-500 text-white"
+                className={` rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300 cursor-pointer ${
+                  currentQuestion === index
+                    ? "bg-blue-500 text-white ring-2 ring-blue-700"
+                    : answers[index]
+                      ? "bg-green-500 text-white"
+                      : "bg-red-500 text-white"
                 }`}
               >
                 {index + 1}

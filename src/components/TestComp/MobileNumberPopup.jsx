@@ -48,7 +48,7 @@ const MobileNumberPopup = ({
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       {/* Popup Modal (Always Visible) */}
       {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div className="fixed z-50 top-0 left-0 w-full h-full bg-black/50 backdrop-blur-sm flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full relative">
             {/* Close Button inside Form (Top Right) */}
             {/* <button

@@ -133,7 +133,7 @@ const ShareResultPopup = ({ setOpenSharePopup, openSharePopup, resultId }) => {
             </div>
 
             <button
-              className="mt-5 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300"
+              className="mt-5 cursor-pointer bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300"
               onClick={closePopup}
             >
               Close
