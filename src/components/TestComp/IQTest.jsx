@@ -148,9 +148,12 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
         />
       )}
       {!isSubmitted && (
-        <div className="w-full bg-gray-100 p-4 shadow-lg rounded-xl mb-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold">{title}</h1>
-          <TestClock testDuration={testDuration} handleSubmit={handleSubmit} />
+        <div className="w-full bg-gray-100 p-4 shadow-lg rounded-xl mb-4 flex flex-col justify-start">
+          <TestClock
+            testDuration={testDuration}
+            handleSubmit={handleSubmit}
+            title={title}
+          />
         </div>
       )}
 
@@ -233,7 +236,7 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
                     ? "bg-blue-500 text-white ring-2 ring-offset-2 ring-blue-700"
                     : answers[index]
                       ? "bg-green-500 text-white"
-                      : "bg-red-500 text-white"
+                      : "bg-red-600 text-white"
                 }`}
               >
                 {index + 1}

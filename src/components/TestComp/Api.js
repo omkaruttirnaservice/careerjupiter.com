@@ -46,3 +46,7 @@ export const updateUserDetails = (data) => {
 export const sendShareState = (data) => {
   return axios.post(`${BASE_URL}/api/result/updation`, data);
 };
+
+export const getResult = (id) => {
+  return axios.get(`${BASE_URL}/api/result/${id}`);
+};

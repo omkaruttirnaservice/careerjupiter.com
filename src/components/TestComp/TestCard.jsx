@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import TestResult from "./TestResult"; // ✅ Import TestResult Component
 import { testOption } from "../../Constant/constantData";
 import IQTest from "./IQTest";
-import ResultPopup from './ResultPopup';
 
 function TestCard() {
   // const [selectedTest, setSelectedTest] = useState(null);
@@ -20,44 +19,39 @@ function TestCard() {
   const [testName, setTestName] = useState("");
   const [testId, setTestId] = useState(null);
   const [testAttemed , setTestAttemed] = useState(false);
-  const [showScore , setShowScore] = useState(false);
+  const [showResult , setShowResult] = useState(false);
+  const [getResult , setGetResult] = useState({});
 
   const { data, isPending } = useQuery({
     queryKey: ["getTest", testLevel],
     queryFn: () => getTest(testLevel),
   });
 
-  useEffect(() => {
-    if (data?.data) {
-      const completedMap = new Map();
-      data.data.forEach(async (test) => {
-        if (test.attempted) {
-          const result = await getTestResult(test._id);
-          // const result =[];
-          completedMap.set(test._id, result?.data || {}); // ✅ Store full result data
-        }
-      });
-      setCompletedTests(completedMap);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data?.data) {
+  //     const completedMap = new Map();
+  //     data.data.forEach(async (test) => {
+  //       if (test.attempted) {
+  //         const result = await getTestResult(test._id);
+  //         // const result =[];
+  //         completedMap.set(test._id, result?.data || {}); // ✅ Store full result data
+  //       }
+  //     });
+  //     setCompletedTests(completedMap);
+  //   }
+  // }, [data]);
 
-  const handleTestStatus = () => {
-    if (data?.data?.test?.attempted) {
+  const handleTestStatus = (resultStatus) => {
+    if (resultStatus) {
+      setShowResult(true);
     }
   };
 
-  useEffect(() => {
-    if (testAttemed) {
-      setShowScore(true);
-    }
-  }, [testAttemed]);
-
-    if (selectedTest) {
+    if (selectedTest || showResult) {
       return (
         <>
-          {showScore && (
-            <ResultPopup showScore={showScore} setShowScore={setShowScore} />
-          )}
+          {showResult && <TestResult getResult={getResult} />}
+
           <div className="p-4">
             {!startTest ? (
               <button
@@ -121,7 +115,7 @@ function TestCard() {
                     key={test._id}
                     className={`p-4 rounded-lg shadow-lg border cursor-pointer transition-all duration-300 ${
                       test?.attempted ? "bg-green-200" : "bg-white"
-                    } ${false || idx === 0 ? "opacity-100" : "opacity-50"}`}
+                    } ${false || idx === 0 ? "opacity-100" : "opacity-40"}`}
                     // onClick={() =>
                     //   setSelectedTest(selectedTest === test._id ? null : test._id)
                     // }
@@ -131,6 +125,8 @@ function TestCard() {
                       setTestName(test.title);
                       setTestId(test._id);
                       setTestAttemed(test?.attempted);
+                      handleTestStatus(test?.attempted);
+                      setGetResult(test?.result);
                     }}
                   >
                     <div className="flex items-center space-x-3 mb-4">
