@@ -9,6 +9,7 @@ import Carouseldiv from './CarouselDiv';
 import Typewriter from 'typewriter-effect';
 import Logopage from './logopage';
 import { FaInstagram, FaYoutube, FaWhatsapp } from 'react-icons/fa';
+import IQtestBanner from './IQtestBanner';
 
 const HeroSection = () => {
 	// Auto-scroll to top on page load or route change
@@ -64,7 +65,9 @@ const HeroSection = () => {
   </div>
 </div>
 
-			<br />
+			
+      <IQtestBanner />
+      
 
 			<Carouseldiv />
 			<br />
