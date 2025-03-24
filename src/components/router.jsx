@@ -28,13 +28,15 @@ import SigninPopup from './../Pages/SignIn/SigninPopup';
 import ComingSoon from '../Pages/CommingSoom.jsx';
 import Nav from '../Layouts/Nav.jsx';
 import ScrollToTop from '../Layouts/ScrollToTop.jsx';
+import ServiceProvide from '../Pages/service_provider.jsx';
+
 
 export const router = createBrowserRouter([
 	{
 		path: '/',
 		element: (
 			<>
-				<ScrollToTop /> {/* ✅ Scrolls to top on every route change */}
+				<ScrollToTop />
 				<AppLayout />,
 			</>
 		),
@@ -47,15 +49,15 @@ export const router = createBrowserRouter([
 			{ path: 'class', element: <InstituteMultiCard /> },
 
 			{ path: 'reviews/:id', element: <ReviewPage /> },
+			{path : '/serviceprovider', element: <ServiceProvide/>}
 
-			{ path: 'university', element: <UniversityMultiCard /> },
 
-			{
-				path: '/coming-soon',
-				element: <ComingSoon />,
-			},
 		],
 	},
+	// {
+	// 	path: '/coming-soon',
+	// 	element: <ComingSoon />,
+	// },
 
 	{ path: 'college/:id', element: <CardDetails /> },
 	{ path: 'university/:id', element: <UniversityDetail /> },
@@ -71,6 +73,38 @@ export const router = createBrowserRouter([
 	{ path: '/my-eligibility', element: <MyEligibility /> },
 	{ path: '/contact-us', element: <ContactUs /> },
 	{ path: '/about-us', element: <AboutUs /> },
+	{ path: '/my-eligibility', element: <MyEligibility /> },
+	{
+		path: '/contact-us',
+		element: (
+			<>
+				<ScrollToTop />
+				<ContactUs />
+			</>
+		),
+	},
+	{
+		path: '/about-us',
+		element: (
+			<>
+				<ScrollToTop />
+				<AboutUs />
+			</>
+		),
+	},
+
+	{
+		path: 'profile',
+		element: <ProfileLayout />,
+		children: [
+			{
+				path: 'personal-details',
+				element: <ProfileDetails />,
+			},
+			{ path: 'test', element: <QueryBasedComponent /> },
+		],
+		scrollRestoration: 'manual',
+	},
 
 	{
 		path: 'profile',

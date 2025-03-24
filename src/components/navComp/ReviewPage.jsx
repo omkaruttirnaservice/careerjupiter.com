@@ -14,27 +14,42 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [loggedInMobile, setLoggedInMobile] = useState("");
   const [userNameValue, setUserNameValue] = useState(null);
+  const [hasReviewed, setHasReviewed] = useState(false); // ✅ NEW
 
   const { pathname } = useLocation();
   const reviewType = pathname.split("/")[1];
 
-  // Fetch user mobile number
+  // Fetch user details
   useEffect(() => {
     const userId = Cookies.get("userId");
-    // console.log(userId, "userID");
     if (userId) {
       fetchUserDetails(userId)
         .then((data) => {
-          if (data?.data?.mobile_no) {
-            setLoggedInMobile(data.data.mobile_no);
-            Cookies.set("userMobile", data.data.mobile_no);
+          const mobile = data?.data?.mobile_no;
+          if (mobile) {
+            setLoggedInMobile(mobile);
+            Cookies.set("userMobile", mobile);
           }
           setUserNameValue(data?.data?.f_name);
-          // console.log(data?.data?.f_name, "data");
         })
         .catch((error) => console.error("Error fetching user details:", error));
     }
   }, []);
+
+  // ✅ Check if user already reviewed
+  useEffect(() => {
+    const mobile = Cookies.get("userMobile");
+    if (id && mobile) {
+      fetch(`/api/check-review?id=${id}&mobile=${mobile}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.exists) {
+            setHasReviewed(true);
+          }
+        })
+        .catch((err) => console.error("Check review failed:", err));
+    }
+  }, [id, loggedInMobile]);
 
   // Submit review mutation
   const mutation = useMutation({
@@ -45,6 +60,7 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
       setSelectedRating(null);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 5000);
+      setHasReviewed(true); // ✅ Mark reviewed after success
     },
   });
 
@@ -53,6 +69,7 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
     initialValues: {
       studentMobile: loggedInMobile || "",
       comment: "",
+      commentTags: [],
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
@@ -63,6 +80,12 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
     }),
     onSubmit: (values) => {
       const storedMobile = Cookies.get("userMobile");
+
+      if (hasReviewed) {
+        alert("You’ve already submitted a review.");
+        return;
+      }
+
       if (values.studentMobile.trim() !== storedMobile?.trim()) {
         alert("Invalid number. Enter the same number used for login.");
         return;
@@ -75,15 +98,13 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
         description: values.comment.trim() || " ",
         type: reviewType,
       };
+
       mutation.mutate(reviewData);
-
     },
-
-
   });
 
   return (
-    <div className="max-w-full  ">
+    <div className="max-w-full">
       <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">
         Leave a Review
       </h2>
@@ -93,7 +114,7 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
         <div className="bg-white shadow-lg rounded-lg p-6">
           {id ? (
             <p className="mb-4 text-gray-600 text-left">
-              <strong>{(reviewCollegeName, reviewUniversityName)}</strong>
+              <strong>{reviewCollegeName}, {reviewUniversityName}</strong>
             </p>
           ) : (
             <p className="text-red-600 font-bold text-center">
@@ -112,8 +133,14 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
             </p>
           )}
 
+          {hasReviewed && (
+            <p className="text-blue-600 font-semibold text-center mb-3">
+              You’ve already submitted a review for this.
+            </p>
+          )}
+
           <form onSubmit={formik.handleSubmit} className="mb-6">
-            {/* Mobile Number Input */}
+            {/* Mobile Number */}
             <div className="mb-3">
               <input
                 type="tel"
@@ -123,14 +150,11 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
                 {...formik.getFieldProps("studentMobile")}
                 readOnly
               />
-
               {formik.touched.studentMobile && formik.errors.studentMobile && (
                 <div className="text-red-500 text-sm">
                   {formik.errors.studentMobile}
                 </div>
               )}
-
-
             </div>
 
             {/* Star Rating */}
@@ -138,36 +162,79 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
               {[1, 2, 3, 4, 5].map((num) => (
                 <span
                   key={num}
-                  className={`cursor-pointer text-3xl ${num <= selectedRating ? "text-yellow-500" : "text-gray-400"
-                    }`}
-                  onClick={() => setSelectedRating(num)}
+                  className={`cursor-pointer text-3xl ${num <= selectedRating ? "text-yellow-500" : "text-gray-400"}`}
+                  onClick={() => !hasReviewed && setSelectedRating(num)}
                 >
                   ★
                 </span>
               ))}
             </div>
 
-            {/* Hidden Comment Box */}
-            <div className="mb-3 ">
-              <textarea
-                name="comment"
-                placeholder="Your Review"
-                className="w-full p-2 border rounded"
-                rows="3"
-                {...formik.getFieldProps("comment")}
-              />
+            {/* Tags */}
+            <div className="mb-3">
+              <p className="mb-2 text-gray-700 font-semibold">
+                Select up to 3 tags to describe your experience:
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {["Good", "Beautiful", "Awesome", "Very Best", "Excellent", "Well Disciplined", "Supportive Staff", "Clean Campus"].map((tag) => {
+                  const currentTags = formik.values.commentTags || [];
+                  const isSelected = currentTags.includes(tag);
+
+                  return (
+                    <span
+                      key={tag}
+                      className={`px-3 py-1 rounded-full border text-sm cursor-pointer ${isSelected
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200 text-gray-700"
+                        }`}
+                      onClick={() => {
+                        if (hasReviewed) return;
+                        let updatedTags = [...currentTags];
+                        if (isSelected) {
+                          updatedTags = updatedTags.filter((t) => t !== tag);
+                        } else if (updatedTags.length < 3) {
+                          updatedTags.push(tag);
+                        }
+
+                        const sentences = updatedTags.map((t, index) => {
+                          if (index === 0) return `This college is ${t}.`;
+                          if (index === 1) return `It is ${t}.`;
+                          return `Staff is ${t}.`;
+                        });
+
+                        const finalComment = sentences.join(" ");
+                        formik.setFieldValue("commentTags", updatedTags);
+                        formik.setFieldValue("comment", finalComment);
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  );
+                })}
+              </div>
+
+              {/* Show generated sentence */}
+              {formik.values.comment && (
+                <div className="mt-3 text-sm text-gray-600 italic whitespace-pre-line">
+                  {formik.values.comment}
+                </div>
+              )}
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              className={`w-full p-2 cursor-pointer rounded text-white ${mutation.isLoading || selectedRating === null
-                  ? "bg-gray-400"
-                  : "bg-blue-600 hover:bg-blue-700"
+              className={`w-full p-2 cursor-pointer rounded text-white ${mutation.isLoading || selectedRating === null || hasReviewed
+                ? "bg-gray-400"
+                : "bg-blue-600 hover:bg-blue-700"
                 }`}
-              disabled={mutation.isLoading || selectedRating === null}
+              disabled={mutation.isLoading || selectedRating === null || hasReviewed}
             >
-              {mutation.isLoading ? "Submitting..." : "Submit Review"}
+              {hasReviewed
+                ? "Review Already Submitted"
+                : mutation.isLoading
+                  ? "Submitting..."
+                  : "Submit Review"}
             </button>
           </form>
         </div>

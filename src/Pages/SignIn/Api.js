@@ -9,6 +9,7 @@ export const userSignUp = async (data) => {
 };
 
 
+
 export const loginUser = async (userData) => {
   console.log({ userData });
 
@@ -20,6 +21,31 @@ export const loginUser = async (userData) => {
 
   return await response.json();
 };
+
+
+// Fetch profile status by userId
+export const fetchProfileStatusAPI = async (userId) => {
+  const response = await axios.get(`${BASE_URL}/api/auth/status/${userId}`);
+  return response.data;
+};
+
+// Update user profile
+export const updateUserProfile = async ({ userId, values }) => {
+  const response = await axios.put(`${BASE_URL}/api/auth/${userId}`, values);
+  return response;
+};
+
+export const sendOTP = async (payload) => {
+  const response = await axios.post(`${BASE_URL}/api/auth/send-otp`, payload);
+  return response.data;
+};
+
+export const verifyOTP = async (payload) => {
+  const response = await axios.post(`${BASE_URL}/api/auth/verify-otp`, payload);
+  return response.data;
+};
+
+
 export const getCollege = async (id) => {
   const response = await axios.get(`/api/college/${id}`);
   return response.data.data;

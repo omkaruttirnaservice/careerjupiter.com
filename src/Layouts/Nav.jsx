@@ -165,7 +165,7 @@ const Nav = () => {
 
 							{/* Mobile & Tablet Toggle */}
 							<button
-								className="md:hidden ml-4"
+								className="md:hidden cursor-pointer ml-4"
 								onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
 							>
 								{isMobileMenuOpen ? (
@@ -229,7 +229,7 @@ const Nav = () => {
 											</NavLink>
 											<button
 												onClick={handleSignOut}
-												className="block w-full text-left px-4 py-3 text-xl font-semibold text-red-600 hover:text-red-500 transition-all"
+												className="block w-full cursor-pointer text-left px-4 py-3 text-xl font-semibold text-red-600 hover:text-red-500 transition-all"
 											>
 												Sign Out
 											</button>
