@@ -175,7 +175,7 @@ const SearchComponent = () => {
 					{/* Header */}
 					<div className="flex items-center mb-3 space-x-3">
 						<FaBrain className="text-4xl text-white" />
-						<h2 className="text-3xl font-bold text-white">𝓘𝓠 𝓣𝓮𝓼𝓽</h2>
+						<h2 className="text-3xl font-bold text-white">IQ Test</h2>
 					</div>
 					<p className="text-gray-100 font-bold mb-6 leading-relaxed">
 						Test your intelligence and problem-solving skills with this quick IQ

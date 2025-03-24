@@ -71,7 +71,7 @@ const UniversityDetail = () => {
 
       {/* Info Section */}
       <div className="container mx-auto mt-6 px-4">
-        <motion.div
+        <div
           className="bg-white shadow-md rounded-lg p-4"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -119,7 +119,7 @@ const UniversityDetail = () => {
           </p>
 
           {/* Contact Number */}
-          <motion.div
+          <div
             className="flex items-center mb-8"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -129,6 +129,7 @@ const UniversityDetail = () => {
             <p className="text-lg text-gray-700">
               {uni.contactDetails?.phoneNumber || "+91-123 123 123 123"}
             </p>
+
           </div>
         </div>
 
@@ -201,7 +202,7 @@ const UniversityDetail = () => {
         <PlacementOpportunities university={uni} />
         <ReviewPage />
       </div>
-    </>
+    </div>
   );
 };
 
