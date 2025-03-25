@@ -39,6 +39,7 @@ export const updateUserDetails = (data) => {
   console.log({ data });
 
   return axios.put(`${BASE_URL}/api/auth/${data.userId}`, {
+    f_name: data.f_name,
     mobile_no: data.mobile_no,
   });
 };
@@ -49,4 +50,14 @@ export const sendShareState = (data) => {
 
 export const getResult = (id) => {
   return axios.get(`${BASE_URL}/api/result/${id}`);
+};
+
+export const sendUserOTP = async (payload) => {
+  const response = await axios.post(`${BASE_URL}/api/auth/send-otp`, payload);
+  return response.data;
+};
+
+export const verifyUserOTP = async (payload) => {
+  const response = await axios.post(`${BASE_URL}/api/auth/verify-otp`, payload);
+  return response.data;
 };
