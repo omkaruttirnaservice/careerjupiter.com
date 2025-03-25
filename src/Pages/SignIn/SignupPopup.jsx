@@ -7,6 +7,7 @@ import { userSignUp, updateUserProfile, fetchProfileStatusAPI, sendOTP, verifyOT
 import { useMutation } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { login, logout } from "../../store-redux/AuthSlice";
+import {useLocation} from "react-router-dom"
 
 const educationOptions = [
   "Diploma",
@@ -49,6 +50,7 @@ const getValidationSchema = (needsFirstName, needsLastName, needsPassword, needs
 };
 
 const SignupPopup = () => {
+
   const authState = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(false);
   const [needsFirstName, setNeedsFirstName] = useState(false);
@@ -61,10 +63,24 @@ const SignupPopup = () => {
   const [otpVerified, setOtpVerified] = useState(false);
   const [referenceId, setReferenceId] = useState(null);
   const [otp, setOtp] = useState("");
+  const [askMeLaterClicked, setAskMeLaterClicked] = useState(false);
+  const [lastSavedTime, setLastSavedTime] = useState(null);
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    // Hide only on /profile* routes
+    if (location.pathname.includes('/profile')) {
+      setIsOpen(false);
+    } else {
+      // Show on other routes (if conditions met)
+      setIsOpen(true); // Or your custom logic
+    }
+  }, [location.pathname]); // 🔥 Re-run on route change
+
   const fetchProfileStatus = async (userId) => {
+    if (location.pathname.includes('/profile')) return; // Block API calls
+
     const token = Cookies.get("token");
 
     if (!token) {
@@ -137,6 +153,7 @@ const SignupPopup = () => {
 
       setUserId(userId);
       setIsOpen(false);
+      setAskMeLaterClicked(false);
 
       setTimeout(() => fetchProfileStatus(userId), 10000);
     },
@@ -149,32 +166,31 @@ const SignupPopup = () => {
   const updateProfileMutation = useMutation({
     mutationFn: async (values) => {
       const payload = {};
-
-      if (needsFirstName) {
-        payload.f_name = values.f_name;
-      }
-      if (needsLastName) {
-        payload.l_name = values.l_name;
-      }
-      if (needsPassword) {
-        payload.password = values.password;
-      }
+  
+      if (needsFirstName) payload.f_name = values.f_name;
+      if (needsLastName) payload.l_name = values.l_name;
+      if (needsPassword) payload.password = values.password;
       if (needsEducation) {
         payload.info = {
           current_education: values.info.current_education,
         };
       }
-
+  
       return updateUserProfile({ userId, values: payload });
     },
     onSuccess: () => {
       toast.success("Profile updated successfully!");
       setIsOpen(false);
-      setTimeout(() => fetchProfileStatus(userId), 10000);
+      setAskMeLaterClicked(false);
+      setLastSavedTime(Date.now());
+  
+      setTimeout(() => {
+        fetchProfileStatus(userId);
+      }, 10000);
     },
     onError: (error) => {
       console.error("[SignupPopup] Profile Update Error:", error?.response?.data);
-      toast.error("Failed to update profile!");
+      // toast.error("Failed to update profile!");
     },
   });
 
@@ -183,7 +199,8 @@ const SignupPopup = () => {
     onSuccess: (data) => {
       console.log("OTP Sent Successfully:", data);
       setReferenceId(data.data.reference_id);
-      setShowOTP(true); // Automatically show OTP input field after OTP is sent
+      setShowOTP(true);
+      setAskMeLaterClicked(false);
       toast.success("OTP sent successfully!");
     },
     onError: (error) => {
@@ -197,7 +214,7 @@ const SignupPopup = () => {
     onSuccess: (data) => {
       console.log("OTP Verified Successfully:", data);
       setOtpVerified(true);
-      toast.success("OTP verified successfully!");
+      // toast.success("OTP verified successfully!");
     },
     onError: (error) => {
       console.error("OTP Verification Error:", error?.response?.data);
@@ -205,12 +222,26 @@ const SignupPopup = () => {
     },
   });
 
+  const handleAskMeLater = () => {
+    setAskMeLaterClicked(true);
+    setIsOpen(false);
+    
+    // Show popup again after 15 seconds
+    setTimeout(() => {
+      if (!profileComplete) {
+        setIsOpen(true);
+      }
+    }, 15000);
+  };
+
   useEffect(() => {
     const token = Cookies.get("token");
     const storedUserId = Cookies.get("userId");
 
     if (!token) {
-      setTimeout(() => setIsOpen(true), 10000);
+      setTimeout(() => {
+        setIsOpen(true);
+      }, 10000);
     } else {
       setUserId(storedUserId);
       setTimeout(() => fetchProfileStatus(storedUserId), 10000);
@@ -220,7 +251,7 @@ const SignupPopup = () => {
   useEffect(() => {
     let timer;
 
-    if (!authState.isLoggedIn) {
+    if (!authState.isLoggedIn && !askMeLaterClicked) {
       timer = setTimeout(() => {
         setIsOpen(true);
       }, 10000);
@@ -229,12 +260,12 @@ const SignupPopup = () => {
     }
 
     return () => clearTimeout(timer);
-  }, [authState.isLoggedIn]);
+  }, [authState.isLoggedIn, askMeLaterClicked]);
 
   useEffect(() => {
     let interval;
 
-    if (authState.isLoggedIn && !profileComplete && userId) {
+    if (authState.isLoggedIn && !profileComplete && userId && !askMeLaterClicked) {
       interval = setInterval(() => {
         fetchProfileStatus(userId);
       }, 10000);
@@ -245,12 +276,12 @@ const SignupPopup = () => {
         clearInterval(interval);
       }
     };
-  }, [authState.isLoggedIn, profileComplete, userId]);
+  }, [authState.isLoggedIn, profileComplete, userId, askMeLaterClicked, lastSavedTime]);
 
   const handleSendOTP = (mobileNumber) => {
     sendOTPMutation.mutate({ mobile_no: mobileNumber });
   };
-  
+
   const handleVerifyOTP = (otp, mobileNumber) => {
     verifyOTPMutation.mutate(
       {
@@ -292,7 +323,9 @@ const SignupPopup = () => {
                       ? "Education"
                       : "Get Started"}
             </h2>
+
             <Formik
+              key={isOpen ? "form-open" : "form-closed"}
               initialValues={{
                 f_name: "",
                 l_name: "",
@@ -308,32 +341,59 @@ const SignupPopup = () => {
                 needsPassword,
                 needsEducation
               )}
-              onSubmit={(values, { setSubmitting }) => {
+              onSubmit={(values, { setSubmitting, resetForm }) => {
                 if (
                   needsFirstName ||
                   needsLastName ||
                   needsPassword ||
                   needsEducation
                 ) {
-                  updateProfileMutation.mutate(values);
+                  updateProfileMutation.mutate(values, {
+                    onSuccess: () => {
+                      toast.success("Profile updated successfully!");
+                      setIsOpen(false);
+                      setOtp("");
+                      resetForm();
+
+                      setTimeout(() => {
+                        fetchProfileStatus(userId);
+                      }, 10000);
+                    },
+                    onError: (error) => {
+                      console.error("[SignupPopup] Profile Update Error:", error?.response?.data);
+                      toast.error("Failed to update profile!");
+                    }
+                  });
                 } else {
                   const signupPayload = {
                     ...values,
                     otp,
                     reference_id: referenceId,
                   };
- 
-                  mutation.mutate(signupPayload);
+
+                  mutation.mutate(signupPayload, {
+                    onSuccess: () => {
+                      toast.success("Signup successful!");
+                      setIsOpen(false);
+                      resetForm();
+                      setOtp("");
+                      setShowOTP(false);
+                    },
+                    onError: () => {
+                      toast.error("Signup failed!");
+                    }
+                  });
                 }
+
                 setSubmitting(false);
               }}
             >
               {({ isSubmitting, values }) => (
                 <Form className="space-y-4">
                   {!needsFirstName &&
-                  !needsLastName &&
-                  !needsPassword &&
-                  !needsEducation ? (
+                    !needsLastName &&
+                    !needsPassword &&
+                    !needsEducation ? (
                     <>
                       <div className="mb-4 w-full max-w-md mx-auto">
                         <label className="block text-sm font-medium text-gray-700">
@@ -377,15 +437,23 @@ const SignupPopup = () => {
                             />
                             <button
                               type="button"
-                              onClick={() =>
-                                handleVerifyOTP(otp, values.mobile_no)
-                              }
+                              onClick={() => handleVerifyOTP(otp, values.mobile_no)}
                               className="mt-3 w-full bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600 transition-all"
                             >
                               Verify OTP
                             </button>
                           </div>
                         </div>
+                      )}
+
+                      {!askMeLaterClicked && !showOTP && (
+                        <button
+                          type="button"
+                          onClick={handleAskMeLater}
+                          className="w-full bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors"
+                        >
+                          Ask Me Later
+                        </button>
                       )}
                     </>
                   ) : (
@@ -470,13 +538,25 @@ const SignupPopup = () => {
                         </div>
                       )}
 
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full block cursor-pointer bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors disabled:bg-green-300"
-                      >
-                        Save
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="flex-1 block cursor-pointer bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors disabled:bg-green-300"
+                        >
+                          Save
+                        </button>
+                        
+                        {!askMeLaterClicked && (
+                          <button
+                            type="button"
+                            onClick={handleAskMeLater}
+                            className="flex-1 block cursor-pointer bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors"
+                          >
+                            Ask Me Later
+                          </button>
+                        )}
+                      </div>
                     </>
                   )}
                 </Form>
