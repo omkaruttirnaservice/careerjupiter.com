@@ -153,12 +153,8 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
         />
       )}
       {!isSubmitted && (
-        <div className="w-full bg-gray-100 p-4 shadow-lg rounded-xl mb-4 flex flex-col justify-start">
-          <TestClock
-            testDuration={testDuration}
-            handleSubmit={handleSubmit}
-            title={title}
-          />
+        <div className="w-full bg-gray-100 p-4 shadow-lg rounded-xl mb-4 flex justify-between items-center">
+          <TestClock testDuration={testDuration} handleSubmit={handleSubmit} title={title} />
         </div>
       )}
 

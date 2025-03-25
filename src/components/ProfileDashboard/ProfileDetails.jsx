@@ -239,7 +239,9 @@ const ProfileDetails = () => {
           <div className="hidden md:block w-full md:w-1/3">
             <div className="bg-white rounded-2xl h-full p-6 shadow-lg border border-gray-100 sticky top-6">
               <div className="flex flex-col  items-center text-center space-y-4">
+              <button className='bg-blue-500 text-white px-3 h-8 rounded-md cursor-pointer absolute top-2 right-2 hover:text-white' >Edit Profile</button>
                 <div className="bg-gradient-to-br from-indigo-400 to-purple-400 p-1.5 rounded-full">
+                  
                   <img
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsEJHmI0MlIGvH9CYkbsLEWQ5_ee8Qtl5V-Q&s" //user?.profile_image ||
                     alt="Profile"

@@ -12,18 +12,15 @@ import ReviewPage from "../navComp/ReviewPage";
 import UniversityCourses from "./OfferedCourse";
 import { motion } from "framer-motion";
 import Nav from "../../Layouts/Nav";
-
 const UniversityDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
   // Fetch university data using react-query
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["university", id],
     queryFn: () => fetchUniversityById(id),
     staleTime: 5 * 60 * 1000,
   });
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -33,7 +30,6 @@ const UniversityDetail = () => {
       </div>
     );
   }
-
   if (isError) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -43,9 +39,7 @@ const UniversityDetail = () => {
       </div>
     );
   }
-
   const { university: uni, courses } = data;
-
   return (
     <>
       <Nav />
@@ -59,7 +53,6 @@ const UniversityDetail = () => {
             </h1>
             <p className="text-white text-3xl  mt-2">{uni.Category || "N/A"}</p>
           </div>
-
           {/* University Image (Loads Above Gradient, Hidden if Error) */}
           <img
             src={uni.image}
@@ -71,7 +64,6 @@ const UniversityDetail = () => {
             }}
           />
         </div>
-
         {/* Info Section */}
         <motion.div className="container mx-auto mt-6 px-4">
           <motion.div
@@ -93,7 +85,6 @@ const UniversityDetail = () => {
             <p className="text-lg text-gray-600 mb-4">
               {`${uni.address.line1}, ${uni.address.line2}, ${uni.address.dist}, ${uni.address.state} - ${uni.address.pincode}`}
             </p>
-
             {/* Establishment Year */}
             <motion.div
               className="flex items-center mb-6"
@@ -109,7 +100,6 @@ const UniversityDetail = () => {
             <p className="text-lg text-gray-600 mb-4">
               {uni.establishedYear || "Not Available"}
             </p>
-
             {/* About */}
             <motion.div
               className="flex items-center mb-6"
@@ -122,7 +112,6 @@ const UniversityDetail = () => {
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
               {uni.info?.description || "No description provided."}
             </p>
-
             {/* Contact Number */}
             <motion.div
               className="flex items-center mb-8"
@@ -136,7 +125,6 @@ const UniversityDetail = () => {
               </p>
             </motion.div>
           </motion.div>
-
           {/* Info Section */}
           <div className="container mx-auto mt-6 px-4">
             <motion.div
@@ -158,7 +146,6 @@ const UniversityDetail = () => {
               <p className="text-lg text-gray-600 mb-4">
                 {`${uni.address.line1}, ${uni.address.line2}, ${uni.address.dist}, ${uni.address.state} - ${uni.address.pincode}`}
               </p>
-
               {/* Establishment Year */}
               <motion.div
                 className="flex items-center mb-6"
@@ -174,7 +161,6 @@ const UniversityDetail = () => {
               <p className="text-lg text-gray-600 mb-4">
                 {uni.establishedYear || "Not Available"}
               </p>
-
               {/* About */}
               <motion.div
                 className="flex items-center mb-6"
@@ -187,7 +173,6 @@ const UniversityDetail = () => {
               <p className="text-lg text-gray-700 leading-relaxed mb-4">
                 {uni.info?.description || "No description provided."}
               </p>
-
               {/* Contact Number */}
               <motion.div
                 className="flex items-center mb-8"
@@ -210,5 +195,4 @@ const UniversityDetail = () => {
     </>
   );
 };
-
 export default UniversityDetail;

@@ -1,9 +1,7 @@
 import React, { memo, useEffect, useState } from "react";
 import { FcAlarmClock } from "react-icons/fc";
-
 function TestClock({ testDuration, handleSubmit, title }) {
   const [timeLeft, setTimeLeft] = useState(testDuration * 60);
-
   useEffect(() => {
     if (timeLeft === 0) {
       handleSubmit();
@@ -14,13 +12,11 @@ function TestClock({ testDuration, handleSubmit, title }) {
     }, 1000);
     return () => clearInterval(timer);
   }, [timeLeft]);
-
   // Progress bar width calculation
   const progressWidth = (timeLeft / (testDuration * 60)) * 100;
-
   return (
     <div
-      className="w-full flex z-0 flex-col sm:flex-row 
+      className="w-full flex z-0 flex-col sm:flex-row
     justify-between sm:justify-between px-4 sm:px-0"
     >
       {/* Clock & Progress Bar Container */}
@@ -36,7 +32,6 @@ function TestClock({ testDuration, handleSubmit, title }) {
         >
           <FcAlarmClock className="text-2xl sm:text-3xl md:ml-80" />
         </div>
-
         {/* Responsive Progress Bar */}
         <div className="w-full z-0 bg-gray-300 rounded-full h-4 md:ml-42 sm:h-4 overflow-hidden mt-6 relative">
           {/* Progress Bar with Gradient */}
@@ -49,14 +44,12 @@ function TestClock({ testDuration, handleSubmit, title }) {
           ></div>
         </div>
       </div>
-
       {/* Timer Display - Mobile Center, Desktop Right */}
       <p className="text-lg mt-0 font-semibold sm:mt-0 sm:text-xl sm:ml-auto">
-        ⏳ Time: {Math.floor(timeLeft / 60)}:
+        Time: {Math.floor(timeLeft / 60)}:
         {(timeLeft % 60).toString().padStart(2, "0")}
       </p>
     </div>
   );
 }
-
 export default memo(TestClock);
