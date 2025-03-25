@@ -113,7 +113,8 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       {/* Glassmorphism Blur Background */}
-      <div className="absolute inset-0  bg-opacity-30 backdrop-blur-xs transition-all"></div>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-all"></div>
+
 
       {/* Modal Box */}
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl relative transform transition-all duration-300 flex flex-col max-h-[90vh]">
