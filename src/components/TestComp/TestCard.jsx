@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getTest , getTestResult} from "./Api";
 import { FaBrain } from "react-icons/fa";
@@ -97,13 +97,13 @@ function TestCard() {
           <label className="block text-lg font-medium mb-2">
             Select Test Level:
           </label>
-          <select
+          <select 
             className="p-2 w-full border rounded-lg"
             value={testLevel}
             onChange={(e) => setTestLevel(e.target.value)}
           >
             {testOption.map((testType) => {
-              return <option value={testType}>{testType}</option>;
+              return <option key={testType} value={testType}>{testType} </option>;
             })}
           </select>
         </div>
@@ -116,7 +116,7 @@ function TestCard() {
               const previousScore = completedTests.get(test._id);
 
               return (
-                <>
+                <React.Fragment key={test._id}>
                   <div
                     key={test._id}
                     className={`p-4 rounded-lg shadow-lg border cursor-pointer transition-all duration-300 ${
@@ -170,7 +170,7 @@ function TestCard() {
                       </div>
                     )}
                   </div>
-                </>
+                </React.Fragment>
               );
             })}
           </div>
