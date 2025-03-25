@@ -4,9 +4,10 @@ import { useEffect, useState } from "react"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import { X } from "lucide-react"
+import { updateUserProfile } from "./Api"
 
 const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
-  // Form State
+
   const [formData, setFormData] = useState({
     f_name: user?.f_name || "",
     m_name: user?.m_name || "",
@@ -24,7 +25,6 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
     },
   })
 
-  // Reset form data when user data changes
   useEffect(() => {
     if (user) {
       setFormData({
@@ -46,7 +46,6 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
     }
   }, [user])
 
-  // Calculate profile completion percentage
   const calculateProfileCompletion = () => {
     const fields = [
       formData.f_name,
@@ -67,11 +66,8 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 
   const completionPercentage = calculateProfileCompletion()
 
-  // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target
-
-    // Handle nested state for address
     if (name.startsWith("address.")) {
       const field = name.split(".")[1]
       setFormData((prev) => ({
@@ -82,25 +78,23 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
       setFormData((prev) => ({ ...prev, [name]: value }))
     }
   }
-
-  // API Update Mutation
   const updateProfileMutation = useMutation({
-    mutationFn: async (updatedData) => {
-      const response = await axios.put(`http://192.168.1.20:5000/api/auth/${user?._id}`, updatedData)
-      return response.data
+    mutationFn: async () => {
+      await updateUserProfile(user?._id, formData);
     },
     onSuccess: () => {
-      onSave() // Refresh Profile Data
-      onClose() // Close Modal
+      onSave();
+      onClose();
+    },
+
+    onSuccess: () => {
+      onSave()
+      onClose()
     },
   })
-
-  // Handle Form Submit
   const handleSubmit = () => {
     updateProfileMutation.mutate(formData)
   }
-
-  // Disable scrolling when modal opens
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto"
     return () => {
@@ -112,13 +106,8 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      {/* Glassmorphism Blur Background */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-all"></div>
-
-
-      {/* Modal Box */}
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl relative transform transition-all duration-300 flex flex-col max-h-[90vh]">
-        {/* Modal Header */}
         <div className="p-6 border-b bg-white sticky top-0 z-10 flex items-center justify-between rounded-t-3xl">
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-indigo-500 shadow-lg">
@@ -142,8 +131,6 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             <X className="w-6 h-6" />
           </button>
         </div>
-
-        {/* Profile Completion Progress */}
         <div className="px-6 py-2 bg-white border-b">
           <div className="flex justify-between mb-1">
             <span className="text-sm font-medium text-indigo-700">Profile Completion</span>
@@ -156,8 +143,6 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             ></div>
           </div>
         </div>
-
-        {/* Scrollable Form Content */}
         <div className="overflow-y-auto px-6 py-4 flex-1">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
@@ -254,6 +239,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                 className="w-full p-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
               />
             </div>
+            <br />
 
             <div className="space-y-2 md:col-span-2">
               <label className="text-sm font-medium text-gray-700">Address Line 2</label>
@@ -304,17 +290,15 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             </div>
           </div>
         </div>
-
-        {/* Save Button */}
         <div className="p-4 border-t bg-white sticky bottom-0 z-10 rounded-b-3xl">
           <button
-            className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all"
+            className="w-full bg-gradient-to-r cursor-pointer from-indigo-500 to-purple-500 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all"
             onClick={handleSubmit}
             disabled={updateProfileMutation.isLoading}
           >
             {updateProfileMutation.isLoading ? (
-              <div className="flex items-center justify-center gap-2">
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="flex cursor-pointer items-center justify-center gap-2">
+                <div className="w-5 h-5 border-2 cursor-pointer border-white border-t-transparent rounded-full animate-spin"></div>
                 <span>Saving...</span>
               </div>
             ) : (

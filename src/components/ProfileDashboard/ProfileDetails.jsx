@@ -268,8 +268,8 @@ const ProfileDetails = () => {
                       </div>
                     ))
                   ) : (
-                    <div className="p-4 text-center text-gray-500 border border-dashed rounded-lg">
-                      No education details added yet. Click "Add Education" to get started.
+                    <div>
+                      
                     </div>
                   )}
                 </div>
@@ -327,7 +327,7 @@ const ProfileDetails = () => {
                 <div className="w-full space-y-3">
                   <div className="flex items-center gap-2 text-gray-700">
                     <FaEnvelope className="text-indigo-600 w-5 h-5 flex-shrink-0" />
-                    <span className="text-sm font-medium break-all">{user?.email_id}</span>
+                    <span className="text-sm font-medium break-all">{user?.email_id || "NA"}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-700">
                     <FaPhone className="text-indigo-600 w-5 h-5 flex-shrink-0" />
