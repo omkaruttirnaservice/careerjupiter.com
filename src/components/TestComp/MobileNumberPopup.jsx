@@ -72,7 +72,7 @@ const MobileNumberPopup = ({
   });
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black/50 backdrop-blur-sm p-4">
+    <div className="fixed z-50 inset-0 flex justify-center items-center bg-black/50 backdrop-blur-sm p-4">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
         <h2 className="text-xl font-semibold text-center mb-4">
           Enter Your Details

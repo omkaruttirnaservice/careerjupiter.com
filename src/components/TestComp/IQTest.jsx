@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { OPTIONS_ENUMS } from "../../utils/constansts";
 import TestClock from "./TestClock";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTest, getUserDetail, sendResult } from "./Api";
 import { setTestResult } from "../../store-redux/testResultSlice";
 import MobileNumberPopup from "./MobileNumberPopup";
@@ -21,6 +21,7 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
   const dispatch = useDispatch();
   const { userId } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const resultGenerationMutation = useMutation({
     mutationFn: sendResult,
@@ -31,6 +32,10 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
         text: "Your test was submitted successfully!",
         confirmButtonColor: "#28a745",
       }).then(() => {
+        queryClient.invalidateQueries({
+          queryKey: ["getTest"],
+          exact: false,
+        });
         navigate("/profile/test/?type=result");
         dispatch(setTestResult(response.data));
       });
