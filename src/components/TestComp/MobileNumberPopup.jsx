@@ -5,7 +5,6 @@ import { useMutation } from "@tanstack/react-query";
 import { sendUserOTP, updateUserDetails, verifyUserOTP } from "./Api";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
 
 const MobileNumberPopup = ({
   setShowMobileNumberPopup,
@@ -15,6 +14,7 @@ const MobileNumberPopup = ({
   const { userId } = useSelector((state) => state.auth);
   const [showOTP, setShowOTP] = useState(false);
   const [referenceId, setReferenceId] = useState(null);
+  const [otpSent, setOtpSent] = useState(false);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -34,9 +34,8 @@ const MobileNumberPopup = ({
     onSuccess: (data) => {
       setReferenceId(data.data.reference_id);
       setShowOTP(true);
-      toast.success("OTP sent successfully!");
+      setOtpSent(true);
     },
-    onError: () => toast.error("Failed to send OTP!"),
   });
 
   const updateUserMutation = useMutation({
@@ -61,14 +60,12 @@ const MobileNumberPopup = ({
   const verifyOTPMutation = useMutation({
     mutationFn: verifyUserOTP,
     onSuccess: (_, variables) => {
-      toast.success("OTP verified successfully!");
       updateUserMutation.mutate({
         userId,
         f_name: variables.name,
         mobile_no: variables.mobile_no,
       });
     },
-    onError: () => toast.error("Failed to verify OTP!"),
   });
 
   return (
@@ -115,12 +112,15 @@ const MobileNumberPopup = ({
                 />
                 <button
                   type="button"
-                  onClick={() =>
-                    sendOTPMutation.mutate({ mobile_no: values.mobileNumber })
-                  }
-                  className="mt-2 w-full bg-blue-500 text-white py-2 rounded-md"
+                  onClick={() => {
+                    sendOTPMutation.mutate({ mobile_no: values.mobileNumber });
+                  }}
+                  className={`mt-2 w-full py-2 rounded-md text-white ${
+                    otpSent ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500"
+                  }`}
+                  disabled={otpSent}
                 >
-                  Get OTP
+                  {otpSent ? "Sent" : "Get OTP"}{" "}
                 </button>
               </div>
 
@@ -163,3 +163,4 @@ const MobileNumberPopup = ({
 };
 
 export default MobileNumberPopup;
+

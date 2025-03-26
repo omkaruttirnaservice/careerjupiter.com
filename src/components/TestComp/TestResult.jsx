@@ -8,8 +8,6 @@ function TestResult() {
   const resultData = useSelector((state) => state.testResult?.resultData);
   const [openSharePopup, setOpenSharePopup] = useState(false);
 
-  console.log("resultData....", resultData);
-
   if (!resultData)
     return (
       <div className="text-center text-xl font-semibold p-6">

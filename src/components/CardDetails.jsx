@@ -97,7 +97,7 @@ const CardDetails = () => {
         <FaPhoneAlt className="text-2xl animate-wiggle" /> {/* Animated icon */}
         <span className="font-bold text-lg">Call Now</span>
       </a>
-      <div className="max-w-7xl mx-auto p-4 mt-5">
+      <div className="max-w-7xl mx-auto p-4 mt-15">
         {/* College Name at the Top */}
         <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
           {college.collegeName}

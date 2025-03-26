@@ -45,9 +45,7 @@ export const sendShareState = (data) => {
 };
 
 export const getResult = (userData) => {
-  return axios.get(
-    `${BASE_URL}/api/result?iqTestId=${userData.iqTestId}&userId=${userData.userId}`
-  );
+  return axios.post(`${BASE_URL}/api/result`, userData);
 };
 
 export const sendUserOTP = async (payload) => {

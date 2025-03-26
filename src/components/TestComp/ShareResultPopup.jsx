@@ -42,8 +42,6 @@ const ShareResultPopup = ({ setOpenSharePopup, openSharePopup, resultId }) => {
     }
   });
 
-  console.log({ deviceType });
-
   const handleSharedState = () => {
     sharedDataMutation.mutate({
       resultId: resultId,
@@ -67,7 +65,6 @@ const ShareResultPopup = ({ setOpenSharePopup, openSharePopup, resultId }) => {
     instagram: `https://www.instagram.com/?url=${encodeURIComponent(generateShareUrl("instagram"))}`, // Instagram doesn't support direct sharing
   };
 
-  console.log(navigator.userAgent, "-navigator.userAgent");
   return (
     <div className="flex justify-center items-center mt-10">
       {openSharePopup && (

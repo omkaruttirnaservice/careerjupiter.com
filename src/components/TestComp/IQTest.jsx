@@ -17,7 +17,6 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
   const [answers, setAnswers] = useState(Array(questions.length).fill(""));
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showMobileNumberPopup, setShowMobileNumberPopup] = useState(false);
-  // const [showResult, setShowResult] = useState(false);
   const dispatch = useDispatch();
   const { userId } = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -57,8 +56,6 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
   });
 
   dispatch(setIqTestId(testId));
-
-  // dispatch(clearIqTestId());
 
   useEffect(() => {
     setResultData({
