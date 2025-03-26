@@ -76,6 +76,24 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 
   const completionPercentage = calculateProfileCompletion()
 
+  const calculateAge = (dobString) => {
+    const birthDate = new Date(dobString);
+    if (isNaN(birthDate.getTime())) return "";
+
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age < 0 ? "" : age.toString();
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target
     if (name.startsWith("address.")) {
@@ -93,8 +111,18 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
           current_education: value,
         },
       }))
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }))
+    } 
+    else {
+      if (name === "dob") {
+        const age = calculateAge(value)
+        setFormData(prev => ({
+          ...prev,
+          dob: value,
+          age: age
+        }))
+      } else {
+        setFormData(prev => ({ ...prev, [name]: value }))
+      }
     }
   }
 
@@ -147,7 +175,9 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                 className="w-full h-full object-cover"
               />
             </div>
-            <h2 className="text-2xl cursor-pointer font-bold text-gray-800">Edit Profile</h2>
+            <h2 className="text-2xl cursor-pointer font-bold text-gray-800">
+              Edit Profile
+            </h2>
           </div>
 
           <button
@@ -159,8 +189,12 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
         </div>
         <div className="px-6 py-2 bg-white border-b">
           <div className="flex justify-between mb-1">
-            <span className="text-sm font-medium text-indigo-700">Profile Completion</span>
-            <span className="text-sm font-medium text-indigo-700">{completionPercentage}%</span>
+            <span className="text-sm font-medium text-indigo-700">
+              Profile Completion
+            </span>
+            <span className="text-sm font-medium text-indigo-700">
+              {completionPercentage}%
+            </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2.5">
             <div
@@ -172,7 +206,9 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
         <div className="overflow-y-auto px-6 py-4 flex-1">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">First Name</label>
+              <label className="text-sm font-medium text-gray-700">
+                First Name
+              </label>
               <input
                 type="text"
                 name="f_name"
@@ -184,7 +220,9 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Middle Name</label>
+              <label className="text-sm font-medium text-gray-700">
+                Middle Name
+              </label>
               <input
                 type="text"
                 name="m_name"
@@ -196,7 +234,9 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Last Name</label>
+              <label className="text-sm font-medium text-gray-700">
+                Last Name
+              </label>
               <input
                 type="text"
                 name="l_name"
@@ -208,7 +248,9 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Mobile Number</label>
+              <label className="text-sm font-medium text-gray-700">
+                Mobile Number
+              </label>
               <input
                 type="text"
                 name="mobile_no"
@@ -228,11 +270,10 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                 onChange={handleChange}
                 placeholder="Email"
                 className="w-full p-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-gray-50"
-                
               />
             </div>
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Date of Birth</label>
               <input
                 type="date"
@@ -253,14 +294,44 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                 placeholder="Age"
                 className="w-full p-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
               />
+            </div> */}
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                Date of Birth
+              </label>
+              <input
+                type="date"
+                name="dob"
+                value={formData.dob}
+                onChange={handleChange}
+                max={new Date().toISOString().split("T")[0]}
+                className="w-full p-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+              />
+            </div>
+
+            {/* Age Input (now read-only) */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Age</label>
+              <input
+                type="number"
+                name="age"
+                value={formData.age}
+                readOnly
+                className="w-full p-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-gray-100"
+              />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Current Education</label>
+              <label className="text-sm font-medium text-gray-700">
+                Current Education
+              </label>
               <input
                 type="text"
                 name="current_education"
-                value={formData.current_education || formData.info?.current_education}
+                value={
+                  formData.current_education || formData.info?.current_education
+                }
                 onChange={handleChange}
                 placeholder="Current Education"
                 className="w-full p-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
@@ -268,7 +339,9 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <label className="text-sm font-medium text-gray-700">Address Line 1</label>
+              <label className="text-sm font-medium text-gray-700">
+                Address Line 1
+              </label>
               <input
                 type="text"
                 name="address.line1"
@@ -281,7 +354,9 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             <br />
 
             <div className="space-y-2 md:col-span-2">
-              <label className="text-sm font-medium text-gray-700">Address Line 2</label>
+              <label className="text-sm font-medium text-gray-700">
+                Address Line 2
+              </label>
               <input
                 type="text"
                 name="address.line2"
@@ -293,7 +368,9 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">District</label>
+              <label className="text-sm font-medium text-gray-700">
+                District
+              </label>
               <input
                 type="text"
                 name="address.dist"
@@ -317,7 +394,9 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Pincode</label>
+              <label className="text-sm font-medium text-gray-700">
+                Pincode
+              </label>
               <input
                 type="text"
                 name="address.pincode"
@@ -347,7 +426,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default EditProfileModal
