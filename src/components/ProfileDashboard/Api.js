@@ -22,7 +22,7 @@ export const updateEducation = async (data) => {
   return response.data;
 };
 
-// ✅ Update User Profile (NEW API)
+// Update User Profile API
 export const updateUserProfile = async (userId, updatedData) => {
   try {
     const response = await axios.put(`${BASE_URL}/api/auth/${userId}`, updatedData);

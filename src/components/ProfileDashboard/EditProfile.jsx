@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react"
 import { useMutation } from "@tanstack/react-query"
-import axios from "axios"
+// import axios from "axios"
 import { X } from "lucide-react"
 import { updateUserProfile } from "./Api"
 
 const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
-
   const [formData, setFormData] = useState({
     f_name: user?.f_name || "",
     m_name: user?.m_name || "",
     l_name: user?.l_name || "",
     mobile_no: user?.mobile_no || "",
+    email_id: user?.email_id || "",
     dob: user?.dob || "",
     age: user?.age || "",
     current_education: user?.info?.current_education || "",
@@ -23,6 +23,10 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
       state: user?.address?.state || "",
       pincode: user?.address?.pincode || "",
     },
+    info: {
+      current_education: user?.info?.current_education || "",
+      education: user?.info?.education || [],
+    },
   })
 
   useEffect(() => {
@@ -32,6 +36,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
         m_name: user?.m_name || "",
         l_name: user?.l_name || "",
         mobile_no: user?.mobile_no || "",
+        email_id: user?.email_id || "",
         dob: user?.dob || "",
         age: user?.age || "",
         current_education: user?.info?.current_education || "",
@@ -42,6 +47,10 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
           state: user?.address?.state || "",
           pincode: user?.address?.pincode || "",
         },
+        info: {
+          current_education: user?.info?.current_education || "",
+          education: user?.info?.education || [],
+        },
       })
     }
   }, [user])
@@ -51,16 +60,17 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
       formData.f_name,
       formData.l_name,
       formData.mobile_no,
+      formData.email_id,
       formData.dob,
       formData.age,
-      formData.current_education,
+      formData.current_education || formData.info?.current_education,
       formData.address.line1,
       formData.address.dist,
       formData.address.state,
       formData.address.pincode,
     ]
 
-    const filledFields = fields.filter((field) => field && field.trim() !== "").length
+    const filledFields = fields.filter((field) => field && field.toString().trim() !== "").length
     return Math.round((filledFields / fields.length) * 100)
   }
 
@@ -74,27 +84,42 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
         ...prev,
         address: { ...prev.address, [field]: value },
       }))
+    } else if (name === "current_education") {
+      setFormData((prev) => ({
+        ...prev,
+        current_education: value,
+        info: {
+          ...prev.info,
+          current_education: value,
+        },
+      }))
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }))
     }
   }
+
   const updateProfileMutation = useMutation({
     mutationFn: async () => {
-      await updateUserProfile(user?._id, formData);
+      // Prepare data for API
+      const dataToSend = {
+        ...formData,
+        info: {
+          ...formData.info,
+          current_education: formData.current_education || formData.info?.current_education,
+        },
+      }
+      await updateUserProfile(user?._id, dataToSend)
     },
-    onSuccess: () => {
-      onSave();
-      onClose();
-    },
-
     onSuccess: () => {
       onSave()
       onClose()
     },
   })
+
   const handleSubmit = () => {
-    updateProfileMutation.mutate(formData)
+    updateProfileMutation.mutate()
   }
+
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto"
     return () => {
@@ -115,6 +140,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                 src={
                   user?.profile_image ||
                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsEJHmI0MlIGvH9CYkbsLEWQ5_ee8Qtl5V-Q&s" ||
+                  "/placeholder.svg" ||
                   "/placeholder.svg"
                 }
                 alt="Profile"
@@ -194,6 +220,19 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             </div>
 
             <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Email</label>
+              <input
+                type="email"
+                name="email_id"
+                value={formData.email_id}
+                onChange={handleChange}
+                placeholder="Email"
+                className="w-full p-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-gray-50"
+                
+              />
+            </div>
+
+            <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Date of Birth</label>
               <input
                 type="date"
@@ -221,7 +260,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
               <input
                 type="text"
                 name="current_education"
-                value={formData.current_education}
+                value={formData.current_education || formData.info?.current_education}
                 onChange={handleChange}
                 placeholder="Current Education"
                 className="w-full p-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
