@@ -128,86 +128,43 @@ const SearchComponent = () => {
 	};
 
 	return (
-		<div className="w-full gap-2 flex flex-col md:flex-row md:gap-6 items-center justify-between md:mt-16 bg-blue-200 p-4 mt-[60px]">
-			{/* Search Bar */}
-			<div className="w-full md:max-w-lg lg:max-w-xl xl:max-w-3xl">
-				<div className="flex border-2 border-gray-400 bg-white mt-8 rounded-full overflow-hidden w-full mx-auto md:ml-8">
-					<input
-						type="text"
-						className="px-3 py-2  w-full focus:outline-none focus:ring-2 focus:ring-blue-600"
-						placeholder="Search..."
-						value={query}
-						onChange={handleInputChange}
-					/>
-					<button className="rounded-r-full px-5 py-3 bg-blue-500 text-white hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500">
-						<IoSearchOutline className="text-xl" />
-					</button>
-				</div>
-				<div className="m-4">
-					<main className="mx-auto max-w-7xl">
-						<div className="text-center">
-							<div className="flex flex-row justify-center gap-2 sm:gap-4 md:gap-5 text-lg sm:text-3xl md:text-4xl font-bold">
-								<h1 className="text-gray-900 font-extrabold text-base sm:text-xl md:text-3xl">
-									FIND YOUR
-								</h1>
-								<span className="font-extrabold text-transparent bg-clip-text animated-gradient text-base sm:text-xl md:text-3xl">
-									<Typewriter
-										options={{
-											strings: ['Best College', 'Best School', 'Best Class'],
-											autoStart: true,
-											loop: true,
-										}}
-									/>
-								</span>
-							</div>
-							<p className="mt-2 mb-0 sm:mt-2 max-w-xs sm:max-w-md md:max-w-3xl mx-auto text-sm sm:text-lg md:text-xl font-bold text-blue-600">
-								"EMPOWER YOUR FUTURE, UNLOCK YOUR POTENTIAL, AND BUILD THE
-								CAREER OF YOUR DREAMS! ✨"
-							</p>
-						</div>
-					</main>
-				</div>
-			</div>
+		<div className="w-full flex flex-col items-center justify-center bg-blue-200 p-6 md:mt-16 mt-[60px]">
+  {/* Search Bar */}
+  <div className="w-full max-w-3xl">
+    <div className="flex border-2 border-gray-400 bg-white rounded-full overflow-hidden w-full mx-auto">
+      <input
+        type="text"
+        className="px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-600"
+        placeholder="Search..."
+        value={query}
+        onChange={handleInputChange}
+      />
+      <button className="rounded-r-full px-6 py-3 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <IoSearchOutline className="text-2xl" />
+      </button>
+    </div>
+  </div>
 
-			{/* Card on the right */}
-			<div className="flex items-center justify-center p-2">
-				{/* Card */}
-				<div className="bg-gradient-to-tr from-green-500/80 to-green-600 p-4 rounded-xl w-full md:w-96 max-w-sm">
-					{/* Header */}
-					<div className="flex items-center mb-3 space-x-3">
-						<FaBrain className="text-4xl text-white" />
-						<h2 className="text-3xl font-bold text-white">𝓘𝓠 𝓣𝓮𝓼𝓽</h2>
-					</div>
-					<p className="text-gray-100 font-bold mb-6 leading-relaxed">
-						Test your intelligence and problem-solving skills with this quick IQ
-						test.
-					</p>
+  {/* Text Section */}
+  <div className="text-center mt-6">
+    <div className="flex flex-row justify-center gap-3 text-2xl md:text-4xl font-bold">
+      <h1 className="text-gray-900 font-extrabold">FIND YOUR</h1>
+      <span className="font-extrabold text-transparent bg-clip-text animated-gradient">
+        <Typewriter
+          options={{
+            strings: ['Best College', 'Best School', 'Best Class'],
+            autoStart: true,
+            loop: true,
+          }}
+        />
+      </span>
+    </div>
+    <p className="mt-3 max-w-2xl mx-auto text-lg md:text-xl font-bold text-blue-600">
+      "EMPOWER YOUR FUTURE, UNLOCK YOUR POTENTIAL, AND BUILD THE CAREER OF YOUR DREAMS! ✨"
+    </p>
+  </div>
+</div>
 
-					{/* Time and Button */}
-					<div className="flex items-center justify-between">
-						{/* Animated Button */}
-						{/* <NavLink
-							to="profile/test"
-							className="text-white hover:text-green-800 flex flex-row gap-2 ml-auto"
-						>
-							<button className="bg-blue-500 shadow-lg w-full cursor-pointer text-white px-6 py-3 rounded-md text-md font-medium flex items-center space-x-2 transition-all duration-300 ease-in-out group">
-								<span>Give Test</span>
-								<IoArrowForwardOutline className="text-xl transition-transform duration-300 ease-in-out group-hover:translate-x-2" />
-							</button>
-						</NavLink> */}
-
-						<NavLink
-							to="profile/test"
-							className="text-white flex-row gap-2 ml-auto animate-pulse hover:animate-none border-white border hover:border-green-700
-							hover:bg-green-700 shadow-lg w-full cursor-pointer px-6 py-3 rounded-md text-md font-medium flex items-center text-xl space-x-2 transition-all duration-300 ease-in-out group justify-center"
-						>
-							<span>Give Test</span>
-							<IoArrowForwardOutline className="text-xl transition-transform duration-300 ease-in-out group-hover:translate-x-2" />
-						</NavLink>
-					</div>
-				</div>
-			</div>
-		</div>
 	);
 };
 

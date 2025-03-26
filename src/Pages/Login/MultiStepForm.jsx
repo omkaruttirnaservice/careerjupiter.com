@@ -63,7 +63,7 @@ const MultiStepForm = () => {
         toast.error(errorData?.usrMsg || "This account already exists.");
       } else if (status === 500) {
         // Server error
-        toast.error("Internal server error. Please try again later.");
+        toast.error("Please try again later.");
       } else {
         // General error fallback
         toast.error(
