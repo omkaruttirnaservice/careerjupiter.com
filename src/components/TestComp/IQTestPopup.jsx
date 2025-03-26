@@ -19,7 +19,6 @@ const IQTestPopup = () => {
   const mutation = useMutation({
     mutationFn: createGuestUser,
     onSuccess: (data) => {
-      console.log(data, "signup data");
       const parsedData = data?.data?.data;
       Cookies.set("token", parsedData.token, { expires: 1 });
       Cookies.set("userId", parsedData.userId, { expires: 1 });
@@ -49,7 +48,6 @@ const IQTestPopup = () => {
     const userId = Cookies.get("userId");
 
     if (token && userId) {
-      toast.success("User already exists.");
       window.location.href = "/profile/test";
       return;
     }
@@ -67,7 +65,7 @@ const IQTestPopup = () => {
             <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 cursor-pointer"
               >
                 ✕
               </button>

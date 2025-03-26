@@ -36,7 +36,7 @@ function TestClock({ testDuration, handleSubmit, title }) {
         <div className="w-full z-0 bg-gray-300 rounded-full h-4 md:ml-42 sm:h-4 overflow-hidden mt-6 relative">
           {/* Progress Bar with Gradient */}
           <div
-            className="h-full rounded-full transition-all duration-500"
+            className="h-full rounded-full border-1 transition-all duration-500"
             style={{
               width: `${progressWidth}%`,
               background: `linear-gradient(to right, red 0%, yellow 50%, green 100%)`,

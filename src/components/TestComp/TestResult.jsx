@@ -4,12 +4,9 @@ import { useSelector } from "react-redux";
 import ShareResultPopup from "./ShareResultPopup";
 
 
-function TestResult({ getResult }) {
+function TestResult() {
   const resultData = useSelector((state) => state.testResult?.resultData);
   const [openSharePopup, setOpenSharePopup] = useState(false);
-
-  console.log("resultData....", resultData);
-  console.log("already done resultData....", getResult);
 
   if (!resultData)
     return (

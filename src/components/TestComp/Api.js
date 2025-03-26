@@ -28,10 +28,6 @@ export const createGuestUser = async (data) => {
   return await axios.post(`${BASE_URL}/api/auth/signup?role=GUEST`, data);
 };
 
-// export const getTestResult = (data) => {
-//   return axios.get(`${BASE_URL}/api/iqtest/${data}`);
-// };
-
 export const getUserDetail = (id) => {
   return axios.get(`${BASE_URL}/api/auth/${id}`);
 };
@@ -49,8 +45,8 @@ export const sendShareState = (data) => {
   return axios.post(`${BASE_URL}/api/result/updation`, data);
 };
 
-export const getResult = (id) => {
-  return axios.get(`${BASE_URL}/api/result/${id}`);
+export const getResult = (userData) => {
+  return axios.post(`${BASE_URL}/api/result`, userData);
 };
 
 export const sendUserOTP = async (payload) => {
