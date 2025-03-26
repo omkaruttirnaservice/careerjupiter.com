@@ -95,6 +95,8 @@ const CardDetails = () => {
         className="fixed bottom-6 right-6 z-5 flex items-center gap-3 bg-green-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-green-700 transition-all duration-300 hover:scale-100 animate-bounce"
       >
         <FaPhoneAlt className="text-2xl animate-wiggle" /> {/* Animated icon */}
+      
+        
         <span className="font-bold text-lg">Call Now</span>
       </a>
       <div className="max-w-7xl mx-auto p-4 mt-5">

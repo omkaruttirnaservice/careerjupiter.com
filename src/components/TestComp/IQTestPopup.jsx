@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SET_TIME } from "../../utils/constansts";
-import { FaBrain } from "react-icons/fa";
-import { Navigate, NavLink, useNavigate } from "react-router-dom";
+import { GiBrain } from "react-icons/gi";
 import { IoArrowForwardOutline } from "react-icons/io5";
 import { createGuestUser } from "./Api";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { login } from "../../store-redux/AuthSlice";
+import Lotify from "./Lotify";
 
 const IQTestPopup = () => {
-
   const [isOpen, setIsOpen] = useState(false);
   const authState = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -19,93 +17,101 @@ const IQTestPopup = () => {
   const mutation = useMutation({
     mutationFn: createGuestUser,
     onSuccess: (data) => {
-      console.log(data, "signup data");
       const parsedData = data?.data?.data;
       Cookies.set("token", parsedData.token, { expires: 1 });
       Cookies.set("userId", parsedData.userId, { expires: 1 });
       dispatch(login(parsedData.userId));
-      window.location.href = '/profile/test'
+      window.location.href = "/profile/test";
     },
   });
 
-
   useEffect(() => {
     let timer;
-
     if (!authState.isLoggedIn) {
       timer = setTimeout(() => {
         setIsOpen(true);
       }, SET_TIME);
     }
-
     return () => {
       if (timer) clearTimeout(timer);
     };
   }, [authState.isLoggedIn]);
 
   const handleCreateGuestUser = () => {
-    // check it token and userId availabe in cookies
     const token = Cookies.get("token");
     const userId = Cookies.get("userId");
 
     if (token && userId) {
-      toast.success("User already exists.");
       window.location.href = "/profile/test";
       return;
     }
 
     mutation.mutate({
-      mobile_no:"0000000000",
+      mobile_no: "0000000000",
     });
   };
 
   return (
     <>
-      <div>
-        {isOpen && (
-          <div className="fixed z-50 top-0 left-0 w-full h-full bg-black/50 backdrop-blur-sm flex justify-center items-center">
-            <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-              >
-                ✕
-              </button>
-              <div className="flex items-center justify-center p-2">
-                <div className="bg-gradient-to-tr from-green-500/80 to-green-600 p-4 rounded-xl w-full md:w-96 max-w-sm">
-                  <div className="flex items-center mb-3 space-x-3">
-                    <FaBrain className="text-4xl text-white" />
-                    <h2 className="text-3xl font-bold text-white">IQ Test</h2>
-                  </div>
-                  <p className="text-gray-100 font-bold mb-6 leading-relaxed">
-                    Test your intelligence and problem-solving skills with this
-                    quick IQ test.
-                  </p>
-                  <div className="flex items-center justify-center mb-5">
-                    <span className="text-gray-300 text-lg line-through mr-2">
-                      ₹1499
-                    </span>
-                    <span className="text-yellow-300 text-xl font-bold bg-black px-3 py-1 rounded-md">
-                      Free
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div
-                      to="profile/test"
-                      className="text-white flex-row gap-2 ml-auto animate-pulse hover:animate-none border-white border hover:border-green-700
-                                        hover:bg-green-700 shadow-lg w-full cursor-pointer px-6 py-3 rounded-md text-md font-medium flex items-center text-xl space-x-2 transition-all duration-300 ease-in-out group justify-center"
-                      onClick={handleCreateGuestUser}
-                    >
-                      <span>Give Test</span>
-                      <IoArrowForwardOutline className="text-xl transition-transform duration-300 ease-in-out group-hover:translate-x-2" />
-                    </div>
-                  </div>
+      {isOpen && (
+        <div className="fixed z-50 inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl md:max-w-3xl p-8 relative scale-90 md:scale-100 animate-zoomIn">
+            {/* Close Button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-2xl"
+            >
+              ✕
+            </button>
+
+            <div className="flex flex-col md:flex-row items-center">
+              {/* Left: Image Section */}
+              <div className="w-full md:w-140 h-80 flex justify-center">
+                <Lotify icon="\public\Lottiefiles\Animation - 1742981797770.json" />
+              </div>
+
+
+
+
+
+              {/* Right: Content Section */}
+              <div className="w-full md:w-1/2 text-center md:text-left p-6">
+                <div className="flex items-center justify-center md:justify-start space-x-3 mb-4">
+                  <GiBrain className="text-4xl text-blue-500" />
+
+                  
+                  <h2 className="text-3xl font-bold text-gray-900 font-mono">IQ Test</h2>
                 </div>
+
+                <p className="text-gray-700 text-base md:text-lg mb-6 font-serif">
+                  Test your intelligence and problem-solving skills with this
+                  quick IQ test.
+                </p>
+
+                {/* Price Tag */}
+                <div className="flex items-center justify-center md:justify-start mr-15 mb-5">
+                  <span className="text-gray-500 font-bold text-3xl line-through ">
+                    ₹1499
+                  </span>
+                  <h1 className="text-9xl h-20 w-35">
+                  <Lotify  icon="\public\Lottiefiles\Animation - 1742985030727.json" />
+                  </h1>
+                </div>
+
+                {/* Button */}
+                <button
+                  className=" animate-pulse w-full flex items-center justify-center cursor-pointer bg-green-500 hover:bg-green-600 text-white px-6 py-4 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out shadow-lg animate-bounceSlow"
+                  onClick={handleCreateGuestUser}
+                >
+                  <span>Give Test</span>
+                  <IoArrowForwardOutline className="ml-3 text-2xl transition-transform duration-300 ease-in-out group-hover:translate-x-2" />
+
+                </button>
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 };

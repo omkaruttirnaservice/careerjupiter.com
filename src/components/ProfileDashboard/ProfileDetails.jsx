@@ -19,6 +19,7 @@ import { VscAdd } from "react-icons/vsc"
 import { MdEdit } from "react-icons/md"
 import EditEductionDetails from "./EditEductionDetails"
 import EditProfileModal from "./EditProfile"
+import Lotify from "../TestComp/Lotify"
 
 const ProfileDetails = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -154,8 +155,10 @@ const ProfileDetails = () => {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-purple-50 rounded-xl">
-                    <FaBirthdayCake className="text-purple-600 w-6 h-6" />
+                  <div className="p-3">
+                    <p className="w-10 h-10">
+                    <Lotify  icon="\public\Lottiefiles\Animation - 1742988633227 (1).json" />
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Date of Birth</p>
@@ -163,8 +166,10 @@ const ProfileDetails = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-indigo-50 rounded-xl">
-                    <FaUserCircle className="text-indigo-600 w-6 h-6" />
+                  <div className="p-3">
+                  <p className=" w-10 h-10">
+                  <Lotify  icon="\public\Lottiefiles\Animation - 1742989600076.json" />
+                  </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Age</p>
@@ -183,9 +188,11 @@ const ProfileDetails = () => {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-green-50 rounded-xl mt-1">
-                  <FaMapMarkerAlt className="text-green-600 w-6 h-6" />
-                </div>
+              <div className="p-3">
+                    <p className="w-12 h-12">
+                    <Lotify  icon="\public\Lottiefiles\Animation - 1742988929198 (1).json"/>
+                    </p>
+                  </div>
                 <div className="break-words">
                   <p className="font-medium text-gray-800">
                     {user?.address?.line1 || "N/A"} {user?.address?.line2}
