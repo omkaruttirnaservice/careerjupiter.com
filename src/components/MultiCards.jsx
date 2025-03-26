@@ -14,7 +14,7 @@ const MultiCards = () => {
 
 	useEffect(() => {
 		if (errorMsg) {
-			toast.error(errorMsg || 'Server error');
+			toast.error(errorMsg || 'Please try again later !');
 		}
 	}, [errorMsg]);
 

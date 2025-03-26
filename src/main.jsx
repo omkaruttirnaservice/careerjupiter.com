@@ -40,7 +40,7 @@ const queryClient = new QueryClient({
 
 function handleError(error) {
   const data = error?.response?.data
-  toast.error(data?.message || "Server error")
+  toast.error(data?.message || "Please try again later !")
   console.log(error,'-error')
   // const errorMessage =
   //   error instanceof AxiosError

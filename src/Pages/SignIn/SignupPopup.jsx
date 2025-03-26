@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -6,7 +7,7 @@ import { toast } from "react-toastify";
 import { userSignUp, updateUserProfile, fetchProfileStatusAPI, sendOTP, verifyOTP } from "./Api";
 import { useMutation } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import { login, logout } from "../../store-redux/AuthSlice";
+import { login } from "../../store-redux/AuthSlice";
 import { useLocation } from "react-router-dom";
 
 const educationOptions = [
@@ -41,6 +42,7 @@ const getValidationSchema = (needsFirstName, needsLastName, needsEducation) => {
 };
 
 const SignupPopup = () => {
+  // const location = useLocation();
   const authState = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(false);
   const [needsFirstName, setNeedsFirstName] = useState(false);
@@ -52,48 +54,19 @@ const SignupPopup = () => {
   const [otpVerified, setOtpVerified] = useState(false);
   const [referenceId, setReferenceId] = useState(null);
   const [otp, setOtp] = useState("");
-  const [askMeLaterClicked, setAskMeLaterClicked] = useState(false);
-  const [lastSavedTime, setLastSavedTime] = useState(null);
-  const [initialLoad, setInitialLoad] = useState(true);
+  const [askLaterClicked, setAskLaterClicked] = useState(false);
+  const [showAskLater, setShowAskLater] = useState(true);
+  const [otpRequested, setOtpRequested] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
-  // const location = useLocation();
 
+  // Hide popup if on profile route
   useEffect(() => {
-    // Hide on /profile* routes
-    if (location.pathname.includes('/profile')) {
+    if (location.pathname.startsWith('/profile')) {
       setIsOpen(false);
-      return;
-    }
-
-    const token = Cookies.get("token");
-    const storedUserId = Cookies.get("userId");
-
-    if (!token) {
-      // Show mobile number popup after 10 seconds if not logged in
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-      }, 10000);
-      return () => clearTimeout(timer);
-    } else if (storedUserId) {
-      setUserId(storedUserId);
-      // Check profile status after 10 seconds
-      const timer = setTimeout(() => {
-        fetchProfileStatus(storedUserId);
-      }, 10000);
-      return () => clearTimeout(timer);
     }
   }, [location.pathname]);
-
-  useEffect(() => {
-    if (!initialLoad && !location.pathname.includes('/profile')) {
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-      }, 10000);
-      return () => clearTimeout(timer);
-    }
-    setInitialLoad(false);
-  }, [initialLoad, location.pathname]);
 
   const fetchProfileStatus = async (userId) => {
     const token = Cookies.get("token");
@@ -111,16 +84,19 @@ const SignupPopup = () => {
         setNeedsLastName(false);
         setNeedsEducation(false);
         setIsOpen(true);
+        setShowAskLater(true);
       } else if (data.usrMsg?.includes("Last name")) {
         setNeedsFirstName(false);
         setNeedsLastName(true);
         setNeedsEducation(false);
         setIsOpen(true);
+        setShowAskLater(true);
       } else if (data.usrMsg?.includes("Education")) {
         setNeedsFirstName(false);
         setNeedsLastName(false);
         setNeedsEducation(true);
         setIsOpen(true);
+        setShowAskLater(true);
       } else {
         setNeedsFirstName(false);
         setNeedsLastName(false);
@@ -136,44 +112,67 @@ const SignupPopup = () => {
     }
   };
 
-  const mutation = useMutation({
-    mutationFn: userSignUp,
-    onSuccess: (data) => {
-      toast.success("SignUp successfully!");
-      const parsedData = data.data.data;
+  const handleAskLater = () => {
+    setAskLaterClicked(true);
+    setIsOpen(false);
+    
+    setTimeout(() => {
+      setIsOpen(true);
+      setShowAskLater(false);
+    }, 15000);
+  };
+
+  const handleSignUp = async (mobileNumber) => {
+    if (!otp) {
+      toast.error("Please enter OTP");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const payload = {
+        mobile_no: mobileNumber,
+        otp,
+        reference_id: referenceId,
+      };
+
+      const response = await mutation.mutateAsync(payload);
+      const parsedData = response.data.data;
       const token = parsedData.token;
       const userId = parsedData.userId || parsedData.data?.userId;
 
       if (!token || !userId) {
-        console.error("🚨 Token or UserID missing!", parsedData);
-        toast.error("Signup successful but token/userId missing!");
-        return;
+        throw new Error("Token or UserID missing");
       }
 
       Cookies.set("token", token, { expires: 1 });
       Cookies.set("userId", userId, { expires: 1 });
-
       dispatch(login(userId));
 
       setUserId(userId);
       setIsOpen(false);
-      setAskMeLaterClicked(false);
+      setShowOTP(false);
+      setOtpVerified(false);
+      setOtpRequested(false);
+      setOtp("");
+      setReferenceId(null);
 
-      // Show popup again after 10 seconds for profile completion
-      setTimeout(() => {
-        fetchProfileStatus(userId);
-      }, 10000);
-    },
-    onError: (error) => {
-      console.error("Signup Error:", error?.response?.data);
-      toast.error("Signup failed! Please try again.");
-    },
+      setTimeout(() => fetchProfileStatus(userId), 10000);
+    } catch (error) {
+      console.error("Signup Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const mutation = useMutation({
+    mutationFn: userSignUp,
   });
 
   const updateProfileMutation = useMutation({
     mutationFn: async (values) => {
       const payload = {};
-  
+
       if (needsFirstName) payload.f_name = values.f_name;
       if (needsLastName) payload.l_name = values.l_name;
       if (needsEducation) {
@@ -181,316 +180,335 @@ const SignupPopup = () => {
           current_education: values.info.current_education,
         };
       }
-  
+
       return updateUserProfile({ userId, values: payload });
     },
     onSuccess: () => {
-      toast.success("Profile updated successfully!");
+      if (needsFirstName) {
+        toast.success("Saved !");
+      } else if (needsLastName) {
+        toast.success("Saved !");
+      } else if (needsEducation) {
+        toast.success("Saved !");
+      }
+      
       setIsOpen(false);
-      setAskMeLaterClicked(false);
-      setLastSavedTime(Date.now());
-  
-      setTimeout(() => {
-        fetchProfileStatus(userId);
-      }, 10000);
+      setAskLaterClicked(false);
+      setTimeout(() => fetchProfileStatus(userId), 10000);
     },
     onError: (error) => {
       console.error("[SignupPopup] Profile Update Error:", error?.response?.data);
+      
     },
   });
 
   const sendOTPMutation = useMutation({
     mutationFn: sendOTP,
     onSuccess: (data) => {
-      console.log("OTP Sent Successfully:", data);
       setReferenceId(data.data.reference_id);
       setShowOTP(true);
-      setAskMeLaterClicked(false);
+      setOtpRequested(true);
       toast.success("OTP sent successfully!");
     },
     onError: (error) => {
       console.error("OTP Send Error:", error?.response?.data);
-      toast.error("Failed to send OTP!");
     },
   });
 
   const verifyOTPMutation = useMutation({
     mutationFn: verifyOTP,
     onSuccess: (data) => {
-      console.log("OTP Verified Successfully:", data);
       setOtpVerified(true);
+      toast.success("OTP varify successfully!");
+
     },
     onError: (error) => {
       console.error("OTP Verification Error:", error?.response?.data);
-      toast.error("Failed to verify OTP!");
     },
   });
 
-  const handleAskMeLater = () => {
-    setAskMeLaterClicked(true);
-    setIsOpen(false);
-    
-    setTimeout(() => {
-      if (!profileComplete) {
+  // For first-time visitors or users without a token
+  useEffect(() => {
+    if (location.pathname.startsWith('/profile')) return;
+
+    const token = Cookies.get("token");
+    const storedUserId = Cookies.get("userId");
+
+    if (!token) {
+      const timer = setTimeout(() => {
         setIsOpen(true);
+      }, 10000);
+      return () => clearTimeout(timer);
+    } else if (storedUserId) {
+      setUserId(storedUserId);
+      const timer = setTimeout(() => {
+        fetchProfileStatus(storedUserId);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname]);
+
+  // For profile status polling
+  useEffect(() => {
+    if (location.pathname.startsWith('/profile')) return;
+
+    let interval;
+
+    if (authState.isLoggedIn && !profileComplete && userId) {
+      interval = setInterval(() => {
+        fetchProfileStatus(userId);
+      }, 10000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
       }
-    }, 15000);
-  };
+    };
+  }, [authState.isLoggedIn, profileComplete, userId, location.pathname]);
 
   const handleSendOTP = (mobileNumber) => {
+    if (!mobileNumber) {
+      toast.error("Please enter mobile number");
+      return;
+    }
     sendOTPMutation.mutate({ mobile_no: mobileNumber });
   };
 
-  const handleVerifyOTP = (otp, mobileNumber) => {
-    verifyOTPMutation.mutate(
-      {
+  const handleVerifyAndSignup = async (otpValue, mobileNumber) => {
+    if (!otpValue) {
+      toast.error("Please enter OTP");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // First verify OTP
+      await verifyOTPMutation.mutateAsync({
         reference_id: referenceId,
-        otp,
+        otp: otpValue,
         mobile_no: mobileNumber,
-      },
-      {
-        onSuccess: () => {
-          setOtpVerified(true);
-          const signupPayload = {
-            mobile_no: mobileNumber,
-            otp,
-            reference_id: referenceId,
-          };
-          mutation.mutate(signupPayload);
-        },
-        onError: (error) => {
-          console.error("OTP Verification Error:", error?.response?.data);
-          toast.error("Failed to verify OTP!");
-        },
-      }
-    );
+      });
+
+      // If OTP verification succeeds, proceed with signup
+      await handleSignUp(mobileNumber);
+    } catch (error) {
+      console.error("Error in verification:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div>
-      {isOpen && (
-        <div className="fixed z-50 top-0 left-0 w-full h-full bg-black/50 backdrop-blur-sm flex justify-center items-center">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">
-              {needsFirstName
-                ? "First Name"
-                : needsLastName
-                  ? "Last Name"
-                  : needsEducation
-                    ? "Education"
-                    : "Get Started"}
-            </h2>
+      {isOpen && !location.pathname.startsWith('/profile') && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+            <div className="p-6">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                {needsFirstName
+                  ? "Complete Your Profile"
+                  : needsLastName
+                    ? "Last Name Required"
+                    : needsEducation
+                      ? "Education Details"
+                      : "Get Started"}
+              </h2>
 
-            <Formik
-              key={isOpen ? "form-open" : "form-closed"}
-              initialValues={{
-                f_name: "",
-                l_name: "",
-                mobile_no: "",
-                info: {
-                  current_education: "",
-                },
-              }}
-              validationSchema={getValidationSchema(
-                needsFirstName,
-                needsLastName,
-                needsEducation
-              )}
-              onSubmit={(values, { setSubmitting, resetForm }) => {
-                if (needsFirstName || needsLastName || needsEducation) {
-                  updateProfileMutation.mutate(values, {
-                    onSuccess: () => {
-                      toast.success("Profile updated successfully!");
-                      setIsOpen(false);
-                      setOtp("");
-                      resetForm();
-
-                      setTimeout(() => {
-                        fetchProfileStatus(userId);
-                      }, 10000);
-                    },
-                    onError: (error) => {
-                      console.error("[SignupPopup] Profile Update Error:", error?.response?.data);
-                      toast.error("Failed to update profile!");
-                    }
-                  });
-                } else {
-                  const signupPayload = {
-                    ...values,
-                    otp,
-                    reference_id: referenceId,
-                  };
-
-                  mutation.mutate(signupPayload, {
-                    onSuccess: () => {
-                      toast.success("Signup successful!");
-                      setIsOpen(false);
-                      resetForm();
-                      setOtp("");
-                      setShowOTP(false);
-                    },
-                    onError: () => {
-                      toast.error("Signup failed!");
-                    }
-                  });
-                }
-
-                setSubmitting(false);
-              }}
-            >
-              {({ isSubmitting, values }) => (
-                <Form className="space-y-4">
-                  {!needsFirstName && !needsLastName && !needsEducation ? (
-                    <>
-                      <div className="mb-4 w-full max-w-md mx-auto">
-                        <label className="block text-sm font-medium text-gray-700">
-                          Mobile Number
-                        </label>
-                        <div className="flex flex-wrap gap-2 mt-1">
-                          <Field
-                            name="mobile_no"
-                            type="tel"
-                            placeholder="Enter Mobile Number"
-                            className="flex-1 w-full sm:w-full md:w-3/4 lg:w-1/2 rounded-md border p-2 focus:ring focus:ring-blue-300"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => handleSendOTP(values.mobile_no)}
-                            className="bg-blue-500 cursor-pointer text-white px-3 py-2 rounded-md hover:bg-blue-600 transition-all w-full sm:w-auto"
-                          >
-                            Get OTP
-                          </button>
-                        </div>
-                        <ErrorMessage
-                          name="mobile_no"
-                          component="div"
-                          className="text-red-500 text-sm mt-1"
-                        />
-                      </div>
-
-                      {showOTP && (
-                        <div className="mb-4">
-                          <div className="w-full max-w-md mx-auto">
-                            <label className="block text-sm font-medium text-gray-700">
-                              Enter OTP
+              <Formik
+                initialValues={{
+                  f_name: "",
+                  l_name: "",
+                  mobile_no: "",
+                  info: {
+                    current_education: "",
+                  },
+                }}
+                validationSchema={getValidationSchema(
+                  needsFirstName,
+                  needsLastName,
+                  needsEducation
+                )}
+                onSubmit={(values, { setSubmitting }) => {
+                  if (needsFirstName || needsLastName || needsEducation) {
+                    updateProfileMutation.mutate(values);
+                  }
+                  setSubmitting(false);
+                }}
+              >
+                {({ values }) => (
+                  <Form className="space-y-4">
+                    {!needsFirstName && !needsLastName && !needsEducation ? (
+                      <>
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Mobile Number
                             </label>
-                            <Field
-                              name="otp"
-                              type="text"
-                              placeholder="Enter OTP"
-                              className="w-full rounded-md border p-2 focus:ring focus:ring-blue-300 mt-1"
-                              value={otp}
-                              onChange={(e) => setOtp(e.target.value)}
+                            <div className="flex gap-2">
+                              <Field
+                                name="mobile_no"
+                                type="tel"
+                                placeholder="Enter 10-digit mobile number"
+                                className="flex-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleSendOTP(values.mobile_no)}
+                                disabled={otpRequested}
+                                className={`px-4 py-2 rounded-lg font-medium transition ${
+                                  otpRequested
+                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                                }`}
+                              >
+                                {otpRequested ? 'Sent' : 'Get OTP'}
+                              </button>
+                            </div>
+                            <ErrorMessage
+                              name="mobile_no"
+                              component="div"
+                              className="text-red-500 text-sm mt-1"
                             />
+                          </div>
+
+                          {showOTP && (
+                            <div className="space-y-2">
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Enter OTP
+                              </label>
+                              <div className="flex gap-2">
+                                <input
+                                  type="text"
+                                  placeholder="Enter 6-digit OTP"
+                                  value={otp}
+                                  onChange={(e) => setOtp(e.target.value)}
+                                  className="flex-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                  maxLength={6}
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => handleVerifyAndSignup(otp, values.mobile_no)}
+                                  disabled={isLoading}
+                                  className={`px-4 py-2 rounded-lg font-medium transition ${
+                                    isLoading
+                                      ? 'bg-blue-400 cursor-wait'
+                                      : 'bg-green-600 text-white hover:bg-green-700'
+                                  }`}
+                                >
+                                  {isLoading ? 'Processing...' : 'Verify & Sign Up'}
+                                </button>
+                              </div>
+                            </div>
+                          )}
+
+                          {showAskLater && !showOTP && (
                             <button
                               type="button"
-                              onClick={() => handleVerifyOTP(otp, values.mobile_no)}
-                              className="mt-3 w-full cursor-pointer bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600 transition-all"
+                              onClick={handleAskLater}
+                              className="w-full mt-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition"
                             >
-                              Verify OTP
+                              Ask Me Later
                             </button>
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="space-y-4">
+                          {needsFirstName && (
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                First Name
+                              </label>
+                              <Field
+                                name="f_name"
+                                type="text"
+                                placeholder="Enter your first name"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                              />
+                              <ErrorMessage
+                                name="f_name"
+                                component="div"
+                                className="text-red-500 text-sm mt-1"
+                              />
+                            </div>
+                          )}
+
+                          {needsLastName && (
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Last Name
+                              </label>
+                              <Field
+                                name="l_name"
+                                type="text"
+                                placeholder="Enter your last name"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                              />
+                              <ErrorMessage
+                                name="l_name"
+                                component="div"
+                                className="text-red-500 text-sm mt-1"
+                              />
+                            </div>
+                          )}
+
+                          {needsEducation && (
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Current Education
+                              </label>
+                              <Field
+                                name="info.current_education"
+                                as="select"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                              >
+                                <option value="">Select your education</option>
+                                {educationOptions.map((option) => (
+                                  <option key={option} value={option}>
+                                    {option}
+                                  </option>
+                                ))}
+                              </Field>
+                              <ErrorMessage
+                                name="info.current_education"
+                                component="div"
+                                className="text-red-500 text-sm mt-1"
+                              />
+                            </div>
+                          )}
+
+                          <div className="flex gap-3 pt-2">
+                            <button
+                              type="submit"
+                              disabled={updateProfileMutation.isLoading}
+                              className={`flex-1 px-4 py-2 rounded-lg font-medium transition ${
+                                updateProfileMutation.isLoading
+                                  ? 'bg-blue-400 cursor-wait'
+                                  : 'bg-blue-600 text-white hover:bg-blue-700'
+                              }`}
+                            >
+                              {updateProfileMutation.isLoading ? 'Saving...' : 'Save'}
+                            </button>
+                            
+                            {showAskLater && (
+                              <button
+                                type="button"
+                                onClick={handleAskLater}
+                                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition"
+                              >
+                                Ask Me Later
+                              </button>
+                            )}
                           </div>
                         </div>
-                      )}
-
-                      {!askMeLaterClicked && !showOTP && (
-                        <button
-                          type="button"
-                          onClick={handleAskMeLater}
-                          className="w-full cursor-pointer bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors"
-                        >
-                          Ask Me Later
-                        </button>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {needsFirstName && (
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            First Name
-                          </label>
-                          <Field
-                            name="f_name"
-                            type="text"
-                            placeholder="Enter First Name"
-                            className="mt-1 block w-full rounded-md border p-2"
-                          />
-                          <ErrorMessage
-                            name="f_name"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
-                        </div>
-                      )}
-                      {needsLastName && (
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Last Name
-                          </label>
-                          <Field
-                            name="l_name"
-                            type="text"
-                            placeholder="Enter Last Name"
-                            className="mt-1 block w-full rounded-md border p-2"
-                          />
-                          <ErrorMessage
-                            name="l_name"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
-                        </div>
-                      )}
-                      {needsEducation && (
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Current Education
-                          </label>
-                          <Field
-                            name="info.current_education"
-                            as="select"
-                            className="mt-1 block w-full rounded-md border p-2"
-                          >
-                            <option value="">Select Current Education</option>
-                            {educationOptions.map((option) => (
-                              <option key={option} value={option}>
-                                {option}
-                              </option>
-                            ))}
-                          </Field>
-
-                          <ErrorMessage
-                            name="info.current_education"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
-                        </div>
-                      )}
-
-                      <div className="flex gap-2">
-                        <button
-                          type="submit"
-                          disabled={isSubmitting}
-                          className="flex-1 block cursor-pointer bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors disabled:bg-green-300"
-                        >
-                          Save
-                        </button>
-                        
-                        {!askMeLaterClicked && (
-                          <button
-                            type="button"
-                            onClick={handleAskMeLater}
-                            className="flex-1 block cursor-pointer bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors"
-                          >
-                            Ask Me Later
-                          </button>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </Form>
-              )}
-            </Formik>
+                      </>
+                    )}
+                  </Form>
+                )}
+              </Formik>
+            </div>
           </div>
         </div>
       )}
