@@ -13,7 +13,7 @@ const UniversityMultiCard = () => {
 	let { UniversityData, errorMsg, isLoading } = useSearchContext();
 
 	useEffect(() => {
-		toast.error(errorMsg || 'Server error');
+		toast.error(errorMsg || 'Please try again later !');
 	}, [errorMsg]);
 
 	const tags = ['All', 'Private', 'Government'];

@@ -8,7 +8,6 @@ import IQTest from "./IQTest";
 import { useDispatch, useSelector } from "react-redux";
 import { setTestResult } from "../../store-redux/testResultSlice";
 import { useNavigate } from "react-router-dom";
-
 function TestCard() {
   const [selectedTest, setSelectedTest] = useState(null);
   const [testDuration, setTestDuration] = useState(0);
@@ -78,7 +77,6 @@ function TestCard() {
       });
       return;
     }
-
     Swal.fire({
       title: `Start ${test.title}?`,
       text: `Duration: ${test.testDuration} min | Total Marks: ${test.totalMarks}`,
@@ -95,7 +93,6 @@ function TestCard() {
       }
     });
   };
-
   if (selectedTest) {
     return (
       <IQTest
@@ -106,7 +103,6 @@ function TestCard() {
       />
     );
   }
-
   return (
     <div className="p-4">
       <div className="mb-4">
@@ -168,5 +164,4 @@ function TestCard() {
     </div>
   );
 }
-
 export default TestCard;

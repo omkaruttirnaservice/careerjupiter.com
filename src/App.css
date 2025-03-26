@@ -24,3 +24,7 @@
 	background-clip: text;
 	color: transparent;
 }
+
+button {
+	cursor: pointer;
+  }
