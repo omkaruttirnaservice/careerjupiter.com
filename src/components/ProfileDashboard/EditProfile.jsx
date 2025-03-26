@@ -2,16 +2,17 @@
 
 import { useEffect, useState } from "react"
 import { useMutation } from "@tanstack/react-query"
-import axios from "axios"
+// import axios from "axios"
 import { X } from "lucide-react"
+import { updateUserProfile } from "./Api"
 
 const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
-  // Form State
   const [formData, setFormData] = useState({
     f_name: user?.f_name || "",
     m_name: user?.m_name || "",
     l_name: user?.l_name || "",
     mobile_no: user?.mobile_no || "",
+    email_id: user?.email_id || "",
     dob: user?.dob || "",
     age: user?.age || "",
     current_education: user?.info?.current_education || "",
@@ -22,9 +23,12 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
       state: user?.address?.state || "",
       pincode: user?.address?.pincode || "",
     },
+    info: {
+      current_education: user?.info?.current_education || "",
+      education: user?.info?.education || [],
+    },
   })
 
-  // Reset form data when user data changes
   useEffect(() => {
     if (user) {
       setFormData({
@@ -32,6 +36,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
         m_name: user?.m_name || "",
         l_name: user?.l_name || "",
         mobile_no: user?.mobile_no || "",
+        email_id: user?.email_id || "",
         dob: user?.dob || "",
         age: user?.age || "",
         current_education: user?.info?.current_education || "",
@@ -42,65 +47,79 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
           state: user?.address?.state || "",
           pincode: user?.address?.pincode || "",
         },
+        info: {
+          current_education: user?.info?.current_education || "",
+          education: user?.info?.education || [],
+        },
       })
     }
   }, [user])
 
-  // Calculate profile completion percentage
   const calculateProfileCompletion = () => {
     const fields = [
       formData.f_name,
       formData.l_name,
       formData.mobile_no,
+      formData.email_id,
       formData.dob,
       formData.age,
-      formData.current_education,
+      formData.current_education || formData.info?.current_education,
       formData.address.line1,
       formData.address.dist,
       formData.address.state,
       formData.address.pincode,
     ]
 
-    const filledFields = fields.filter((field) => field && field.trim() !== "").length
+    const filledFields = fields.filter((field) => field && field.toString().trim() !== "").length
     return Math.round((filledFields / fields.length) * 100)
   }
 
   const completionPercentage = calculateProfileCompletion()
 
-  // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target
-
-    // Handle nested state for address
     if (name.startsWith("address.")) {
       const field = name.split(".")[1]
       setFormData((prev) => ({
         ...prev,
         address: { ...prev.address, [field]: value },
       }))
+    } else if (name === "current_education") {
+      setFormData((prev) => ({
+        ...prev,
+        current_education: value,
+        info: {
+          ...prev.info,
+          current_education: value,
+        },
+      }))
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }))
     }
   }
 
-  // API Update Mutation
   const updateProfileMutation = useMutation({
-    mutationFn: async (updatedData) => {
-      const response = await axios.put(`http://192.168.1.20:5000/api/auth/${user?._id}`, updatedData)
-      return response.data
+    mutationFn: async () => {
+      // Prepare data for API
+      const dataToSend = {
+        ...formData,
+        info: {
+          ...formData.info,
+          current_education: formData.current_education || formData.info?.current_education,
+        },
+      }
+      await updateUserProfile(user?._id, dataToSend)
     },
     onSuccess: () => {
-      onSave() // Refresh Profile Data
-      onClose() // Close Modal
+      onSave()
+      onClose()
     },
   })
 
-  // Handle Form Submit
   const handleSubmit = () => {
-    updateProfileMutation.mutate(formData)
+    updateProfileMutation.mutate()
   }
 
-  // Disable scrolling when modal opens
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto"
     return () => {
@@ -112,12 +131,8 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      {/* Glassmorphism Blur Background */}
-      <div className="absolute inset-0  bg-opacity-30 backdrop-blur-xs transition-all"></div>
-
-      {/* Modal Box */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-all"></div>
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl relative transform transition-all duration-300 flex flex-col max-h-[90vh]">
-        {/* Modal Header */}
         <div className="p-6 border-b bg-white sticky top-0 z-10 flex items-center justify-between rounded-t-3xl">
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-indigo-500 shadow-lg">
@@ -125,6 +140,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                 src={
                   user?.profile_image ||
                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsEJHmI0MlIGvH9CYkbsLEWQ5_ee8Qtl5V-Q&s" ||
+                  "/placeholder.svg" ||
                   "/placeholder.svg"
                 }
                 alt="Profile"
@@ -141,8 +157,6 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             <X className="w-6 h-6" />
           </button>
         </div>
-
-        {/* Profile Completion Progress */}
         <div className="px-6 py-2 bg-white border-b">
           <div className="flex justify-between mb-1">
             <span className="text-sm font-medium text-indigo-700">Profile Completion</span>
@@ -155,8 +169,6 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             ></div>
           </div>
         </div>
-
-        {/* Scrollable Form Content */}
         <div className="overflow-y-auto px-6 py-4 flex-1">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
@@ -208,6 +220,19 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             </div>
 
             <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Email</label>
+              <input
+                type="email"
+                name="email_id"
+                value={formData.email_id}
+                onChange={handleChange}
+                placeholder="Email"
+                className="w-full p-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-gray-50"
+                
+              />
+            </div>
+
+            <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Date of Birth</label>
               <input
                 type="date"
@@ -235,7 +260,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
               <input
                 type="text"
                 name="current_education"
-                value={formData.current_education}
+                value={formData.current_education || formData.info?.current_education}
                 onChange={handleChange}
                 placeholder="Current Education"
                 className="w-full p-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
@@ -253,6 +278,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                 className="w-full p-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
               />
             </div>
+            <br />
 
             <div className="space-y-2 md:col-span-2">
               <label className="text-sm font-medium text-gray-700">Address Line 2</label>
@@ -303,17 +329,15 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
             </div>
           </div>
         </div>
-
-        {/* Save Button */}
         <div className="p-4 border-t bg-white sticky bottom-0 z-10 rounded-b-3xl">
           <button
-            className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all"
+            className="w-full bg-gradient-to-r cursor-pointer from-indigo-500 to-purple-500 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all"
             onClick={handleSubmit}
             disabled={updateProfileMutation.isLoading}
           >
             {updateProfileMutation.isLoading ? (
-              <div className="flex items-center justify-center gap-2">
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="flex cursor-pointer items-center justify-center gap-2">
+                <div className="w-5 h-5 border-2 cursor-pointer border-white border-t-transparent rounded-full animate-spin"></div>
                 <span>Saving...</span>
               </div>
             ) : (

@@ -20,7 +20,6 @@ import { MdEdit } from "react-icons/md"
 import EditEductionDetails from "./EditEductionDetails"
 import EditProfileModal from "./EditProfile"
 
-
 const ProfileDetails = () => {
   const [isOpen, setIsOpen] = useState(false)
   const dispatch = useDispatch()
@@ -66,7 +65,6 @@ const ProfileDetails = () => {
     const completedFields = fieldsToCheck.filter((field) => Boolean(user[field])).length
 
     // Calculate percentage (base fields + address + education)
-    // Total possible: fieldsToCheck.length + 4 (address) + 2 (education)
     const totalPossibleFields = fieldsToCheck.length + 4 + 2
     const totalCompletedFields =
       completedFields + addressFields + (hasEducation ? 1 : 0) + (hasCurrentEducation ? 1 : 0)
@@ -89,8 +87,13 @@ const ProfileDetails = () => {
     )
 
   const user = data?.data
+  // console.log("user........................", user)
+
   const educationList = data?.data?.info?.education || []
+  console.log("...................", educationList)
+
   const completionPercentage = calculateProfileCompletion(user)
+  // console.log("com........", completionPercentage)
 
   return (
     <>
@@ -104,11 +107,11 @@ const ProfileDetails = () => {
       <div className="max-w-6xl mx-auto p-4 md:p-6 bg-gradient-to-br from-indigo-50 to-purple-50 min-h-screen">
         {/* Mobile Header (shown only on small screens) */}
         <div className="md:hidden w-full flex flex-col items-center text-center space-y-4 mb-6">
-          <div className="bg-gradient-to-br from-indigo-400 to-purple-400 p-1 rounded-full">
+          <div className="bg-gradient-to-br  from-indigo-400 to-purple-400 p-1 rounded-full">
             <img
               src={user?.profile_image || "https://via.placeholder.com/150"}
               alt="Profile"
-              className="w-24 h-24 rounded-full object-cover border-4 border-white"
+              className="w-24 h-24   rounded-full object-cover border-4 border-white"
             />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
@@ -227,9 +230,16 @@ const ProfileDetails = () => {
                 <div className="p-3 bg-blue-50 rounded-xl">
                   <FaGraduationCap className="text-blue-600 w-6 h-6" />
                 </div>
-                <div>
+                <div className="w-full">
                   <p className="text-sm text-gray-500">Current Education</p>
-                  <p className="font-semibold text-gray-800">{user?.info?.current_education || "N/A"}</p>
+                  <div className="flex justify-between items-center">
+                    <p className="font-semibold text-gray-800">{user?.info?.current_education || "N/A"}</p>
+                    {user?.info?.current_education && (
+                      <div className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-medium">
+                        Current
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -262,14 +272,15 @@ const ProfileDetails = () => {
                         <h4 className="text-lg font-semibold">{edu.education_name}</h4>
                         <p className="text-gray-700">{edu.school}</p>
                         <p className="text-gray-500 text-sm">
-                          {`${edu.start_year.month} ${edu.start_year.year}`} -{" "}
-                          {`${edu.end_year.month} ${edu.end_year.year}`}
-                        </p>
+                          {`${edu.start_year?.month || "N/A"} ${edu.start_year?.year || " "}`} -{" "}
+                          {`${edu.end_year?.month || ""} ${edu.end_year?.year || " "}`}
+                        </p> 
                       </div>
                     ))
                   ) : (
-                    <div className="p-4 text-center text-gray-500 border border-dashed rounded-lg">
-                      No education details added yet. Click "Add Education" to get started.
+                    <div className="p-4 border rounded-lg bg-gray-50 text-center">
+                      <p className="text-gray-500">No education details added yet.</p>
+                      <p className="text-sm text-indigo-600 mt-1">Click "Add Education" to get started.</p>
                     </div>
                   )}
                 </div>
@@ -306,6 +317,7 @@ const ProfileDetails = () => {
                     src={
                       user?.profile_image ||
                       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsEJHmI0MlIGvH9CYkbsLEWQ5_ee8Qtl5V-Q&s" ||
+                      "/placeholder.svg" ||
                       "/placeholder.svg"
                     }
                     alt="Profile"
@@ -327,7 +339,7 @@ const ProfileDetails = () => {
                 <div className="w-full space-y-3">
                   <div className="flex items-center gap-2 text-gray-700">
                     <FaEnvelope className="text-indigo-600 w-5 h-5 flex-shrink-0" />
-                    <span className="text-sm font-medium break-all">{user?.email_id}</span>
+                    <span className="text-sm font-medium break-all">{user?.email_id || "NA"}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-700">
                     <FaPhone className="text-indigo-600 w-5 h-5 flex-shrink-0" />

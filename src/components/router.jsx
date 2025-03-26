@@ -49,7 +49,7 @@ export const router = createBrowserRouter([
 			{ path: 'class', element: <InstituteMultiCard /> },
 
 			{ path: 'reviews/:id', element: <ReviewPage /> },
-			{path : '/serviceprovider', element: <ServiceProvide/>}
+			{path : '/service-provider', element: <ServiceProvide/>}
 
 
 		],
