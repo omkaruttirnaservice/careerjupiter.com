@@ -4,14 +4,19 @@ import { useSelector } from "react-redux";
 import ShareResultPopup from "./ShareResultPopup";
 
 
-function TestResult() {
+function TestResult({ getResult }) {
   const resultData = useSelector((state) => state.testResult?.resultData);
-  const [openSharePopup , setOpenSharePopup] = useState(false);
+  const [openSharePopup, setOpenSharePopup] = useState(false);
 
   console.log("resultData....", resultData);
-  
+  console.log("already done resultData....", getResult);
 
-  if (!resultData) return <div className="text-center text-xl font-semibold p-6">⏳ Loading results...</div>;
+  if (!resultData)
+    return (
+      <div className="text-center text-xl font-semibold p-6">
+        ⏳ Loading results...
+      </div>
+    );
 
   const {
     totalQuestions,
@@ -70,7 +75,7 @@ function TestResult() {
           Score: {marksGained} / {totalMarks} ({percentage.toFixed(2)}%)
         </p>
         <div
-          className={`p-2 text-lg font-semibold ${isPassed ? "text-green-600" : "text-red-600"}`}
+          className={`p-2 flex items-center flex-col gap-2 text-lg font-semibold ${isPassed ? "text-green-600" : "text-red-600"}`}
         >
           {resultIcon} {passFailMessage}
         </div>

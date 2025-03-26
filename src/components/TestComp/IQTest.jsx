@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { OPTIONS_ENUMS } from "../../utils/constansts";
 import TestClock from "./TestClock";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTest, getUserDetail, sendResult } from "./Api";
 import { setTestResult } from "../../store-redux/testResultSlice";
 import MobileNumberPopup from "./MobileNumberPopup";
@@ -21,6 +21,7 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
   const dispatch = useDispatch();
   const { userId } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const resultGenerationMutation = useMutation({
     mutationFn: sendResult,
@@ -31,6 +32,10 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
         text: "Your test was submitted successfully!",
         confirmButtonColor: "#28a745",
       }).then(() => {
+        queryClient.invalidateQueries({
+          queryKey: ["getTest"],
+          exact: false,
+        });
         navigate("/profile/test/?type=result");
         dispatch(setTestResult(response.data));
       });
@@ -149,8 +154,7 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
       )}
       {!isSubmitted && (
         <div className="w-full bg-gray-100 p-4 shadow-lg rounded-xl mb-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold">{title}</h1>
-          <TestClock testDuration={testDuration} handleSubmit={handleSubmit} />
+          <TestClock testDuration={testDuration} handleSubmit={handleSubmit} title={title} />
         </div>
       )}
 
@@ -223,17 +227,17 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
 
         <div className="w-full md:w-1/4 h-[60vh] bg-white p-4 rounded-lg shadow-md">
           <h2 className="text-lg font-bold mb-4">Questions</h2>
-          <div className="grid grid-cols-4 h-[80%] overflow-auto gap-1 py-1.5">
+          <div className="grid grid-cols-4 h-[80%] overflow-auto gap-1 py-2">
             {questions.map((q, index) => (
               <button
                 key={q._id}
                 onClick={() => setCurrentQuestion(index)}
-                className={` rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300 cursor-pointer ${
+                className={`mt-1 rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300 cursor-pointer ${
                   currentQuestion === index
-                    ? "bg-blue-500 text-white ring-2 ring-blue-700"
+                    ? "bg-blue-500 text-white ring-2 ring-offset-2 ring-blue-700"
                     : answers[index]
                       ? "bg-green-500 text-white"
-                      : "bg-red-500 text-white"
+                      : "bg-red-600 text-white"
                 }`}
               >
                 {index + 1}
