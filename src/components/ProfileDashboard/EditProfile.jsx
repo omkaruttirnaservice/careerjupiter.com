@@ -243,7 +243,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
               />
             </div>
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Age</label>
               <input
                 type="number"
@@ -253,7 +253,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                 placeholder="Age"
                 className="w-full p-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
               />
-            </div>
+            </div> */}
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Current Education</label>
