@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
@@ -15,6 +15,20 @@ const MobileNumberPopup = ({
   const [showOTP, setShowOTP] = useState(false);
   const [referenceId, setReferenceId] = useState(null);
   const [otpSent, setOtpSent] = useState(false);
+  const [isMobileEdited, setIsMobileEdited] = useState(false);
+  const [timer, setTimer] = useState(0);
+
+  useEffect(() => {
+    let countdown;
+    if (otpSent && timer > 0) {
+      countdown = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      setOtpSent(false);
+    }
+    return () => clearInterval(countdown);
+  }, [otpSent, timer]);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -35,6 +49,8 @@ const MobileNumberPopup = ({
       setReferenceId(data.data.reference_id);
       setShowOTP(true);
       setOtpSent(true);
+      setIsMobileEdited(false);
+      setTimer(60);
     },
   });
 
@@ -79,7 +95,7 @@ const MobileNumberPopup = ({
           validationSchema={validationSchema}
           onSubmit={() => {}}
         >
-          {({ values }) => (
+          {({ values, setFieldValue }) => (
             <Form className="space-y-4">
               <div>
                 <label className="block text-sm font-medium">Name</label>
@@ -104,6 +120,11 @@ const MobileNumberPopup = ({
                   name="mobileNumber"
                   maxLength="10"
                   className="mt-1 w-full p-2 border rounded-md"
+                  onChange={(e) => {
+                    setFieldValue("mobileNumber", e.target.value);
+                    setIsMobileEdited(true);
+                    setOtpSent(false);
+                  }}
                 />
                 <ErrorMessage
                   name="mobileNumber"
@@ -120,8 +141,13 @@ const MobileNumberPopup = ({
                   }`}
                   disabled={otpSent}
                 >
-                  {otpSent ? "Sent" : "Get OTP"}{" "}
+                  {otpSent ? `Resend OTP` : "Get OTP"}
                 </button>
+                {otpSent && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    Please wait for {timer} seconds before requesting a new OTP.
+                  </p>
+                )}
               </div>
 
               {showOTP && (
@@ -163,4 +189,3 @@ const MobileNumberPopup = ({
 };
 
 export default MobileNumberPopup;
-

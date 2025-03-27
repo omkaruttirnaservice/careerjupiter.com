@@ -21,6 +21,7 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
   const { userId } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [timeLeft, setTimeLeft] = useState(testDuration * 60);
 
   const resultGenerationMutation = useMutation({
     mutationFn: sendResult,
@@ -111,7 +112,12 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
 
   const handleSubmit = () => {
     const allAnswered = answers.every((ans) => ans !== "");
-    if (!allAnswered) {
+
+    if (timeLeft===0) {
+      setShowMobileNumberPopup(true);
+    }
+
+    if (!allAnswered && timeLeft !== 0) {
       Swal.fire({
         icon: "warning",
         title: "Incomplete Test!",
@@ -123,21 +129,23 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
 
     //step 1 : get user details
 
-    Swal.fire({
-      icon: "question",
-      title: "Are you sure?",
-      text: "Once submitted, you cannot change your answers.",
-      showCancelButton: true,
-      confirmButtonText: "Yes, Submit",
-      cancelButtonText: "No, Cancel",
-      confirmButtonColor: "#28a745",
-      cancelButtonColor: "#dc3545",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // refetch();
-        setShowMobileNumberPopup(true);
-      }
-    });
+    if(timeLeft !== 0){
+      Swal.fire({
+        icon: "question",
+        title: "Are you sure?",
+        text: "Once submitted, you cannot change your answers.",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Submit",
+        cancelButtonText: "No, Cancel",
+        confirmButtonColor: "#28a745",
+        cancelButtonColor: "#dc3545",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // refetch();
+          setShowMobileNumberPopup(true);
+        }
+      });
+    }
   };
 
   return (
@@ -156,18 +164,22 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
               testDuration={testDuration}
               handleSubmit={handleSubmit}
               title={title}
+              setTimeLeft={setTimeLeft}
+              timeLeft={timeLeft}
             />
           </div>
         )}
 
         <div className="flex flex-col lg:flex-row p-2 sm:p-4 bg-gray-100 gap-4">
           <div className="flex-1 w-full bg-white p-3 sm:p-6 rounded-lg shadow-md">
-            <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-4">
-              Question {currentQuestion + 1}
-            </h2>
-            <p className="mb-2 sm:mb-4">
-              {questions[currentQuestion].question}
-            </p>
+            <div className="h-[15vh] md:h-[20vh] w-full">
+              <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-4">
+                Question {currentQuestion + 1}
+              </h2>
+              <p className="mb-2 sm:mb-4">
+                {questions[currentQuestion].question}
+              </p>
+            </div>
 
             <div className="space-y-2">
               {[
@@ -259,3 +271,4 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
 };
 
 export default IQTest;
+

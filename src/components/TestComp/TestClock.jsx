@@ -3,9 +3,13 @@
 import { memo, useEffect, useState } from "react";
 import { FcAlarmClock } from "react-icons/fc";
 
-function TestClock({ testDuration, handleSubmit, title }) {
-  const [timeLeft, setTimeLeft] = useState(testDuration * 60);
-
+function TestClock({
+  testDuration,
+  handleSubmit,
+  title,
+  timeLeft,
+  setTimeLeft,
+}) {
   useEffect(() => {
     if (timeLeft === 0) {
       handleSubmit();

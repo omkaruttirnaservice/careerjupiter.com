@@ -83,6 +83,8 @@ const CardDetails = () => {
   const infrastructure = data?.infrastructure;
   const placements = data?.placements;
   const imageGallery = data?.college?.imageGallery;
+  const typeOfCourse = data?.college?.typeOfCourse;
+  const subCategory = data?.college?.subCategory;
 
   if (!college) {
     return <p className="text-center text-gray-600 mt-8">No data found.</p>;
@@ -192,6 +194,7 @@ const CardDetails = () => {
             <p className="text-gray-700 text-base leading-relaxed">
               {college.info?.description}
             </p>
+            <p>Course Type :{typeOfCourse}</p>
           </div>
         </div>
 
