@@ -89,7 +89,7 @@ const ShowReviews = ({userName}) => {
           {sortedReviews.map((review) => (
             <div
               key={review._id}
-              className="flex items-start gap-4 border-b pb-6 mb-6 last:border-b-0"
+              className="flex items-start gap-4 p-4 border-b pb-6 mb-6 last:border-b-0"
             >
               <img
                 src="https://img.freepik.com/premium-vector/portrait-male-student-with-glasses_684058-1126.jpg"

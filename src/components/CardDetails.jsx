@@ -91,15 +91,21 @@ const CardDetails = () => {
     <>
       <Nav />
       <a
-        href="tel:+1234567890" // Replace with your phone number
-        className="fixed bottom-6 right-6 z-5 flex items-center gap-3 bg-green-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-green-700 transition-all duration-300 hover:scale-100 animate-bounce"
+        href="tel:+1234567890"
+        className="fixed bottom-[100px] right-5 z-50 flex items-center gap-2 bg-green-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-green-700 transition-all duration-300 hover:scale-105 animate-bounce"
       >
-        <FaPhoneAlt className="text-2xl animate-wiggle" /> {/* Animated icon */}
-        <span className="font-bold text-lg">Call Now</span>
+        <FaPhoneAlt className="text-xl animate-pulse" />
+        <span className="font-bold text-sm md:text-base">Call Now</span>
       </a>
-      <div className="max-w-7xl mx-auto p-4 mt-15">
+      <div className="max-w-full mx-auto p-4 mt-15">
         {/* College Name at the Top */}
-        <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
+        <h1
+          className="text-2xl font-extrabold text-center text-gray-900 mb-6 
+               xs:text-1xl 
+               sm:text-1xl 
+               md:text-3xl 
+               lg:text-4xl"
+        >
           {college.collegeName}
         </h1>
 
@@ -124,8 +130,8 @@ const CardDetails = () => {
 
             {/* College Name - Always Visible on Overlay */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <h2 className="text-white text-3xl font-bold text-center px-4">
-                {college.collegeName || "Unknown College"}
+              <h2 className="text-white text-3xl sm:text-1xl font-bold text-center px-4">
+                {/* {college.collegeName || "Unknown College"} */}
               </h2>
             </div>
           </div>
@@ -148,7 +154,7 @@ const CardDetails = () => {
           <div className="absolute inset-0 bg-black opacity-60 group-hover:opacity-30 transition-opacity duration-300 rounded-lg"></div>
         </div>
 
-        <div className="bg-gray-50 p-8 rounded-lg w-full mt-8 shadow-md grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="bg-gray-50 p-5 rounded-lg w-full mt-8 shadow-md grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left Side - Contact Details */}
           <div className="space-y-4">
             <h2 className="text-2xl font-bold text-gray-800">
@@ -200,31 +206,32 @@ const CardDetails = () => {
 
         {/* Tabs Section */}
         <div className="relative mt-10 border-b text-gray-600 text-sm">
-          <div className="flex justify-center">
-            <div className="flex items-center overflow-x-auto scrollbar-hide scroll-smooth w-full max-w-3xl justify-center md:space-x-4">
-              <div className="flex space-x-6 px-4 md:px-0 overflow-x-auto scrollbar-hide">
-                {navItem.map((each) => (
-                  <div
-                    key={each}
-                    ref={(el) => (tabRefs.current[each] = el)}
-                    onClick={(e) => {
-                      e.preventDefault(); // Prevent scrolling to top
-                      handleNavName(each);
-                    }}
-                    className={`cursor-pointer h-8 px-6 rounded-md transition-all duration-300 font-bold flex items-center justify-center ${
-                      each === navName
-                        ? "text-blue-600 bg-gray-200"
-                        : "text-gray-600 hover:text-blue-600 hover:bg-gray-300 hover:h-12"
-                    }`}
-                  >
-                    {each}
-                  </div>
-                ))}
+          <div className="flex justify-center px-4">
+            <div className="w-full max-w-6xl">
+              <div className="flex overflow-x-auto scrollbar-hide pb-2">
+                <div className="flex space-x-2 md:space-x-4 min-w-max mx-auto">
+                  {navItem.map((each) => (
+                    <button
+                      key={each}
+                      ref={(el) => (tabRefs.current[each] = el)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleNavName(each);
+                      }}
+                      className={`cursor-pointer h-8 px-3 md:px-6 rounded-md transition-all duration-300 font-medium flex items-center justify-center whitespace-nowrap ${
+                        each === navName
+                          ? "text-blue-600 bg-blue-100 shadow-inner"
+                          : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+                      } text-xs sm:text-sm md:text-base`}
+                    >
+                      {each}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
-
         <div ref={sectionRef} className="mt-4">
           <HandleNavComp
             navName={navName}
