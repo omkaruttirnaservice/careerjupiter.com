@@ -12,15 +12,15 @@ const Gallery = ({ imageGallery }) => {
    }
 
   return (
-    <div className="bg-gradient-to-r  from-indigo-50 to-indigo-100 min-h-screen p-8 w-full">
-      <h1 className="text-4xl font-extrabold text-center mb-10 text-indigo-700">
+    <div className="bg-gradient-to-r  from-indigo-50 to-indigo-100 h-auto p-8 w-full">
+      <h1 className="text-2xl md:text-3xl font-extrabold text-center mb-5 text-grey-700">
         College Gallery
       </h1>
 
       <div className="">
-        <h4 className="text-2xl font-semibold text-indigo-600 mb-6">
-          Explore Our Campus
-        </h4>
+      <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gre-700 mb-6 pl-2">
+            Explore Our Campus
+          </h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {imageGallery.map((image) => (

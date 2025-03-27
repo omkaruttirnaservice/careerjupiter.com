@@ -23,25 +23,18 @@ const FacultyDetails = () => {
     queryFn: () => fetchInstitute(id),
   });
 
-  if (isLoading) {
-    return <p className="text-center text-gray-600 mt-8">Loading faculty details...</p>;
-  }
-
-  if (error) {
-    return <p className="text-center text-red-600 mt-8">Error: {error.message}</p>;
-  }
+  
 
   const faculty = institute?.class?.faculty_Details || [];
   // const staf_profile = institute?.class?.staff_profile || [];
   // console.log("profile",staf_profile)
   console.log( " faculty details......",data.class.faculty_Details )
 
-  if (!faculty.length) {
-    return <p className="text-center text-gray-600 mt-8">No faculty details available.</p>;
-  }
 
   return (
-    <section className="mt-10 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-lg">
+   <>
+   {Array.isArray(faculty) && faculty.length > 0 && (
+  <section className="mt-10 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-lg">
     <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Meet Our Faculty</h2>
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
       {faculty.map((member, index) => (
@@ -59,7 +52,6 @@ const FacultyDetails = () => {
               alt={member.name}
               className="w-28 h-28 rounded-full object-cover mb-4 border-4 border-indigo-300 shadow-lg"
             />
-            {console.log('staff image',member.staff_Profile)}
             <div className="absolute inset-0 bg-indigo-500 opacity-10 rounded-full"></div>
           </div>
           <h3 className="text-lg font-semibold text-gray-800">{member.staff_Name}</h3>
@@ -70,6 +62,9 @@ const FacultyDetails = () => {
       ))}
     </div>
   </section>
+)}
+
+   </>
   );
 };
 
