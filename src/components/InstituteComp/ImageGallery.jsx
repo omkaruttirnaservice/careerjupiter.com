@@ -36,30 +36,35 @@ const ImageGallery = () => {
   // console.log( "institute images",images)
 
   if (!images.length) {
-    return <p className="text-center text-gray-600 mt-8">No images available.</p>;
+    // return <p className="text-center text-gray-600 mt-8">No images available.</p>;
   }
 
   return (
-    <section className="mt-10 p-4 bg-gray-50 rounded-lg">
-      <h2 className="text-2xl font-bold mb-6 text-center">Image Gallery</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {images.map((imageGallery, index) => (
-          <motion.div 
-            key={index}
-            className="overflow-hidden rounded-lg shadow-lg"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: index * 0.2 }}
-          >
-            <img 
-              src={`${BASE_URL}${imageGallery}`} 
-              alt={`Gallery Image ${index + 1}`} 
-              className="w-full h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-300" 
-            />
-          </motion.div>
-        ))}
-      </div>
-    </section>
+    <>
+    {Array.isArray(images) && images.length > 0 && (
+      <section className="mt-10 p-4 bg-gray-50 rounded-lg">
+        <h2 className="text-2xl font-bold mb-6 text-center">Image Gallery</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {images.map((imageGallery, index) => (
+            <motion.div 
+              key={index}
+              className="overflow-hidden rounded-lg shadow-lg"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: index * 0.2 }}
+            >
+              <img 
+                src={`${BASE_URL}${imageGallery}`} 
+                alt={`Gallery Image ${index + 1}`} 
+                className="w-full h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-300" 
+              />
+            </motion.div>
+          ))}
+        </div>
+      </section>
+    )}
+    </>
+    
   );
 };
 

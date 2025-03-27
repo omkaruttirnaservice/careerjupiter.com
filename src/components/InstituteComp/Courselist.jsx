@@ -1,6 +1,6 @@
 const CourseList = ({ courses }) => {
     if (!courses || courses.length === 0) {
-      return <p className="text-center text-gray-600">No courses available.</p>;
+      // return <p className="text-center text-gray-600">No courses available.</p>;
     }
   
     return (

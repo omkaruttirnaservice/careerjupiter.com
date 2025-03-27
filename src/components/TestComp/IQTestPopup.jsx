@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SET_TIME } from "../../utils/constansts";
 import { FaBrain } from "react-icons/fa";
+import { GiBrain } from "react-icons/gi";
 import { IoArrowForwardOutline } from "react-icons/io5";
 import { createGuestUser } from "./Api";
 import { useMutation } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { login } from "../../store-redux/AuthSlice";
+import Lotify from "./Lotify";
 
 const IQTestPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -65,39 +67,41 @@ const IQTestPopup = () => {
 
             <div className="flex flex-col md:flex-row items-center">
               {/* Left: Image Section */}
-              <div className="w-full md:w-1/2 flex justify-center animate-pulse">
-                <img
-                  src="https://static.vecteezy.com/system/resources/previews/026/994/839/non_2x/tiny-woman-determine-cognitive-abilities-iq-test-intelligence-quotient-modern-flat-cartoon-style-illustration-on-white-background-vector.jpg"
-                  alt="IQ Test"
-                  className="w-56 md:w-72 object-cover"
-                />
+              <div className="w-full md:w-140 h-80 flex justify-center">
+                <Lotify icon="\public\Lottiefiles\Animation - 1742981797770.json" />
               </div>
+
+
+
+
 
               {/* Right: Content Section */}
               <div className="w-full md:w-1/2 text-center md:text-left p-6">
                 <div className="flex items-center justify-center md:justify-start space-x-3 mb-4">
-                  <FaBrain className="text-5xl text-blue-500" />
-                  <h2 className="text-3xl font-bold text-gray-900">IQ Test</h2>
+                  <GiBrain className="text-4xl text-blue-500" />
+
+                  
+                  <h2 className="text-3xl font-bold text-gray-900 font-mono">IQ Test</h2>
                 </div>
 
-                <p className="text-gray-700 text-base md:text-lg mb-6">
+                <p className="text-gray-700 text-base md:text-lg mb-6 font-serif">
                   Test your intelligence and problem-solving skills with this
                   quick IQ test.
                 </p>
 
                 {/* Price Tag */}
-                <div className="flex items-center justify-center md:justify-start mb-5">
-                  <span className="text-gray-500 text-xl line-through mr-2">
+                <div className="flex items-center justify-center md:justify-start mr-15 mb-5">
+                  <span className="text-gray-500 font-bold text-3xl line-through ">
                     ₹1499
                   </span>
-                  <span className="text-yellow-500 text-2xl font-bold bg-gray-900 px-4 py-2 rounded-md">
-                    Free
-                  </span>
+                  <h1 className="text-9xl h-20 w-35">
+                  <Lotify  icon="\public\Lottiefiles\Animation - 1742985030727.json" />
+                  </h1>
                 </div>
 
                 {/* Button */}
                 <button
-                  className="w-full flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-6 py-4 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out shadow-lg animate-bounceSlow"
+                  className=" animate-pulse w-full flex items-center justify-center cursor-pointer bg-green-500 hover:bg-green-600 text-white px-6 py-4 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out shadow-lg animate-bounceSlow"
                   onClick={handleCreateGuestUser}
                 >
                   <span>Give Test</span>

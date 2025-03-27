@@ -26,6 +26,7 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
       fetchUserDetails(userId)
         .then((data) => {
           const mobile = data?.data?.mobile_no;
+          console.log(mobile , 'mobilelllll')
           if (mobile) {
             setLoggedInMobile(mobile);
             Cookies.set("userMobile", mobile);
@@ -109,12 +110,12 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
         Leave a Review
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2  gap-6">
         {/* Left Column - Review Form */}
-        <div className="bg-white shadow-lg rounded-lg p-6">
+        <div className="bg-white shadow-lg rounded-lg p-5 ">
           {id ? (
             <p className="mb-4 text-gray-600 text-left">
-              <strong>{reviewCollegeName}, {reviewUniversityName}</strong>
+              <strong>{reviewCollegeName}</strong>
             </p>
           ) : (
             <p className="text-red-600 font-bold text-center">
@@ -240,7 +241,7 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
         </div>
 
         {/* Right Column - Reviews List */}
-        <div className="bg-white shadow-lg rounded-lg h-full">
+        <div className="bg-white shadow-lg rounded-lg h-full ">
           <ShowReviews userName={userNameValue} />
         </div>
       </div>

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { OPTIONS_ENUMS } from "../../utils/constansts";
 import TestClock from "./TestClock";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getTest, getUserDetail, sendResult } from "./Api";
+import { getUserDetail, sendResult } from "./Api";
 import { setTestResult } from "../../store-redux/testResultSlice";
 import MobileNumberPopup from "./MobileNumberPopup";
 import { setIqTestId } from "../../store-redux/iqTestSlice";
@@ -95,13 +95,13 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
   // useEffect(() => {
   //   const mobileNumber = data?.data?.data?.mobile_no;
   //   console.log({ mobileNumber });
-    
-    // step 2 : check user present or not
+
+  // step 2 : check user present or not
   //   if (data?.data) {
   //     if (mobileNumber === "0000000000") {
   //       setShowMobileNumberPopup(true);
   //     } else {
-        
+
   //       resultGenerationMutation.mutate(resultData);
   //       setShowMobileNumberPopup(false);
   //       // generate result mutation
@@ -142,104 +142,115 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
 
   return (
     <>
-      {showMobileNumberPopup && (
-        <MobileNumberPopup
-          setShowMobileNumberPopup={setShowMobileNumberPopup}
-          resultGenerationMutation={resultGenerationMutation}
-          resultData={resultData}
-        />
-      )}
-      {!isSubmitted && (
-        <div className="w-full bg-gray-100 p-4 shadow-lg rounded-xl mb-4 flex justify-between items-center">
-          <TestClock testDuration={testDuration} handleSubmit={handleSubmit} title={title} />
-        </div>
-      )}
-
-      <div className="flex flex-col md:flex-row p-4 bg-gray-100">
-        <div className="flex-1 bg-white p-6 rounded-lg shadow-md mb-4 md:mb-0 md:mr-4">
-          <h2 className="text-xl font-bold mb-4">
-            Question {currentQuestion + 1}
-          </h2>
-          <p className="mb-4">{questions[currentQuestion].question}</p>
-
-          <div className="space-y-2">
-            {[
-              OPTIONS_ENUMS.OPTION_A,
-              OPTIONS_ENUMS.OPTION_B,
-              OPTIONS_ENUMS.OPTION_C,
-              OPTIONS_ENUMS.OPTION_D,
-              OPTIONS_ENUMS.OPTION_E,
-            ].map((letter) => {
-              const optionValue = questions[currentQuestion][`option${letter}`];
-              if (!optionValue) return null;
-
-              return (
-                <label
-                  key={letter}
-                  className="flex items-center p-2 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer"
-                >
-                  <input
-                    type="radio"
-                    name="option"
-                    value={letter}
-                    checked={answers[currentQuestion] === letter}
-                    onChange={() => handleOptionSelect(letter)}
-                    className="mr-2"
-                  />
-                  {letter}. {optionValue}
-                </label>
-              );
-            })}
+      <div className="flex flex-col w-full max-w-7xl mx-auto">
+        {showMobileNumberPopup && (
+          <MobileNumberPopup
+            setShowMobileNumberPopup={setShowMobileNumberPopup}
+            resultGenerationMutation={resultGenerationMutation}
+            resultData={resultData}
+          />
+        )}
+        {!isSubmitted && (
+          <div className="w-full bg-gray-100 p-3 md:p-4 shadow-lg rounded-xl mb-4 flex flex-col sm:flex-row justify-between items-center">
+            <TestClock
+              testDuration={testDuration}
+              handleSubmit={handleSubmit}
+              title={title}
+            />
           </div>
+        )}
 
-          <div className="flex justify-between mt-6">
-            <button
-              onClick={() =>
-                setCurrentQuestion((prev) => Math.max(0, prev - 1))
-              }
-              className="cursor-pointer flex items-center bg-blue-500 text-white p-2 rounded"
-            >
-              <FaArrowLeft className="mr-2" /> Previous
-            </button>
+        <div className="flex flex-col lg:flex-row p-2 sm:p-4 bg-gray-100 gap-4">
+          <div className="flex-1 w-full bg-white p-3 sm:p-6 rounded-lg shadow-md">
+            <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-4">
+              Question {currentQuestion + 1}
+            </h2>
+            <p className="mb-2 sm:mb-4">
+              {questions[currentQuestion].question}
+            </p>
 
-            {currentQuestion < questions.length - 1 ? (
+            <div className="space-y-2">
+              {[
+                OPTIONS_ENUMS.OPTION_A,
+                OPTIONS_ENUMS.OPTION_B,
+                OPTIONS_ENUMS.OPTION_C,
+                OPTIONS_ENUMS.OPTION_D,
+                OPTIONS_ENUMS.OPTION_E,
+              ].map((letter) => {
+                const optionValue =
+                  questions[currentQuestion][`option${letter}`];
+                if (!optionValue) return null;
+
+                return (
+                  <label
+                    key={letter}
+                    className="flex items-center p-2 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer text-sm sm:text-base"
+                  >
+                    <input
+                      type="radio"
+                      name="option"
+                      value={letter}
+                      checked={answers[currentQuestion] === letter}
+                      onChange={() => handleOptionSelect(letter)}
+                      className="mr-2"
+                    />
+                    {letter}. {optionValue}
+                  </label>
+                );
+              })}
+            </div>
+
+            <div className="flex justify-between mt-4 sm:mt-6">
               <button
-                onClick={() => setCurrentQuestion((prev) => prev + 1)}
-                className="cursor-pointer flex items-center bg-blue-500 p-2 rounded text-white"
+                onClick={() =>
+                  setCurrentQuestion((prev) => Math.max(0, prev - 1))
+                }
+                className="cursor-pointer flex items-center bg-blue-500 text-white p-1.5 sm:p-2 rounded text-sm sm:text-base"
               >
-                Next <FaArrowRight className="ml-2" />
+                <FaArrowLeft className="mr-1 sm:mr-2" /> Previous
               </button>
-            ) : (
-              answers[currentQuestion] !== "" && (
+
+              {currentQuestion < questions.length - 1 ? (
                 <button
-                  onClick={handleSubmit}
-                  className="cursor-pointer flex items-center bg-green-500 p-2 rounded text-white"
+                  onClick={() => setCurrentQuestion((prev) => prev + 1)}
+                  className="cursor-pointer flex items-center bg-blue-500 p-1.5 sm:p-2 rounded text-white text-sm sm:text-base"
                 >
-                  <FaCheckCircle className="ml-2" /> Save & Submit
+                  Next <FaArrowRight className="ml-1 sm:ml-2" />
                 </button>
-              )
-            )}
+              ) : (
+                answers[currentQuestion] !== "" && (
+                  <button
+                    onClick={handleSubmit}
+                    className="cursor-pointer flex items-center bg-green-500 p-1.5 sm:p-2 rounded text-white text-sm sm:text-base"
+                  >
+                    Submit <FaCheckCircle className="ml-1 sm:ml-2" />
+                  </button>
+                )
+              )}
+            </div>
           </div>
-        </div>
 
-        <div className="w-full md:w-1/4 h-[60vh] bg-white p-4 rounded-lg shadow-md">
-          <h2 className="text-lg font-bold mb-4">Questions</h2>
-          <div className="grid grid-cols-4 h-[80%] overflow-auto gap-1 py-2">
-            {questions.map((q, index) => (
-              <button
-                key={q._id}
-                onClick={() => setCurrentQuestion(index)}
-                className={`mt-1 rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300 cursor-pointer ${
-                  currentQuestion === index
-                    ? "bg-blue-500 text-white ring-2 ring-offset-2 ring-blue-700"
-                    : answers[index]
-                      ? "bg-green-500 text-white"
-                      : "bg-red-600 text-white"
-                }`}
-              >
-                {index + 1}
-              </button>
-            ))}
+          <div className="w-full lg:w-1/3 xl:w-1/4 bg-white p-3 sm:p-4 rounded-lg shadow-md mt-4 lg:mt-0">
+            <h2 className="text-base sm:text-lg font-bold mb-2 sm:mb-4">
+              Questions
+            </h2>
+            <div className="grid grid-cols-4  sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-4 xl:grid-cols-4 gap-1 sm:gap-2 py-2 h-[40vh] lg:h-[60vh] overflow-y-auto">
+              {questions.map((q, index) => (
+                <button
+                  key={q._id}
+                  onClick={() => setCurrentQuestion(index)}
+                  className={`rounded-full ml-4 md:ml-1 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center transition-all duration-300 cursor-pointer text-xs sm:text-sm ${
+                    currentQuestion === index
+                      ? "bg-blue-500 text-white ring-2 ring-offset-2 ring-blue-700"
+                      : answers[index]
+                        ? "bg-green-500 text-white"
+                        : "bg-red-600 text-white"
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
