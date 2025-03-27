@@ -7,6 +7,7 @@ import { getCollege } from "./Api";
 import { BACKEND_SERVER_IP } from "../Constant/constantData";
 import { FaPhoneAlt } from "react-icons/fa"; // Contact icon
 import Nav from "../Layouts/Nav";
+import Lotify from "./TestComp/Lotify";
 
 const CardDetails = () => {
   const navItem = [
@@ -92,12 +93,11 @@ const CardDetails = () => {
       <Nav />
       <a
         href="tel:+1234567890" // Replace with your phone number
-        className="fixed bottom-6 right-6 z-5 flex items-center gap-3 bg-green-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-green-700 transition-all duration-300 hover:scale-100 animate-bounce"
+        className="fixed bottom-6 ml-5 right-6 z-5 flex items-center    transition-all duration-300 hover:scale-100 "
       >
-        <FaPhoneAlt className="text-2xl animate-wiggle" /> {/* Animated icon */}
-      
-        
-        <span className="font-bold text-lg">Call Now</span>
+       <span className="w-34 h-34">
+                     <Lotify icon="\public\Lottiefiles\Animation - 1743060162749.json"/>
+                   </span>
       </a>
       <div className="max-w-7xl mx-auto p-4 mt-5">
         {/* College Name at the Top */}

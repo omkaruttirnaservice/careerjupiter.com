@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { BACKEND_SERVER_IP } from '../Constant/constantData';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { BounceLoader } from 'react-spinners';
+import Lotify from './TestComp/Lotify';
 
 
 const MultiCards = () => {
@@ -59,29 +60,29 @@ const MultiCards = () => {
 								onClick={() => navigate(`/college/${college._id}`)}
 							>
 								<div className="relative w-full h-48 overflow-hidden rounded-t-lg">
-  <img
-    src={college.image ? `${BACKEND_SERVER_IP}${college.image}` : ""}
-    alt={college.collegeName || "College Image"}
-    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-    onError={(e) => {
-      e.target.onerror = null; // Prevent infinite loop
-      e.target.style.display = "none"; // Hide broken image
+									<img
+										src={college.image ? `${BACKEND_SERVER_IP}${college.image}` : ""}
+										alt={college.collegeName || "College Image"}
+										className="w-full h-full  object-cover transition-transform duration-500 hover:scale-110"
+										onError={(e) => {
+											e.target.onerror = null; // Prevent infinite loop
+											e.target.style.display = "none"; // Hide broken image
 
-      // Set gradient background dynamically
-      e.target.parentNode.style.background =
-        "linear-gradient(to right, #667eea, #764ba2)";
-    }}
-  />
+											// Set gradient background dynamically
+											e.target.parentNode.style.background =
+												"linear-gradient(to right, #667eea, #764ba2)";
+										}}
+									/>
 
-  {/* Overlay for text if image fails */}
-  {!college.image && (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <h3 className="text-white text-3xl font-bold text-center px-4">
-        {college.collegeName || "Unknown College"}
-      </h3>
-    </div>
-  )}
-</div>
+									{/* Overlay for text if image fails */}
+									{!college.image && (
+										<div className="absolute inset-0 flex items-center justify-center">
+											<h3 className="text-white text-xl font-bold text-center px-4">
+												{college.collegeName || "Unknown College"}
+											</h3>
+										</div>
+									)}
+								</div>
 
 
 								<div className="p-5">
@@ -89,7 +90,9 @@ const MultiCards = () => {
 										{college.collegeName}
 									</h3>
 									<p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
-										<FaMapMarkerAlt className="text-red-500" />{' '}
+										<p className="w-8 h-8">
+											<Lotify icon="\public\Lottiefiles\Animation - 1742988929198 (1).json" />
+										</p>{' '}
 										{/* Red Location Icon */}
 										{college.address?.state}, {college.address?.dist}
 									</p>

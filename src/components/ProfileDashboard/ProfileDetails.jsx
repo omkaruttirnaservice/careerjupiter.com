@@ -3,15 +3,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { getUser } from "./Api"
 import { useQuery } from "@tanstack/react-query"
-import {
-  FaUserCircle,
-  FaEnvelope,
-  FaPhone,
-  FaBirthdayCake,
-  FaGraduationCap,
-  FaMapMarkerAlt,
-  FaEdit,
-} from "react-icons/fa"
+import { FaEnvelope, FaPhone, FaGraduationCap, FaEdit } from "react-icons/fa"
 import { useEffect, useState } from "react"
 import { setCurrentEducation } from "../../store-redux/educationSlice"
 import EducationFormModal from "./EducationFormModal"
@@ -25,7 +17,7 @@ const ProfileDetails = () => {
   const [isOpen, setIsOpen] = useState(false)
   const dispatch = useDispatch()
   const { userId } = useSelector((state) => state.auth)
-  const [isListVisible, setIsListVisible] = useState(false)
+  const [isListVisible, setIsListVisible] = useState(true)
   const [isOpenEdit, setIsOpenEdit] = useState(false)
   const [selectedEducation, setSelectedEducation] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -108,12 +100,18 @@ const ProfileDetails = () => {
       <div className="max-w-6xl mx-auto p-4 md:p-6 bg-gradient-to-br from-indigo-50 to-purple-50 min-h-screen">
         {/* Mobile Header (shown only on small screens) */}
         <div className="md:hidden w-full flex flex-col items-center text-center space-y-4 mb-6">
-          <div className="bg-gradient-to-br  from-indigo-400 to-purple-400 p-1 rounded-full">
+          <div className="relative bg-gradient-to-br from-indigo-400 to-purple-400 p-1 rounded-full">
             <img
               src={user?.profile_image || "https://via.placeholder.com/150"}
               alt="Profile"
-              className="w-24 h-24   rounded-full object-cover border-4 border-white"
+              className="w-24 h-24 rounded-full object-cover border-4 border-white"
             />
+            <button
+              className="absolute bottom-1 right-1 cursor-pointer bg-white p-2 rounded-full shadow-md hover:bg-gray-200 transition-all"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <FaEdit className="text-indigo-600 w-4 h-4" />
+            </button>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
             {user?.f_name} {user?.m_name} {user?.l_name}
@@ -142,12 +140,76 @@ const ProfileDetails = () => {
               ></div>
             </div>
           </div>
+          {/* Edit Profile Button for Mobile */}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="w-full cursor-pointer mt-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-2 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200"
+          >
+            Edit Profile
+          </button>
+        </div>
+        {/* Tablet Header (shown only on medium screens) */}
+        <div className="hidden md:block lg:hidden w-full mb-6">
+          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="relative bg-gradient-to-br from-indigo-400 to-purple-400 p-1.5 rounded-full">
+                <img
+                  src={user?.profile_image || "https://via.placeholder.com/150"}
+                  alt="Profile"
+                  className="w-28 h-28 rounded-full object-cover border-4 border-white"
+                />
+                <button
+                  className="absolute bottom-1 right-1 cursor-pointer bg-white p-2 rounded-full shadow-md hover:bg-gray-200 transition-all"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  <FaEdit className="text-indigo-600 w-4 h-4" />
+                </button>
+              </div>
+
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                {user?.f_name || "N/A"} {user?.m_name} {user?.l_name}
+              </h2>
+
+              <div className="w-full space-y-3">
+                <div className="flex items-center justify-center gap-2 text-gray-700">
+                  <FaEnvelope className="text-indigo-600 w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm font-medium break-all">{user?.email_id || "NA"}</span>
+                </div>
+                <div className="flex items-center justify-center gap-2 text-gray-700">
+                  <FaPhone className="text-indigo-600 w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm font-medium">{user?.mobile_no}</span>
+                </div>
+              </div>
+
+              {/* Profile Completion Progress */}
+              <div className="w-full mb-4">
+                <div className="flex justify-between mb-1">
+                  <span className="text-sm font-medium text-indigo-700">Profile Completion</span>
+                  <span className="text-sm font-medium text-indigo-700">{completionPercentage}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                  <div
+                    className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2.5 rounded-full transition-all duration-500 ease-in-out"
+                    style={{ width: `${completionPercentage}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              {/* Edit Profile Button */}
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="w-full cursor-pointer mt-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-2 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200"
+              >
+                Edit Profile
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-col md:flex-row gap-8 w-full">
+        <div className="flex flex-col lg:flex-row gap-8 w-full">
           {/* Left Column - Details */}
-          <div className="w-full md:w-2/3 space-y-8">
+          <div className="w-full lg:w-2/3 space-y-8">
             {/* Personal Information Card */}
             <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
               <h3 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
@@ -157,7 +219,7 @@ const ProfileDetails = () => {
                 <div className="flex items-center gap-4">
                   <div className="p-3">
                     <p className="w-10 h-10">
-                    <Lotify  icon="\public\Lottiefiles\Animation - 1742988633227 (1).json" />
+                      <Lotify icon="\public\Lottiefiles\Animation - 1742988633227 (1).json" />
                     </p>
                   </div>
                   <div>
@@ -167,9 +229,9 @@ const ProfileDetails = () => {
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="p-3">
-                  <p className=" w-10 h-10">
-                  <Lotify  icon="\public\Lottiefiles\Animation - 1742989600076.json" />
-                  </p>
+                    <p className=" w-10 h-10">
+                      <Lotify icon="\public\Lottiefiles\Animation - 1742989600076.json" />
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Age</p>
@@ -188,11 +250,11 @@ const ProfileDetails = () => {
               </div>
 
               <div className="flex items-start gap-4">
-              <div className="p-3">
-                    <p className="w-12 h-12">
-                    <Lotify  icon="\public\Lottiefiles\Animation - 1742988929198 (1).json"/>
-                    </p>
-                  </div>
+                <div className="p-3">
+                  <p className="w-12 h-12">
+                    <Lotify icon="\public\Lottiefiles\Animation - 1742988929198 (1).json" />
+                  </p>
+                </div>
                 <div className="break-words">
                   <p className="font-medium text-gray-800">
                     {user?.address?.line1 || "N/A"} {user?.address?.line2}
@@ -221,15 +283,7 @@ const ProfileDetails = () => {
                       <span>Add Education</span>
                     </p>
                   </button>
-                  <button
-                    onClick={() => console.log("Add Class Clicked")}
-                    className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 h-8 rounded-md cursor-pointer hover:shadow-md transition-all duration-200"
-                  >
-                    <p className="flex flex-row gap-2 items-center">
-                      <VscAdd />
-                      <span>Add Class</span>
-                    </p>
-                  </button>
+                  
                 </div>
               </div>
 
@@ -261,41 +315,38 @@ const ProfileDetails = () => {
               </div>
 
               {/* Education List */}
-              {isListVisible && (
-                <div className="mt-4 space-y-4">
-                  {educationList.length > 0 ? (
-                    educationList.map((edu, index) => (
-                      <div
-                        key={index}
-                        className="relative p-4 border rounded-lg shadow-sm bg-gray-50 hover:shadow-md transition-all duration-200"
+              <div className={`mt-4 space-y-4 ${isListVisible ? "block" : "hidden"}`}>
+                {educationList.length > 0 ? (
+                  educationList.map((edu, index) => (
+                    <div
+                      key={index}
+                      className="relative p-4 border rounded-lg shadow-sm bg-gray-50 hover:shadow-md transition-all duration-200"
+                    >
+                      <button
+                        className="absolute top-2 right-2 text-blue-500 hover:text-blue-700"
+                        onClick={() => openEditModal(edu)}
                       >
-                        <button
-                          className="absolute top-2 right-2 text-blue-500 hover:text-blue-700"
-                          onClick={() => openEditModal(edu)}
-                        >
-                          <MdEdit className="text-2xl cursor-pointer" />
-                        </button>
+                        <MdEdit className="text-2xl cursor-pointer" />
+                      </button>
 
-                        <h4 className="text-lg font-semibold">{edu.education_name}</h4>
-                        <p className="text-gray-700">{edu.school}</p>
-                        <p className="text-gray-500 text-sm">
-                          {`${edu.start_year?.month || "N/A"} ${edu.start_year?.year || " "}`} -{" "}
-                          {`${edu.end_year?.month || ""} ${edu.end_year?.year || " "}`}
-                        </p> 
-                      </div>
-                    ))
-                  ) : (
-                    <div className="p-4 border rounded-lg bg-gray-50 text-center">
-                      <p className="text-gray-500">No education details added yet.</p>
-                      <p className="text-sm text-indigo-600 mt-1">Click "Add Education" to get started.</p>
+                      <h4 className="text-lg font-semibold">{edu.education_name}</h4>
+                      <p className="text-gray-700">{edu.school}</p>
+                      <p className="text-gray-500 text-sm">
+                        {`${edu.start_year?.month || "N/A"} ${edu.start_year?.year || " "}`} -{" "}
+                        {`${edu.end_year?.month || ""} ${edu.end_year?.year || " "}`}
+                      </p>
                     </div>
-                  )}
-                </div>
-              )}
+                  ))
+                ) : (
+                  <div>
+                    
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="hidden md:block w-full md:w-1/3">
+          <div className="hidden lg:block w-full lg:w-1/3 md:mt-8">
             <div className="bg-white rounded-2xl h-full p-6 shadow-lg border border-gray-100 sticky top-6">
               <div className="flex flex-col items-center text-center space-y-4">
                 {/* Profile Completion Progress (Desktop) */}
@@ -324,6 +375,9 @@ const ProfileDetails = () => {
                     src={
                       user?.profile_image ||
                       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsEJHmI0MlIGvH9CYkbsLEWQ5_ee8Qtl5V-Q&s" ||
+                      "/placeholder.svg" ||
+                      "/placeholder.svg" ||
+                      "/placeholder.svg" ||
                       "/placeholder.svg" ||
                       "/placeholder.svg"
                     }

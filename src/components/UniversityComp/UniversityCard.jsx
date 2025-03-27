@@ -2,6 +2,7 @@
 
 import React from "react";
 import { MapPin, Medal } from "lucide-react"; // Importing icons
+import Lotify from "../TestComp/Lotify";
 
 const UniversityCard = ({ university, onClick }) => {
   return (
@@ -44,7 +45,9 @@ const UniversityCard = ({ university, onClick }) => {
         </div>
         {/* Location with Icon */}
         <div className="flex items-center text-gray-500 text-sm mb-2">
-          <MapPin size={16} className="mr-1 text-red-500" />
+         <span className="w-6 h-6">
+                       <Lotify icon="\public\Lottiefiles\Animation - 1742988929198 (1).json" />
+                     </span>
           {university.location}
         </div>
 
