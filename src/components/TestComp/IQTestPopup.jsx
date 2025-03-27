@@ -68,7 +68,7 @@ const IQTestPopup = () => {
             <div className="flex flex-col md:flex-row items-center">
               {/* Left: Image Section */}
               <div className="w-full md:w-140 h-80 flex justify-center">
-                <Lotify icon="\public\Lottiefiles\Animation - 1742981797770.json" />
+                <Lotify icon="\Lottiefiles\Animation - 1742981797770.json" />
               </div>
 
 
@@ -95,7 +95,7 @@ const IQTestPopup = () => {
                     ₹1499
                   </span>
                   <h1 className="text-9xl h-20 w-35">
-                  <Lotify  icon="\public\Lottiefiles\Animation - 1742985030727.json" />
+                  <Lotify  icon="\Lottiefiles\Animation - 1742985030727.json" />
                   </h1>
                 </div>
 

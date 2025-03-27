@@ -46,7 +46,7 @@ const UniversityCard = ({ university, onClick }) => {
         {/* Location with Icon */}
         <div className="flex items-center text-gray-500 text-sm mb-2">
          <span className="w-6 h-6">
-                       <Lotify icon="\public\Lottiefiles\Animation - 1742988929198 (1).json" />
+                       <Lotify icon="\Lottiefiles\Animation - 1742988929198 (1).json" />
                      </span>
           {university.location}
         </div>

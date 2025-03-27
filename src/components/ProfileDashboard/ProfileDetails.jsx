@@ -219,7 +219,7 @@ const ProfileDetails = () => {
                 <div className="flex items-center gap-4">
                   <div className="p-3">
                     <p className="w-10 h-10">
-                      <Lotify icon="\public\Lottiefiles\Animation - 1742988633227 (1).json" />
+                      <Lotify icon="\Lottiefiles\Animation - 1742988633227 (1).json" />
                     </p>
                   </div>
                   <div>
@@ -230,7 +230,7 @@ const ProfileDetails = () => {
                 <div className="flex items-center gap-4">
                   <div className="p-3">
                     <p className=" w-10 h-10">
-                      <Lotify icon="\public\Lottiefiles\Animation - 1742989600076.json" />
+                      <Lotify icon="\Lottiefiles\Animation - 1742989600076.json" />
                     </p>
                   </div>
                   <div>
@@ -252,7 +252,7 @@ const ProfileDetails = () => {
               <div className="flex items-start gap-4">
                 <div className="p-3">
                   <p className="w-12 h-12">
-                    <Lotify icon="\public\Lottiefiles\Animation - 1742988929198 (1).json" />
+                    <Lotify icon="\Lottiefiles\Animation - 1742988929198 (1).json" />
                   </p>
                 </div>
                 <div className="break-words">
