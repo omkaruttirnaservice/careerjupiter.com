@@ -10,11 +10,11 @@ const BestClass = () => {
   };
 
   return (
-    <div id='search-class' className="w-full min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 p-6 md:p-12 rounded-lg">
+    <div id='search-class' className="w-auto flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 p-6 md:p-12 rounded-lg">
       {/* Right Side - Content */}
       <div className="w-full md:w-1/2 text-white text-center md:text-left p-6">
-        <h1 className="text-2xl md:text-4xl font-bold flex items-center gap-3">
-          <FaChalkboardTeacher className="text-4xl md:text-4xl" /> SEARCH BEST CLASS
+        <h1 className="text-xl md:text-4xl font-bold flex items-center gap-3">
+          <FaChalkboardTeacher className="text-3xl md:text-4xl" /> SEARCH BEST CLASS
         </h1>
         <p className="text-lg mb-6 mt-4 md:mt-5">
           Explore top classes tailored to elevate your skills and knowledge. The right class leads to a brighter future.

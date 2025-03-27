@@ -1,5 +1,6 @@
 import { FaTrophy, FaChartLine, FaTags, FaMapMarkerAlt } from "react-icons/fa";
 import { BACKEND_SERVER_IP } from "../../Constant/constantData";
+import Lotify from "../TestComp/Lotify";
 
 const InstituteCard = ({ institute, onClick }) => {
   // Check if the image is available
@@ -12,30 +13,30 @@ const InstituteCard = ({ institute, onClick }) => {
     >
       {/* Image / Default Gradient */}
       <div
-  className="w-full h-60 relative flex items-center justify-center text-white text-lg font-bold"
-  style={{
-    backgroundImage: imageUrl
-      ? `url(${imageUrl})`
-      : "linear-gradient(to right, #667eea, #764ba2)", // Apply gradient if image is null
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  }}
->
-  {imageUrl && (
-    <img
-      src={imageUrl}
-      alt={institute?.className || "Institute Image"}
-      className="absolute inset-0 w-full h-full object-cover"
-      onError={(e) => {
-        e.target.style.display = "none"; // Hide broken image
-        e.target.parentNode.style.backgroundImage =
-          "linear-gradient(to right, #667eea, #764ba2)"; // Apply gradient
-      }}
-    />
-  )}
-  {/* Class Name Overlay */}
-  <span className="absolute z-10">{institute?.className || "No Image Available"}</span>
-</div>
+        className="w-full h-60 relative flex items-center justify-center text-white text-lg font-bold"
+        style={{
+          backgroundImage: imageUrl
+            ? `url(${imageUrl})`
+            : "linear-gradient(to right, #667eea, #764ba2)", // Apply gradient if image is null
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt={institute?.className || "Institute Image"}
+            className="absolute inset-0  w-full h-full object-cover"
+            onError={(e) => {
+              e.target.style.display = "none"; // Hide broken image
+              e.target.parentNode.style.backgroundImage =
+                "linear-gradient(to right, #667eea, #764ba2)"; // Apply gradient
+            }}
+          />
+        )}
+        {/* Class Name Overlay */}
+        <span className="absolute text-xl z-10">{institute?.className || "No Image Available"}</span>
+      </div>
       {/* Gradient Background (Initially Hidden) */}
       {/* <div className="w-full h-full hidden items-center justify-center text-white font-bold text-lg bg-gradient-to-r from-blue-500 to-purple-500">
           {institute?.className || "No Image Available"}
@@ -49,7 +50,7 @@ const InstituteCard = ({ institute, onClick }) => {
         </h2>
 
         {/* Category */}
-        <div className="flex items-center space-x-2 text-sm text-gray-700 mb-3">
+        <div className="flex ml-2 items-center space-x-2 text-sm text-gray-700 mb-3">
           <FaTags className="text-blue-500" />
           <p>
             <strong>Category:</strong> {institute.Category || "N/A"}
@@ -58,13 +59,17 @@ const InstituteCard = ({ institute, onClick }) => {
 
         {/* Location */}
         <div className="flex items-center space-x-2 text-sm text-gray-700">
-          <FaMapMarkerAlt className="text-red-500" />
-          <p>
-            <strong>Location:</strong>{" "}
-            {institute.address?.dist && institute.address?.state
-              ? `${institute.address.dist}, ${institute.address.state}`
-              : "N/A"}
-          </p>
+          <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
+            <span className="w-8 h-8">
+              <Lotify icon="\public\Lottiefiles\Animation - 1742988929198 (1).json" />
+            </span>
+            <p>
+              <strong>Location:</strong>{" "}
+              {institute.address?.dist && institute.address?.state
+                ? `${institute.address.dist}, ${institute.address.state}`
+                : "N/A"}
+            </p>
+            </p>
         </div>
 
         {/* Description */}

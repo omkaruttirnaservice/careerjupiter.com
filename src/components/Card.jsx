@@ -28,7 +28,7 @@ const Card = ({
 				/>
 				<div className="p-4 sm:p-5">
 					<div className="flex flex-col">
-						<h2 className="font-semibold text-base sm:text-lg md:text-xl text-gray-900">
+						<h2 className="font-semibold text-base sm:text-lg  text-gray-900">
 							{toPascalCase(name)}
 						</h2>
 						<div className="flex items-center gap-1 text-gray-500 text-xs sm:text-sm">

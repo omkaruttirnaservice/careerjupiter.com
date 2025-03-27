@@ -7,6 +7,7 @@ import { getCollege } from "./Api";
 import { BACKEND_SERVER_IP } from "../Constant/constantData";
 import { FaPhoneAlt } from "react-icons/fa"; // Contact icon
 import Nav from "../Layouts/Nav";
+import Lotify from "./TestComp/Lotify";
 
 const CardDetails = () => {
   const navItem = [
