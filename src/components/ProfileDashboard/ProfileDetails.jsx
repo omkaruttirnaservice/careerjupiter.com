@@ -113,7 +113,7 @@ const ProfileDetails = () => {
               <FaEdit className="text-indigo-600 w-4 h-4" />
             </button>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text">
             {user?.f_name} {user?.m_name} {user?.l_name}
           </h2>
           <div className="flex flex-col space-y-2">
