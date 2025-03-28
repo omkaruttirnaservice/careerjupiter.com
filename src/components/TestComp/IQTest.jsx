@@ -251,7 +251,7 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
                 <button
                   key={q._id}
                   onClick={() => setCurrentQuestion(index)}
-                  className={`rounded-full ml-4 md:ml-1 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center transition-all duration-300 cursor-pointer text-xs sm:text-sm ${
+                  className={`rounded-full ml-4 md:ml-1 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center transition-all duration-300 cursor-pointer text-base sm:text-lg font-bold ${
                     currentQuestion === index
                       ? "bg-blue-500 text-white ring-2 ring-offset-2 ring-blue-700"
                       : answers[index]
