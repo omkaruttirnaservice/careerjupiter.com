@@ -14,7 +14,9 @@ export const fetchCutoffs = async () => {
 };
 
 // Fetch eligible colleges
-export const fetchEligibleColleges = async (params) => {
-  const response = await axios.get(`${BASE_URL}/api/eligibility/colleges`, { params });
+export const fetchEligibleColleges = async (selectedData) => {
+  const response = await axios.get(
+    `${BASE_URL}/api/eligibility/colleges?education=${selectedData.education}&percentage=${selectedData.percentage}&caste=${selectedData.caste}&district=${selectedData.district}&year=2023`
+  );
   return response.data;
 };
