@@ -1,11 +1,21 @@
-
-"use client";
-
 import { useEffect, useState } from "react";
-import { Formik, Form, Field, ErrorMessage, useFormikContext } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
+import { useLocation } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+
+import MobileForm from "./MobileForm";
+import ProfileForm from "./ProfileForm";
+import {
+  educationOptions,
+  ASK_LATER_DELAY,
+  PROFILE_CHECK_DELAY,
+  PROFILE_POLL_INTERVAL,
+} from "../../Constant/constantData";
+import { login } from "../../store-redux/AuthSlice";
 import {
   userSignUp,
   updateUserProfile,
@@ -13,25 +23,11 @@ import {
   sendOTP,
   verifyOTP,
 } from "./Api";
-import { useMutation } from "@tanstack/react-query";
-import Cookies from "js-cookie";
-import { login } from "../../store-redux/AuthSlice";
-import { useLocation } from "react-router-dom";
 
-const educationOptions = [
-  "Diploma",
-  "Engineering",
-  "HSC",
-  "SSC",
-  "ITI",
-  "Graduation",
-  "Post Graduation",
-];
-
-const getValidationSchema = (needsFirstName, needsLastName, needsEducation) => {
+const getValidationSchema = (requirement) => {
   return Yup.object().shape({
     mobile_no:
-      needsFirstName || needsLastName || needsEducation
+      requirement !== "none"
         ? Yup.string()
         : Yup.string()
             .matches(
@@ -39,43 +35,38 @@ const getValidationSchema = (needsFirstName, needsLastName, needsEducation) => {
               "Contact number must start with 6-9 and be 10 digits"
             )
             .required("Contact number is required"),
-    f_name: needsFirstName
-      ? Yup.string().required("First Name is required")
-      : Yup.string(),
-    l_name: needsLastName
-      ? Yup.string().required("Last Name is required")
-      : Yup.string(),
-    info: Yup.object().shape({
-      current_education: needsEducation
-        ? Yup.string().required("Current Education is required")
+    f_name:
+      requirement === "firstName"
+        ? Yup.string().required("First Name is required")
         : Yup.string(),
+    l_name:
+      requirement === "lastName"
+        ? Yup.string().required("Last Name is required")
+        : Yup.string(),
+    info: Yup.object().shape({
+      current_education:
+        requirement === "education"
+          ? Yup.string().required("Current Education is required")
+          : Yup.string(),
     }),
   });
 };
 
-const SignupPopup = () => {
-  // const location = useLocation()
+export default function SignupPopup() {
+  // const location = useLocation();
   const authState = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(false);
-  const [needsFirstName, setNeedsFirstName] = useState(false);
-  const [needsLastName, setNeedsLastName] = useState(false);
-  const [needsEducation, setNeedsEducation] = useState(false);
+  const [requirement, setRequirement] = useState("none");
   const [userId, setUserId] = useState(null);
   const [profileComplete, setProfileComplete] = useState(false);
-  const [showOTP, setShowOTP] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
   const [referenceId, setReferenceId] = useState(null);
-  const [otp, setOtp] = useState("");
   const [askLaterClicked, setAskLaterClicked] = useState(false);
   const [showAskLater, setShowAskLater] = useState(true);
-  const [otpRequested, setOtpRequested] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [askLaterTimer, setAskLaterTimer] = useState(null);
-  const [isMobileEdited, setIsMobileEdited] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
-  const [timer , setTimer] = useState(0);
-
   const dispatch = useDispatch();
+  const [otpCooldown, setOtpCooldown] = useState(false);
+  const [otpTimer, setOtpTimer] = useState(0);
 
   // Hide popup if on profile route
   useEffect(() => {
@@ -96,27 +87,19 @@ const SignupPopup = () => {
       const data = await fetchProfileStatusAPI(userId);
 
       if (data.usrMsg?.includes("First name")) {
-        setNeedsFirstName(true);
-        setNeedsLastName(false);
-        setNeedsEducation(false);
+        setRequirement("firstName");
         setIsOpen(true);
         setShowAskLater(true);
       } else if (data.usrMsg?.includes("Last name")) {
-        setNeedsFirstName(false);
-        setNeedsLastName(true);
-        setNeedsEducation(false);
+        setRequirement("lastName");
         setIsOpen(true);
         setShowAskLater(true);
       } else if (data.usrMsg?.includes("Education")) {
-        setNeedsFirstName(false);
-        setNeedsLastName(false);
-        setNeedsEducation(true);
+        setRequirement("education");
         setIsOpen(true);
         setShowAskLater(true);
       } else {
-        setNeedsFirstName(false);
-        setNeedsLastName(false);
-        setNeedsEducation(false);
+        setRequirement("none");
         setIsOpen(false);
         setProfileComplete(true);
       }
@@ -128,41 +111,34 @@ const SignupPopup = () => {
     }
   };
 
-  // Fixed "Ask me later" functionality
   const handleAskLater = () => {
     setAskLaterClicked(true);
     setIsOpen(false);
 
-    // Clear any existing timer
     if (askLaterTimer) {
       clearTimeout(askLaterTimer);
     }
 
-    // Set new timer to show popup after exactly 15 seconds
     const timer = setTimeout(() => {
       setIsOpen(true);
-      setShowAskLater(false); // Hide the "Ask me later" button when popup reappears
-    }, 15000);
+      setShowAskLater(false);
+    }, ASK_LATER_DELAY);
 
     setAskLaterTimer(timer);
   };
 
-  // Cleanup timer on unmount
   useEffect(() => {
     return () => {
-      if (askLaterTimer) {
-        clearTimeout(askLaterTimer);
-      }
+      askLaterTimer && clearTimeout(askLaterTimer);
     };
   }, [askLaterTimer]);
 
-  const handleSignUp = async (mobileNumber) => {
+  const handleSignUp = async (mobileNumber, otp) => {
     if (!otp) {
       toast.error("Please enter OTP");
       return;
     }
 
-    setIsLoading(true);
     try {
       const payload = {
         mobile_no: mobileNumber,
@@ -170,7 +146,7 @@ const SignupPopup = () => {
         reference_id: referenceId,
       };
 
-      const response = await mutation.mutateAsync(payload);
+      const response = await signupMutation.mutateAsync(payload);
       const parsedData = response.data.data;
       const token = parsedData.token;
       const userId = parsedData.userId || parsedData.data?.userId;
@@ -185,22 +161,16 @@ const SignupPopup = () => {
 
       setUserId(userId);
       setIsOpen(false);
-      setShowOTP(false);
-      setOtpVerified(false);
-      setOtpRequested(false);
-      setOtp("");
+      setOtpSent(false);
       setReferenceId(null);
 
-      // Reduced API calls by using a longer timeout
-      setTimeout(() => fetchProfileStatus(userId), 10000);
+      setTimeout(() => fetchProfileStatus(userId), PROFILE_CHECK_DELAY);
     } catch (error) {
       console.error("Signup Error:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const mutation = useMutation({
+  const signupMutation = useMutation({
     mutationFn: userSignUp,
   });
 
@@ -208,9 +178,9 @@ const SignupPopup = () => {
     mutationFn: async (values) => {
       const payload = {};
 
-      if (needsFirstName) payload.f_name = values.f_name;
-      if (needsLastName) payload.l_name = values.l_name;
-      if (needsEducation) {
+      if (requirement === "firstName") payload.f_name = values.f_name;
+      if (requirement === "lastName") payload.l_name = values.l_name;
+      if (requirement === "education") {
         payload.info = {
           current_education: values.info.current_education,
         };
@@ -219,19 +189,10 @@ const SignupPopup = () => {
       return updateUserProfile({ userId, values: payload });
     },
     onSuccess: () => {
-      if (needsFirstName) {
-        toast.success("Saved !");
-      } else if (needsLastName) {
-        toast.success("Saved !");
-      } else if (needsEducation) {
-        toast.success("Saved !");
-      }
-
+      toast.success("Saved!");
       setIsOpen(false);
       setAskLaterClicked(false);
-
-      // Reduced API calls by using a longer timeout
-      setTimeout(() => fetchProfileStatus(userId), 10000);
+      setTimeout(() => fetchProfileStatus(userId), PROFILE_CHECK_DELAY);
     },
     onError: (error) => {
       console.error(
@@ -245,12 +206,8 @@ const SignupPopup = () => {
     mutationFn: sendOTP,
     onSuccess: (data) => {
       setReferenceId(data.data.reference_id);
-      setShowOTP(true);
-      setOtpRequested(true);
-      toast.success("OTP sent successfully!");
       setOtpSent(true);
-      setIsMobileEdited(false);
-      setTimer(60);
+      toast.success("OTP sent successfully!");
     },
     onError: (error) => {
       console.error("OTP Send Error:", error?.response?.data);
@@ -259,9 +216,8 @@ const SignupPopup = () => {
 
   const verifyOTPMutation = useMutation({
     mutationFn: verifyOTP,
-    onSuccess: (data) => {
-      setOtpVerified(true);
-      toast.success("OTP verify successfully!");
+    onSuccess: () => {
+      toast.success("OTP verified successfully!");
     },
     onError: (error) => {
       console.error("OTP Verification Error:", error?.response?.data);
@@ -269,16 +225,63 @@ const SignupPopup = () => {
   });
 
   useEffect(() => {
-    let countdown;
-    if (otpSent && timer > 0) {
-      countdown = setInterval(() => {
-        setTimer((prev) => prev - 1);
+    let interval;
+    if (otpCooldown && otpTimer > 0) {
+      interval = setInterval(() => {
+        setOtpTimer((prev) => prev - 1);
       }, 1000);
-    } else if (timer === 0) {
-      setOtpSent(false);
+    } else if (otpTimer === 0 && otpCooldown) {
+      setOtpCooldown(false);
     }
-    return () => clearInterval(countdown);
-  }, [otpSent, timer]);
+    return () => clearInterval(interval);
+  }, [otpCooldown, otpTimer]);
+
+  const handleSendOTP = (mobileNumber) => {
+    if (!mobileNumber) {
+      toast.error("Please enter mobile number");
+      return;
+    }
+    if (!/^[6-9][0-9]{9}$/.test(mobileNumber)) {
+      toast.error("Please enter valid 10-digit mobile number");
+      return;
+    }
+
+    setOtpCooldown(true);
+    setOtpTimer(60); // Reset timer to 60 seconds
+    sendOTPMutation.mutate({ mobile_no: mobileNumber });
+  };
+
+  const handleVerifyAndSignup = async (otp, mobileNumber) => {
+    if (!otp) {
+      toast.error("Please enter OTP");
+      return;
+    }
+
+    try {
+      await verifyOTPMutation.mutateAsync({
+        reference_id: referenceId,
+        otp,
+        mobile_no: mobileNumber,
+      });
+
+      await handleSignUp(mobileNumber, otp);
+    } catch (error) {
+      console.error("Error in verification:", error);
+    }
+  };
+
+  const getTitle = () => {
+    switch (requirement) {
+      case "firstName":
+        return "Complete Your Profile";
+      case "lastName":
+        return "Last Name Required";
+      case "education":
+        return "Education Details";
+      default:
+        return "Get Started";
+    }
+  };
 
   // For first-time visitors or users without a token
   useEffect(() => {
@@ -290,18 +293,18 @@ const SignupPopup = () => {
     if (!token) {
       const timer = setTimeout(() => {
         setIsOpen(true);
-      }, 10000);
+      }, PROFILE_CHECK_DELAY);
       return () => clearTimeout(timer);
     } else if (storedUserId) {
       setUserId(storedUserId);
       const timer = setTimeout(() => {
         fetchProfileStatus(storedUserId);
-      }, 10000);
+      }, PROFILE_CHECK_DELAY);
       return () => clearTimeout(timer);
     }
   }, [location.pathname]);
 
-  // For profile status polling - reduced frequency to avoid unnecessary API calls
+  // For profile status polling
   useEffect(() => {
     if (location.pathname.startsWith("/profile")) return;
 
@@ -310,62 +313,22 @@ const SignupPopup = () => {
     if (authState.isLoggedIn && !profileComplete && userId) {
       interval = setInterval(() => {
         fetchProfileStatus(userId);
-      }, 30000); // Increased interval to 30 seconds to reduce API calls
+      }, PROFILE_POLL_INTERVAL);
     }
 
     return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
+      interval && clearInterval(interval);
     };
   }, [authState.isLoggedIn, profileComplete, userId, location.pathname]);
 
-  const handleSendOTP = (mobileNumber) => {
-    if (!mobileNumber) {
-      toast.error("Please enter mobile number");
-      return;
-    }
-    sendOTPMutation.mutate({ mobile_no: mobileNumber });
-  };
-
-  const handleVerifyAndSignup = async (otpValue, mobileNumber) => {
-    if (!otpValue) {
-      toast.error("Please enter OTP");
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      // First verify OTP
-      await verifyOTPMutation.mutateAsync({
-        reference_id: referenceId,
-        otp: otpValue,
-        mobile_no: mobileNumber,
-      });
-
-      // If OTP verification succeeds, proceed with signup
-      await handleSignUp(mobileNumber);
-    } catch (error) {
-      console.error("Error in verification:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
-    <div>
+    <>
       {isOpen && !location.pathname.startsWith("/profile") && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
             <div className="p-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                {needsFirstName
-                  ? "Complete Your Profile"
-                  : needsLastName
-                    ? "Last Name Required"
-                    : needsEducation
-                      ? "Education Details"
-                      : "Get Started"}
+                {getTitle()}
               </h2>
 
               <Formik
@@ -377,225 +340,44 @@ const SignupPopup = () => {
                     current_education: "",
                   },
                 }}
-                validationSchema={getValidationSchema(
-                  needsFirstName,
-                  needsLastName,
-                  needsEducation
-                )}
+                validationSchema={getValidationSchema(requirement)}
                 onSubmit={(values, { setSubmitting }) => {
-                  if (needsFirstName || needsLastName || needsEducation) {
+                  if (requirement !== "none") {
                     updateProfileMutation.mutate(values);
                   }
                   setSubmitting(false);
                 }}
               >
-                {({ values, setFieldValue }) => (
-                  <Form className="space-y-4">
-                    {!needsFirstName && !needsLastName && !needsEducation ? (
-                      <>
-                        <div className="space-y-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Mobile Number
-                            </label>
-                            <div className="flex flex-col gap-3">
-                              <Field name="mobile_no">
-                                {({ field, form }) => (
-                                  <input
-                                    {...field}
-                                    type="tel"
-                                    maxLength="10"
-                                    placeholder="Enter 10-digit mobile number"
-                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition w-full"
-                                    onChange={(e) => {
-                                      form.setFieldValue(
-                                        "mobile_no",
-                                        e.target.value
-                                      );
-                                      setIsMobileEdited(true);
-                                      setOtpSent(false);
-                                    }}
-                                  />
-                                )}
-                              </Field>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  sendOTPMutation.mutate({
-                                    mobile_no: values.mobile_no,
-                                  });
-                                }}
-                                className={`px-4 py-2 rounded-lg font-medium transition ${
-                                  otpSent && !isMobileEdited
-                                    ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                                    : "bg-blue-600 text-white hover:bg-blue-700"
-                                }`}
-                                disabled={otpSent && !isMobileEdited}
-                              >
-                                {otpSent && !isMobileEdited
-                                  ? "Resent Otp"
-                                  : "Get OTP"}
-                              </button>
-                              <p className="text-sm text-gray-500 mt-1">
-                                Please wait for {timer} second before requesting a new OTP
-
-                              </p>
-                            </div>
-                            <ErrorMessage
-                              name="mobile_no"
-                              component="div"
-                              className="text-red-500 text-sm mt-1"
-                            />
-                          </div>
-
-                          {showOTP && (
-                            <div className="space-y-2">
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Enter OTP
-                              </label>
-                              <div className="flex gap-2">
-                                <input
-                                  type="text"
-                                  placeholder="Enter 6-digit OTP"
-                                  value={otp}
-                                  onChange={(e) => setOtp(e.target.value)}
-                                  className="flex-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                                  maxLength={6}
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    handleVerifyAndSignup(otp, values.mobile_no)
-                                  }
-                                  disabled={isLoading}
-                                  className={`px-4 py-2 rounded-lg font-medium transition ${
-                                    isLoading
-                                      ? "bg-blue-400 cursor-wait"
-                                      : "bg-green-600 text-white hover:bg-green-700"
-                                  }`}
-                                >
-                                  {isLoading
-                                    ? "Processing..."
-                                    : "Verify & Sign Up"}
-                                </button>
-                              </div>
-                            </div>
-                          )}
-
-                          {showAskLater && !showOTP && (
-                            <button
-                              type="button"
-                              onClick={handleAskLater}
-                              className="w-full mt-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition"
-                            >
-                              Ask Me Later
-                            </button>
-                          )}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="space-y-4">
-                          {needsFirstName && (
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                First Name
-                              </label>
-                              <Field
-                                name="f_name"
-                                type="text"
-                                placeholder="Enter your first name"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                              />
-                              <ErrorMessage
-                                name="f_name"
-                                component="div"
-                                className="text-red-500 text-sm mt-1"
-                              />
-                            </div>
-                          )}
-
-                          {needsLastName && (
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Last Name
-                              </label>
-                              <Field
-                                name="l_name"
-                                type="text"
-                                placeholder="Enter your last name"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                              />
-                              <ErrorMessage
-                                name="l_name"
-                                component="div"
-                                className="text-red-500 text-sm mt-1"
-                              />
-                            </div>
-                          )}
-
-                          {needsEducation && (
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Current Education
-                              </label>
-                              <Field
-                                name="info.current_education"
-                                as="select"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                              >
-                                <option value="">Select your education</option>
-                                {educationOptions.map((option) => (
-                                  <option key={option} value={option}>
-                                    {option}
-                                  </option>
-                                ))}
-                              </Field>
-                              <ErrorMessage
-                                name="info.current_education"
-                                component="div"
-                                className="text-red-500 text-sm mt-1"
-                              />
-                            </div>
-                          )}
-
-                          <div className="flex gap-3 pt-2">
-                            <button
-                              type="submit"
-                              disabled={updateProfileMutation.isLoading}
-                              className={`flex-1 px-4 py-2 rounded-lg font-medium transition ${
-                                updateProfileMutation.isLoading
-                                  ? "bg-blue-400 cursor-wait"
-                                  : "bg-blue-600 text-white hover:bg-blue-700"
-                              }`}
-                            >
-                              {updateProfileMutation.isLoading
-                                ? "Saving..."
-                                : "Save"}
-                            </button>
-
-                            {showAskLater && (
-                              <button
-                                type="button"
-                                onClick={handleAskLater}
-                                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition"
-                              >
-                                Ask Me Later
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </Form>
-                )}
+                <Form className="space-y-4">
+                  {requirement === "none" ? (
+                    <MobileForm
+                      onSendOtp={handleSendOTP}
+                      onVerifyAndSignup={handleVerifyAndSignup}
+                      otpSent={otpSent}
+                      isLoading={
+                        signupMutation.isLoading || verifyOTPMutation.isLoading
+                      }
+                      showAskLater={showAskLater}
+                      onAskLater={handleAskLater}
+                      referenceId={referenceId}
+                      otpCooldown={otpCooldown}
+                      otpTimer={otpTimer}
+                      isSendingOtp={sendOTPMutation.isLoading}
+                    />
+                  ) : (
+                    <ProfileForm
+                      requirement={requirement}
+                      isLoading={updateProfileMutation.isLoading}
+                      showAskLater={showAskLater}
+                      onAskLater={handleAskLater}
+                    />
+                  )}
+                </Form>
               </Formik>
             </div>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
-};
-
-export default SignupPopup;
+}
