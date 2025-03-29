@@ -54,7 +54,6 @@ export default function MobileForm({
     </button>
   </div>
 
-  {/* Cooldown Text */}
   
 </div>
 
