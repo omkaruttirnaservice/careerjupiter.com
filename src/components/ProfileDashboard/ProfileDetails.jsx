@@ -12,6 +12,7 @@ import { MdEdit } from "react-icons/md"
 import EditEductionDetails from "./EditEductionDetails"
 import EditProfileModal from "./EditProfile"
 import Lotify from "../TestComp/Lotify"
+import LoadingProfilePage from "../loading-skeleton/LoadingProfilePage"
 
 const ProfileDetails = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -66,11 +67,7 @@ const ProfileDetails = () => {
   }
 
   if (isPending)
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-500"></div>
-      </div>
-    )
+    return <LoadingProfilePage />;
 
   if (isError)
     return (
@@ -426,5 +423,5 @@ const ProfileDetails = () => {
   )
 }
 
-export default ProfileDetails
+export default ProfileDetails;
 

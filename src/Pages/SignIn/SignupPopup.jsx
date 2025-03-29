@@ -23,6 +23,7 @@ import {
   sendOTP,
   verifyOTP,
 } from "./Api";
+import PasswordPopUp from "./PasswordPopUp";
 
 const getValidationSchema = (requirement) => {
   return Yup.object().shape({
@@ -323,6 +324,7 @@ export default function SignupPopup() {
 
   return (
     <>
+      {/* {!otpSent ? <PasswordPopUp/> : ""} */}
       {isOpen && !location.pathname.startsWith("/profile") && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">

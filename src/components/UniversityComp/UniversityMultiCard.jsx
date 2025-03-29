@@ -1,27 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import UniversityCard from './UniversityCard';
-import TagsSection from '../TagsSection';
-import { useSearchContext } from '../../store/SearchContext';
-import toast from 'react-hot-toast';
-import { BounceLoader } from 'react-spinners';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import UniversityCard from "./UniversityCard";
+import TagsSection from "../TagsSection";
+import { useSearchContext } from "../../store/SearchContext";
+import toast from "react-hot-toast";
+import { BounceLoader } from "react-spinners";
+import LoadingCard from "../loading-skeleton/LoadingCard";
 // import Loader from '../Loader';
 
 const UniversityMultiCard = () => {
-	const navigate = useNavigate();
+  const navigate = useNavigate();
 
-	let { UniversityData, errorMsg, isLoading } = useSearchContext();
+  let { UniversityData, errorMsg, isLoading } = useSearchContext();
 
-	useEffect(() => {
-		toast.error(errorMsg || 'Please try again later !');
-	}, [errorMsg]);
+  useEffect(() => {
+    toast.error(errorMsg || "Please try again later !");
+  }, [errorMsg]);
 
-	const tags = ['All', 'Private', 'Government'];
+  const tags = ["All", "Private", "Government"];
 
-	console.log('UniversityData inside university.......', UniversityData);
-	console.log('loading...', isLoading);
+  console.log("UniversityData inside university.......", UniversityData);
+  console.log("loading...", isLoading);
 
-	return (
+  return (
     <div className="mt-10">
       <TagsSection tags={tags} />
       <div className="bg-gray-30 py-10">
@@ -33,22 +34,14 @@ const UniversityMultiCard = () => {
             Discover the world's top universities with outstanding programs,
             cutting-edge research, and vibrant campus communities.
           </p>
-          
 
-          {
-				isLoading ? (
-					<div className="flex flex-col items-center justify-center h-64">
-						{/* <div className="w-16 h-16 border-8 border-t-blue-500 border-b-blue-500 border-r-transparent border-l-transparent rounded-full animate-spin"></div> */}
-						<BounceLoader color='#36d7b7' />
-						<p className="mt-4 text-lg font-medium text-gray-600">Loading...</p>
-					</div>
-				) : null
-			}
-
-
-
-
-
+          {isLoading ? (
+            <div className="mt-10 px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, index) => (
+                <LoadingCard key={index} />
+              ))}
+            </div>
+          ) : null}
 
           {!isLoading && UniversityData?.results?.length !== 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
