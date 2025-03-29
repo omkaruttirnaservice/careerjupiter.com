@@ -897,3 +897,17 @@ export const navigation = [
 export const BACKEND_SERVER_IP = import.meta.env.VITE_BACKEND_URL;
 
 export const testOption =["all","HSC","Diploma","Pharmacy","SSC","Beginner","engineering"]
+
+export const educationOptions = [
+	"Diploma",
+	"Engineering",
+	"HSC",
+	"SSC",
+	"ITI",
+	"Graduation",
+	"Post Graduation",
+  ];
+  
+  export const ASK_LATER_DELAY = 15000; // 15 seconds
+  export const PROFILE_CHECK_DELAY = 10000; // 10 seconds
+  export const PROFILE_POLL_INTERVAL = 30000; // 30 seconds
