@@ -1,6 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSearch, FaUniversity } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { FaArrowRight } from "react-icons/fa";
+
 
 const BestCollege = () => {
   const navigate = useNavigate();
@@ -22,8 +25,8 @@ const BestCollege = () => {
 
       {/* Right Side - Content */}
       <div className="w-auto md:w-1/2 text-white text-center md:text-left mt-6 md:mt-0 p-6">
-        <h1 className="text-xl tb:text-sm md:text-4xl font-bold flex items-center gap-3">
-          <FaUniversity className="text-3xl md:text-4xl" /> SEARCH BEST COLLEGE
+        <h1 className="text-xl tb:text-sm md:text-4xl font-bold flex items-center gap-3 justify-center ">
+          <FaUniversity className="text-3xl md:text-4xl  " /> SEARCH BEST COLLEGE
         </h1>
         <p className="text-lg mb-6 mt-4 md:mt-5">
           Discover top colleges that match your dreams and goals. Your future starts with the right choice.
@@ -33,6 +36,21 @@ const BestCollege = () => {
           className="w-full cursor-pointer border-2 flex items-center justify-center gap-3 bg-green-400 text-white px-6 py-3 rounded-full font-semibold text-lg hover:bg-green-500 transition-transform duration-300 hover:scale-105"
         >
           <FaSearch /> Search College
+          <motion.span
+  className="text-2xl ml-2"
+  animate={{ 
+    y: [0, -8, 0],
+    rotate: [0, -5, 5, 0]
+  }}
+  transition={{ 
+    repeat: Infinity, 
+    duration: 2,
+    ease: "easeInOut"
+  }}
+>
+  🎓
+</motion.span>
+
         </button>
       </div>
     </div>

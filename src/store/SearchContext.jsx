@@ -7,7 +7,15 @@ export const useSearchContext = () => {
 };
 
 const SearchContextProvider = ({ children }) => {
-  const tags = ["All", "Diploma", "Engineering", "Pharmacy", "HSC"];
+  const tags = [
+    "All",
+    "Diploma",
+    "Engineering",
+    "Pharmacy",
+    "HSC",
+    "Under graduate",
+    "Post graduate",
+  ];
 
   const [tagName, setTagName] = useState("All");
   const [query, setQuery] = useState("");

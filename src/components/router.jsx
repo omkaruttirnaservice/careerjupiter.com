@@ -24,7 +24,7 @@ import SignupPopup from '../Pages/SignIn/SignupPopup.jsx';
 import ContactUs from '../Legal/ContactUs.jsx';
 import AboutUs from '../Legal/AboutUs.jsx';
 // import ClassesList from './InstituteComp/ClassesList.jsx';
-import SigninPopup from './../Pages/SignIn/SigninPopup';
+// import SigninPopup from './../Pages/SignIn/SigninPopup';
 import ComingSoon from '../Pages/CommingSoom.jsx';
 import Nav from '../Layouts/Nav.jsx';
 import ScrollToTop from '../Layouts/ScrollToTop.jsx';

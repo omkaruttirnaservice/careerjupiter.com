@@ -275,7 +275,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 							/>
 						</div>
 
-						{/* <div className="space-y-2">
+						 <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Date of Birth</label>
               <input
                 type="date"
