@@ -8,6 +8,7 @@ import IQTest from "./IQTest";
 import { useDispatch, useSelector } from "react-redux";
 import { setTestResult } from "../../store-redux/testResultSlice";
 import { useNavigate } from "react-router-dom";
+import LoadingTestCard from "../loading-skeleton/LoadingTestCard";
 function TestCard() {
   const [selectedTest, setSelectedTest] = useState(null);
   const [testDuration, setTestDuration] = useState(0);
@@ -122,7 +123,7 @@ function TestCard() {
         </label>
       </div>
       {isPending || isFetchingResult ? (
-        <p>Loading...</p>
+        <LoadingTestCard/>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {data?.data?.map((test) => (
