@@ -61,7 +61,7 @@ const InstituteCard = ({ institute, onClick }) => {
         <div className="flex items-center space-x-2 text-sm text-gray-700">
           <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
             <span className="w-8 h-8">
-              <Lotify icon="\public\Lottiefiles\Animation - 1742988929198 (1).json" />
+              <Lotify icon="\Lottiefiles\Animation - 1742988929198 (1).json" />
             </span>
             <p>
               <strong>Location:</strong>{" "}

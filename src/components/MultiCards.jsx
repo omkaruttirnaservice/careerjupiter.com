@@ -91,7 +91,7 @@ const MultiCards = () => {
                   </h3>
                   <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
                     <p className="w-8 h-8">
-                      <Lotify icon="\public\Lottiefiles\Animation - 1742988929198 (1).json" />
+                      <Lotify icon="\Lottiefiles\Animation - 1742988929198 (1).json" />
                     </p>{' '}
                     {/* Red Location Icon */}
                     {college.address?.state}, {college.address?.dist}
