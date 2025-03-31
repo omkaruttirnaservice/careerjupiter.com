@@ -1,15 +1,20 @@
+import { useState } from "react";
+
 import { Field, ErrorMessage } from "formik";
 import { educationOptions } from "../../Constant/constantData";
 
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 export default function ProfileForm({
   requirement,
   isLoading,
   showAskLater,
   onAskLater,
 }) {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="space-y-4">
-      {requirement === 'firstName' && (
+      {requirement === "firstName" && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             First Name
@@ -28,7 +33,7 @@ export default function ProfileForm({
         </div>
       )}
 
-      {requirement === 'lastName' && (
+      {requirement === "lastName" && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Last Name
@@ -47,7 +52,7 @@ export default function ProfileForm({
         </div>
       )}
 
-      {requirement === 'education' && (
+      {requirement === "education" && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Current Education
@@ -66,6 +71,37 @@ export default function ProfileForm({
           </Field>
           <ErrorMessage
             name="info.current_education"
+            component="div"
+            className="text-red-500 text-sm mt-1"
+          />
+        </div>
+      )}
+      {requirement === "password" && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Password
+          </label>
+          <div className="relative">
+            <Field
+              name="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter your Password"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (
+                <FaEyeSlash className="h-5 w-5 text-gray-500" />
+              ) : (
+                <FaEye className="h-5 w-5 text-gray-500" />
+              )}
+            </button>
+          </div>
+          <ErrorMessage
+            name="password"
             component="div"
             className="text-red-500 text-sm mt-1"
           />

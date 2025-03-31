@@ -50,6 +50,12 @@ const getValidationSchema = (requirement) => {
           ? Yup.string().required("Current Education is required")
           : Yup.string(),
     }),
+    password:
+      requirement === "password"
+        ? Yup.string()
+            .min(4, "Password must be at least 4 characters")
+            .required("Password is required")
+        : Yup.string(),
   });
 };
 
@@ -99,7 +105,11 @@ export default function SignupPopup() {
         setRequirement("education");
         setIsOpen(true);
         setShowAskLater(true);
-      } else {
+      } else if (data.usrMsg?.includes("password")) {
+        setRequirement("password");
+        setIsOpen(true);
+        setShowAskLater(false); // Don't show ask later for password
+      }  else {
         setRequirement("none");
         setIsOpen(false);
         setProfileComplete(true);
@@ -178,15 +188,21 @@ export default function SignupPopup() {
   const updateProfileMutation = useMutation({
     mutationFn: async (values) => {
       const payload = {};
-
-      if (requirement === "firstName") payload.f_name = values.f_name;
-      if (requirement === "lastName") payload.l_name = values.l_name;
-      if (requirement === "education") {
+  
+      // Handle each requirement case separately
+      if (requirement === "firstName") {
+        payload.f_name = values.f_name;
+      } else if (requirement === "lastName") {
+        payload.l_name = values.l_name;
+      } else if (requirement === "education") {
         payload.info = {
           current_education: values.info.current_education,
         };
+      } else if (requirement === "password") {
+        payload.password = values.password;
       }
-
+  
+      // console.log("Sending payload:", payload);
       return updateUserProfile({ userId, values: payload });
     },
     onSuccess: () => {
@@ -196,13 +212,10 @@ export default function SignupPopup() {
       setTimeout(() => fetchProfileStatus(userId), PROFILE_CHECK_DELAY);
     },
     onError: (error) => {
-      console.error(
-        "[SignupPopup] Profile Update Error:",
-        error?.response?.data
-      );
-    },
+      console.error("Update error:", error?.response?.data);
+      toast.error(error.response?.data?.message || "Failed to update profile");
+    }
   });
-
   const sendOTPMutation = useMutation({
     mutationFn: sendOTP,
     onSuccess: (data) => {
@@ -279,6 +292,8 @@ export default function SignupPopup() {
         return "Last Name Required";
       case "education":
         return "Education Details";
+      case "password":
+          return "Password Required";
       default:
         return "Get Started";
     }
@@ -341,6 +356,7 @@ export default function SignupPopup() {
                   info: {
                     current_education: "",
                   },
+                  password:"",
                 }}
                 validationSchema={getValidationSchema(requirement)}
                 onSubmit={(values, { setSubmitting }) => {
