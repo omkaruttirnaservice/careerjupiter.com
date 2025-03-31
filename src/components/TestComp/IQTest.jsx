@@ -44,8 +44,15 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
       Swal.fire({
         icon: "error",
         title: "Submission Failed!",
-        text: "Something went wrong. Please try again.",
+        text: "You are unable to submit the test. Please try again.",
         confirmButtonColor: "#dc3545",
+        showCancelButton: true,
+        confirmButtonText: "Try Again",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          resultGenerationMutation.mutate(resultData); // Retry submission
+        }
       });
     },
   });
@@ -113,7 +120,7 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
   const handleSubmit = () => {
     const allAnswered = answers.every((ans) => ans !== "");
 
-    if (timeLeft===0) {
+    if (timeLeft === 0) {
       setShowMobileNumberPopup(true);
     }
 
@@ -127,9 +134,7 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
       return;
     }
 
-    //step 1 : get user details
-
-    if(timeLeft !== 0){
+    if (timeLeft !== 0) {
       Swal.fire({
         icon: "question",
         title: "Are you sure?",
@@ -141,7 +146,6 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
         cancelButtonColor: "#dc3545",
       }).then((result) => {
         if (result.isConfirmed) {
-          // refetch();
           setShowMobileNumberPopup(true);
         }
       });
