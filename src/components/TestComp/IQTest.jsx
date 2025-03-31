@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { OPTIONS_ENUMS } from "../../utils/constansts";
 import TestClock from "./TestClock";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUserDetail, sendResult } from "./Api";
+import { getUserDetail, saveProgress, sendResult } from "./Api";
 import { setTestResult } from "../../store-redux/testResultSlice";
 import MobileNumberPopup from "./MobileNumberPopup";
 import { setIqTestId } from "../../store-redux/iqTestSlice";
@@ -56,6 +56,16 @@ const IQTest = ({ questions, testDuration, title, testId }) => {
       });
     },
   });
+
+  const saveTestProgressMutation = useMutation({
+    mutationFn: saveProgress,
+    onSuccess: (response) => {
+
+    },
+    onError: () => {
+      
+    }
+  })
 
   const [resultData, setResultData] = useState({
     iqTestId: testId,

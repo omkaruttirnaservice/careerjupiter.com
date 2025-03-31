@@ -4,7 +4,7 @@ import { getAuthHeader } from "../../utils/mics";
 
 export const getTest = async (testLevel) => {
   // const response = await axios.get(`${BASE_URL}/api/iqtest?type=${testLevel}`, {
-    const response = await axios.get(`${BASE_URL}/api/iqtest?type=all`, {
+  const response = await axios.get(`${BASE_URL}/api/iqtest?type=all`, {
     headers: {
       Authorization: getAuthHeader(),
     },
@@ -56,5 +56,13 @@ export const sendUserOTP = async (payload) => {
 
 export const verifyUserOTP = async (payload) => {
   const response = await axios.post(`${BASE_URL}/api/auth/verify-otp`, payload);
+  return response.data;
+};
+
+export const saveProgress = async (progressData) => {
+  const response = await axios.post(
+    `${BASE_URL}/api/result/save-progress`,
+    progressData
+  );
   return response.data;
 };
