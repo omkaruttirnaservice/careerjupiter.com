@@ -21,7 +21,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SignupPopup from "./Pages/SignIn/SignupPopup.jsx";
 import ScrollToTop from "./Layouts/ScrollToTop.jsx";
-import IQTestPopup from "./components/TestComp/IQTestPopup.jsx";
+
 import { RouterProvider } from "react-router-dom";
 import { router } from "./components/router.jsx";
 
@@ -40,25 +40,23 @@ const queryClient = new QueryClient({
 
 function handleError(error) {
   const data = error?.response?.data
-  toast.error(data?.message || "Please try again later !")
-  console.log(error,'-error')
-  // const errorMessage =
-  //   error instanceof AxiosError
-  //     ? error.response?.data?.message || "Something went wrong"
-  //     : error.message || "An unexpected error occurred";
+  const datamsg = error?.response?.data
 
-  // console.error("Query Error:", errorMessage);
+  toast.warning(data?.usrMsg || "Please try again later !")
+
+  console.log(error,'-error')
+  
 }
 
 createRoot(document.getElementById("root")).render(
   <>
     <QueryClientProvider client={queryClient}>
       <Provider store={reduxStore}>
-        <App />
-        <SignupPopup />
-        <IQTestPopup/> 
+      
+        <RouterProvider router={router}/>
+         
       </Provider> 
     </QueryClientProvider>
-    <ToastContainer position="top-right" autoClose={3000} />
+    <ToastContainer position="top-right" autoClose={2000} />
   </>
 );

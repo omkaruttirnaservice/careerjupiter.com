@@ -120,6 +120,14 @@ const Nav = () => {
 										➡️
 									</motion.span>
 								</button>
+								{!isLoggedIn &&(
+								<button
+									 onClick={() => navigate('/Sign-in')}
+									className="bg-blue-600 cursor-pointer text-white font-bold m-2 py-2 px-4 rounded-lg"
+											>
+									Sign in	
+								</button>
+							)}
 							</div>
 
 							{/* Desktop Profile Icon */}
