@@ -4,7 +4,7 @@ import { getAuthHeader } from "../../utils/mics";
 
 export const getTest = async (testLevel) => {
   // const response = await axios.get(`${BASE_URL}/api/iqtest?type=${testLevel}`, {
-  const response = await axios.get(`${BASE_URL}/api/iqtest?type=all`, {
+  const response = await axios.get(`${BASE_URL}/api/iqtest?type=${testLevel}`, {
     headers: {
       Authorization: getAuthHeader(),
     },
@@ -50,7 +50,7 @@ export const getResult = (userData) => {
 };
 
 export const sendUserOTP = async (payload) => {
-  const response = await axios.post(`${BASE_URL}/api/auth/send-otp`, payload);
+  const response = await axios.post(`${BASE_URL}/api/auth/otp`, payload);
   return response.data;
 };
 
@@ -59,10 +59,22 @@ export const verifyUserOTP = async (payload) => {
   return response.data;
 };
 
-export const saveProgress = async (progressData) => {
+export const getIQTestData = async (payload) => {
   const response = await axios.post(
-    `${BASE_URL}/api/result/save-progress`,
-    progressData
+    `${BASE_URL}/api/iqtest/questions`,
+    payload
   );
   return response.data;
 };
+
+export const updateTestProgress = (data) => {
+
+  return axios.put(`${BASE_URL}/api/iqtest/update`, {
+    userId: data.userId,
+    iqTestId: data.iqTestId,
+    questionId: data.questionId,
+    selectedOption: data.selectedOption,
+    testDuration: data.testDuration,
+    resultID: data.resultId
+  });
+}
