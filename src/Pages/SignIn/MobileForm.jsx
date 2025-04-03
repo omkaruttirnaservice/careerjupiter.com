@@ -16,13 +16,9 @@ export default function MobileForm({
   otpCooldown,
   otpTimer,
   isSendingOtp,
-  isAlreadyRegistered,
-  onCloseAlreadyRegisteredModal,
-  onNavigateToSignIn,
 }) {
   const { values, resetForm } = useFormikContext()
   const [otp, setOtp] = useState("")
-  const [showRegisteredModal, setShowRegisteredModal] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -31,31 +27,10 @@ export default function MobileForm({
     }
   }, [referenceId])
 
-  useEffect(() => {
-    if (isAlreadyRegistered) {
-      setShowRegisteredModal(true)
-      resetForm()
-      setOtp("")
-    }
-  }, [isAlreadyRegistered, resetForm])
-
-  const handleCloseModal = () => {
-    setShowRegisteredModal(false)
-    onCloseAlreadyRegisteredModal?.()
-  }
-
-  const handleNavigateToSignInWrapper = () => {
-    handleCloseModal()
-    onNavigateToSignIn?.()
-  }
 
   return (
     <div className="space-y-4">
-      {/* <AlreadyRegisteredModal
-        isOpen={showRegisteredModal}
-        onClose={handleCloseModal}
-        onNavigateToSignIn={handleNavigateToSignInWrapper}
-      /> */}
+     
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
@@ -92,16 +67,16 @@ export default function MobileForm({
             </p>
           )}
 
-<p className="text-sm text-gray-500 mt-1">  
-  This number is already used! Please go to 
+<p className="text-md text-gray-500 mt-1">  
+  You have already registered! Please go to 
   <button 
     type="button"
     onClick={() => navigate('/Sign-in')}
     className="text-blue-600 hover:underline ml-1"
   > 
-    Sign in
+    Sign in page
   </button>
-  page
+    
 </p>
         </div>
 

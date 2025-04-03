@@ -63,11 +63,12 @@ function ForgetPasswordPage() {
       setMobileNumber(cleanedMobile)
 
       const response = await forgotPassword(cleanedMobile)
+    // console.log({response});
 
       if (response.success) {
         setReferenceId(response.data.reference_id)
         setStep(2)
-        toast.success(response.usrMsg || "OTP sent successfully!")
+        toast.success(response.usrMsg || "OTP.. sent successfully!")
       } else {
         toast.error(response.errMsg || "Failed to send OTP")
       }
@@ -92,14 +93,16 @@ function ForgetPasswordPage() {
 
       const response = await verifyResetOtp(payload)
 
+      // console.log('verfiy otp error', response)
+
       if (response.success) {
         setStep(3)
         toast.success(response.usrMsg || "OTP verified successfully!")
       } else {
-        toast.error(response.errMsg || "Invalid OTP")
+        toast.warning(response.message || "Invalid.. OTP")
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.errMsg || error.response?.data?.message || "Invalid OTP"
+      const errorMsg = error.response?.data?.errMsg || error.response?.data?.message || "Invalid..... OTP"
       toast.error(errorMsg)
     } finally {
       setIsLoading(false)
@@ -118,6 +121,7 @@ function ForgetPasswordPage() {
       }
 
       const response = await resetPassword(payload)
+      // console.log(resposne ,'responseeee')
 
       if (response.success) {
         toast.success(response.usrMsg || "Password updated successfully!")

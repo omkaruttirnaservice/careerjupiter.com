@@ -148,6 +148,8 @@ const IQTestPopup = () => {
   });
 
   useEffect(() => {
+    const hasSeenPopup = localStorage.getItem('hasSeenIQPopup');
+
     const excludedPaths = ["/Sign-in", "/forget-password"];
     if (excludedPaths.includes(location.pathname)) return;
 
@@ -155,6 +157,8 @@ const IQTestPopup = () => {
     if (!authState.isLoggedIn) {
       timer = setTimeout(() => {
         setIsOpen(true);
+        // Mark that user has seen the popup
+        localStorage.setItem('hasSeenIQPopup', 'true');
       }, SET_TIME);
     }
     return () => {
