@@ -120,6 +120,14 @@ const Nav = () => {
 										➡️
 									</motion.span>
 								</button>
+								{!isLoggedIn &&(
+								<button
+									 onClick={() => navigate('/Sign-in')}
+									className="bg-blue-600 text-white font-bold py-2 px-2 rounded-lg text-md mx-4"
+											>
+									Sign in	
+								</button>
+							)}
 							</div>
 
 							{/* Desktop Profile Icon */}
@@ -216,6 +224,19 @@ const Nav = () => {
 											)}
 										</div>
 									))}
+
+									 {/* Sign In Button (for non-logged in users) */}
+      {!isLoggedIn && (
+        <button
+          onClick={() => {
+            navigate('/Sign-in');
+            setIsMobileMenuOpen(false);
+          }}
+          className="bg-blue-600 text-white font-bold py-2 px-2 rounded-lg text-lg mx-2"
+        >
+          Sign in
+        </button>
+      )}
 
 									{/* Profile Section */}
 									{isLoggedIn && (

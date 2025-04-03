@@ -8,9 +8,10 @@ function App() {
   AOS.init({ duration: 1000 });
 
   return (
-    <RouterProvider router={router}>
-      <ScrollToTop /> {/* ✅ This must be inside RouterProvider */}
-    </RouterProvider>
+   <>
+      <ScrollToTop /> 
+   
+       </>
   );
 }
 
