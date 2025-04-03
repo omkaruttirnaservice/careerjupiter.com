@@ -1,12 +1,18 @@
 import React, { useState } from "react";
-import { FaCheckCircle, FaTimesCircle, FaQuestionCircle, FaTrophy } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaTimesCircle,
+  FaQuestionCircle,
+  FaTrophy,
+} from "react-icons/fa";
 import { useSelector } from "react-redux";
 import ShareResultPopup from "./ShareResultPopup";
-
 
 function TestResult() {
   const resultData = useSelector((state) => state.testResult?.resultData);
   const [openSharePopup, setOpenSharePopup] = useState(false);
+
+  console.log("result page :", resultData);
 
   if (!resultData)
     return (

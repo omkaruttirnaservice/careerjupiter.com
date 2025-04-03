@@ -27,7 +27,7 @@ function TestClock({
   return (
     <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4 px-2 sm:px-4">
       <div className="relative w-full sm:w-3/4 md:w-2/3 lg:w-1/2 flex flex-col justify-start">
-        <h1 className="text-lg sm:text-xl md:text-2xl font-bold mb-1 sm:mb-2">
+        <h1 className="text-lg sm:text-xl md:text-xl font-bold mb-1 sm:mb-2">
           {title}
         </h1>
 
@@ -39,7 +39,7 @@ function TestClock({
             top: "2.5rem",
           }}
         >
-          <FcAlarmClock className="text-2xl mt-2  sm:mt-6 md:mt-4 sm:text-3xl" />
+          <FcAlarmClock className="text-2xl mt-2  sm:mt-6 md:mt-3 sm:text-3xl" />
         </div>
 
         <div className="w-full bg-gray-300 rounded-full h-3 sm:h-4 overflow-hidden mt-6 relative">

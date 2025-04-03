@@ -117,13 +117,17 @@ const SearchComponent = () => {
 
 	const handleSearch = () => {
 		setSearchParams((prev) => {
-			const type = getPathType();
+			const val = getPathType();
+			if (val !== "service-provider") {
+				let type = val;
+      		
 			const newParams = {
 				searchKey: query,
 				category: tagName,
 				type,
 			};
 			return newParams;
+		}
 		});
 	};
 
