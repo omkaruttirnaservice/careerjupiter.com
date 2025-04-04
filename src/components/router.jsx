@@ -37,6 +37,7 @@ export const router = createBrowserRouter([
 	{
 		path:"/",
 		element:<ExtraPopUp/>,
+		
 		children:[{
 			path: '/',
 			element: (
@@ -54,14 +55,11 @@ export const router = createBrowserRouter([
 	
 				{ path: 'reviews/:id', element: <ReviewPage /> },
 				{path : '/service-provider', element: <ServiceProvide/>}
-	
+				
 	
 			],
 		},
-		// {
-		// 	path: '/coming-soon',
-		// 	element: <ComingSoon />,
-		// },
+		
 	
 		{ path: 'college/:id', element: <CardDetails /> },
 		{ path: 'university/:id', element: <UniversityDetail /> },
