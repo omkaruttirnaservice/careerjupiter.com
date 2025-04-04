@@ -131,19 +131,30 @@ const SignInPopup = ({ setShowSignUp, onSuccessfulSignIn }) => {
                   className="text-red-500 text-sm mt-1"
                 />
               </div>
-              <button 
-                  type="button"
-                  
-                  onClick={() => {
-                    // setIsOpen(false)
-                    // setShowSignUp?.()
-                    setIsOpen(false); // Close the popup first
-                 setTimeout(() => navigate('/forget-password'));
-                  }}
-                  className="text-blue-600 hover:underline"
-                > 
-                  Forgot password?
-                </button>
+              <div className="flex justify-between w-full">
+  <button 
+    type="button"
+    onClick={() => {
+      setIsOpen(false);
+      setTimeout(() => navigate('/forget-password'));
+    }}
+    className="text-blue-600 hover:underline"
+  > 
+    Forgot password?
+  </button>
+  
+  <button 
+    type="button"
+    onClick={() => {
+      setIsOpen(false);
+      setTimeout(() => navigate('/create-password'));
+    }}
+    className="text-blue-600 hover:underline"
+  > 
+    Create new password
+  </button>
+</div>
+
               <button
                 type="submit"
                 // disabled={isSubmitting}

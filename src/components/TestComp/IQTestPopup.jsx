@@ -32,7 +32,7 @@ const IQTestPopup = () => {
   useEffect(() => {
     const hasSeenPopup = localStorage.getItem('hasSeenIQPopup');
 
-    const excludedPaths = ["/Sign-in", "/forget-password"];
+    const excludedPaths = ["/Sign-in", "/forget-password","/create-password"];
     if (excludedPaths.includes(location.pathname)) return;
 
     let timer;
