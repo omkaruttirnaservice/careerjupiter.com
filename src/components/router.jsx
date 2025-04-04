@@ -31,12 +31,14 @@ import ExtraPopUp from '../Layouts/ExtraPopUp.jsx';
 
 import ServiceProvide from '../Pages/service_provider.jsx';
 import ForgetPasswordPage from '../Pages/SignIn/ForgetPasswordPage.jsx'
+import CreatePasswordPage from '../Pages/SignIn/CreatePasswordPage.jsx';
 
 
 export const router = createBrowserRouter([
 	{
 		path:"/",
 		element:<ExtraPopUp/>,
+		
 		children:[{
 			path: '/',
 			element: (
@@ -54,14 +56,11 @@ export const router = createBrowserRouter([
 	
 				{ path: 'reviews/:id', element: <ReviewPage /> },
 				{path : '/service-provider', element: <ServiceProvide/>}
-	
+				
 	
 			],
 		},
-		// {
-		// 	path: '/coming-soon',
-		// 	element: <ComingSoon />,
-		// },
+		
 	
 		{ path: 'college/:id', element: <CardDetails /> },
 		{ path: 'university/:id', element: <UniversityDetail /> },
@@ -132,7 +131,12 @@ export const router = createBrowserRouter([
 			element: <SignupPopup />,
 		},
 		{ path: '/Sign-in', element: <SignInPopup /> },
-		{path : 'forget-password' , element:<ForgetPasswordPage/>}]
+		{path : 'forget-password' , element:<ForgetPasswordPage/>},
+		{path : 'create-password' , element:<CreatePasswordPage/>}
+
+	
+	
+	]
 	}
 	
 ]);
