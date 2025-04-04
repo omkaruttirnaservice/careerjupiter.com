@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaArrowRight, FaArrowLeft, FaCheckCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,8 @@ import { getUserDetail, sendResult, updateTestProgress } from "./Api";
 import { setTestResult } from "../../store-redux/testResultSlice";
 import MobileNumberPopup from "./MobileNumberPopup";
 import { setIqTestId } from "../../store-redux/iqTestSlice";
-import { setUserRole } from "../../store-redux/userRoleSlice";
+import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 const IQTest = ({
   questions,
@@ -32,7 +33,9 @@ const IQTest = ({
   const { userId } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [timeLeft, setTimeLeft] = useState(testDuration * 60);
+  const [timeLeft, setTimeLeft] = useState(
+    testDuration.minutes * 60 + testDuration.seconds
+  );
   const [TestProgress, setTestProgress] = useState({
     userId: userId,
     iqTestId: testId,
@@ -40,11 +43,33 @@ const IQTest = ({
     questionId: "",
     testDuration: "",
     selectedOption: "",
+    status: -1,
   });
 
-  // const userRole = useSelector((state) => state.auth.userRole);
+  // Add refs to store current values that can be accessed in the interval
+  const progressIntervalRef = useRef(null);
+  const timeLeftRef = useRef(timeLeft);
+  const testProgressRef = useRef(TestProgress);
 
-  // console.log({decodedToken});
+  const token = Cookies.get("token");
+  const decodedToken = jwtDecode(token);
+  const userRole = decodedToken.role;
+  console.log("Decoded Token iq test:", userRole);
+
+  // Update refs when state changes
+  useEffect(() => {
+    timeLeftRef.current = timeLeft;
+  }, [timeLeft]);
+
+  useEffect(() => {
+    testProgressRef.current = TestProgress;
+  }, [TestProgress]);
+
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return { minutes, seconds: remainingSeconds };
+  }
 
   const resultGenerationMutation = useMutation({
     mutationFn: sendResult,
@@ -89,6 +114,7 @@ const IQTest = ({
   const [resultData, setResultData] = useState({
     iqTestId: testId,
     userId: userId,
+    status: 1,
     answers: questions.map((q) => ({ questionId: q._id, selectedOption: "" })),
   });
 
@@ -98,6 +124,7 @@ const IQTest = ({
     setResultData({
       iqTestId: testId,
       userId: userId,
+      status: -1,
       answers: questions.map((q) => ({
         questionId: q._id,
         selectedOption: "",
@@ -115,8 +142,9 @@ const IQTest = ({
       iqTestId: testId,
       resultId: resultId,
       questionId: questions[currentQuestion]._id,
-      testDuration: timeLeft,
+      testDuration: formatTime(timeLeft),
       selectedOption: letter,
+      status: -1,
     });
 
     setResultData((prevData) => ({
@@ -129,12 +157,20 @@ const IQTest = ({
     }));
   };
 
-  // ✅ Function to handle "Next" button click
   const handleNextQuestion = () => {
-    if (TestProgress.questionId && TestProgress.selectedOption) {
+    // Clear the existing interval
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current);
+    }
+
+    // Get the current values from refs for the API call
+    const currentTimeLeft = timeLeftRef.current;
+    const currentTestProgress = testProgressRef.current;
+
+    if (currentTestProgress.questionId && currentTestProgress.selectedOption) {
       updateTestProgressMutation.mutate({
-        ...TestProgress,
-        testDuration: timeLeft, // Store the remaining time dynamically
+        ...currentTestProgress,
+        testDuration: formatTime(currentTimeLeft),
       });
     }
 
@@ -143,20 +179,21 @@ const IQTest = ({
 
   //get user details api call
 
-  const { data, isPending, refetch } = useQuery({
-    queryKey: ["getUserDetail", userId],
-    queryFn: () => getUserDetail(userId),
-    enabled: true,
-    refetchOnMount: true,
-  });
+  // const { data, isPending, refetch } = useQuery({
+  //   queryKey: ["getUserDetail", userId],
+  //   queryFn: () => getUserDetail(userId),
+  //   enabled: true,
+  //   refetchOnMount: true,
+  // });
 
-  const userRole = data?.data?.data?.role;
+  // const userRole = data?.data?.data?.role;
 
   useEffect(() => {
     setAnswers(questions.map((q) => q.selectedOption || ""));
     setResultData({
       iqTestId: testId,
       userId: userId,
+      status: 1,
       answers: questions.map((q) => ({
         questionId: q._id,
         selectedOption: q.selectedOption || "", // Use stored option or default empty
@@ -165,10 +202,10 @@ const IQTest = ({
   }, [questions, testId, userId]);
 
   const handleSubmit = async () => {
-    const latestUserRole = data?.data?.data?.role;
+    const latestUserRole = userRole;
     const allAnswered = answers.every((ans) => ans !== "");
 
-    if (timeLeft === 0) {
+    if (timeLeft == "00:00") {
       if (latestUserRole === "GUEST") {
         setShowMobileNumberPopup(true);
       } else {
@@ -187,7 +224,7 @@ const IQTest = ({
     }
 
     // Ensure data is fetched before checking userRole
-    await refetch();
+    // await refetch();
 
     if (timeLeft !== 0) {
       Swal.fire({
@@ -213,6 +250,33 @@ const IQTest = ({
       });
     }
   };
+
+  // Modified useEffect to use refs for the most current values
+  useEffect(() => {
+    const updateProgress = () => {
+      // Access the most current values from refs
+      const currentTimeLeft = timeLeftRef.current;
+      const currentTestProgress = testProgressRef.current;
+
+      if (
+        currentTestProgress.questionId &&
+        currentTestProgress.selectedOption
+      ) {
+        updateTestProgressMutation.mutate({
+          ...currentTestProgress,
+          testDuration: formatTime(currentTimeLeft),
+        });
+      }
+    };
+
+    progressIntervalRef.current = setInterval(updateProgress, 10000);
+
+    return () => {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+      }
+    };
+  }, [currentQuestion]);
 
   useEffect(() => {
     const handleOffline = () => {
@@ -378,7 +442,7 @@ const IQTest = ({
                 </div>
                 <div className="flex items-center">
                   <div className="w-4 h-4 rounded-full bg-[#E67E22] mr-3"></div>
-                  <span className="text-gray-700">Skipped</span>
+                  <span className="text-gray-700">Unattempted</span>
                 </div>
               </div>
             </div>

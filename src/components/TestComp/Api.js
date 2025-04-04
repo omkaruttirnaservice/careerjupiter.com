@@ -75,6 +75,7 @@ export const updateTestProgress = (data) => {
     questionId: data.questionId,
     selectedOption: data.selectedOption,
     testDuration: data.testDuration,
-    resultID: data.resultId
+    resultID: data.resultId,
+    status:data.status
   });
 }

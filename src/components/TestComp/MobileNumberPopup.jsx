@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { sendUserOTP, updateUserDetails, verifyUserOTP } from "./Api";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 const MobileNumberPopup = ({
   setShowMobileNumberPopup,
@@ -57,12 +58,25 @@ const MobileNumberPopup = ({
 
   const updateUserMutation = useMutation({
     mutationFn: updateUserDetails,
-    onSuccess: () => {
+    onSuccess: (response) => {
       Swal.fire({
         icon: "success",
         title: "Details Submitted!",
         text: "Your details were updated successfully!",
       });
+      console.log("after userdetails submited :", response?.data?.data?.token);
+
+     const newToken = response?.data?.data?.token;
+     
+      
+     if (typeof newToken === "string" && newToken.trim() !== "") {
+       Cookies.remove("token"); // Remove the token
+       Cookies.set("token", newToken, { expires: 1 });
+     } else {
+       console.warn("Received invalid token:", newToken);
+     }
+
+
       resultGenerationMutation.mutate(resultData);
       setShowMobileNumberPopup(false);
     },
@@ -120,7 +134,7 @@ const MobileNumberPopup = ({
                   type="text"
                   name="mobileNumber"
                   maxLength="10"
-                  className={`mt-1 w-full p-2 border rounded-md ${!isMobileEditable ?"":"cursor - not - allowed"}`}
+                  className={`mt-1 w-full p-2 border rounded-md ${!isMobileEditable ? "" : "cursor - not - allowed"}`}
                   disabled={!isMobileEditable}
                   onChange={(e) => {
                     if (isMobileEditable) {
