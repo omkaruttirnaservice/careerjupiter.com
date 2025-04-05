@@ -4,6 +4,7 @@ import authReducer from "./AuthSlice";
 import testResultSlice from "./testResultSlice";
 import educationSlice from "./educationSlice";
 import iqTestSlice from "./iqTestSlice";
+import userRoleSlice from "./userRoleSlice";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     testResult: testResultSlice,
     education: educationSlice,
     iqTest: iqTestSlice,
+    userRole: userRoleSlice,
   },
 });
 

@@ -910,4 +910,4 @@ export const educationOptions = [
   
   export const ASK_LATER_DELAY = 15000; // 15 seconds
   export const PROFILE_CHECK_DELAY = 10000; // 10 seconds
-  export const PROFILE_POLL_INTERVAL = 30000; // 30 seconds
+  export const PROFILE_POLL_INTERVAL = 10000; // 30 seconds

@@ -214,31 +214,213 @@
 
 // export default LoginPage;
 
+// import { useEffect, useState } from "react";
+// import { Formik, Form, Field, ErrorMessage } from "formik";
+// import * as Yup from "yup";
+// import { useDispatch } from "react-redux";
+// import { toast } from "react-toastify";
+// import { useMutation } from "@tanstack/react-query";
+// import Cookies from "js-cookie";
+// import { loginUser } from "../Login/Api";
+// import { login } from "../../store-redux/AuthSlice";
+
+// const validationSchema = Yup.object().shape({
+//   mobile_no: Yup.string()
+//     .matches(/^[6-9]\d{9}$/, "Enter valid 10-digit mobile number")
+//     .required("Mobile number is required"),
+//   password: Yup.string().required("Password is required"),
+// });
+
+// const SignInPopup = ({ setShowSignUp }) => {
+//   const [isOpen, setIsOpen] = useState(true);
+//   const [showPassword, setShowPassword] = useState(false);
+//   const dispatch = useDispatch();
+
+//   const loginMutation = useMutation({
+//     mutationFn: loginUser,
+//     onSuccess: (data) => {
+//       const parsedData = data.data;
+//       const userId = parsedData.user_id || parsedData.user?._id;
+
+//       if (!userId) {
+//         toast.error("Invalid credentials");
+//         return;
+//       }
+
+//       Cookies.set("token", parsedData.token, { expires: 1 });
+//       Cookies.set("userId", userId, { expires: 1 });
+//       dispatch(login(userId));
+
+//       toast.success("Logged in successfully!");
+//       setIsOpen(false);
+//       window.location.reload(); // Refresh to show authenticated content
+//     },
+//     onError: (error) => {
+//       toast.error(error.response?.data?.message || "Invalid credentials");
+//     },
+//   });
+
+//   const togglePasswordVisibility = () => {
+//     setShowPassword(!showPassword);
+//   };
+
+//   return (
+//     <>
+//       {isOpen && (
+//         <div className="fixed z-50 top-0 left-0 w-full h-full bg-black/50 backdrop-blur-sm flex justify-center items-center">
+//           <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+//             <button
+//               onClick={() => setIsOpen(false)}
+//               className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+//             >
+//               ✕
+//             </button>
+//             <h2 className="text-2xl font-bold mb-6 text-gray-800">Sign In</h2>
+//             <Formik
+//               initialValues={{
+//                 mobile_no: "",
+//                 password: "",
+//               }}
+//               validationSchema={validationSchema}
+//               onSubmit={(values) => {
+//                 loginMutation.mutate({
+//                   mobile_no: values.mobile_no,
+//                   password: values.password,
+//                 });
+//               }}
+//             >
+//               {({ isSubmitting }) => (
+//                 <Form className="space-y-4">
+//                   {/* Mobile Number */}
+//                   <div>
+//                     <label className="block text-sm font-medium text-gray-700">
+//                       Mobile Number
+//                     </label>
+//                     <Field
+//                       name="mobile_no"
+//                       type="tel"
+//                       placeholder="Enter 10-digit mobile number"
+//                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+//                     />
+//                     <ErrorMessage
+//                       name="mobile_no"
+//                       component="div"
+//                       className="text-red-500 text-sm mt-1"
+//                     />
+//                   </div>
+
+//                   {/* Password with toggle */}
+//                   <div>
+//                     <label className="block text-sm font-medium text-gray-700">
+//                       Password
+//                     </label>
+//                     <div className="relative">
+//                       <Field
+//                         name="password"
+//                         type={showPassword ? "text" : "password"}
+//                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 pr-10"
+//                       />
+//                       <button
+//                         type="button"
+//                         onClick={togglePasswordVisibility}
+//                         className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
+//                       >
+//                         {showPassword ? (
+//                           <svg
+//                             xmlns="http://www.w3.org/2000/svg"
+//                             className="h-5 w-5"
+//                             viewBox="0 0 20 20"
+//                             fill="currentColor"
+//                           >
+//                             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+//                             <path
+//                               fillRule="evenodd"
+//                               d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+//                               clipRule="evenodd"
+//                             />
+//                           </svg>
+//                         ) : (
+//                           <svg
+//                             xmlns="http://www.w3.org/2000/svg"
+//                             className="h-5 w-5"
+//                             viewBox="0 0 20 20"
+//                             fill="currentColor"
+//                           >
+//                             <path
+//                               fillRule="evenodd"
+//                               d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z"
+//                               clipRule="evenodd"
+//                             />
+//                             <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
+//                           </svg>
+//                         )}
+//                       </button>
+//                     </div>
+//                     <ErrorMessage
+//                       name="password"
+//                       component="div"
+//                       className="text-red-500 text-sm mt-1"
+//                     />
+//                   </div>
+
+//                   {/* Submit Button */}
+//                   <button
+//                     type="submit"
+//                     disabled={isSubmitting}
+//                     className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
+//                   >
+//                     {loginMutation.isLoading ? "Signing In..." : "Sign In"}
+//                   </button>
+//                 </Form>
+//               )}
+//             </Formik>
+//             {/* Sign Up Link */}
+//             <p className="mt-4 text-center text-gray-600">
+//               Don't have an account?{" "}
+//               <button
+//                 onClick={() => setShowSignUp(true)}
+//                 className="text-blue-600 hover:underline"
+//               >
+//                 Sign Up
+//               </button>
+//             </p>
+//           </div>
+//         </div>
+//       )}
+//     </>
+//   );
+// };
+
+// export default SignInPopup;
+
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import { loginUser } from "../Login/Api";
+import { loginUser } from "../SignIn/Api";
 import { login } from "../../store-redux/AuthSlice";
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Email is required"),
+  mobile_no: Yup.string()
+    .matches(/^[6-9]\d{9}$/, "Enter valid 10-digit mobile number")
+    .required("Mobile number is required"),
   password: Yup.string().required("Password is required"),
 });
 
 const SignInPopup = ({ setShowSignUp }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const authState = useSelector((state) => state.auth);
+  const [isOpen, setIsOpen] = useState(!authState.isLoggedIn); // Only open if not logged in
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
 
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      const parsedData = typeof data.data === "string" ? data.data : data.data;
-      const userId =
-        parsedData._id || parsedData.user_id || parsedData.user?._id;
+      const parsedData = data.data;
+      const userId = parsedData.user_id || parsedData.user?._id;
 
       if (!userId) {
         toast.error("Invalid credentials");
@@ -246,101 +428,120 @@ const SignInPopup = ({ setShowSignUp }) => {
       }
 
       Cookies.set("token", parsedData.token, { expires: 1 });
-      Cookies.set("userId", parsedData.user_id, { expires: 1 });
-      dispatch(login(parsedData.user_id));
+      Cookies.set("userId", userId, { expires: 1 });
+      dispatch(login(userId));
 
       toast.success("Logged in successfully!");
-      setIsOpen(false);
+      setIsOpen(false); // Just close the popup without refresh
     },
-    onError: () => {
-      toast.error("Invalid credentials");
+    onError: (error) => {
+      toast.error(error.response?.data?.message || "Invalid credentials");
     },
   });
 
+  // Close popup if user is already logged in
+  useEffect(() => {
+    if (authState.isLoggedIn) {
+      setIsOpen(false);
+    }
+  }, [authState.isLoggedIn]);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  if (!isOpen) return null; // Don't render anything if not open
+
   return (
-    <>
-      {isOpen && (
-        <div className="fixed z-50 top-0 left-0 w-full h-full bg-black/50 backdrop-blur-sm flex justify-center items-center">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-            >
-              ✕
-            </button>
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">Sign In</h2>
-            <Formik
-              initialValues={{
-                email: "",
-                password: "",
-              }}
-              validationSchema={validationSchema}
-              onSubmit={(values) => {
-                loginMutation.mutate({
-                  email_id: values.email,
-                  password: values.password,
-                });
-              }}
-            >
-              {({ isSubmitting }) => (
-                <Form className="space-y-4">
-                  {/* Email */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Email
-                    </label>
-                    <Field
-                      name="email"
-                      type="email"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
-                    />
-                    <ErrorMessage
-                      name="email"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                  </div>
-                  {/* Password */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Password
-                    </label>
-                    <Field
-                      name="password"
-                      type="password"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
-                    />
-                    <ErrorMessage
-                      name="password"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                  </div>
-                  {/* Submit Button */}
+    <div className="fixed z-50 top-0 left-0 w-full h-full bg-black/50 backdrop-blur-sm flex justify-center items-center">
+      <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+        <button
+          onClick={() => setIsOpen(false)}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+        >
+          ✕
+        </button>
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">Sign In</h2>
+        <Formik
+          initialValues={{
+            mobile_no: "",
+            password: "",
+          }}
+          validationSchema={validationSchema}
+          onSubmit={(values) => {
+            loginMutation.mutate({
+              mobile_no: values.mobile_no,
+              password: values.password,
+            });
+          }}
+        >
+          {({ isSubmitting }) => (
+            <Form className="space-y-4">
+              {/* Mobile Number */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Mobile Number
+                </label>
+                <Field
+                  name="mobile_no"
+                  type="tel"
+                  placeholder="Enter 10-digit mobile number"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                />
+                <ErrorMessage
+                  name="mobile_no"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+
+              {/* Password with toggle */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Password
+                </label>
+                <div className="relative">
+                  <Field
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 pr-10"
+                  />
                   <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
                   >
-                    Sign In
+                    {showPassword ? "🙈" : "👁️"}
                   </button>
-                </Form>
-              )}
-            </Formik>
-            {/* Sign Up Link */}
-            <p className="mt-4 text-center text-gray-600">
-              Don't have an account?{" "}
+                </div>
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+
               <button
-                onClick={() => setShowSignUp(true)}
-                className="text-blue-600 hover:underline"
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
               >
-                Sign Up
+                {loginMutation.isLoading ? "Signing In..." : "Sign In"}
               </button>
-            </p>
-          </div>
-        </div>
-      )}
-    </>
+            </Form>
+          )}
+        </Formik>
+        <p className="mt-4 text-center text-gray-600">
+          Don't have an account?{" "}
+          <button
+            onClick={() => setShowSignUp(true)}
+            className="text-blue-600 hover:underline"
+          >
+            Sign Up
+          </button>
+        </p>
+      </div>
+    </div>
   );
 };
 

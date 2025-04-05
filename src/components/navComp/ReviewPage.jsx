@@ -106,7 +106,7 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
 
   return (
     <div className="max-w-full">
-      <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">
+      <h2 className="text-3xl font-bold text-gray-800  mt-6 text-center">
         Leave a Review
       </h2>
 

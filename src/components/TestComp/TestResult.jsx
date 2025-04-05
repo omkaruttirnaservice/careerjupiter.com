@@ -1,12 +1,19 @@
-import React, { useState } from "react";
-import { FaCheckCircle, FaTimesCircle, FaQuestionCircle, FaTrophy } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import {
+  FaCheckCircle,
+  FaTimesCircle,
+  FaQuestionCircle,
+  FaTrophy,
+} from "react-icons/fa";
 import { useSelector } from "react-redux";
 import ShareResultPopup from "./ShareResultPopup";
-
 
 function TestResult() {
   const resultData = useSelector((state) => state.testResult?.resultData);
   const [openSharePopup, setOpenSharePopup] = useState(false);
+  const [passFailMessage, setPassFailMessage] = useState("");
+  const [resultIcon, setResultIcon] = useState(<FaQuestionCircle className="text-yellow-500 text-5xl" />);
+  const [resultEmoji, setResultEmoji] = useState("🎉");
 
   if (!resultData)
     return (
@@ -26,24 +33,27 @@ function TestResult() {
   } = resultData?.result;
 
   const percentage = (marksGained / totalMarks) * 100;
-  let resultEmoji = "🤔";
-  let resultIcon = <FaQuestionCircle className="text-yellow-500 text-5xl" />;
-
-  if (percentage >= 80) {
-    resultEmoji = "🎉😃";
-    resultIcon = <FaTrophy className="text-green-500 text-5xl" />;
-  } else if (percentage >= 50) {
-    resultEmoji = "🙂";
-    resultIcon = <FaCheckCircle className="text-blue-500 text-5xl" />;
-  } else {
-    resultEmoji = "😢";
-    resultIcon = <FaTimesCircle className="text-red-500 text-5xl" />;
-  }
-
   const isPassed = marksGained >= passingMarks;
-  const passFailMessage = isPassed
-    ? `🎉 Congratulations! You Passed! ${resultEmoji}`
-    : `😞 Better luck next time! ${resultEmoji}`;
+
+  useEffect(() => {
+    if (percentage >= 75) {
+      setPassFailMessage("Congratulations! Keep up the great work! 😃");
+      setResultIcon(<FaTrophy className="text-green-500 text-5xl" />);
+      setResultEmoji("😃");
+    } else if (percentage >= 50) {
+      setPassFailMessage("Well done! You're on the right track! 🙂");
+      setResultIcon(<FaCheckCircle className="text-blue-500 text-5xl" />);
+      setResultEmoji("🙂");
+    } else if (percentage >= 25) {
+      setPassFailMessage("Good effort! Keep practicing, you're improving! 😢");
+      setResultIcon(<FaCheckCircle className="text-blue-500 text-5xl" />);
+      setResultEmoji("😢");
+    } else {
+      setPassFailMessage("Keep going! Every step is progress! 😢");
+      setResultIcon(<FaTimesCircle className="text-red-500 text-5xl" />);
+      setResultEmoji("😢");
+    }
+  }, [percentage]);
 
   return (
     <>
@@ -72,7 +82,9 @@ function TestResult() {
           Score: {marksGained} / {totalMarks} ({percentage.toFixed(2)}%)
         </p>
         <div
-          className={`p-2 flex items-center flex-col gap-2 text-lg font-semibold ${isPassed ? "text-green-600" : "text-red-600"}`}
+          className={`p-2 flex items-center flex-col gap-2 text-lg font-semibold ${
+            isPassed ? "text-green-600" : "text-red-600"
+          }`}
         >
           {resultIcon} {passFailMessage}
         </div>
