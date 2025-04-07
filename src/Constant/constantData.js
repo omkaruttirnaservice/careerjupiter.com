@@ -879,19 +879,19 @@ export const cityData = [
 ];
 
 export const navigation = [
-	{ name: 'Home', to: '/' },
-	{
-		name: 'Students Corner',
-		children: [
-			{ name: 'Search Eligibility', href: '#check-eligibility-section' },
-			{ name: 'Search College', href: '#search-college' },
-			{ name: 'Search Class', href: '#search-class' },
-			{ name: 'Search University', href: '#search-university' },
-		],
-	},
-	{ name: 'Service Providers', to: '/service-provider' },
-	{ name: 'About Us', to: '/about-us' },
-	{ name: 'Contact Us', to: '/contact-us' },
+  { name: "Home", to: "/" },
+  {
+    name: "Students Corner",
+    children: [
+      { name: "Search Eligibility", to: "/my-eligibility" },
+      { name: "Search College", to: "/college" },
+      { name: "Search Class", to: "/class" },
+      { name: "Search University", to: "/university" },
+    ],
+  },
+  { name: "Service Providers", to: "/service-provider" },
+  { name: "About Us", to: "/about-us" },
+  { name: "Contact Us", to: "/contact-us" },
 ];
 
 export const BACKEND_SERVER_IP = import.meta.env.VITE_BACKEND_URL;

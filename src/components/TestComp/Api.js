@@ -50,7 +50,7 @@ export const getResult = (userData) => {
 };
 
 export const sendUserOTP = async (payload) => {
-  const response = await axios.post(`${BASE_URL}/api/auth/otp`, payload);
+  const response = await axios.post(`${BASE_URL}/api/auth/send-otp`, payload);
   return response.data;
 };
 

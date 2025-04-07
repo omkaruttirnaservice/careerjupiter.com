@@ -1,12 +1,13 @@
 import { Popover, Transition, Menu } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { Fragment, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { navigation } from "../Constant/constantData";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import { setIsOpen } from "../store-redux/iqTestSlice";
+import { LiaHandPointLeftSolid } from "react-icons/lia";
 
 const Nav = () => {
   let dispatch = useDispatch();
@@ -14,6 +15,7 @@ const Nav = () => {
   const { isLoggedIn } = useSelector((state) => state.auth);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isStudentsCornerOpen, setIsStudentsCornerOpen] = useState(false);
 
   const profilePic =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsEJHmI0MlIGvH9CYkbsLEWQ5_ee8Qtl5V-Q&s";
@@ -48,23 +50,6 @@ const Nav = () => {
     }
   };
 
-  const handleClick = (e, href) => {
-    e.preventDefault();
-    const targetElement = document.querySelector(href);
-    if (targetElement) {
-      const offset = 100;
-      const targetPosition =
-        targetElement.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top: targetPosition, behavior: "smooth" });
-
-      targetElement.classList.add("highlight");
-      setTimeout(() => {
-        targetElement.classList.remove("highlight");
-      }, 1500);
-    }
-    setIsMobileMenuOpen(false);
-  };
-
   return (
     <div className="p-2 bg-gray-50 fixed top-0 left-0 w-full shadow-md z-50">
       <Popover>
@@ -90,18 +75,16 @@ const Nav = () => {
                       {item.name}
                     </NavLink>
 
-                    {/* Student Corner Dropdown */}
                     {item.name === "Students Corner" && item.children && (
                       <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md opacity-0 transform scale-95 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
                         {item.children.map((child) => (
-                          <NavLink
+                          <Link
                             key={child.name}
                             to={child.to}
-                            onClick={(e) => handleClick(e, child.href)}
                             className="block px-4 py-2 text-black hover:bg-gray-300 transition-all"
                           >
                             {child.name}
-                          </NavLink>
+                          </Link>
                         ))}
                       </div>
                     )}
@@ -197,7 +180,7 @@ const Nav = () => {
             {/* Mobile & Tablet Menu */}
             {isMobileMenuOpen && (
               <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
-                <div className="bg-white w-3/4 max-w-sm h-full shadow-lg flex flex-col px-6 py-8 space-y-4 relative">
+                <div className="bg-white w-3/4 max-w-sm h-full shadow-lg flex flex-col px-6 py-8 space-y-4 relative overflow-y-auto overflow-x-hidden">
                   {/* Close Button */}
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
@@ -209,33 +192,49 @@ const Nav = () => {
                   {/* Navigation Items */}
                   {navigation.map((item) => (
                     <div key={item.name} className="text-lg relative group">
-                      <NavLink
-                        to={item.to}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-4 py-3 text-xl font-semibold text-gray-900 hover:text-gray-600 transition-all"
-                      >
-                        {item.name}
-                      </NavLink>
+                      {item.name === "Students Corner" ? (
+                        <>
+                          <button
+                            onClick={() =>
+                              setIsStudentsCornerOpen((prev) => !prev)
+                            }
+                            className="w-full  text-left px-5 py-3 text-xl font-semibold text-gray-900 hover:text-gray-600 transition-all flex items-center cursor-pointer justify-between"
+                          >
+                            {item.name}
+                            <LiaHandPointLeftSolid
+                              className={`text-3xl transform animate-pulse transition-transform duration-300 
+                              }`}
+                            />
+                          </button>
 
-                      {/* Students Corner Dropdown */}
-                      {item.name === "Students Corner" && item.children && (
-                        <div className="mt-1 ml-4 space-y-2">
-                          {item.children.map((child) => (
-                            <a
-                              key={child.name}
-                              href={child.href}
-                              onClick={(e) => handleClick(e, child.href)}
-                              className="block px-4 py-2 text-lg text-gray-700 hover:text-gray-500 transition-all"
-                            >
-                              {child.name}
-                            </a>
-                          ))}
-                        </div>
+                          {isStudentsCornerOpen && item.children && (
+                            <div className="mt-1 ml-4 space-y-2">
+                              {item.children.map((child) => (
+                                <Link
+                                  key={child.name}
+                                  to={child.to}
+                                  onClick={() => setIsMobileMenuOpen(false)}
+                                  className="block px-4 py-2 text-lg text-gray-700 hover:text-gray-500 transition-all"
+                                >
+                                  {child.name}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <NavLink
+                          to={item.to}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="block px-4 py-3 text-xl font-semibold text-gray-900 hover:text-gray-600 transition-all"
+                        >
+                          {item.name}
+                        </NavLink>
                       )}
                     </div>
                   ))}
 
-                  {/* Sign In Button (for non-logged in users) */}
+                  {/* Sign In Buttons (non-logged in users) */}
                   {!isLoggedIn && (
                     <>
                       <button

@@ -54,7 +54,7 @@ const IQTest = ({
   const token = Cookies.get("token");
   const decodedToken = jwtDecode(token);
   const userRole = decodedToken.role;
-  console.log("Decoded Token iq test:", userRole);
+
 
   // Update refs when state changes
   useEffect(() => {
