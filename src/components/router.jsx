@@ -30,12 +30,7 @@ import ScrollToTop from '../Layouts/ScrollToTop.jsx';
 import ExtraPopUp from '../Layouts/ExtraPopUp.jsx';
 
 import ServiceProvide from '../Pages/service_provider.jsx';
-<<<<<<< HEAD
 import AddImage from './Add-Img/Add-Image.jsx';
-=======
-import ForgetPasswordPage from '../Pages/SignIn/ForgetPasswordPage.jsx'
-import CreatePasswordPage from '../Pages/SignIn/CreatePasswordPage.jsx';
->>>>>>> 737c6d393c2171181f83c9fec608529c8b48bb2e
 
 
 export const router = createBrowserRouter([
