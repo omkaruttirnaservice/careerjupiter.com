@@ -1,6 +1,8 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getTest, getResult } from "./Api";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { getTest, getResult, getIQTestData, getUserDetail } from "./Api";
 import { FaBrain } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { testOption } from "../../Constant/constantData";
@@ -9,16 +11,44 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTestResult } from "../../store-redux/testResultSlice";
 import { useNavigate } from "react-router-dom";
 import LoadingTestCard from "../loading-skeleton/LoadingTestCard";
+import { setUserRole } from "../../store-redux/userRoleSlice";
+import { Opacity } from "@mui/icons-material";
+import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode";
+
 function TestCard() {
   const [selectedTest, setSelectedTest] = useState(null);
   const [testDuration, setTestDuration] = useState(0);
   const [testName, setTestName] = useState("");
   const [testId, setTestId] = useState(null);
   const [testLevel, setTestLevel] = useState("all");
+  const [resultId, setResultId] = useState();
+  const [userType, setUserType] = useState();
+  const [iqTestDataPayload, setIqTestDataPayload] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { userId } = useSelector((state) => state.auth);
+
+
+      const token = Cookies.get("token");
+      const decodedToken = jwtDecode(token);
+      const userRole = decodedToken.role;
+      console.log("Decoded Token test card:", decodedToken.role);
+      console.log("========", userRole);
+
+
+  // Fetch User Details
+  // const { data: userData } = useQuery({
+  //   queryKey: ["getUserDetail", userId],
+  //   queryFn: () => getUserDetail(userId),
+  //   enabled: true,
+  //   refetchOnMount: true,
+  // });
+  // useEffect(() => {
+  //   if (userData?.data?.data?.role) {
+  //     dispatch(setUserRole(userData.data.data.role));
+  //   }
+  // }, [userData, dispatch]);
 
   // Fetch available tests
   const { data, isPending, refetch } = useQuery({
@@ -27,69 +57,62 @@ function TestCard() {
     staleTime: 0,
   });
 
-  // Fetch test result if attempted
-  // const {
-  //   data: resultData,
-  //   refetch: fetchResult,
-  //   isFetching: isFetchingResult,
-  // } = useQuery({
-  //   queryKey: ["getResult"],
-  //   queryFn: () => getResult({ iqTestId: testId, userId }),
-  //   staleTime: 0,
-  //   enabled: !!testId, // Prevent automatic execution
-  // });
-
-  const {
-    mutate: fetchResult,
-    data: resultData,
-    isPending: isFetchingResult,
-  } = useMutation({
+  const getIQTestDataMutation = useMutation({
+    mutationFn: getIQTestData,
+    onSuccess: (response) => {
+      setSelectedTest(response?.data?.questions);
+      setTestDuration(response?.data?.testDuration);
+      setTestName(response?.data?.title);
+      setResultId(response?.data?.resultId);
+    },
+  });
+  const { mutate: fetchResult, data: resultData } = useMutation({
     mutationFn: () => getResult({ iqTestId: testId, userId }),
   });
-
   useEffect(() => {
     if (resultData?.data) {
       dispatch(setTestResult(resultData.data));
       navigate("/profile/test/?type=result");
     }
   }, [resultData?.data, dispatch, navigate]);
-
   useEffect(() => {
     refetch();
   }, [testLevel, refetch]);
-
-	const anyTestAttempted = data?.data?.some((test) => test?.attempted);
-
   const handleTestClick = async (test) => {
-    if (test.attempted) {
-      setTestId(test._id); // Set testId before fetching result
-      await fetchResult(); // Fetch result and trigger navigation in useEffect
-      return;
-    }
+    // Set userType from the current test
+    setUserType(test.userType);
 
-    const isFirstTest = data?.data?.indexOf(test) === 0;
-    const isUnlocked = anyTestAttempted || isFirstTest;
+    const isAccessible =
+      (userRole === "GUEST" && test.userType === "0") ||
+      (userRole === "USER" && (test.userType === "0" || test.userType === "1"));
 
-    if (!isUnlocked) {
+    if (!isAccessible) {
       Swal.fire({
         icon: "warning",
         title: "Access Denied",
-        text: "Please complete the first basic test before attempting other tests.",
+        text: "Please sign up and access this test.",
       });
       return;
     }
+
+    if (test.attempted === 1) {
+      setTestId(test._id);
+      await fetchResult();
+      return;
+    }
+
+    const newIqTestDataPayload = { iqTestId: test._id, userId };
     Swal.fire({
       title: `Start ${test.title}?`,
-      text: `Duration: ${test.testDuration} min | Total Marks: ${test.totalMarks}`,
+      text: `Duration: ${test.testDuration.minutes} min | Total Marks: ${test.totalMarks}`,
       icon: "info",
       showCancelButton: true,
       confirmButtonText: "Start Test",
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
-        setSelectedTest(test.questions);
-        setTestDuration(test.testDuration);
-        setTestName(test.title);
+        setIqTestDataPayload(newIqTestDataPayload); // Set payload in state
+        getIQTestDataMutation.mutate(newIqTestDataPayload);
         setTestId(test._id);
       }
     });
@@ -101,6 +124,9 @@ function TestCard() {
         testDuration={testDuration}
         title={testName}
         testId={testId}
+        resultId={resultId}
+        getIQTestDataMutation={getIQTestDataMutation}
+        iqTestDataPayload={iqTestDataPayload}
       />
     );
   }
@@ -122,47 +148,63 @@ function TestCard() {
           </select>
         </label>
       </div>
-      {isPending || isFetchingResult ? (
-        <LoadingTestCard/>
+      {isPending ? (
+        <LoadingTestCard />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data?.data?.map((test) => (
-            <div
-              key={test._id}
-              className={`relative p-4 rounded-lg shadow-lg border cursor-pointer transition-all duration-300 
-                ${anyTestAttempted || test === data?.data[0] ? "opacity-100" : "opacity-40"} 
-                ${test?.attempted ? "shadow-green-500 shadow-md" : "bg-white shadow-lg"}`}
-              onClick={() => handleTestClick(test)}
-            >
-              <div className="flex items-center space-x-3 mb-4">
-                <FaBrain className="text-blue-500 text-4xl" />
-                <h2 className="text-xl font-semibold">{test.title}</h2>
-              </div>
-              <p>
-                Test Level:{" "}
-                <span className="font-medium">{test.testLevel || "N/A"}</span>
-              </p>
-              <p>
-                Duration:{" "}
-                <span className="font-medium">
-                  {test.testDuration || "N/A"} min
-                </span>
-              </p>
-              <p>
-                Total Marks:{" "}
-                <span className="font-medium">{test.totalMarks || "N/A"}</span>
-              </p>
-
-              {test?.attempted && (
-                <div className="absolute bottom-2 right-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-md shadow">
-                  ✅ Completed
+          {data?.data?.map((test) => {
+            const isAccessible =
+              (userRole === "GUEST" && test.userType === "0") ||
+              (userRole === "USER" &&
+                (test.userType === "0" || test.userType === "1"));
+            console.log({ isAccessible });
+            console.log("userType:", test?.userType);
+            return (
+              <div
+                key={test._id}
+                className={`relative p-4 rounded-lg shadow-lg border cursor-pointer transition-all duration-300
+                  ${isAccessible ? "opacity-100" : "opacity-40"}
+                  ${test?.attempted === 1 ? "shadow-green-500 shadow-md" : "bg-white shadow-lg"}
+                  ${test?.attempted === -1 ? "shadow-yellow-500 shadow-md" : "bg-white shadow-lg"}`}
+                onClick={() => handleTestClick(test)}
+              >
+                <div className="flex items-center space-x-3 mb-4">
+                  <FaBrain className="text-blue-500 text-4xl" />
+                  <h2 className="text-xl font-semibold">{test.title}</h2>
                 </div>
-              )}
-            </div>
-          ))}
+                <p>
+                  Test Level:{" "}
+                  <span className="font-medium">{test.testLevel || "N/A"}</span>
+                </p>
+                <p>
+                  Duration:{" "}
+                  <span className="font-medium">
+                    {test?.testDuration?.minutes || "N/A"} min
+                  </span>
+                </p>
+                <p>
+                  Total Marks:{" "}
+                  <span className="font-medium">
+                    {test.totalMarks || "N/A"}
+                  </span>
+                </p>
+                {test?.attempted === 1 && (
+                  <div className="absolute bottom-2 right-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-md shadow">
+                    Completed
+                  </div>
+                )}
+                {test?.attempted === -1 && (
+                  <div className="absolute bottom-2 right-2 bg-yellow-600 text-white text-xs font-bold px-2 py-1 rounded-md shadow">
+                    In-Progress
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
   );
 }
 export default TestCard;
+

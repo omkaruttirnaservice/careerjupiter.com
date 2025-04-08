@@ -1,17 +1,20 @@
-import { useDispatch } from "react-redux";
-import { logout } from "../features/auth/authSlice";
-import { useNavigate } from "react-router-dom";
+// import { useDispatch } from "react-redux";
+// import { logout } from "../features/auth/authSlice";
+// import { useNavigate } from "react-router-dom";
 
-const Logout = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+// const Logout = () => {
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
+    
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/signin"); // send login
-  };
 
-  return <button onClick={handleLogout}>Logout</button>;
-};
+//   const handleLogout = () => {
+//     dispatch(logout());
+//     navigate("/signin"); // send login
+//     window.location.reload(); 
+//   };
 
-export default Logout;
+//   return <button onClick={handleLogout}>Logout</button>;
+// };
+
+// export default Logout;
