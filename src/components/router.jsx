@@ -29,6 +29,7 @@ import ComingSoon from '../Pages/CommingSoom.jsx';
 import Nav from '../Layouts/Nav.jsx';
 import ScrollToTop from '../Layouts/ScrollToTop.jsx';
 import ServiceProvide from '../Pages/service_provider.jsx';
+import AddImage from './Add-Img/Add-Image.jsx';
 
 
 export const router = createBrowserRouter([
@@ -49,7 +50,8 @@ export const router = createBrowserRouter([
 			{ path: 'class', element: <InstituteMultiCard /> },
 
 			{ path: 'reviews/:id', element: <ReviewPage /> },
-			{path : '/service-provider', element: <ServiceProvide/>}
+			{path : '/service-provider', element: <ServiceProvide/>},
+			{path : '/add-img', element: <AddImage/>}
 
 
 		],
