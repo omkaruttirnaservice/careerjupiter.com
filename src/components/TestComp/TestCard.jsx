@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { getTest, getResult, getIQTestData, getUserDetail } from "./Api";
+import {
+  getTest,
+  getResult,
+  getIQTestData,
+  getUserDetail,
+  deleteTest,
+} from "./Api";
 import { FaBrain } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { testOption } from "../../Constant/constantData";
@@ -14,7 +20,8 @@ import LoadingTestCard from "../loading-skeleton/LoadingTestCard";
 import { setUserRole } from "../../store-redux/userRoleSlice";
 import { Opacity } from "@mui/icons-material";
 import Cookies from "js-cookie";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+import { setResultsId } from "../../store-redux/resultSlice";
 
 function TestCard() {
   const [selectedTest, setSelectedTest] = useState(null);
@@ -28,14 +35,14 @@ function TestCard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { userId } = useSelector((state) => state.auth);
+  const resultsId = useSelector((state) => state.result.resultsId);
+  // resultsId;
 
-
-      const token = Cookies.get("token");
-      const decodedToken = jwtDecode(token);
-      const userRole = decodedToken.role;
-      console.log("Decoded Token test card:", decodedToken.role);
-      console.log("========", userRole);
-
+  const token = Cookies.get("token");
+  const decodedToken = jwtDecode(token);
+  const userRole = decodedToken.role;
+  console.log("Decoded Token test card:", decodedToken.role);
+  console.log("========", userRole);
 
   // Fetch User Details
   // const { data: userData } = useQuery({
@@ -64,8 +71,12 @@ function TestCard() {
       setTestDuration(response?.data?.testDuration);
       setTestName(response?.data?.title);
       setResultId(response?.data?.resultId);
+
+      console.log("coming hereeeee---------");
+      dispatch(setResultsId(response?.data?.resultId));
     },
   });
+
   const { mutate: fetchResult, data: resultData } = useMutation({
     mutationFn: () => getResult({ iqTestId: testId, userId }),
   });
@@ -78,6 +89,60 @@ function TestCard() {
   useEffect(() => {
     refetch();
   }, [testLevel, refetch]);
+
+  const deleteTestMutation = useMutation({
+    mutationFn: deleteTest,
+    onSuccess: () => {
+      Swal.fire({
+        icon: "success",
+        title: "Test Reset!",
+        text: "You can now re-attempt the test.",
+        confirmButtonColor: "#28a745",
+      }).then(() => {
+        refetch(); // Refresh the test list if needed
+      });
+    },
+    onError: () => {
+      Swal.fire({
+        icon: "error",
+        title: "Failed!",
+        text: "Something went wrong while resetting the test.",
+      });
+    },
+  });
+
+  const handleDeleteTest = (test) => {
+    setTestId(test._id);
+    Swal.fire({
+      icon: "question",
+      title: "Are you sure?",
+      text: `You are about to re-attempt "${test.title}"`,
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, Re-Test!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteTestMutation.mutate({
+          iqTestId: test._id,
+          userId: userId,
+          // resultId: resultsId, // Adjust this based on your API structure
+        });
+      }
+    });
+  };
+
+  const handleResult = async (test) => {
+    console.log("hello - 1");
+
+    if (test.attempted === 1) {
+      setTestId(test._id);
+      await fetchResult();
+      console.log("hello - 2");
+      return;
+    }
+  };
+
   const handleTestClick = async (test) => {
     // Set userType from the current test
     setUserType(test.userType);
@@ -95,27 +160,30 @@ function TestCard() {
       return;
     }
 
-    if (test.attempted === 1) {
-      setTestId(test._id);
-      await fetchResult();
-      return;
-    }
+    // if (test.attempted === 1) {
+    //   setTestId(test._id);
+    //   await fetchResult();
+    //   return;
+    // }
 
     const newIqTestDataPayload = { iqTestId: test._id, userId };
-    Swal.fire({
-      title: `Start ${test.title}?`,
-      text: `Duration: ${test.testDuration.minutes} min | Total Marks: ${test.totalMarks}`,
-      icon: "info",
-      showCancelButton: true,
-      confirmButtonText: "Start Test",
-      cancelButtonText: "Cancel",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setIqTestDataPayload(newIqTestDataPayload); // Set payload in state
-        getIQTestDataMutation.mutate(newIqTestDataPayload);
-        setTestId(test._id);
-      }
-    });
+
+    if (test?.attempted === 0 || test?.attempted === -1) {
+      Swal.fire({
+        title: `Start ${test.title}?`,
+        text: `Duration: ${test.testDuration.minutes} min | Total Marks: ${test.totalMarks}`,
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: "Start Test",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setIqTestDataPayload(newIqTestDataPayload);
+          getIQTestDataMutation.mutate(newIqTestDataPayload);
+          setTestId(test._id);
+        }
+      });
+    }
   };
   if (selectedTest) {
     return (
@@ -189,14 +257,25 @@ function TestCard() {
                   </span>
                 </p>
                 {test?.attempted === 1 && (
-                  <div className="absolute bottom-2 right-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-md shadow">
-                    Completed
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => handleResult(test)}
+                      className="absolute bottom-2 right-18 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-md shadow"
+                    >
+                      View Result
+                    </button>
+                    <button
+                      onClick={() => handleDeleteTest(test)}
+                      className="absolute bottom-2 right-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-md shadow"
+                    >
+                      Re-Test
+                    </button>
                   </div>
                 )}
                 {test?.attempted === -1 && (
-                  <div className="absolute bottom-2 right-2 bg-yellow-600 text-white text-xs font-bold px-2 py-1 rounded-md shadow">
+                  <button className="absolute bottom-2 right-2 bg-yellow-600 text-white text-xs font-bold px-2 py-1 rounded-md shadow">
                     In-Progress
-                  </div>
+                  </button>
                 )}
               </div>
             );
@@ -207,4 +286,3 @@ function TestCard() {
   );
 }
 export default TestCard;
-

@@ -24,3 +24,13 @@ export const MONTHS = [
   "November",
   "December",
 ];
+
+export const EDUCATION_LIST = [
+                      "HSC",
+                      "SSC",
+                      "Diploma",
+                      "Pharmacy",
+                      "UG",
+                      "PG",
+                      "Other",
+                    ];

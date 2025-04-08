@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 const ServiceProvide = () => {
   const handleRegisterClick = () => {
-    window.location.href = 'https://uat-admin.careerjupiter.com/register-class';
+    window.location.href = 'https://admin.careerjupiter.com/register-class';
   };
 
   return (
