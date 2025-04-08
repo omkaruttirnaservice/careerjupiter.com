@@ -34,7 +34,7 @@ function TestCard() {
       const decodedToken = jwtDecode(token);
       const userRole = decodedToken.role;
       console.log("Decoded Token test card:", decodedToken.role);
-      console.log("========", userRole, userType);
+      console.log("========", userRole);
 
 
   // Fetch User Details

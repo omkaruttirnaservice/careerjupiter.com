@@ -92,7 +92,7 @@ const CheckEligibility = () => {
 				>
 					Check Eligibility
 					<motion.span
-						className="text-2xl ml-2"
+						className="text-2xl ml-2 "
 						animate={{ x: [0, 10, 0] }}
 						transition={{ repeat: Infinity, duration: 1 }}
 					>
