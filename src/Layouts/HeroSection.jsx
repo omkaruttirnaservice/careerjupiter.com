@@ -8,6 +8,7 @@ import BestUniversity from "./BestUniversity";
 import Carouseldiv from "./CarouselDiv";
 import Logopage from "./logopage";
 import { useDispatch } from "react-redux";
+import Flotingbutton from "./Flotingbutton";
 
 // import IQtestBanner from './IQtestBanner';
 
@@ -23,6 +24,7 @@ const HeroSection = () => {
     <>
       <div className="relative bg-green-200 overflow-hidden">
         {/* Main Floating Button */}
+        <Flotingbutton />
       </div>
 
       {/* <IQtestBanner /> */}
