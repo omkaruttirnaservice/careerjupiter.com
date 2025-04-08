@@ -44,7 +44,7 @@ const SignInPopup = ({ setShowSignUp, onSuccessfulSignIn }) => {
       toast.success("Logged in successfully!")
       setIsOpen(false)
       onSuccessfulSignIn?.()
-      navigate("/") 
+      navigate("/profile/personal-details"); 
       setTimeout(() => {
         window.location.reload();
       },);
