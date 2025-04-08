@@ -111,7 +111,7 @@ const Nav = () => {
                       onClick={() => dispatch(setIsOpen(true))}
                       className="bg-red-600 text-white font-bold py-2 px-2 rounded-lg text-md mx-4"
                     >
-                      IQ Test
+                      Go To Test
                     </button>
                     <button
                       onClick={() => navigate("/Sign-in")}
@@ -130,7 +130,7 @@ const Nav = () => {
                     <img
                       src={profilePic}
                       alt="Profile"
-                      className="h-8 w-8 rounded-full"
+                      className="h-11 w-11 rounded-full"
                     />
                   </Menu.Button>
                   <Transition
