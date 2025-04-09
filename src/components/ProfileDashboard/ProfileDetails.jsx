@@ -77,10 +77,13 @@ const ProfileDetails = () => {
     )
 
   const user = data?.data
-  // console.log("user........................", user)
+  console.log("user........................", user)
 
-  const educationList = data?.data?.info?.education || []
-  console.log("...................", educationList)
+  const educationList = data?.data?.info?.education 
+  console.log("data -------989898----",data?.data);
+  
+  console.log("...................Edu-List", educationList)
+  
 
   const completionPercentage = calculateProfileCompletion(user)
   // console.log("com........", completionPercentage)
@@ -94,7 +97,7 @@ const ProfileDetails = () => {
         setIsOpenEdit={setIsOpenEdit}
         getProfileRefetch={refetch}
       />
-      <div className="max-w-6xl mx-auto p-4 md:p-6 bg-gradient-to-br from-indigo-50 to-purple-50 min-h-screen">
+      <div className="max-w-6xl mzx-auto p-4 md:p-6 bg-gradient-to-br from-indigo-50 to-purple-50 min-h-screen">
         {/* Mobile Header (shown only on small screens) */}
         <div className="md:hidden w-full flex flex-col items-center text-center space-y-4 mb-6">
           <div className="relative bg-gradient-to-br from-indigo-400 to-purple-400 p-1 rounded-full">
@@ -312,35 +315,44 @@ const ProfileDetails = () => {
               </div>
 
               {/* Education List */}
-              <div className={`mt-4 space-y-4 ${isListVisible ? "block" : "hidden"}`}>
-                {educationList.length > 0 ? (
-                  educationList.map((edu, index) => (
-                    <div
-                      key={index}
-                      className="relative p-4 border rounded-lg shadow-sm bg-gray-50 hover:shadow-md transition-all duration-200"
-                    >
-                      <button
-                        className="absolute top-2 right-2 text-blue-500 hover:text-blue-700"
-                        onClick={() => openEditModal(edu)}
-                      >
-                        <MdEdit className="text-2xl cursor-pointer" />
-                      </button>
+             
+<div className={`mt-4 space-y-4 ${isListVisible ? "block" : "hidden"}`}>
+  {educationList && educationList.length > 0 ? (
+    educationList.map((edu, index) => {
+      // Added null checks for nested properties
+      const startYear = edu?.start_year?.year || 'N/A';
+      const endYear = edu?.end_year?.year || 'N/A';
+      const startMonth = edu?.start_year?.month || 'N/A';
+      const endMonth = edu?.end_year?.month || 'N/A';
 
-                      <h4 className="text-lg font-semibold">{edu.education_name}</h4>
-                      <p className="text-gray-700">{edu.school}</p>
-                      <p className="text-gray-500 text-sm">
-                        {`${edu.start_year?.month || "N/A"} ${edu.start_year?.year || " "}`} -{" "}
-                        {`${edu.end_year?.month || ""} ${edu.end_year?.year || " "}`}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <div>
-                    
-                  </div>
-                )}
-              </div>
-            </div>
+      return (
+        <div
+          key={index}
+          className="relative p-4 border rounded-lg shadow-sm bg-gray-50 hover:shadow-md transition-all duration-200"
+        >
+          <button
+            className="absolute top-2 right-2 text-blue-500 hover:text-blue-700"
+            onClick={() => openEditModal(edu)}
+          >
+            <MdEdit className="text-2xl cursor-pointer" />
+          </button>
+
+          <h4 className="text-lg font-semibold">{edu.education_name || 'Unnamed Education'}</h4>
+          <p className="text-gray-700">{edu.school || 'School not specified'}</p>
+          <p className="text-gray-500 text-sm">
+            {`${startMonth} ${startYear} - ${endMonth} ${endYear}`}
+          </p>
+        </div>
+      );
+    })
+  ) : (
+    <div className="text-center py-4">
+      <p className="text-gray-500 text-sm">
+        No education entries found. Click "Add Education" to get started.
+      </p>
+    </div>
+  )}
+</div>            </div>
           </div>
 
           <div className="hidden lg:block w-full lg:w-1/3 md:mt-8">
@@ -425,3 +437,4 @@ const ProfileDetails = () => {
 
 export default ProfileDetails;
 
+  

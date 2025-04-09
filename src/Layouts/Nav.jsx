@@ -10,6 +10,7 @@ import { setIsOpen } from "../store-redux/iqTestSlice";
 import { LiaHandPointLeftSolid } from "react-icons/lia";
 
 const Nav = () => {
+  const isActive = (path) => location.pathname === path;
   let dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoggedIn } = useSelector((state) => state.auth);
@@ -57,44 +58,113 @@ const Nav = () => {
           <>
             {/* Navbar */}
             <nav className="flex justify-between items-center h-12 max-w-7xl mx-auto px-4">
-              <a
-                href="/"
-                className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600"
+              <Link
+                to="/"
+                className="font-extrabold text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600"
               >
                 CAREER JUPITER
-              </a>
+              </Link>
 
               {/* Desktop Navigation */}
               <div className="hidden md:flex md:items-center md:space-x-8">
-                {navigation.map((item) => (
-                  <div key={item.name} className="relative group">
-                    <NavLink
-                      to={item.to}
-                      className="text-gray-700 hover:text-blue-600"
+
+
+
+                <ul className="flex space-x-2 font-medium">
+                  <li>
+                    <Link
+                      to="/"
+                      className={`px-3 py-2 rounded-md ${isActive("/") ? "text-blue-500" : "hover:text-blue-500"
+                        }`}
                     >
-                      {item.name}
-                    </NavLink>
+                      Home
+                    </Link>
+                  </li>
 
-                    {item.name === "Students Corner" && item.children && (
-                      <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md opacity-0 transform scale-95 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
-                        {item.children.map((child) => (
+                  <li className="relative group">
+                    <Link
+                      to="#"
+                      className="hover:text-blue-500 px-3 py-2 rounded-md items-center"
+                    >
+                      Students Corner
+                    </Link>
+
+                    <div className="absolute hidden group-hover:block  w-40 bg-white mt-2 rounded z-10">
+                      <ul className="py-1">
+                        <li>
                           <Link
-                            key={child.name}
-                            to={child.to}
-                            className="block px-4 py-2 text-black hover:bg-gray-300 transition-all"
+                            to="/my-eligibility"
+                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/my-eligibility") ? "text-blue-500" : ""
+                              }`}
                           >
-                            {child.name}
+                            Search Eligibility
                           </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                        </li>
+                        <li>
+                          <Link
+                            to="/college"
+                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/college") ? "text-blue-500" : ""
+                              }`}
+                          >
+                            Search College
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/class"
+                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/class") ? "text-blue-500" : ""
+                              }`}
+                          >
+                            Search Class
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/university"
+                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/university") ? "text-blue-500" : ""
+                              }`}
+                          >
+                            Search University
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
 
+                  <li>
+                    <Link
+                      to="/service-provider"
+                      className={`px-3 py-2 rounded-md ${isActive("/service-provider") ? "text-blue-500" : "hover:text-blue-500"
+                        }`}
+                    >
+                      Service Providers
+                    </Link>
+                  </li>
+
+                  <li>
+                    <Link
+                      to="/about-us"
+                      className={`px-3 py-2 rounded-md ${isActive("/about-us") ? "text-blue-500" : "hover:text-blue-500"
+                        }`}
+                    >
+                      About Us
+                    </Link>
+                  </li>
+
+                  <li>
+                    <Link
+                      to="/contact-us"
+                      className={`px-3 py-2 rounded-md ${isActive("/contact-us") ? "text-blue-500" : "hover:text-blue-500"
+                        }`}
+                    >
+                      Contact Us
+                    </Link>
+                  </li>
+                </ul>
                 {/* Check Eligibility Button */}
                 <button
                   onClick={handleScrollToSection}
-                  className="bg-pink-600 cursor-pointer text-white font-bold py-2 px-4 rounded-lg"
+                  className="bg-gradient-to-r from-purple-500 to-pink-600 cursor-pointer text-white font-bold py-2 px-2 rounded-lg"
                 >
                   Check Eligibility
                   <motion.span
@@ -102,7 +172,7 @@ const Nav = () => {
                     animate={{ x: [0, 10, 0] }}
                     transition={{ repeat: Infinity, duration: 1 }}
                   >
-                    ➡️
+
                   </motion.span>
                 </button>
                 {!isLoggedIn && (

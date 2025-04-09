@@ -878,6 +878,8 @@ export const cityData = [
 	},
 ];
 
+
+// mobile view navigation
 export const navigation = [
   { name: "Home", to: "/" },
   {
@@ -893,6 +895,7 @@ export const navigation = [
   { name: "About Us", to: "/about-us" },
   { name: "Contact Us", to: "/contact-us" },
 ];
+// end mobile view navigation
 
 export const BACKEND_SERVER_IP = import.meta.env.VITE_BACKEND_URL;
 
