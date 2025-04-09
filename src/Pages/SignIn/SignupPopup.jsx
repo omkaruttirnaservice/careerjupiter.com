@@ -78,6 +78,9 @@ export default function SignupPopup() {
     try {
       const data = await fetchProfileStatusAPI(userId)
 
+      console.log("SignUpPopup------",data);
+      
+
       if (data.usrMsg?.includes("First name")) {
         setRequirement("firstName")
         setIsOpen(true)

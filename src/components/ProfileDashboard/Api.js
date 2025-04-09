@@ -15,6 +15,8 @@ export const setEducation = async (data) => {
 
 // Update Education
 export const updateEducation = async (data) => {
+  console.log("inside education update api===", data.educationData);
+  
   const response = await axios.put(
     `${BASE_URL}/api/education/${data.user_id}`,
     data.educationData

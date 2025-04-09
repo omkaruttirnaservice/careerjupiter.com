@@ -22,6 +22,7 @@ const ProfileDetails = () => {
   const [isOpenEdit, setIsOpenEdit] = useState(false)
   const [selectedEducation, setSelectedEducation] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [eduactionList , setEducationList] = useState([]);
 
   const openEditModal = (edu) => {
     setSelectedEducation(edu)
@@ -34,8 +35,12 @@ const ProfileDetails = () => {
   })
 
   useEffect(() => {
-    if (data?.data?.info?.current_education) {
-      dispatch(setCurrentEducation(data.data.info.current_education))
+    if (
+      data?.data?.info?.current_education ||
+      data?.data?.info?.education?.education
+    ) {
+      dispatch(setCurrentEducation(data.data.info.current_education));
+      setEducationList(data?.data?.info?.education?.education);
     }
   }, [data, dispatch])
 
@@ -79,20 +84,25 @@ const ProfileDetails = () => {
   const user = data?.data
   // console.log("user........................", user)
 
-  const educationList = data?.data?.info?.education || []
-  console.log("...................", educationList)
+  // const educationList = data?.data?.info?.education || []
+  // console.log("...................", educationList)
 
   const completionPercentage = calculateProfileCompletion(user)
   // console.log("com........", completionPercentage)
 
   return (
     <>
-      <EducationFormModal isOpen={isOpen} setIsOpen={setIsOpen} getProfileRefetch={refetch} />
+      <EducationFormModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        getProfileRefetch={refetch}
+      />
       <EditEductionDetails
         isOpenEdit={isOpenEdit}
         selectedEducation={selectedEducation}
         setIsOpenEdit={setIsOpenEdit}
         getProfileRefetch={refetch}
+        eduactionList={eduactionList}
       />
       <div className="max-w-6xl mx-auto p-4 md:p-6 bg-gradient-to-br from-indigo-50 to-purple-50 min-h-screen">
         {/* Mobile Header (shown only on small screens) */}
@@ -116,7 +126,9 @@ const ProfileDetails = () => {
           <div className="flex flex-col space-y-2">
             <div className="flex items-center justify-center gap-2 text-gray-700">
               <FaEnvelope className="text-indigo-600 w-4 h-4" />
-              <span className="text-sm font-medium break-all">{user?.email_id}</span>
+              <span className="text-sm font-medium break-all">
+                {user?.email_id}
+              </span>
             </div>
             <div className="flex items-center justify-center gap-2 text-gray-700">
               <FaPhone className="text-indigo-600 w-4 h-4" />
@@ -127,8 +139,12 @@ const ProfileDetails = () => {
           {/* Profile Completion Progress (Mobile) */}
           <div className="w-full mt-2 px-4">
             <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium text-indigo-700">Profile Completion</span>
-              <span className="text-sm font-medium text-indigo-700">{completionPercentage}%</span>
+              <span className="text-sm font-medium text-indigo-700">
+                Profile Completion
+              </span>
+              <span className="text-sm font-medium text-indigo-700">
+                {completionPercentage}%
+              </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2.5">
               <div
@@ -170,7 +186,9 @@ const ProfileDetails = () => {
               <div className="w-full space-y-3">
                 <div className="flex items-center justify-center gap-2 text-gray-700">
                   <FaEnvelope className="text-indigo-600 w-5 h-5 flex-shrink-0" />
-                  <span className="text-sm font-medium break-all">{user?.email_id || "NA"}</span>
+                  <span className="text-sm font-medium break-all">
+                    {user?.email_id || "NA"}
+                  </span>
                 </div>
                 <div className="flex items-center justify-center gap-2 text-gray-700">
                   <FaPhone className="text-indigo-600 w-5 h-5 flex-shrink-0" />
@@ -181,8 +199,12 @@ const ProfileDetails = () => {
               {/* Profile Completion Progress */}
               <div className="w-full mb-4">
                 <div className="flex justify-between mb-1">
-                  <span className="text-sm font-medium text-indigo-700">Profile Completion</span>
-                  <span className="text-sm font-medium text-indigo-700">{completionPercentage}%</span>
+                  <span className="text-sm font-medium text-indigo-700">
+                    Profile Completion
+                  </span>
+                  <span className="text-sm font-medium text-indigo-700">
+                    {completionPercentage}%
+                  </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div
@@ -221,7 +243,9 @@ const ProfileDetails = () => {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Date of Birth</p>
-                    <p className="font-semibold text-gray-800">{user?.dob || "N/A"}</p>
+                    <p className="font-semibold text-gray-800">
+                      {user?.dob || "N/A"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -232,7 +256,9 @@ const ProfileDetails = () => {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Age</p>
-                    <p className="font-semibold text-gray-800">{user?.age || "N/A"}</p>
+                    <p className="font-semibold text-gray-800">
+                      {user?.age || "N/A"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -259,7 +285,9 @@ const ProfileDetails = () => {
                   <p className="text-gray-600 mt-2">
                     {user?.address?.dist || "N/A"}, {user?.address?.state}
                   </p>
-                  <p className="text-gray-600">PIN: {user?.address?.pincode || "N/A"}</p>
+                  <p className="text-gray-600">
+                    PIN: {user?.address?.pincode || "N/A"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -280,7 +308,6 @@ const ProfileDetails = () => {
                       <span>Add Education</span>
                     </p>
                   </button>
-                  
                 </div>
               </div>
 
@@ -291,7 +318,9 @@ const ProfileDetails = () => {
                 <div className="w-full">
                   <p className="text-sm text-gray-500">Current Education</p>
                   <div className="flex justify-between items-center">
-                    <p className="font-semibold text-gray-800">{user?.info?.current_education || "N/A"}</p>
+                    <p className="font-semibold text-gray-800">
+                      {user?.info?.current_education || "N/A"}
+                    </p>
                     {user?.info?.current_education && (
                       <div className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-medium">
                         Current
@@ -307,14 +336,18 @@ const ProfileDetails = () => {
                   onClick={() => setIsListVisible(!isListVisible)}
                   className="bg-gray-200 text-gray-700 px-4 h-8 rounded-md shadow-md hover:bg-gray-300 transition cursor-pointer"
                 >
-                  {isListVisible ? "Hide Education List" : "View Education List"}
+                  {isListVisible
+                    ? "Hide Education List"
+                    : "View Education List"}
                 </button>
               </div>
 
               {/* Education List */}
-              <div className={`mt-4 space-y-4 ${isListVisible ? "block" : "hidden"}`}>
-                {educationList.length > 0 ? (
-                  educationList.map((edu, index) => (
+              <div
+                className={`mt-4 space-y-4 ${isListVisible ? "block" : "hidden"}`}
+              >
+                {eduactionList?.length > 0 ? (
+                  eduactionList?.map((edu, index) => (
                     <div
                       key={index}
                       className="relative p-4 border rounded-lg shadow-sm bg-gray-50 hover:shadow-md transition-all duration-200"
@@ -326,18 +359,19 @@ const ProfileDetails = () => {
                         <MdEdit className="text-2xl cursor-pointer" />
                       </button>
 
-                      <h4 className="text-lg font-semibold">{edu.education_name}</h4>
+                      <h4 className="text-lg font-semibold">
+                        {edu.education_name}
+                      </h4>
                       <p className="text-gray-700">{edu.school}</p>
                       <p className="text-gray-500 text-sm">
-                        {`${edu.start_year?.month || "N/A"} ${edu.start_year?.year || " "}`} -{" "}
+                        {`${edu.start_year?.month || "N/A"} ${edu.start_year?.year || " "}`}{" "}
+                        -{" "}
                         {`${edu.end_year?.month || ""} ${edu.end_year?.year || " "}`}
                       </p>
                     </div>
                   ))
                 ) : (
-                  <div>
-                    
-                  </div>
+                  <div></div>
                 )}
               </div>
             </div>
@@ -349,8 +383,12 @@ const ProfileDetails = () => {
                 {/* Profile Completion Progress (Desktop) */}
                 <div className="w-full mb-4">
                   <div className="flex justify-between mb-1">
-                    <span className="text-sm font-medium text-indigo-700">Profile Completion</span>
-                    <span className="text-sm font-medium text-indigo-700">{completionPercentage}%</span>
+                    <span className="text-sm font-medium text-indigo-700">
+                      Profile Completion
+                    </span>
+                    <span className="text-sm font-medium text-indigo-700">
+                      {completionPercentage}%
+                    </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
                     <div
@@ -362,7 +400,8 @@ const ProfileDetails = () => {
                   {/* Completion tip */}
                   {completionPercentage < 100 && (
                     <p className="text-xs text-gray-500 mt-2 bg-indigo-50 p-2 rounded-md">
-                      Complete your profile to enhance your experience. Click the edit icon to add missing information.
+                      Complete your profile to enhance your experience. Click
+                      the edit icon to add missing information.
                     </p>
                   )}
                 </div>
@@ -397,11 +436,15 @@ const ProfileDetails = () => {
                 <div className="w-full space-y-3">
                   <div className="flex items-center gap-2 text-gray-700">
                     <FaEnvelope className="text-indigo-600 w-5 h-5 flex-shrink-0" />
-                    <span className="text-sm font-medium break-all">{user?.email_id || "NA"}</span>
+                    <span className="text-sm font-medium break-all">
+                      {user?.email_id || "NA"}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-700">
                     <FaPhone className="text-indigo-600 w-5 h-5 flex-shrink-0" />
-                    <span className="text-sm font-medium">{user?.mobile_no}</span>
+                    <span className="text-sm font-medium">
+                      {user?.mobile_no}
+                    </span>
                   </div>
                 </div>
 
@@ -417,10 +460,15 @@ const ProfileDetails = () => {
           </div>
         </div>
 
-        <EditProfileModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} user={user} onSave={refetch} />
+        <EditProfileModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          user={user}
+          onSave={refetch}
+        />
       </div>
     </>
-  )
+  );
 }
 
 export default ProfileDetails;

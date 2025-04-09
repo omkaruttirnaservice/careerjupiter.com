@@ -13,13 +13,17 @@ const years = Array.from(
   (_, i) => new Date().getFullYear() - i
 );
 
-export default function EducationFormModal({ isOpen, setIsOpen, getProfileRefetch }) {
+export default function EducationFormModal({
+  isOpen,
+  setIsOpen,
+  getProfileRefetch,
+}) {
   const { userId } = useSelector((state) => state.auth);
 
   const mutation = useMutation({
     mutationFn: setEducation,
     onSuccess: (data) => {
-      console.log(data, "Add Eduction data");
+      console.log(data, "....Add Eduction data");
       Swal.fire({
         title: "Are you sure to add Eduction data ?",
         showCancelButton: true,
@@ -30,7 +34,7 @@ export default function EducationFormModal({ isOpen, setIsOpen, getProfileRefetc
           Swal.fire("Add Education data successfully!");
         }
       });
-       getProfileRefetch();
+      getProfileRefetch();
     },
 
     onError: (error) => {},
