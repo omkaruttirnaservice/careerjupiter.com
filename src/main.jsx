@@ -39,28 +39,19 @@ const queryClient = new QueryClient({
 });
 
 function handleError(error) {
-  // console.log({error});
-  const data = error?.response?.data
+  console.log(error, "-err");
+  const data = error?.response?.data;
 
-  // const usrmessage =error.response?.data?.message
-
-  toast.warning(data?.usrMsg || "Please try again later !")
+  toast.warning(data?.usrMsg || "Please try again later !");
   // toast.info(usrmessage || "Please try again later.... !")
-  console.log(usrmessage , '----------error message')
-
-
-  console.log(error,'-error')
-  
 }
 
 createRoot(document.getElementById("root")).render(
   <>
     <QueryClientProvider client={queryClient}>
       <Provider store={reduxStore}>
-      
-        <RouterProvider router={router}/>
-         
-      </Provider> 
+        <RouterProvider router={router} />
+      </Provider>
     </QueryClientProvider>
     <ToastContainer position="top-right" autoClose={2000} />
   </>
