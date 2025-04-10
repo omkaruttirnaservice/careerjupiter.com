@@ -204,7 +204,7 @@ const IQTest = ({
     const latestUserRole = userRole;
     const allAnswered = answers.every((ans) => ans !== "");
 
-    if (timeLeft == "00:00") {
+    if (timeLeft === 0) {
       if (latestUserRole === "GUEST") {
         setShowMobileNumberPopup(true);
       } else {

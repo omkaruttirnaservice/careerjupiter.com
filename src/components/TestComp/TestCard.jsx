@@ -170,11 +170,11 @@ function TestCard() {
 
     if (test?.attempted === 0 || test?.attempted === -1) {
       Swal.fire({
-        title: `Start ${test.title}?`,
+        title: `${test?.attempted === -1 ? "Resume" : "Start"} ${test.title}?`,
         text: `Duration: ${test.testDuration.minutes} min | Total Marks: ${test.totalMarks}`,
         icon: "info",
         showCancelButton: true,
-        confirmButtonText: "Start Test",
+        confirmButtonText: `${test?.attempted === -1 ? "Resume Test" : "Start Test"}`,
         cancelButtonText: "Cancel",
       }).then((result) => {
         if (result.isConfirmed) {
