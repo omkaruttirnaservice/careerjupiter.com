@@ -6,10 +6,10 @@ import ReviewPage from "./navComp/ReviewPage";
 import PlacementDetails from "./navComp/PlacementDetails";
 import CutoffTable from "./navComp/CutoffTable";
 import Ranking from "./navComp/Ranking";
-import Infrastructure from "./navComp/infrastructure";
 import Gallery from "./navComp/Gallery";
 import News from "./navComp/News";
 import QuenAns from "./navComp/QuenAns";
+import Infrastructure from "./navComp/Infrastructure";
 
 const HandleNavComp = ({
   navName,
@@ -62,7 +62,12 @@ const HandleNavComp = ({
         setNavComp(<Gallery imageGallery={imageGallery} />);
         break;
       case navItem[4]:
-        setNavComp(<ReviewPage reviewCollegeName={review} reviewUniversityName={review} />);
+        setNavComp(
+          <ReviewPage
+            reviewCollegeName={review}
+            reviewUniversityName={review}
+          />
+        );
         break;
       // case navItem[9]:
       //   setNavComp(<News />);
