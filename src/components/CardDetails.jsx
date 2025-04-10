@@ -95,10 +95,12 @@ const CardDetails = () => {
       <Nav />
       <a
         href="tel:+1234567890"
-        className="fixed bottom-[100px] right-5 z-50 flex items-center gap-2 bg-green-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-green-700 transition-all duration-300 hover:scale-105 animate-bounce"
+        className="fixed mt-110  right-5  z-50 flex items-center   transition-all duration-300"
       >
-        <FaPhoneAlt className="text-xl animate-pulse" />
-        <span className="font-bold text-sm md:text-base">Call Now</span>
+         <p className="w-28 h-28">
+          <Lotify icon="/public/Lottiefiles/Animation - 1743060162749.json" />
+        </p>
+
       </a>
       <div className="max-w-full mx-auto p-4 mt-15">
         {/* College Name at the Top */}
