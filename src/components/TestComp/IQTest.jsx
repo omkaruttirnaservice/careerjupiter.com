@@ -55,7 +55,6 @@ const IQTest = ({
   const decodedToken = jwtDecode(token);
   const userRole = decodedToken.role;
 
-
   // Update refs when state changes
   useEffect(() => {
     timeLeftRef.current = timeLeft;
@@ -104,7 +103,7 @@ const IQTest = ({
       });
     },
   });
-
+  
   const updateTestProgressMutation = useMutation({
     mutationFn: updateTestProgress,
     onSuccess: (response) => {},
@@ -209,6 +208,7 @@ const IQTest = ({
       if (latestUserRole === "GUEST") {
         setShowMobileNumberPopup(true);
       } else {
+        setIsSubmitted(true);
         resultGenerationMutation.mutate(resultData);
       }
     }
@@ -241,9 +241,14 @@ const IQTest = ({
         if (result.isConfirmed) {
           console.log("User Role:", latestUserRole);
 
+          if (progressIntervalRef.current) {
+            clearInterval(progressIntervalRef.current);
+          }
+
           if (latestUserRole === "GUEST") {
             setShowMobileNumberPopup(true);
           } else {
+            setIsSubmitted(true);
             resultGenerationMutation.mutate(resultData);
           }
         }
@@ -252,9 +257,42 @@ const IQTest = ({
   };
 
   // Modified useEffect to use refs for the most current values
+  // useEffect(() => {
+  //   const updateProgress = () => {
+  //     // Access the most current values from refs
+  //     const currentTimeLeft = timeLeftRef.current;
+  //     const currentTestProgress = testProgressRef.current;
+
+  //     if (
+  //       currentTestProgress.questionId &&
+  //       currentTestProgress.selectedOption
+  //     ) {
+  //       updateTestProgressMutation.mutate({
+  //         ...currentTestProgress,
+  //         testDuration: formatTime(currentTimeLeft),
+  //       });
+  //     }
+  //   };
+
+  //   progressIntervalRef.current = setInterval(updateProgress, 10000);
+
+  //   return () => {
+  //     if (progressIntervalRef.current) {
+  //       clearInterval(progressIntervalRef.current);
+  //     }
+  //   };
+  // }, [currentQuestion]);
+
   useEffect(() => {
+    if (isSubmitted) {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+        progressIntervalRef.current = null; // optional but safe
+      }
+      return; // Don't create a new interval
+    }
+
     const updateProgress = () => {
-      // Access the most current values from refs
       const currentTimeLeft = timeLeftRef.current;
       const currentTestProgress = testProgressRef.current;
 
@@ -276,7 +314,7 @@ const IQTest = ({
         clearInterval(progressIntervalRef.current);
       }
     };
-  }, [currentQuestion]);
+  }, [currentQuestion, isSubmitted]); // Add isSubmitted here
 
   useEffect(() => {
     const handleOffline = () => {
@@ -330,11 +368,11 @@ const IQTest = ({
         <div className="flex flex-col lg:flex-row p-2 sm:p-4 bg-gray-100 gap-4">
           <div className="flex-1 w-full bg-white p-3 sm:p-6 rounded-lg shadow-md">
             <div className="h-auto min-h-[15vh] md:min-h-[20vh] w-full">
-              <div className="flex items-center mb-4">
-                <div className="bg-[#2C4167] text-white w-12 h-12 flex items-center justify-center text-xl font-bold rounded-sm">
-                  {currentQuestion + 1}
-                </div>
-                <h2 className="text-lg sm:text-xl font-medium ml-4 text-[#2C4167]">
+              <div className="bg-[#2C4167] text-white w-10 h-10 flex items-center justify-center text-xl font-bold rounded-sm">
+                {currentQuestion + 1}
+              </div>
+              <div className="flex items-center w-full h-30 mb-4">
+                <h2 className="text-lg sm:text-xl font-medium text-[#2C4167]">
                   {questions[currentQuestion].question}
                 </h2>
                 <div className="ml-auto text-sm text-gray-500">

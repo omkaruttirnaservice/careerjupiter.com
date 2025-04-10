@@ -1,15 +1,20 @@
 import { FaInstagram, FaYoutube } from "react-icons/fa";
 import { LuNotebookPen } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { setIsOpen } from "../store-redux/iqTestSlice";
 
 const Flotingbutton = () => {
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    dispatch(setIsOpen(true));
+        if (!authState.isLoggedIn) {
+         dispatch(setIsOpen(true));
+        }else{
+             navigate("/profile/test");
+        }
   };
 
   return (

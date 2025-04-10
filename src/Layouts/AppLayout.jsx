@@ -25,7 +25,6 @@ const AppLayout = () => {
       <SearchContextProvider>
         <Nav />
         <SearchComponent />
-        <Flotingbutton/>
         <Outlet />
         <Footer />
       </SearchContextProvider>

@@ -5,6 +5,7 @@ import testResultSlice from "./testResultSlice";
 import educationSlice from "./educationSlice";
 import iqTestSlice from "./iqTestSlice";
 import userRoleSlice from "./userRoleSlice";
+import resultSlice from "./resultSlice";
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     education: educationSlice,
     iqTest: iqTestSlice,
     userRole: userRoleSlice,
+    result: resultSlice,
   },
 });
 

@@ -16,6 +16,7 @@ const Nav = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isStudentsCornerOpen, setIsStudentsCornerOpen] = useState(false);
+   const authState = useSelector((state) => state.auth);
 
   const profilePic =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsEJHmI0MlIGvH9CYkbsLEWQ5_ee8Qtl5V-Q&s";
@@ -39,6 +40,14 @@ const Nav = () => {
   const confirmSignOut = () => {
     setShowConfirm(true);
   };
+
+    const handleClick = () => {
+      if (!authState.isLoggedIn) {
+        dispatch(setIsOpen(true));
+      } else {
+        navigate("/profile/test");
+      }
+    };
 
   const handleScrollToSection = () => {
     const section = document.getElementById("check-eligibility-section");
@@ -105,14 +114,14 @@ const Nav = () => {
                     ➡️
                   </motion.span>
                 </button>
+                <button
+                  onClick={handleClick}
+                  className="bg-red-600 text-white font-bold py-2 px-2 rounded-lg text-md mx-4"
+                >
+                  Go To Test
+                </button>
                 {!isLoggedIn && (
                   <>
-                    <button
-                      onClick={() => dispatch(setIsOpen(true))}
-                      className="bg-red-600 text-white font-bold py-2 px-2 rounded-lg text-md mx-4"
-                    >
-                      Go To Test
-                    </button>
                     <button
                       onClick={() => navigate("/Sign-in")}
                       className="bg-blue-600 text-white font-bold py-2 px-2 rounded-lg text-md mx-4"

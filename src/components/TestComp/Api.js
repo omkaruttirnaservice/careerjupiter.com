@@ -67,8 +67,12 @@ export const getIQTestData = async (payload) => {
   return response.data;
 };
 
-export const updateTestProgress = (data) => {
+export const deleteTest = async (userTestData) => {
+  console.log("inside delete api :", userTestData);
+  return await axios.post(`${BASE_URL}/api/result/delete`, userTestData);
+};
 
+export const updateTestProgress = (data) => {
   return axios.put(`${BASE_URL}/api/iqtest/update`, {
     userId: data.userId,
     iqTestId: data.iqTestId,
@@ -76,6 +80,6 @@ export const updateTestProgress = (data) => {
     selectedOption: data.selectedOption,
     testDuration: data.testDuration,
     resultID: data.resultId,
-    status:data.status
+    status: data.status,
   });
-}
+};
