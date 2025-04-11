@@ -42,7 +42,6 @@ const SignInPopup = ({ setShowSignUp, onSuccessfulSignIn }) => {
       Cookies.set("token", parsedData.token, { expires: 1 });
       Cookies.set("userId", userId, { expires: 1 });
       dispatch(login(userId));
-
       toast.success("Logged in successfully!");
       setIsOpen(false);
       onSuccessfulSignIn?.();
