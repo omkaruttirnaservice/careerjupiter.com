@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {
@@ -36,28 +34,11 @@ function TestCard() {
   const navigate = useNavigate();
   const { userId } = useSelector((state) => state.auth);
   const resultsId = useSelector((state) => state.result.resultsId);
-  // resultsId;
 
   const token = Cookies.get("token");
   const decodedToken = jwtDecode(token);
   const userRole = decodedToken.role;
-  console.log("Decoded Token test card:", decodedToken.role);
-  console.log("========", userRole);
 
-  // Fetch User Details
-  // const { data: userData } = useQuery({
-  //   queryKey: ["getUserDetail", userId],
-  //   queryFn: () => getUserDetail(userId),
-  //   enabled: true,
-  //   refetchOnMount: true,
-  // });
-  // useEffect(() => {
-  //   if (userData?.data?.data?.role) {
-  //     dispatch(setUserRole(userData.data.data.role));
-  //   }
-  // }, [userData, dispatch]);
-
-  // Fetch available tests
   const { data, isPending, refetch } = useQuery({
     queryKey: ["getTest", testLevel],
     queryFn: () => getTest(testLevel),
@@ -71,8 +52,6 @@ function TestCard() {
       setTestDuration(response?.data?.testDuration);
       setTestName(response?.data?.title);
       setResultId(response?.data?.resultId);
-
-      console.log("coming hereeeee---------");
       dispatch(setResultsId(response?.data?.resultId));
     },
   });
@@ -86,6 +65,7 @@ function TestCard() {
       navigate("/profile/test/?type=result");
     }
   }, [resultData?.data, dispatch, navigate]);
+
   useEffect(() => {
     refetch();
   }, [testLevel, refetch]);
@@ -99,7 +79,7 @@ function TestCard() {
         text: "You can now re-attempt the test.",
         confirmButtonColor: "#28a745",
       }).then(() => {
-        refetch(); // Refresh the test list if needed
+        refetch();
       });
     },
     onError: () => {
@@ -126,19 +106,15 @@ function TestCard() {
         deleteTestMutation.mutate({
           iqTestId: test._id,
           userId: userId,
-          // resultId: resultsId, // Adjust this based on your API structure
         });
       }
     });
   };
 
   const handleResult = async (test) => {
-    console.log("hello - 1");
-
     if (test.attempted === 1) {
       setTestId(test._id);
       await fetchResult();
-      console.log("hello - 2");
       return;
     }
   };
@@ -159,12 +135,6 @@ function TestCard() {
       });
       return;
     }
-
-    // if (test.attempted === 1) {
-    //   setTestId(test._id);
-    //   await fetchResult();
-    //   return;
-    // }
 
     const newIqTestDataPayload = { iqTestId: test._id, userId };
 

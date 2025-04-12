@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect, useRef } from "react";
 import { FaArrowRight, FaArrowLeft, FaCheckCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
