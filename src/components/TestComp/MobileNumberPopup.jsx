@@ -6,6 +6,7 @@ import { sendUserOTP, updateUserDetails, verifyUserOTP } from "./Api";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const MobileNumberPopup = ({
   setShowMobileNumberPopup,
@@ -18,6 +19,10 @@ const MobileNumberPopup = ({
   const [otpSent, setOtpSent] = useState(false);
   const [isMobileEditable, setIsMobileEditable] = useState(true);
   const [timer, setTimer] = useState(0);
+
+    const token = Cookies.get("token");
+    const decodedToken = jwtDecode(token);
+    const userRole = decodedToken.role;
 
   useEffect(() => {
     let countdown;
@@ -150,7 +155,10 @@ const MobileNumberPopup = ({
                 <button
                   type="button"
                   onClick={() => {
-                    sendOTPMutation.mutate({ mobile_no: values.mobileNumber });
+                    sendOTPMutation.mutate({
+                      mobile_no: values.mobileNumber,
+                      role: userRole,
+                    });
                   }}
                   className={`mt-2 w-full py-2 rounded-md text-white ${
                     otpSent ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500"

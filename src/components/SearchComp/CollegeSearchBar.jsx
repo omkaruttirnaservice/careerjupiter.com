@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
-import { getCollegeCategory, getCollegeDist, searchCollege } from "./Api";
+import { getCollegeCategory, getCollegeDist, GetSearchCollege } from "./Api";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import { useSearchContext } from "../../store/SearchContext";
+import { capitalize } from "../../utils/constansts";
 
-const CollegeSearchBar = () => {
+
+const CollegeSearchBar = ({ setSearchCollegeData }) => {
   const {
     tagName,
     query,
@@ -17,15 +19,14 @@ const CollegeSearchBar = () => {
     setErrorMsg,
   } = useSearchContext();
 
-  const districts = ["Nashik", "Pune", "Nagar"];
-
-  // typeWritter effect code
-
   const dynamicWords = ["college name...", "district...", "category..."];
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [typingSpeed, setTypingSpeed] = useState(150);
+  const [collegeCategoryValue, setCollegeCategoryValue] = useState("");
+  const [collegeDistValue, setCollegeDistValue] = useState("");
+  const [collegeQuery, setCollegeQuery] = useState("");
 
   useEffect(() => {
     const currentWord = dynamicWords[currentWordIndex];
@@ -39,12 +40,10 @@ const CollegeSearchBar = () => {
         setTypingSpeed(150);
       }
 
-      // Word is fully typed
       if (!isDeleting && displayText === currentWord) {
         setTimeout(() => setIsDeleting(true), 1000);
       }
 
-      // Word is fully deleted
       if (isDeleting && displayText === "") {
         setIsDeleting(false);
         setCurrentWordIndex((prev) => (prev + 1) % dynamicWords.length);
@@ -69,7 +68,6 @@ const CollegeSearchBar = () => {
   });
 
   const { pathname } = useLocation();
-  // console.log(pathname, '--pathname');
 
   const [searchParams, setSearchParams] = useState({
     searchKey: "",
@@ -77,16 +75,33 @@ const CollegeSearchBar = () => {
     type: null,
   });
 
+  const [collegeSearchParams, setCollegeSearchParams] = useState({
+    searchKey: "",
+    category: "",
+    type: null,
+    dist: "",
+  });
+
   const getPathType = () => {
     const pathParts = pathname.split("/");
     return pathParts.length > 2 ? pathParts[1] : pathname.slice(1);
   };
 
+  // const { data, isPending, isError, error } = useQuery({
+  //   queryKey: ["colleges", searchParams],
+  //   queryFn: () => searchCollege(searchParams),
+  //   // enabled: false,
+  //   enabled: searchParams?.type ? true : false,
+  //   refetchOnMount: false,
+  //   refetchOnWindowFocus: false,
+  //   retry: false,
+  // });
+
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["colleges", searchParams],
-    queryFn: () => searchCollege(searchParams),
+    queryKey: ["colleges", collegeSearchParams],
+    queryFn: () => GetSearchCollege(collegeSearchParams),
     // enabled: false,
-    enabled: searchParams?.type ? true : false,
+    enabled: collegeSearchParams?.type ? true : false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retry: false,
@@ -94,11 +109,13 @@ const CollegeSearchBar = () => {
 
   useEffect(() => {
     handleSearch();
+    handleCollegeSearch();
   }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       handleSearch();
+      handleCollegeSearch();
     }, 1500);
     return () => {
       clearTimeout(timeout);
@@ -108,6 +125,7 @@ const CollegeSearchBar = () => {
   useEffect(() => {
     if (data?.data) {
       setCollegesData(data.data);
+      setSearchCollegeData(data.data);
       setIsLoading(false);
     }
   }, [data]);
@@ -151,6 +169,7 @@ const CollegeSearchBar = () => {
     if (isError) {
       setErrorMsg(error);
       setCollegesData([]);
+      setSearchCollegeData([]);
       setInstitutesData([]);
       setUniversityData([]);
     }
@@ -160,6 +179,7 @@ const CollegeSearchBar = () => {
     const inputValue = e.target.value;
     setQuery(inputValue);
     setIsLoading(true);
+    setCollegeQuery(inputValue);
   };
 
   const handleSearch = () => {
@@ -178,6 +198,18 @@ const CollegeSearchBar = () => {
     });
   };
 
+  const handleCollegeSearch = () => {
+    setCollegeSearchParams((prev) => {
+      const newParams = {
+        searchKey: collegeQuery,
+        category: collegeCategoryValue,
+        type: getPathType(),
+        dist: collegeDistValue,
+      };
+      return newParams;
+    });
+  };
+
   return (
     <>
       <div className="w-full max-w-5xl items-center justify-center p-6 mx-auto">
@@ -191,20 +223,26 @@ const CollegeSearchBar = () => {
             onChange={handleInputChange}
           />
 
-          <select className="px-4 py-3 border-l border-gray-300 cursor-pointer">
+          <select
+            className="px-4 py-3 border-l border-gray-300 cursor-pointer"
+            onChange={(e) => setCollegeDistValue(e.target.value)}
+          >
             <option value="">District</option>
             {collegeDist?.data.map((district) => (
               <option key={district} value={district}>
-                {district}
+                {capitalize(district)}
               </option>
             ))}
           </select>
 
-          <select className="px-4 py-3 border-l border-gray-300 cursor-pointer">
+          <select
+            className="px-4 py-3 border-l border-gray-300 cursor-pointer"
+            onChange={(e) => setCollegeCategoryValue(e.target.value)}
+          >
             <option value="">Category</option>
             {collegeCategory?.categories?.map((cate) => (
               <option key={cate.category} value={cate.category}>
-                {cate.category}
+                {capitalize(cate.category)}
               </option>
             ))}
           </select>
@@ -231,7 +269,7 @@ const CollegeSearchBar = () => {
               <option value="">District</option>
               {collegeDist?.data.map((district) => (
                 <option key={district} value={district}>
-                  {district}
+                  {capitalize(district)}
                 </option>
               ))}
             </select>
@@ -242,7 +280,7 @@ const CollegeSearchBar = () => {
               <option value="">Category</option>
               {collegeCategory?.categories?.map((cate) => (
                 <option key={cate.category} value={cate.category}>
-                  {cate.category}
+                  {capitalize(cate.category)}
                 </option>
               ))}
             </select>

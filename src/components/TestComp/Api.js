@@ -3,7 +3,7 @@ import { BASE_URL } from "../../utils/constansts";
 import { getAuthHeader } from "../../utils/mics";
 
 export const getTest = async (testLevel) => {
-  // const response = await axios.get(`${BASE_URL}/api/iqtest?type=${testLevel}`, {
+  
   const response = await axios.get(`${BASE_URL}/api/iqtest?type=${testLevel}`, {
     headers: {
       Authorization: getAuthHeader(),

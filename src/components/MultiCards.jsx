@@ -5,23 +5,31 @@ import { BACKEND_SERVER_IP } from "../Constant/constantData";
 import Lotify from "./TestComp/Lotify";
 import LoadingCard from "./loading-skeleton/LoadingCard";
 import CollegeSearchBar from "./SearchComp/CollegeSearchBar";
+import { useState } from "react";
+import dataNotFound from "../assets/images/dataNotFound.jpg";
+
+
 
 const MultiCards = () => {
   const navigate = useNavigate();
   let { tags, collegesData,isLoading } = useSearchContext();
+   const [searchCollegeData, setSearchCollegeData] = useState([]);
+
+   console.log("new api college data", searchCollegeData);
+   
 
   return (
     <>
-    <div className="mt-20 px-4">
-          <h2 className="text-3xl font-bold text-center mb-6">
-            Explore Top Colleges
-          </h2>
-          <p className="text-center text-gray-600 max-w-xl mx-auto">
-            Find the best colleges with outstanding programs and excellent
-            learning opportunities.
-          </p>
-    </div>
-      <CollegeSearchBar/>
+      <div className="mt-20 px-4">
+        <h2 className="text-3xl font-bold text-center mb-6">
+          Explore Top Colleges
+        </h2>
+        <p className="text-center text-gray-600 max-w-xl mx-auto">
+          Find the best colleges with outstanding programs and excellent
+          learning opportunities.
+        </p>
+      </div>
+      <CollegeSearchBar setSearchCollegeData={setSearchCollegeData} />
       <TagsSection tags={tags} />
 
       {isLoading ? (
@@ -30,10 +38,10 @@ const MultiCards = () => {
             <LoadingCard key={index} />
           ))}
         </div>
-      ) : collegesData.results?.length > 0 ? (
+      ) : searchCollegeData.results?.length > 0 ? (
         <div className="mt-10 px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {collegesData.results.map((college, index) => (
+            {searchCollegeData.results.map((college, index) => (
               <div
                 key={index}
                 className="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-transform duration-200 cursor-pointer"
@@ -106,7 +114,16 @@ const MultiCards = () => {
             ))}
           </div>
         </div>
-      ) : null}
+      ) : (
+        <div className="flex justify-center items-center flex-col mt-10">
+          <img
+            src={dataNotFound}
+            alt="No image found"
+            className="w-40 sm:w-56 md:w-64 lg:w-72 xl:w-80 object-contain"
+          />
+          <h1 className="text-red-700">No College Data Found</h1>
+        </div>
+      )}
     </>
   );
 };
