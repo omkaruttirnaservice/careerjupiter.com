@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import SearchComponent from "../components/SearchComp/Search";
 import SearchContextProvider from "../store/SearchContext";
 import Flotingbutton from './Flotingbutton';
+import SloganHomePage from "../components/SloganHomePage";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -24,7 +25,6 @@ const AppLayout = () => {
     <>
       <SearchContextProvider>
         <Nav />
-        <SearchComponent />
         <Outlet />
         <Footer />
       </SearchContextProvider>
