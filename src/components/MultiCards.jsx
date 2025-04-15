@@ -12,14 +12,20 @@ import dataNotFound from "../assets/images/dataNotFound.jpg";
 
 const MultiCards = () => {
   const navigate = useNavigate();
-  let { tags, collegesData,isLoading } = useSearchContext();
+  // let { tags, collegesData,isLoading } = useSearchContext();
    const [searchCollegeData, setSearchCollegeData] = useState([]);
+   const [isLoading , setIsLoading] = useState(true);
 
    console.log("new api college data", searchCollegeData);
    
 
   return (
     <>
+      <CollegeSearchBar
+        setSearchCollegeData={setSearchCollegeData}
+        setIsLoading={setIsLoading}
+      />
+
       <div className="mt-20 px-4">
         <h2 className="text-3xl font-bold text-center mb-6">
           Explore Top Colleges
@@ -29,8 +35,7 @@ const MultiCards = () => {
           learning opportunities.
         </p>
       </div>
-      <CollegeSearchBar setSearchCollegeData={setSearchCollegeData} />
-      <TagsSection tags={tags} />
+      {/* <TagsSection tags={tags} /> */}
 
       {isLoading ? (
         <div className="mt-10 px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
