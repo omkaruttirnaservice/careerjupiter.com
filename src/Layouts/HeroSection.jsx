@@ -10,7 +10,7 @@ import Logopage from "./logopage";
 import { useDispatch } from "react-redux";
 import Flotingbutton from "./Flotingbutton";
 
-// import IQtestBanner from './IQtestBanner';
+import IQtestBanner from './IQtestBanner';
 
 
 const HeroSection = () => {
@@ -27,20 +27,22 @@ const HeroSection = () => {
         <Flotingbutton />
       </div>
 
-      {/* <IQtestBanner /> */}
+      <IQtestBanner />
 
-      <br />
+      {/* <br /> */}
       <Carouseldiv />
       <br />
       <Logopage />
       <br />
-      <CheckEligibility />
-      <br />
+      
       <BestCollege />
       <br />
       <BestClass />
       <br />
       <BestUniversity />
+      <br/>
+      <CheckEligibility />
+      <br />
     </>
   );
 };

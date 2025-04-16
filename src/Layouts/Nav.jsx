@@ -75,7 +75,7 @@ const Nav = () => {
               </Link>
 
               {/* Desktop Navigation */}
-              <div className="hidden md:flex md:items-center md:space-x-8">
+              <div className="hidden lg:flex md:items-center md:space-x-8">
 
 
 
@@ -188,7 +188,7 @@ const Nav = () => {
                   onClick={handleClick}
                   className="bg-red-600 text-white font-bold py-2 px-2 rounded-lg text-md mx-4"
                 >
-                  Go To Test
+                  Go To IQ Test
                 </button>
                 {!isLoggedIn && (
                   <>
@@ -204,7 +204,7 @@ const Nav = () => {
 
               {/* Desktop Profile Icon */}
               {isLoggedIn && (
-                <Menu as="div" className="relative hidden md:block">
+                <Menu as="div" className="relative hidden lg:block">
                   <Menu.Button className="flex items-center cursor-pointer">
                     <img
                       src={profilePic}
@@ -245,7 +245,7 @@ const Nav = () => {
 
               {/* Mobile & Tablet Toggle */}
               <button
-                className="md:hidden cursor-pointer ml-4"
+                className="lg:hidden cursor-pointer ml-4"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 {isMobileMenuOpen ? (
@@ -318,9 +318,10 @@ const Nav = () => {
                     <>
                       <button
                         onClick={() => dispatch(setIsOpen(true))}
-                        className="bg-red-600 text-white font-bold py-2 px-2 rounded-lg text-md mx-2"
+                        className="bg-red-600 text-white font-bold py-2 px-2 rounded-lg text-sm mx-2"
                       >
-                        IQ Test
+                        Go To IQ Test
+
                       </button>
                       <button
                         onClick={() => {
@@ -349,6 +350,13 @@ const Nav = () => {
                         className="block w-full cursor-pointer text-left px-4 py-3 text-xl font-semibold text-red-600 hover:text-red-500 transition-all"
                       >
                         Sign Out
+                      </button>
+                      <button
+                        onClick={() => dispatch(setIsOpen(true))}
+                        className="bg-red-600 text-white font-bold py-2 px-2 mt-3 w-full rounded-lg text-sm mx-2"
+                      >
+                        Go To IQ Test
+
                       </button>
                     </div>
                   )}
