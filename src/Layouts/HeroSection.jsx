@@ -9,6 +9,7 @@ import Carouseldiv from "./CarouselDiv";
 import Logopage from "./logopage";
 import { useDispatch } from "react-redux";
 import Flotingbutton from "./Flotingbutton";
+import SloganHomePage from "../components/SloganHomePage";
 
 // import IQtestBanner from './IQtestBanner';
 
@@ -29,6 +30,7 @@ const HeroSection = () => {
 
       {/* <IQtestBanner /> */}
 
+      <SloganHomePage/>
       <br />
       <Carouseldiv />
       <br />

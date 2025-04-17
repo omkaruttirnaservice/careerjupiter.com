@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {
@@ -8,6 +6,7 @@ import {
   getIQTestData,
   getUserDetail,
   deleteTest,
+  getIqTestCategory,
 } from "./Api";
 import { FaBrain } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -36,33 +35,26 @@ function TestCard() {
   const navigate = useNavigate();
   const { userId } = useSelector((state) => state.auth);
   const resultsId = useSelector((state) => state.result.resultsId);
-  // resultsId;
 
   const token = Cookies.get("token");
   const decodedToken = jwtDecode(token);
   const userRole = decodedToken.role;
-  console.log("Decoded Token test card:", decodedToken.role);
-  console.log("========", userRole);
 
-  // Fetch User Details
-  // const { data: userData } = useQuery({
-  //   queryKey: ["getUserDetail", userId],
-  //   queryFn: () => getUserDetail(userId),
-  //   enabled: true,
-  //   refetchOnMount: true,
-  // });
-  // useEffect(() => {
-  //   if (userData?.data?.data?.role) {
-  //     dispatch(setUserRole(userData.data.data.role));
-  //   }
-  // }, [userData, dispatch]);
-
-  // Fetch available tests
   const { data, isPending, refetch } = useQuery({
     queryKey: ["getTest", testLevel],
     queryFn: () => getTest(testLevel),
     staleTime: 0,
   });
+
+    const { data: TestCategory, refetch: getTestCategory } = useQuery({
+      queryKey: ["getTestCategory"],
+      queryFn: () => getIqTestCategory(),
+      staleTime: 0,
+    });
+  
+    const IqTestCategoryes = TestCategory?.data;
+    console.log("IqTestCategoryes", IqTestCategoryes);
+    
 
   const getIQTestDataMutation = useMutation({
     mutationFn: getIQTestData,
@@ -70,15 +62,13 @@ function TestCard() {
       setSelectedTest(response?.data?.questions);
       setTestDuration(response?.data?.testDuration);
       setTestName(response?.data?.title);
-      setResultId(response?.data?.resultId);
-
-      console.log("coming hereeeee---------");
+      setResultId(response?.data?.iqTestId);
       dispatch(setResultsId(response?.data?.resultId));
     },
   });
 
   const { mutate: fetchResult, data: resultData } = useMutation({
-    mutationFn: () => getResult({ iqTestId: testId, userId }),
+    mutationFn: () => getResult({ testID: testId, userId }),
   });
   useEffect(() => {
     if (resultData?.data) {
@@ -86,6 +76,7 @@ function TestCard() {
       navigate("/profile/test/?type=result");
     }
   }, [resultData?.data, dispatch, navigate]);
+
   useEffect(() => {
     refetch();
   }, [testLevel, refetch]);
@@ -99,7 +90,7 @@ function TestCard() {
         text: "You can now re-attempt the test.",
         confirmButtonColor: "#28a745",
       }).then(() => {
-        refetch(); // Refresh the test list if needed
+        refetch();
       });
     },
     onError: () => {
@@ -124,21 +115,17 @@ function TestCard() {
     }).then((result) => {
       if (result.isConfirmed) {
         deleteTestMutation.mutate({
-          iqTestId: test._id,
+          testID: test._id,
           userId: userId,
-          // resultId: resultsId, // Adjust this based on your API structure
         });
       }
     });
   };
 
   const handleResult = async (test) => {
-    console.log("hello - 1");
-
     if (test.attempted === 1) {
       setTestId(test._id);
       await fetchResult();
-      console.log("hello - 2");
       return;
     }
   };
@@ -160,13 +147,7 @@ function TestCard() {
       return;
     }
 
-    // if (test.attempted === 1) {
-    //   setTestId(test._id);
-    //   await fetchResult();
-    //   return;
-    // }
-
-    const newIqTestDataPayload = { iqTestId: test._id, userId };
+    const newIqTestDataPayload = { testID: test._id, userId };
 
     if (test?.attempted === 0 || test?.attempted === -1) {
       Swal.fire({
@@ -203,17 +184,22 @@ function TestCard() {
       <div className="mb-4">
         <label className="block text-lg font-medium mb-2">
           IQ Test Level:
-          <select
-            className="p-2 ml-3 w-50 border rounded-lg"
-            value={testLevel}
-            onChange={(e) => setTestLevel(e.target.value)}
-          >
-            {testOption.map((testType) => (
-              <option key={testType} value={testType}>
-                {testType}
-              </option>
-            ))}
-          </select>
+          {IqTestCategoryes ?
+            (<select
+              className="p-2 ml-3 w-50 border rounded-lg"
+              value={testLevel}
+              onChange={(e) => setTestLevel(e.target.value)}
+            >
+              {IqTestCategoryes.map((testType) => (
+                <option
+                  key={testType.main_category}
+                  value={testType._id}
+                >
+                  {testType.main_category}
+                </option>
+              ))}
+            </select>):<h1 className="text-red-500">No test-level data found</h1>
+          }
         </label>
       </div>
       {isPending ? (
@@ -241,7 +227,7 @@ function TestCard() {
                   <h2 className="text-xl font-semibold">{test.title}</h2>
                 </div>
                 <p>
-                  Test Level:{" "}
+                  Main Category:{" "}
                   <span className="font-medium">{test.testLevel || "N/A"}</span>
                 </p>
                 <p>

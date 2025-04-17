@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect, useRef } from "react";
 import { FaArrowRight, FaArrowLeft, FaCheckCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -119,6 +118,9 @@ const IQTest = ({
 
   dispatch(setIqTestId(testId));
 
+        const currentTimeLeft = timeLeftRef.current;
+        const currentTestProgress = testProgressRef.current;
+
   useEffect(() => {
     setResultData({
       iqTestId: testId,
@@ -162,10 +164,6 @@ const IQTest = ({
       clearInterval(progressIntervalRef.current);
     }
 
-    // Get the current values from refs for the API call
-    const currentTimeLeft = timeLeftRef.current;
-    const currentTestProgress = testProgressRef.current;
-
     if (currentTestProgress.questionId && currentTestProgress.selectedOption) {
       updateTestProgressMutation.mutate({
         ...currentTestProgress,
@@ -175,6 +173,13 @@ const IQTest = ({
 
     setCurrentQuestion((prev) => Math.min(prev + 1, questions.length - 1));
   };
+
+  useEffect(()=>{
+    updateTestProgressMutation.mutate({
+      ...currentTestProgress,
+      testDuration: formatTime(currentTimeLeft),
+    });
+  },[])
 
   //get user details api call
 
@@ -256,40 +261,13 @@ const IQTest = ({
     }
   };
 
-  // Modified useEffect to use refs for the most current values
-  // useEffect(() => {
-  //   const updateProgress = () => {
-  //     // Access the most current values from refs
-  //     const currentTimeLeft = timeLeftRef.current;
-  //     const currentTestProgress = testProgressRef.current;
-
-  //     if (
-  //       currentTestProgress.questionId &&
-  //       currentTestProgress.selectedOption
-  //     ) {
-  //       updateTestProgressMutation.mutate({
-  //         ...currentTestProgress,
-  //         testDuration: formatTime(currentTimeLeft),
-  //       });
-  //     }
-  //   };
-
-  //   progressIntervalRef.current = setInterval(updateProgress, 10000);
-
-  //   return () => {
-  //     if (progressIntervalRef.current) {
-  //       clearInterval(progressIntervalRef.current);
-  //     }
-  //   };
-  // }, [currentQuestion]);
-
   useEffect(() => {
     if (isSubmitted) {
       if (progressIntervalRef.current) {
         clearInterval(progressIntervalRef.current);
-        progressIntervalRef.current = null; // optional but safe
+        progressIntervalRef.current = null;
       }
-      return; // Don't create a new interval
+      return;
     }
 
     const updateProgress = () => {
@@ -314,7 +292,7 @@ const IQTest = ({
         clearInterval(progressIntervalRef.current);
       }
     };
-  }, [currentQuestion, isSubmitted]); // Add isSubmitted here
+  }, [currentQuestion, isSubmitted]);
 
   useEffect(() => {
     const handleOffline = () => {
