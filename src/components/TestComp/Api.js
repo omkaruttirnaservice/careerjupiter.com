@@ -3,12 +3,17 @@ import { BASE_URL } from "../../utils/constansts";
 import { getAuthHeader } from "../../utils/mics";
 
 export const getTest = async (testLevel) => {
-  // const response = await axios.get(`${BASE_URL}/api/iqtest?type=${testLevel}`, {
+  
   const response = await axios.get(`${BASE_URL}/api/iqtest?type=${testLevel}`, {
     headers: {
       Authorization: getAuthHeader(),
     },
   });
+  return response.data;
+};
+
+export const getIqTestCategory = async () => {
+  const response = await axios.get(`${BASE_URL}/api/iq_category/all`);
   return response.data;
 };
 
@@ -73,13 +78,26 @@ export const deleteTest = async (userTestData) => {
 };
 
 export const updateTestProgress = (data) => {
+  console.log("updateTestProgress===",data);
+  
   return axios.put(`${BASE_URL}/api/iqtest/update`, {
     userId: data.userId,
-    iqTestId: data.iqTestId,
+    testID: data.iqTestId, //iqTestId: data.iqTestId,
     questionId: data.questionId,
     selectedOption: data.selectedOption,
     testDuration: data.testDuration,
-    resultID: data.resultId,
+    iqTestId: data.resultId, //resultID: data.resultId,
     status: data.status,
   });
 };
+
+// {
+ 
+//     "iqTestId": "67ff7fc19810df7dd6ef57e8",
+//   "testID": "67ff793456907ad17324b194",
+//   "userId": "67fceeb91cd644e6399fdf0d",
+
+//     "questionId": "67ff7fc19810df7dd6ef57ea",
+//     "selectedOption": "B",
+//     "duration": 1200
+// }

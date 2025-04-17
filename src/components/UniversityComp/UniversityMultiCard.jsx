@@ -6,6 +6,8 @@ import { useSearchContext } from "../../store/SearchContext";
 import toast from "react-hot-toast";
 import { BounceLoader } from "react-spinners";
 import LoadingCard from "../loading-skeleton/LoadingCard";
+import UniversitySearchBar from "../SearchComp/UniversitySearchBar";
+import dataNotFound from '../../assets/images/dataNotFound.jpg'
 // import Loader from '../Loader';
 
 const UniversityMultiCard = () => {
@@ -19,11 +21,9 @@ const UniversityMultiCard = () => {
 
   const tags = ["All", "Private", "Government"];
 
-  console.log("UniversityData inside university.......", UniversityData);
-  console.log("loading...", isLoading);
-
   return (
     <div className="mt-10">
+      <UniversitySearchBar />
       <TagsSection tags={tags} />
       <div className="bg-gray-30 py-10">
         <div className="container mx-auto px-4">
@@ -62,6 +62,18 @@ const UniversityMultiCard = () => {
                 />
               ))}
             </div>
+          )}
+          {!isLoading && UniversityData?.results?.length !== 0 && (
+            <>
+              <div className="flex justify-center items-center flex-col mt-5">
+                <img
+                  src={dataNotFound}
+                  alt="No image found"
+                  className="w-40 sm:w-56 md:w-64 lg:w-72 xl:w-80 object-contain"
+                />
+                <h1 className="text-red-700">No University Data Found</h1>
+              </div>
+            </>
           )}
         </div>
       </div>

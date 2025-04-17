@@ -26,11 +26,18 @@ export const MONTHS = [
 ];
 
 export const EDUCATION_LIST = [
-                      "HSC",
-                      "SSC",
-                      "Diploma",
-                      "Pharmacy",
-                      "UG",
-                      "PG",
-                      "Other",
-                    ];
+  "HSC",
+  "SSC",
+  "Diploma",
+  "Pharmacy",
+  "UG",
+  "PG",
+  "Other",
+];
+
+export const capitalize = (str) =>
+  str
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
