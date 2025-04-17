@@ -18,7 +18,7 @@ const IQtestBanner = () => {
      };
 
   return (
-    <div className="flex justify-center items-center py-5" onClick={handleClick}>
+    <div className="flex justify-center items-center py-5 " onClick={handleClick}>
       <motion.button
         className="relative px-8 py-3 rounded-full text-white font-bold text-lg overflow-hidden bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-[length:200%_200%]"
         initial={{ scale: 0.95 }}

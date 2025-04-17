@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom"; // Import useLocation
+import { useLocation , useNavigate } from "react-router-dom"; // Import useLocation
 import { SET_TIME } from "../../utils/constansts";
 import { createGuestUser } from "./Api";
 import { useMutation } from "@tanstack/react-query";
@@ -16,6 +16,7 @@ const IQTestPopup = () => {
   const isOpen = useSelector((state) => state.iqTest.isOpen);
   const dispatch = useDispatch();
   const location = useLocation(); // Access the current location
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: createGuestUser,
@@ -24,7 +25,7 @@ const IQTestPopup = () => {
       Cookies.set("token", parsedData.token, { expires: 1 });
       Cookies.set("userId", parsedData.userId, { expires: 1 });
       dispatch(login(parsedData.userId));
-      window.location.href = "/profile/test";
+      navigate("/profile/test");
     },
   });
 
@@ -52,7 +53,7 @@ const IQTestPopup = () => {
     const userId = Cookies.get("userId");
 
     if (token && userId) {
-      window.location.href = "/profile/test";
+      navigate("/profile/test");
       return;
     }
 
@@ -122,3 +123,4 @@ const IQTestPopup = () => {
 };
 
 export default IQTestPopup;
+

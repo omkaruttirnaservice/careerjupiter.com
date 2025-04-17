@@ -79,8 +79,8 @@ function ForgetPasswordPage() {
       }
     } catch (error) {
       const errorMsg =
-        error.response?.data?.errMsg || error.response?.data?.message || error.response?.usrMsg || "Failed to send OTP"
-      toast.error(errorMsg)
+        error.response?.data?.usrMsg || error.response?.data?.message || error.response?.usrMsg || "Failed to send OTP"
+      toast.warning(errorMsg)
     } finally {
       setIsLoading(false)
       setSubmitting(false)
@@ -103,10 +103,10 @@ function ForgetPasswordPage() {
         setStep(3)
         toast.success(response.usrMsg || "OTP verified successfully!")
       } else {
-        toast.warning(response.message || "Invalid OTP")
+        toast.warning(response.usrMsg || "Invalid OTP...")
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.errMsg || error.response?.data?.message || "Invalid OTP"
+      const errorMsg = error.response?.data?.usrMsg || error.response?.data?.message || "Invalid OTP"
       toast.error(errorMsg)
     } finally {
       setIsLoading(false)
