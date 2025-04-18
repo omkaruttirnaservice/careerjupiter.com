@@ -4,19 +4,16 @@ import {
   getTest,
   getResult,
   getIQTestData,
-  getUserDetail,
   deleteTest,
+  getIqTestCategory,
 } from "./Api";
 import { FaBrain } from "react-icons/fa";
 import Swal from "sweetalert2";
-import { testOption } from "../../Constant/constantData";
 import IQTest from "./IQTest";
 import { useDispatch, useSelector } from "react-redux";
 import { setTestResult } from "../../store-redux/testResultSlice";
 import { useNavigate } from "react-router-dom";
 import LoadingTestCard from "../loading-skeleton/LoadingTestCard";
-import { setUserRole } from "../../store-redux/userRoleSlice";
-import { Opacity } from "@mui/icons-material";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { setResultsId } from "../../store-redux/resultSlice";
@@ -28,12 +25,13 @@ function TestCard() {
   const [testId, setTestId] = useState(null);
   const [testLevel, setTestLevel] = useState("all");
   const [resultId, setResultId] = useState();
-  const [userType, setUserType] = useState();
   const [iqTestDataPayload, setIqTestDataPayload] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { userId } = useSelector((state) => state.auth);
-  const resultsId = useSelector((state) => state.result.resultsId);
+  const [newTestId ,setNewTestId] = useState(null);
+  const [submitTest , setSubmitTest] = useState(null);
+  const [resultsData ,setResultsData] = useState(null);
 
   const token = Cookies.get("token");
   const decodedToken = jwtDecode(token);
@@ -45,20 +43,33 @@ function TestCard() {
     staleTime: 0,
   });
 
+    const { data: TestCategory, refetch: getTestCategory } = useQuery({
+      queryKey: ["getTestCategory"],
+      queryFn: () => getIqTestCategory(),
+      staleTime: 0,
+    });
+  
+    // const IqTestCategoryes = TestCategory?.data;
+
   const getIQTestDataMutation = useMutation({
     mutationFn: getIQTestData,
     onSuccess: (response) => {
+      setNewTestId(response?.data?.testID);
       setSelectedTest(response?.data?.questions);
       setTestDuration(response?.data?.testDuration);
       setTestName(response?.data?.title);
-      setResultId(response?.data?.resultId);
+      setResultId(response?.data?.iqTestId);
       dispatch(setResultsId(response?.data?.resultId));
     },
   });
 
+  // const { mutate: fetchResult, data: resultData } = useMutation({
+  //   mutationFn: () => getResult({ testID: newTestId, userId }),
+  // });
   const { mutate: fetchResult, data: resultData } = useMutation({
-    mutationFn: () => getResult({ iqTestId: testId, userId }),
+    mutationFn: ({ testID, userId }) => getResult({ testID, userId }),
   });
+
   useEffect(() => {
     if (resultData?.data) {
       dispatch(setTestResult(resultData.data));
@@ -104,7 +115,7 @@ function TestCard() {
     }).then((result) => {
       if (result.isConfirmed) {
         deleteTestMutation.mutate({
-          iqTestId: test._id,
+          testID: test._id,
           userId: userId,
         });
       }
@@ -112,17 +123,20 @@ function TestCard() {
   };
 
   const handleResult = async (test) => {
-    if (test.attempted === 1) {
-      setTestId(test._id);
-      await fetchResult();
-      return;
-    }
-  };
+  if (test.attempted === 1) {
+    setTestId(test._id);
+    await fetchResult({ testID: test._id, userId });
+    return;
+  }
+};
+
+const IqTestCategoryes = [
+  { _id: "all", main_category: "All" },
+  ...(TestCategory?.data || []),
+];
+
 
   const handleTestClick = async (test) => {
-    // Set userType from the current test
-    setUserType(test.userType);
-
     const isAccessible =
       (userRole === "GUEST" && test.userType === "0") ||
       (userRole === "USER" && (test.userType === "0" || test.userType === "1"));
@@ -136,16 +150,85 @@ function TestCard() {
       return;
     }
 
-    const newIqTestDataPayload = { iqTestId: test._id, userId };
+    const newIqTestDataPayload = { testID: test._id, userId };
 
+    // if (test?.attempted === 0 || test?.attempted === -1) {
+    //   Swal.fire({
+    //     title: `${test?.attempted === -1 ? "Resume" : "Start"} ${test.title}?`,
+    //     text: `Duration: ${test.testDuration.minutes} min | Total Marks: ${test.totalMarks}`,
+    //     icon: "info",
+    //     showCancelButton: true,
+    //     confirmButtonText: `${test?.attempted === -1 ? "Resume Test" : "Start Test"}`,
+    //     cancelButtonText: "Cancel",
+    //   }).then((result) => {
+    //     if (result.isConfirmed) {
+    //       setIqTestDataPayload(newIqTestDataPayload);
+    //       getIQTestDataMutation.mutate(newIqTestDataPayload);
+    //       setTestId(test._id);
+    //     }
+    //   });
+    // }
     if (test?.attempted === 0 || test?.attempted === -1) {
       Swal.fire({
         title: `${test?.attempted === -1 ? "Resume" : "Start"} ${test.title}?`,
-        text: `Duration: ${test.testDuration.minutes} min | Total Marks: ${test.totalMarks}`,
-        icon: "info",
+        html: `
+      <div class="text-left max-h-[60vh] overflow-y-auto">
+        <div class="flex items-center mb-4">
+          <svg class="w-6 h-6 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h3 class="text-lg font-bold">Test Instructions</h3>
+        </div>
+        
+        <div class="bg-blue-50 p-4 rounded-lg mb-4">
+          <h4 class="font-semibold text-blue-800 mb-2">General Guidelines:</h4>
+          <ul class="space-y-2 list-disc pl-5 text-blue-700">
+            <li>Total duration: ${test.testDuration.minutes} minutes</li>
+            <li>Total questions: ${test.totalMarks}</li>
+            <li>Each question carries equal marks</li>
+            <li>No negative marking</li>
+          </ul>
+        </div>
+        
+        <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+          <h4 class="font-semibold text-yellow-800 mb-2">During the Test:</h4>
+          <ul class="space-y-2 list-disc pl-5 text-yellow-700">
+            <li>Click on radio buttons to select answers</li>
+            <li>You can change answers before final submission</li>
+            <li>Don't refresh the page during the test</li>
+            <li>Timer starts immediately when you begin</li>
+          </ul>
+        </div>
+        
+        <div class="flex items-start mt-4">
+          <input 
+            type="checkbox" 
+            id="agreeTerms" 
+            class="w-5 h-5 mt-1 mr-2 cursor-pointer"
+          >
+          <label for="agreeTerms" class="text-gray-700 cursor-pointer">
+            I confirm that I have read and understood all instructions
+          </label>
+        </div>
+      </div>
+    `,
         showCancelButton: true,
-        confirmButtonText: `${test?.attempted === -1 ? "Resume Test" : "Start Test"}`,
+        confirmButtonText: `
+      <span class="flex items-center gap-2">
+        <VscDebugStart />
+        ${test?.attempted === -1 ? "Resume Test" : "Start Test"}
+      </span>
+    `,
         cancelButtonText: "Cancel",
+        didOpen: () => {
+          const confirmBtn = Swal.getConfirmButton();
+          const checkbox = Swal.getPopup().querySelector("#agreeTerms");
+          confirmBtn.disabled = true;
+
+          checkbox.addEventListener("change", () => {
+            confirmBtn.disabled = !checkbox.checked;
+          });
+        },
       }).then((result) => {
         if (result.isConfirmed) {
           setIqTestDataPayload(newIqTestDataPayload);
@@ -165,6 +248,9 @@ function TestCard() {
         resultId={resultId}
         getIQTestDataMutation={getIQTestDataMutation}
         iqTestDataPayload={iqTestDataPayload}
+        newTestId={newTestId}
+        setSubmitTest={setSubmitTest}
+        setResultsData={setResultsData}
       />
     );
   }
@@ -173,17 +259,21 @@ function TestCard() {
       <div className="mb-4">
         <label className="block text-lg font-medium mb-2">
           IQ Test Level:
-          <select
-            className="p-2 ml-3 w-50 border rounded-lg"
-            value={testLevel}
-            onChange={(e) => setTestLevel(e.target.value)}
-          >
-            {testOption.map((testType) => (
-              <option key={testType} value={testType}>
-                {testType}
-              </option>
-            ))}
-          </select>
+          {IqTestCategoryes ? (
+            <select
+              className="p-2 ml-3 w-50 border rounded-lg"
+              value={testLevel}
+              onChange={(e) => setTestLevel(e.target.value)}
+            >
+              {IqTestCategoryes.map((testType) => (
+                <option key={testType._id} value={testType._id}>
+                  {testType.main_category}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <h1 className="text-red-500">No test-level data found</h1>
+          )}
         </label>
       </div>
       {isPending ? (
@@ -195,8 +285,6 @@ function TestCard() {
               (userRole === "GUEST" && test.userType === "0") ||
               (userRole === "USER" &&
                 (test.userType === "0" || test.userType === "1"));
-            console.log({ isAccessible });
-            console.log("userType:", test?.userType);
             return (
               <div
                 key={test._id}
@@ -211,8 +299,10 @@ function TestCard() {
                   <h2 className="text-xl font-semibold">{test.title}</h2>
                 </div>
                 <p>
-                  Test Level:{" "}
-                  <span className="font-medium">{test.testLevel || "N/A"}</span>
+                  Main Category:{" "}
+                  <span className="font-medium">
+                    {test.main_category || "N/A"}
+                  </span>
                 </p>
                 <p>
                   Duration:{" "}

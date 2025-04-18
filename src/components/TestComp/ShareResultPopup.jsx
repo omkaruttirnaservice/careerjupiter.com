@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { sendShareState } from "./Api";
+import { FiX } from 'react-icons/fi';
 
 const ShareResultPopup = ({ setOpenSharePopup, openSharePopup, resultId }) => {
   const closePopup = () => setOpenSharePopup(false);
@@ -48,7 +49,7 @@ const ShareResultPopup = ({ setOpenSharePopup, openSharePopup, resultId }) => {
       iqTestId: iqTestId,
       isShared: true,
     });
-     closePopup;
+    closePopup;
   };
 
   // Function to generate dynamic share URLs
@@ -66,7 +67,7 @@ const ShareResultPopup = ({ setOpenSharePopup, openSharePopup, resultId }) => {
   };
 
   return (
-    <div className="flex justify-center items-center mt-10">
+    <div className="flex justify-center items-center position-FiX ">
       {openSharePopup && (
         <div
           className="fixed z-50 top-0 left-0 w-full h-full bg-black/50 backdrop-blur-sm flex justify-center items-center"

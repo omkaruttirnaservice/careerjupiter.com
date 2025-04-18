@@ -160,7 +160,7 @@ function TestResult() {
         wrongAnswers: wA,
         totalMarks: tM,
         marksGained: mG,
-        passingMarks: pM,
+        passingmarks: pM,
         _id: id,
       } = resultData?.result;
 

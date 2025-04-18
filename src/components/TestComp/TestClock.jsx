@@ -1,6 +1,4 @@
-"use client";
-
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect } from "react";
 import { FcAlarmClock } from "react-icons/fc";
 
 function TestClock({
@@ -10,7 +8,6 @@ function TestClock({
   setTimeLeft,
   timeLeft,
 }) {
-  // Initialize timeLeft dynamically based on testDuration
 
   useEffect(() => {
     if (timeLeft <= 0) {
@@ -29,7 +26,6 @@ function TestClock({
     return () => clearInterval(timer);
   }, []);
 
-  // Progress bar width calculation
   const totalDuration = testDuration.minutes * 60 + testDuration.seconds;
   const progressWidth = (timeLeft / totalDuration) * 100;
 
@@ -62,7 +58,6 @@ function TestClock({
         </div>
       </div>
 
-      {/* Display time in mm:ss format */}
       <p className="text-base sm:text-lg md:text-xl font-semibold mt-2 sm:mt-0 whitespace-nowrap">
         Time: {String(Math.floor(timeLeft / 60)).padStart(2, "0")}:
         {String(timeLeft % 60).padStart(2, "0")}

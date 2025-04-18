@@ -4,13 +4,16 @@ import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import { sendUserOTP, updateUserDetails, verifyUserOTP } from "./Api";
 import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import { updateUserId } from "../../store-redux/AuthSlice";
 
 const MobileNumberPopup = ({
   setShowMobileNumberPopup,
   resultGenerationMutation,
   resultData,
+  testID,
 }) => {
   const { userId } = useSelector((state) => state.auth);
   const [showOTP, setShowOTP] = useState(false);
@@ -18,6 +21,13 @@ const MobileNumberPopup = ({
   const [otpSent, setOtpSent] = useState(false);
   const [isMobileEditable, setIsMobileEditable] = useState(true);
   const [timer, setTimer] = useState(0);
+  const [otpResponseId, setOtpResponseId] = useState(null);
+  const [verifyOtpResponse, setVerifyOtpResponse] = useState(null);
+  const dispatch = useDispatch();
+
+  const token = Cookies.get("token");
+  const decodedToken = jwtDecode(token);
+  const userRole = decodedToken.role;
 
   useEffect(() => {
     let countdown;
@@ -53,6 +63,7 @@ const MobileNumberPopup = ({
       setOtpSent(true);
       setIsMobileEditable(false);
       setTimer(60);
+      setOtpResponseId(data.data.userId);
     },
   });
 
@@ -64,18 +75,15 @@ const MobileNumberPopup = ({
         title: "Details Submitted!",
         text: "Your details were updated successfully!",
       });
-      console.log("after userdetails submited :", response?.data?.data?.token);
 
-     const newToken = response?.data?.data?.token;
-     
-      
-     if (typeof newToken === "string" && newToken.trim() !== "") {
-       Cookies.remove("token"); // Remove the token
-       Cookies.set("token", newToken, { expires: 1 });
-     } else {
-       console.warn("Received invalid token:", newToken);
-     }
+      const newToken = response?.data?.data?.token;
 
+      if (typeof newToken === "string" && newToken.trim() !== "") {
+        Cookies.remove("token"); // Remove the token
+        Cookies.set("token", newToken, { expires: 1 });
+      } else {
+        console.warn("Received invalid token:", newToken);
+      }
 
       resultGenerationMutation.mutate(resultData);
       setShowMobileNumberPopup(false);
@@ -90,11 +98,18 @@ const MobileNumberPopup = ({
 
   const verifyOTPMutation = useMutation({
     mutationFn: verifyUserOTP,
-    onSuccess: (_, variables) => {
+    onSuccess: (response, variables) => {
+      console.log("respose",response);
+      setVerifyOtpResponse(response?.data);
+      Cookies.set("token", response?.data?.token, { expires: 1 });
+      Cookies.set("userId", response?.data?.userId, { expires: 1 });
+      dispatch(updateUserId(response?.data?.userId));
       updateUserMutation.mutate({
-        userId,
+        userId:response?.data?.userId,
         f_name: variables.name,
         mobile_no: variables.mobile_no,
+        guestId: userId,
+        testID: testID,
       });
     },
   });
@@ -150,7 +165,10 @@ const MobileNumberPopup = ({
                 <button
                   type="button"
                   onClick={() => {
-                    sendOTPMutation.mutate({ mobile_no: values.mobileNumber });
+                    sendOTPMutation.mutate({
+                      mobile_no: values.mobileNumber,
+                      role: userRole,
+                    });
                   }}
                   className={`mt-2 w-full py-2 rounded-md text-white ${
                     otpSent ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500"
@@ -188,6 +206,9 @@ const MobileNumberPopup = ({
                         otp: values.otp,
                         mobile_no: values.mobileNumber,
                         name: values.name,
+                        userId: otpResponseId,
+                        guestId: userId,
+                        testID: testID,
                       })
                     }
                     className="mt-2 w-full bg-green-500 text-white py-2 rounded-md"

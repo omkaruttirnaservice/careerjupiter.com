@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import Flotingbutton from "./Flotingbutton";
 import SloganHomePage from "../components/SloganHomePage";
 
-// import IQtestBanner from './IQtestBanner';
+import IQtestBanner from './IQtestBanner';
 
 
 const HeroSection = () => {
@@ -28,21 +28,21 @@ const HeroSection = () => {
         <Flotingbutton />
       </div>
 
-      {/* <IQtestBanner /> */}
-
+      <br/>
       <SloganHomePage/>
-      <br />
+      <IQtestBanner />
       <Carouseldiv />
       <br />
       <Logopage />
-      <br />
-      <CheckEligibility />
       <br />
       <BestCollege />
       <br />
       <BestClass />
       <br />
       <BestUniversity />
+      <br/>
+      <CheckEligibility />
+      <br />
     </>
   );
 };

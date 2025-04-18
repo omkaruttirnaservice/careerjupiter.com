@@ -23,6 +23,7 @@ const SignInPopup = ({ setShowSignUp, onSuccessfulSignIn }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate(); // Initialize navigate
+  
 
   const dispatch = useDispatch();
 
@@ -47,7 +48,7 @@ const SignInPopup = ({ setShowSignUp, onSuccessfulSignIn }) => {
       onSuccessfulSignIn?.();
       navigate("/profile/personal-details");
       setTimeout(() => {
-        window.location.reload();
+        // window.location.reload();
       });
     },
     // onError: (error) => {
@@ -166,6 +167,7 @@ const SignInPopup = ({ setShowSignUp, onSuccessfulSignIn }) => {
         <p className="mt-4 text-center text-gray-600">
           Don't have an account?{" "}
           <button
+          
             onClick={() => {
               setIsOpen(false); // Close the popup first
               setTimeout(() => navigate("/"));
