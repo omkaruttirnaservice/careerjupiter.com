@@ -26,7 +26,7 @@ export const getTestResult = async (testId) => {
   return response.data;
 };
 export const sendResult = (data) => {
-  return axios.post(`${BASE_URL}/api/result/create`, data);
+  return axios.post(`${BASE_URL}/api/iqtest/submit`, data);
 };
 
 export const createGuestUser = async (data) => {
@@ -51,16 +51,16 @@ export const sendShareState = (data) => {
 };
 
 export const getResult = (userData) => {
-  return axios.post(`${BASE_URL}/api/result`, userData);
+  return axios.post(`${BASE_URL}/api/iqtest/result`, userData);
 };
 
 export const sendUserOTP = async (payload) => {
-  const response = await axios.post(`${BASE_URL}/api/auth/send-otp`, payload);
+  const response = await axios.post(`${BASE_URL}/api/auth/send-otps`, payload);
   return response.data;
 };
 
 export const verifyUserOTP = async (payload) => {
-  const response = await axios.post(`${BASE_URL}/api/auth/verify-otp`, payload);
+  const response = await axios.post(`${BASE_URL}/api/auth/verify-otps`, payload);
   return response.data;
 };
 
@@ -74,7 +74,7 @@ export const getIQTestData = async (payload) => {
 
 export const deleteTest = async (userTestData) => {
   console.log("inside delete api :", userTestData);
-  return await axios.post(`${BASE_URL}/api/result/delete`, userTestData);
+  return await axios.post(`${BASE_URL}/api/iqtest/delete`, userTestData);
 };
 
 export const updateTestProgress = (data) => {
