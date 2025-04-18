@@ -25,7 +25,10 @@ const IQTestPopup = () => {
       Cookies.set("token", parsedData.token, { expires: 1 });
       Cookies.set("userId", parsedData.userId, { expires: 1 });
       dispatch(login(parsedData.userId));
+      dispatch(setIsOpen(false));
+
       navigate("/profile/test");
+      // window.location.href = "/profile/test";
     },
   });
 
@@ -51,9 +54,11 @@ const IQTestPopup = () => {
   const handleCreateGuestUser = () => {
     const token = Cookies.get("token");
     const userId = Cookies.get("userId");
+    dispatch(setIsOpen(false));
 
     if (token && userId) {
       navigate("/profile/test");
+      // window.location.href = "/profile/test";
       return;
     }
 
