@@ -63,7 +63,7 @@ const MobileNumberPopup = ({
       setOtpSent(true);
       setIsMobileEditable(false);
       setTimer(60);
-      setOtpResponseId(data.data.user_id);
+      setOtpResponseId(data.data.userId);
     },
   });
 
@@ -99,15 +99,15 @@ const MobileNumberPopup = ({
   const verifyOTPMutation = useMutation({
     mutationFn: verifyUserOTP,
     onSuccess: (response, variables) => {
+      console.log("respose",response);
       setVerifyOtpResponse(response?.data);
       Cookies.set("token", response?.data?.token, { expires: 1 });
       Cookies.set("userId", response?.data?.userId, { expires: 1 });
       dispatch(updateUserId(response?.data?.userId));
       updateUserMutation.mutate({
-        userId,
+        userId:response?.data?.userId,
         f_name: variables.name,
         mobile_no: variables.mobile_no,
-        userId: otpResponseId,
         guestId: userId,
         testID: testID,
       });
