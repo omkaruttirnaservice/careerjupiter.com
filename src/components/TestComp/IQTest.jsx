@@ -34,6 +34,7 @@ const IQTest = ({
   const { userId } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [isProgressSaved, setIsProgressSaved] = useState(true);
   const [timeLeft, setTimeLeft] = useState(
     testDuration.minutes * 60 + testDuration.seconds
   );
@@ -107,8 +108,12 @@ const IQTest = ({
 
   const updateTestProgressMutation = useMutation({
     mutationFn: updateTestProgress,
-    onSuccess: (response) => {},
-    onError: () => {},
+    onSuccess: (response) => {
+      setIsProgressSaved(true);
+    },
+    onError: () => {
+      setIsProgressSaved(true);
+    },
   });
 
   const [resultData, setResultData] = useState({
@@ -139,8 +144,9 @@ const IQTest = ({
     const newAnswers = [...answers];
     newAnswers[currentQuestion] = letter;
     setAnswers(newAnswers);
+    setIsProgressSaved(false);
 
-    setTestProgress({
+    const updatedProgress = {
       userId: userId,
       iqTestId: testId,
       resultId: resultId,
@@ -148,15 +154,14 @@ const IQTest = ({
       testDuration: formatTime(timeLeft),
       selectedOption: letter,
       status: -1,
-    });
+    };
+
+    setTestProgress(updatedProgress);
+    updateTestProgressMutation.mutate(updatedProgress); // API call here
 
     setResultData((prevData) => ({
       ...prevData,
-      // answers: prevData.answers.map((ans) =>
-      //   ans.questionId === questions[currentQuestion]._id
-      //     ? { ...ans, selectedOption: letter }
-      //     : ans
-      // ),
+      // Optional: update answers here if you track them
     }));
   };
 
@@ -212,9 +217,6 @@ const IQTest = ({
       return;
     }
 
-    // Ensure data is fetched before checking userRole
-    // await refetch();
-
     if (timeLeft !== 0) {
       Swal.fire({
         icon: "question",
@@ -225,11 +227,8 @@ const IQTest = ({
         cancelButtonText: "No, Cancel",
         confirmButtonColor: "#28a745",
         cancelButtonColor: "#dc3545",
-      }).then((result) => {
-        console.log({ userRole });
+      }).then((result) => {  
         if (result.isConfirmed) {
-          console.log("User Role:", latestUserRole);
-
           if (progressIntervalRef.current) {
             clearInterval(progressIntervalRef.current);
           }
@@ -387,18 +386,62 @@ const IQTest = ({
                 <FaArrowLeft className="mr-1 sm:mr-2" /> Previous
               </button>
 
-              {currentQuestion < questions.length - 1 ? (
+              {/* {currentQuestion < questions.length - 1 ? (
                 <button
                   onClick={handleNextQuestion}
-                  className="flex items-center bg-[#F7941D] text-white px-4 py-2 rounded hover:bg-[#E88C19] transition-colors"
+                  className={`flex items-center px-4 py-2 rounded transition-colors
+      ${
+        isProgressSaved
+          ? "bg-[#F7941D] text-white hover:bg-[#E88C19]"
+          : "bg-gray-300 text-gray-600 cursor-not-allowed"
+      }`}
+                  disabled={!isProgressSaved}
                 >
-                  Next <FaArrowRight className="ml-1 sm:ml-2" />
+                  Save & Next <FaArrowRight className="ml-1 sm:ml-2" />
                 </button>
               ) : (
                 answers[currentQuestion] !== "" && (
                   <button
                     onClick={handleSubmit}
-                    className="flex items-center bg-[#F7941D] text-white px-4 py-2 rounded hover:bg-[#E88C19] transition-colors"
+                    className={`flex items-center px-4 py-2 rounded transition-colors
+        ${
+          isProgressSaved
+            ? "bg-[#F7941D] text-white hover:bg-[#E88C19]"
+            : "bg-gray-300 text-gray-600 cursor-not-allowed"
+        }`}
+                    disabled={!isProgressSaved}
+                  >
+                    Submit <FaCheckCircle className="ml-1 sm:ml-2" />
+                  </button>
+                )
+              )} */}
+              {currentQuestion < questions.length - 1 ? (
+                answers[currentQuestion] === "" ? (
+                  <button
+                    onClick={handleNextQuestion}
+                    className="flex items-center bg-gray-300 text-gray-600 px-4 py-2 rounded cursor-pointer hover:bg-gray-400 transition-colors"
+                  >
+                    Next <FaArrowRight className="ml-1 sm:ml-2" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleNextQuestion}
+                    className="flex items-center bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors"
+                  >
+                    Save & Next <FaArrowRight className="ml-1 sm:ml-2" />
+                  </button>
+                )
+              ) : (
+                answers[currentQuestion] !== "" && (
+                  <button
+                    onClick={handleSubmit}
+                    className={`flex items-center px-4 py-2 rounded transition-colors
+        ${
+          isProgressSaved
+            ? "bg-[#F7941D] text-white hover:bg-[#E88C19]"
+            : "bg-gray-300 text-gray-600 cursor-not-allowed"
+        }`}
+                    disabled={!isProgressSaved}
                   >
                     Submit <FaCheckCircle className="ml-1 sm:ml-2" />
                   </button>

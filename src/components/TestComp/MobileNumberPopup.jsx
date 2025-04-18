@@ -75,7 +75,6 @@ const MobileNumberPopup = ({
         title: "Details Submitted!",
         text: "Your details were updated successfully!",
       });
-      console.log("after userdetails submited :", response?.data?.data?.token);
 
       const newToken = response?.data?.data?.token;
 
@@ -112,11 +111,8 @@ const MobileNumberPopup = ({
         guestId: userId,
         testID: testID,
       });
-      console.log("user_id by send otp api call..", otpResponseId);
     },
   });
-
-  console.log("verify otp response ====", verifyOtpResponse);
 
   return (
     <div className="fixed z-50 inset-0 flex justify-center items-center bg-black/50 backdrop-blur-sm p-4">
