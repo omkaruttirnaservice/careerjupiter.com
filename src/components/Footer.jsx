@@ -211,7 +211,7 @@ const Footer = () => {
         {/* Bottom copyright text */}
         <div className="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-400">
           © {new Date().getFullYear()}{" "}
-          <span className="text-white font-semibold">UTTIRNA Services</span>.
+          <span className="text-white font-semibold">Career Jupiter</span>.
           All rights reserved.
         </div>
       </div>

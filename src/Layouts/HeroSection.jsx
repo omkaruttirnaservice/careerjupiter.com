@@ -28,8 +28,9 @@ const HeroSection = () => {
         <Flotingbutton />
       </div>
 
-      <IQtestBanner />
+      <br/>
       <SloganHomePage/>
+      <IQtestBanner />
       <Carouseldiv />
       <br />
       <Logopage />

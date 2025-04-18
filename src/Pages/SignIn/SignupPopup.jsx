@@ -67,20 +67,60 @@ export default function SignupPopup() {
     }
   }, [location.pathname])
 
+  // const fetchProfileStatus = async (userId) => {
+  //   const token = Cookies.get("token")
+
+  //   if (!token) {
+  //     setIsOpen(true)
+  //     return
+  //   }
+
+  //   try {
+  //     const data = await fetchProfileStatusAPI(userId)
+
+  //     console.log("SignUpPopup------",data);
+      
+
+  //     if (data.usrMsg?.includes("First name")) {
+  //       setRequirement("firstName")
+  //       setIsOpen(true)
+  //       setShowAskLater(true)
+  //     } else if (data.usrMsg?.includes("Last name")) {
+  //       setRequirement("lastName")
+  //       setIsOpen(true)
+  //       setShowAskLater(true)
+  //     } else if (data.usrMsg?.includes("Education")) {
+  //       setRequirement("education")
+  //       setIsOpen(true)
+  //       setShowAskLater(true)
+  //     } else if (data.usrMsg?.includes("password")) {
+  //       setRequirement("password")
+  //       setIsOpen(true)
+  //       setShowAskLater(false)
+  //     } else {
+  //       setRequirement("none")
+  //       setIsOpen(false)
+  //       setProfileComplete(true)
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching profile status:", error)
+  //     if (error.response?.status === 401) {
+  //       setIsOpen(true)
+  //     }
+  //   }
+  // }
   const fetchProfileStatus = async (userId) => {
     const token = Cookies.get("token")
-
+  
     if (!token) {
       setIsOpen(true)
       return
     }
-
+  
     try {
       const data = await fetchProfileStatusAPI(userId)
-
-      console.log("SignUpPopup------",data);
-      
-
+      // console.log("SignUpPopup------", data);
+  
       if (data.usrMsg?.includes("First name")) {
         setRequirement("firstName")
         setIsOpen(true)
@@ -93,7 +133,7 @@ export default function SignupPopup() {
         setRequirement("education")
         setIsOpen(true)
         setShowAskLater(true)
-      } else if (data.usrMsg?.includes("password")) {
+      } else if (data.usrMsg?.includes("password") || data.usrMsg?.includes("Password")) {
         setRequirement("password")
         setIsOpen(true)
         setShowAskLater(false)
@@ -103,7 +143,7 @@ export default function SignupPopup() {
         setProfileComplete(true)
       }
     } catch (error) {
-      console.error("Error fetching profile status:", error)
+      // console.error("Error fetching profile status:", error)
       if (error.response?.status === 401) {
         setIsOpen(true)
       }
@@ -165,7 +205,7 @@ export default function SignupPopup() {
 
       setTimeout(() => fetchProfileStatus(userId), PROFILE_CHECK_DELAY)
     } catch (error) {
-      console.error("Signup Error:", error)
+      // console.error("Signup Error:", error)
     }
   }
 
@@ -217,6 +257,7 @@ export default function SignupPopup() {
         setIsAlreadyRegistered(true)
       } else {
         toast.error(error?.response?.data?.usrMsg || "Failed to send OTP")
+        console.log(error?.response?.data?.usrMsg , 'sent otp errror msg')
       }
     },
   })
