@@ -21,6 +21,8 @@ const IQTest = ({
   resultId,
   iqTestDataPayload,
   getIQTestDataMutation,
+  newTestId,
+  setSubmitTest,
 }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState(
@@ -102,7 +104,7 @@ const IQTest = ({
       });
     },
   });
-  
+
   const updateTestProgressMutation = useMutation({
     mutationFn: updateTestProgress,
     onSuccess: (response) => {},
@@ -110,26 +112,26 @@ const IQTest = ({
   });
 
   const [resultData, setResultData] = useState({
-    iqTestId: testId,
+    testID: newTestId,
     userId: userId,
-    status: 1,
-    answers: questions.map((q) => ({ questionId: q._id, selectedOption: "" })),
+    // status: 1,
+    // answers: questions.map((q) => ({ questionId: q._id, selectedOption: "" })),
   });
 
   dispatch(setIqTestId(testId));
 
-        const currentTimeLeft = timeLeftRef.current;
-        const currentTestProgress = testProgressRef.current;
+  const currentTimeLeft = timeLeftRef.current;
+  const currentTestProgress = testProgressRef.current;
 
   useEffect(() => {
     setResultData({
-      iqTestId: testId,
+      testID: newTestId,
       userId: userId,
-      status: -1,
-      answers: questions.map((q) => ({
-        questionId: q._id,
-        selectedOption: "",
-      })),
+      // status: -1,
+      // answers: questions.map((q) => ({
+      //   questionId: q._id,
+      //   selectedOption: "",
+      // })),
     });
   }, [questions, testId, userId]);
 
@@ -150,11 +152,11 @@ const IQTest = ({
 
     setResultData((prevData) => ({
       ...prevData,
-      answers: prevData.answers.map((ans) =>
-        ans.questionId === questions[currentQuestion]._id
-          ? { ...ans, selectedOption: letter }
-          : ans
-      ),
+      // answers: prevData.answers.map((ans) =>
+      //   ans.questionId === questions[currentQuestion]._id
+      //     ? { ...ans, selectedOption: letter }
+      //     : ans
+      // ),
     }));
   };
 
@@ -174,34 +176,16 @@ const IQTest = ({
     setCurrentQuestion((prev) => Math.min(prev + 1, questions.length - 1));
   };
 
-  useEffect(()=>{
-    updateTestProgressMutation.mutate({
-      ...currentTestProgress,
-      testDuration: formatTime(currentTimeLeft),
-    });
-  },[])
-
-  //get user details api call
-
-  // const { data, isPending, refetch } = useQuery({
-  //   queryKey: ["getUserDetail", userId],
-  //   queryFn: () => getUserDetail(userId),
-  //   enabled: true,
-  //   refetchOnMount: true,
-  // });
-
-  // const userRole = data?.data?.data?.role;
-
   useEffect(() => {
     setAnswers(questions.map((q) => q.selectedOption || ""));
     setResultData({
-      iqTestId: testId,
+      testID: newTestId,
       userId: userId,
-      status: 1,
-      answers: questions.map((q) => ({
-        questionId: q._id,
-        selectedOption: q.selectedOption || "", // Use stored option or default empty
-      })),
+      // status: 1,
+      // answers: questions.map((q) => ({
+      //   questionId: q._id,
+      //   selectedOption: q.selectedOption || "",
+      // })),
     });
   }, [questions, testId, userId]);
 
@@ -329,6 +313,8 @@ const IQTest = ({
             setShowMobileNumberPopup={setShowMobileNumberPopup}
             resultGenerationMutation={resultGenerationMutation}
             resultData={resultData}
+            testID={newTestId}
+            userId={userId}
           />
         )}
         {!isSubmitted && (

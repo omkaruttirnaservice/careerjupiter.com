@@ -152,6 +152,22 @@ function TestResult() {
   const [marksGained, setMarksGained] = useState(0);
   const [passingMarks, setPassingMarks] = useState(0);
 
+  console.log("result page result data====", resultData);
+
+  // "result": {
+  //     "_id": "6800d6cf35abbb5de048bd57",
+  //     "testID": "6800d6ae35abbb5de048bc81",
+  //     "userId": "6800c5dffe8e292db27fc4ae",
+  //     "totalQuestions": 0,
+  //     "correctAnswers": 0,
+  //     "wrongAnswers": 0,
+  //     "totalMarks": 0,
+  //     "marksGained": 0,
+  //     "passingmarks": 0,
+  //     "createdAt": "2025-04-17T10:24:15.592Z",
+  //     "updatedAt": "2025-04-17T10:24:40.914Z"
+  // }
+
   useEffect(() => {
     if (resultData?.result) {
       const {
@@ -160,7 +176,7 @@ function TestResult() {
         wrongAnswers: wA,
         totalMarks: tM,
         marksGained: mG,
-        passingMarks: pM,
+        passingmarks: pM,
         _id: id,
       } = resultData?.result;
 

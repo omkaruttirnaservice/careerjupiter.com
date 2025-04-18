@@ -35,6 +35,9 @@ function TestCard() {
   const navigate = useNavigate();
   const { userId } = useSelector((state) => state.auth);
   const resultsId = useSelector((state) => state.result.resultsId);
+  const [newTestId ,setNewTestId] = useState(null);
+  const [submitTest , setSubmitTest] = useState(null);
+  const [resultsData ,setResultsData] = useState(null);
 
   const token = Cookies.get("token");
   const decodedToken = jwtDecode(token);
@@ -59,6 +62,11 @@ function TestCard() {
   const getIQTestDataMutation = useMutation({
     mutationFn: getIQTestData,
     onSuccess: (response) => {
+      console.log(
+        "response for get specific question :",
+        response?.data?.testID
+      );
+      setNewTestId(response?.data?.testID);
       setSelectedTest(response?.data?.questions);
       setTestDuration(response?.data?.testDuration);
       setTestName(response?.data?.title);
@@ -67,9 +75,13 @@ function TestCard() {
     },
   });
 
+  // const { mutate: fetchResult, data: resultData } = useMutation({
+  //   mutationFn: () => getResult({ testID: newTestId, userId }),
+  // });
   const { mutate: fetchResult, data: resultData } = useMutation({
-    mutationFn: () => getResult({ testID: testId, userId }),
+    mutationFn: ({ testID, userId }) => getResult({ testID, userId }),
   });
+
   useEffect(() => {
     if (resultData?.data) {
       dispatch(setTestResult(resultData.data));
@@ -122,13 +134,21 @@ function TestCard() {
     });
   };
 
+  // const handleResult = async (test) => {
+  //   if (test.attempted === 1) {
+  //     setTestId(test._id);
+  //     await fetchResult();
+  //     return;
+  //   }
+  // };
+
   const handleResult = async (test) => {
-    if (test.attempted === 1) {
-      setTestId(test._id);
-      await fetchResult();
-      return;
-    }
-  };
+  if (test.attempted === 1) {
+    setTestId(test._id);
+    await fetchResult({ testID: test._id, userId });
+    return;
+  }
+};
 
   const handleTestClick = async (test) => {
     // Set userType from the current test
@@ -176,6 +196,9 @@ function TestCard() {
         resultId={resultId}
         getIQTestDataMutation={getIQTestDataMutation}
         iqTestDataPayload={iqTestDataPayload}
+        newTestId={newTestId}
+        setSubmitTest={setSubmitTest}
+        setResultsData={setResultsData}
       />
     );
   }
@@ -212,7 +235,7 @@ function TestCard() {
               (userRole === "USER" &&
                 (test.userType === "0" || test.userType === "1"));
             console.log({ isAccessible });
-            console.log("userType:", test?.userType);
+            console.log("test=====:", test);
             return (
               <div
                 key={test._id}
@@ -228,7 +251,9 @@ function TestCard() {
                 </div>
                 <p>
                   Main Category:{" "}
-                  <span className="font-medium">{test.testLevel || "N/A"}</span>
+                  <span className="font-medium">
+                    {test.main_category || "N/A"}
+                  </span>
                 </p>
                 <p>
                   Duration:{" "}
