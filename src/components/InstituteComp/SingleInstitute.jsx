@@ -7,24 +7,22 @@ import FacultyDetails from "./FacultyDetails";
 import ReviewPage from "../navComp/ReviewPage";
 import { AiOutlineBook } from "react-icons/ai";
 import { BiTimeFive } from "react-icons/bi";
-import { FaRupeeSign ,FaTags } from "react-icons/fa";
+import { FaRupeeSign, FaTags } from "react-icons/fa";
 import { MdOutlineDiscount, MdLocationOn } from "react-icons/md";
 import { FiArrowRight } from "react-icons/fi";
 import Nav from "../../Layouts/Nav";
 import { motion } from "framer-motion";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 // import { FaTags } from 'react-icons/fa';
 
 const fetchInstitute = async (id) => {
   const response = await fetch(`${BASE_URL}/api/class/${id}`);
   if (!response.ok) {
     throw new Error("Failed to fetch class details");
-
   }
   const result = await response.json();
 
-  console.log(result , 'classs details')
-
+  console.log(result, "classs details");
 
   if (result.success && result.data) {
     return result.data;
@@ -55,13 +53,13 @@ const SingleInstitute = () => {
   // Prevent body scrolling when popup is open
   useEffect(() => {
     if (isPopupOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
-    
+
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [isPopupOpen]);
 
@@ -74,7 +72,6 @@ const SingleInstitute = () => {
     queryFn: () => fetchInstitute(id),
     enabled: !!id,
   });
-
 
   const {
     data: courses,
@@ -107,108 +104,106 @@ const SingleInstitute = () => {
   return (
     <>
       <Nav />
-      
-       
+
       {/* Floating Discount Icon */}
       {instituteClass?.discount && showDiscountPopup && (
-  <motion.div
-    initial={{ opacity: 0, y: 50 }}
-    animate={{ 
-      opacity: 1,
-      y: 0,
-      boxShadow: [
-        "0 0 0 0 rgba(255, 105, 0, 0.7)",
-        "0 0 0 15px rgba(255, 105, 0, 0)",
-        "0 0 0 0 rgba(255, 105, 0, 0)"
-      ]
-    }}
-    transition={{
-      opacity: { duration: 0.5 },
-      y: { duration: 0.7, type: "spring", stiffness: 100 },
-      boxShadow: {
-        duration: 2,
-        repeat: Infinity,
-        ease: "easeOut"
-      }
-    }}
-    whileHover={{ 
-      scale: 1.1,
-      rotate: [0, -10, 10, -5, 5, 0] 
-    }}
-    whileTap={{ scale: 0.9 }}
-    className="fixed bottom-8 right-8 z-50 cursor-pointer"
-    onClick={() => setIsPopupOpen(true)}
-  >
-    <div className="relative">
-      {/* Main button with improved gradient and shadow */}
-      <motion.div
-        className="w-20 h-20 bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 rounded-full flex items-center justify-center shadow-2xl"
-        animate={{
-          rotate: [0, 5, -5, 0],
-        }}
-        transition={{
-          rotate: {
-            duration: 3,
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut"
-          }
-        }}
-      >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          className="h-10 w-10 text-white" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          stroke="currentColor"
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            boxShadow: [
+              "0 0 0 0 rgba(255, 105, 0, 0.7)",
+              "0 0 0 15px rgba(255, 105, 0, 0)",
+              "0 0 0 0 rgba(255, 105, 0, 0)",
+            ],
+          }}
+          transition={{
+            opacity: { duration: 0.5 },
+            y: { duration: 0.7, type: "spring", stiffness: 100 },
+            boxShadow: {
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeOut",
+            },
+          }}
+          whileHover={{
+            scale: 1.1,
+            rotate: [0, -10, 10, -5, 5, 0],
+          }}
+          whileTap={{ scale: 0.9 }}
+          className="fixed bottom-8 right-8 z-50 cursor-pointer"
+          onClick={() => setIsPopupOpen(true)}
         >
-          <path 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            strokeWidth={2} 
-            d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z" 
-          />
-        </svg>
-      </motion.div>
-      
-      {/* Enhanced discount badge */}
-      <motion.div
-        className="absolute -top-3 -right-3 bg-gradient-to-br from-red-600 to-red-700 text-white text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center shadow-lg"
-        initial={{ scale: 0 }}
-        animate={{ 
-          scale: 1,
-          rotate: [0, 20, -20, 10, -10, 0]
-        }}
-        transition={{
-          scale: { duration: 0.5, type: "spring" },
-          rotate: {
-            duration: 2,
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut"
-          }
-        }}
-      >
-        {instituteClass.discount}%
-        {/* Ribbon effect */}
-        <div className="absolute -bottom-1 w-4 h-2 bg-red-800 clip-ribbon"></div>
-      </motion.div>
-      
-      {/* Optional floating text */}
-      <motion.div
-        className="absolute -left-8 top-1/2 -translate-y-1/2 bg-white text-red-600 font-bold px-3 py-1 rounded-full text-xs whitespace-nowrap shadow-md"
-        initial={{ x: -20, opacity: 0 }}
-        animate={{ 
-          x: 0,
-          opacity: 1,
-          transition: { delay: 0.5 }
-        }}
-      >
-        Special Offer!
-      </motion.div>
-    </div>
-  </motion.div>
-)}
+          <div className="relative">
+            {/* Main button with improved gradient and shadow */}
+            <motion.div
+              className="w-20 h-20 bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 rounded-full flex items-center justify-center shadow-2xl"
+              animate={{
+                rotate: [0, 5, -5, 0],
+              }}
+              transition={{
+                rotate: {
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  ease: "easeInOut",
+                },
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-10 w-10 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z"
+                />
+              </svg>
+            </motion.div>
+
+            {/* Enhanced discount badge */}
+            <motion.div
+              className="absolute -top-3 -right-3 bg-gradient-to-br from-red-600 to-red-700 text-white text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center shadow-lg"
+              initial={{ scale: 0 }}
+              animate={{
+                scale: 1,
+                rotate: [0, 20, -20, 10, -10, 0],
+              }}
+              transition={{
+                scale: { duration: 0.5, type: "spring" },
+                rotate: {
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  ease: "easeInOut",
+                },
+              }}
+            >
+              {instituteClass.discount}%{/* Ribbon effect */}
+              <div className="absolute -bottom-1 w-4 h-2 bg-red-800 clip-ribbon"></div>
+            </motion.div>
+
+            {/* Optional floating text */}
+            <motion.div
+              className="absolute -left-8 top-1/2 -translate-y-1/2 bg-white text-red-600 font-bold px-3 py-1 rounded-full text-xs whitespace-nowrap shadow-md"
+              initial={{ x: -20, opacity: 0 }}
+              animate={{
+                x: 0,
+                opacity: 1,
+                transition: { delay: 0.5 },
+              }}
+            >
+              Special Offer!
+            </motion.div>
+          </div>
+        </motion.div>
+      )}
 
       {/* Discount Popup Modal */}
       {isPopupOpen && (
@@ -220,25 +215,51 @@ const SingleInstitute = () => {
             transition={{ type: "spring", damping: 20 }}
             className="relative bg-white rounded-xl w-full max-w-md"
           >
-            <button 
+            <button
               onClick={() => setIsPopupOpen(false)}
               className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
-            
+
             <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 p-6 text-center">
               <div className="flex justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-16 w-16 text-red-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z"
+                  />
                 </svg>
               </div>
-              
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">SPECIAL DISCOUNT!</h3>
-              <p className="text-lg text-gray-800 mb-4">Limited time offer for this course</p>
-              
+
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                SPECIAL DISCOUNT!
+              </h3>
+              <p className="text-lg text-gray-800 mb-4">
+                Limited time offer for this course
+              </p>
+
               <div className="relative inline-block mb-6">
                 <div className="absolute inset-0 bg-white opacity-20 rounded-full animate-ping"></div>
                 <div className="relative bg-white rounded-full py-3 px-8">
@@ -247,13 +268,17 @@ const SingleInstitute = () => {
                   </span>
                 </div>
               </div>
-              
+
               <div className="bg-white bg-opacity-20 rounded-lg p-4 mb-4">
-                <p className="text-gray-800 font-medium">Hurry up! This offer ends soon</p>
-                <p className="text-sm text-gray-700 mt-1">Don't miss this amazing opportunity</p>
+                <p className="text-gray-800 font-medium">
+                  Hurry up! This offer ends soon
+                </p>
+                <p className="text-sm text-gray-700 mt-1">
+                  Don't miss this amazing opportunity
+                </p>
               </div>
-              
-              <button 
+
+              <button
                 className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105"
                 onClick={() => {
                   // Add your action here (e.g., navigate to enrollment page)
@@ -263,9 +288,11 @@ const SingleInstitute = () => {
                 Claim Your Discount Now
               </button>
             </div>
-            
+
             <div className="bg-gray-50 p-4 text-center">
-              <p className="text-sm text-gray-600">Terms and conditions apply</p>
+              <p className="text-sm text-gray-600">
+                Terms and conditions apply
+              </p>
             </div>
           </motion.div>
         </div>
@@ -551,37 +578,33 @@ const SingleInstitute = () => {
                 </motion.div>
               )}
 
-{instituteClass.category?.length > 0 && (
-  <motion.div
-    whileHover={{ scale: 1.02 }}
-    className="p-5 bg-gray-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border-l-4 border-blue-500"
-  >
-    <div className="flex items-start">
-      <span className="text-2xl mr-4 text-blue-500">
-        <FaTags />
-      </span>
-      <div>
-        <h3 className="font-semibold text-gray-800 mb-1">
-          Categories
-        </h3>
-        <div className="text-gray-600">
-          {instituteClass.category[0]}
-          {instituteClass.category.length > 1 && (
-            <Tooltip 
-              title={instituteClass.category.slice(1).join(', ')} 
-              arrow
-            >
-              <span className="text-blue-600 ml-1 cursor-pointer hover:underline">
-                +{instituteClass.category.length - 1} more
-              </span>
-            </Tooltip>
-          )}
-        </div>
-      </div>
-    </div>
-  </motion.div>
-)}
-              
+              {/* {instituteClass.category?.length > 0 && (
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="p-5 bg-gray-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border-l-4 border-blue-500"
+                >
+                  <div className="flex items-start">
+                    <span className="text-2xl mr-4 text-blue-500">
+                    </span>
+                    <div>
+                      <h3 className="font-semibold text-gray-800 mb-1">
+                        Categories
+                      </h3>
+                      <div className="text-gray-600">
+                        {instituteClass.category[0]}
+                        {instituteClass.category.length > 1 && (
+                          <span
+                            className="text-blue-600 ml-1 cursor-pointer hover:underline"
+                            title={instituteClass.category.slice(1).join(", ")}
+                          >
+                            +{instituteClass.category.length - 1} more
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )} */}
             </div>
           </div>
         </motion.div>
