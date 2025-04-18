@@ -49,7 +49,7 @@ function TestCard() {
       staleTime: 0,
     });
   
-    const IqTestCategoryes = TestCategory?.data;
+    // const IqTestCategoryes = TestCategory?.data;
 
   const getIQTestDataMutation = useMutation({
     mutationFn: getIQTestData,
@@ -129,6 +129,12 @@ function TestCard() {
     return;
   }
 };
+
+const IqTestCategoryes = [
+  { _id: "all", main_category: "All" },
+  ...(TestCategory?.data || []),
+];
+
 
   const handleTestClick = async (test) => {
     const isAccessible =
@@ -248,27 +254,26 @@ function TestCard() {
       />
     );
   }
-  return (    
+  return (
     <div className="p-4">
       <div className="mb-4">
         <label className="block text-lg font-medium mb-2">
           IQ Test Level:
-          {IqTestCategoryes ?
-            (<select
+          {IqTestCategoryes ? (
+            <select
               className="p-2 ml-3 w-50 border rounded-lg"
               value={testLevel}
               onChange={(e) => setTestLevel(e.target.value)}
             >
               {IqTestCategoryes.map((testType) => (
-                <option
-                  key={testType.main_category}
-                  value={testType._id}
-                >
+                <option key={testType._id} value={testType._id}>
                   {testType.main_category}
                 </option>
               ))}
-            </select>):<h1 className="text-red-500">No test-level data found</h1>
-          }
+            </select>
+          ) : (
+            <h1 className="text-red-500">No test-level data found</h1>
+          )}
         </label>
       </div>
       {isPending ? (
