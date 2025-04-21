@@ -8,7 +8,6 @@ export const OPTIONS_ENUMS = {
   OPTION_E: "E",
 };
 
-export const SET_TIME = 5000;
 
 export const MONTHS = [
   "January",

@@ -413,11 +413,12 @@ function TestResult() {
         {/* Action Buttons */}
         <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
           <button
-            className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-blue-500 rounded-full text-white hover:bg-blue-600 transition shadow-lg"
+            className="flex flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-blue-500 rounded-full text-white hover:bg-blue-600 transition shadow-lg p-4"
             onClick={() => setOpenSharePopup(true)}
             aria-label="Share results"
           >
-            <FaShareAlt className="w-5 h-5 sm:w-6 sm:h-6" />
+            <FaShareAlt className="w-10 h-10 sm:w-6 sm:h-6 mb-1" />
+            <span className="text-[10px] sm:text-xs leading-none">Share</span>
           </button>
         </div>
       </div>

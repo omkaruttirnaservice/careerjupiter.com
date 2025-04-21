@@ -1,6 +1,4 @@
 
-"use client"
-
 import { useEffect, useState } from "react"
 import { Formik, Form } from "formik"
 import * as Yup from "yup"
@@ -27,7 +25,7 @@ const getValidationSchema = (requirement) => {
     f_name: requirement === "firstName" ? Yup.string().required("First Name is required") : Yup.string(),
     l_name: requirement === "lastName" ? Yup.string().required("Last Name is required") : Yup.string(),
     info: Yup.object().shape({
-      current_education: requirement === "education" 
+      education: requirement === "education" 
         ? Yup.string().required("Current Education is required") 
         : Yup.string(),
     }),
@@ -61,66 +59,26 @@ export default function SignupPopup() {
   const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false)
   const [showSignIn, setShowSignIn] = useState(false)
 
+  
+
   useEffect(() => {
     if (location.pathname.startsWith("/profile")) {
       setIsOpen(false)
     }
   }, [location.pathname])
 
-  // const fetchProfileStatus = async (userId) => {
-  //   const token = Cookies.get("token")
-
-  //   if (!token) {
-  //     setIsOpen(true)
-  //     return
-  //   }
-
-  //   try {
-  //     const data = await fetchProfileStatusAPI(userId)
-
-  //     console.log("SignUpPopup------",data);
-      
-
-  //     if (data.usrMsg?.includes("First name")) {
-  //       setRequirement("firstName")
-  //       setIsOpen(true)
-  //       setShowAskLater(true)
-  //     } else if (data.usrMsg?.includes("Last name")) {
-  //       setRequirement("lastName")
-  //       setIsOpen(true)
-  //       setShowAskLater(true)
-  //     } else if (data.usrMsg?.includes("Education")) {
-  //       setRequirement("education")
-  //       setIsOpen(true)
-  //       setShowAskLater(true)
-  //     } else if (data.usrMsg?.includes("password")) {
-  //       setRequirement("password")
-  //       setIsOpen(true)
-  //       setShowAskLater(false)
-  //     } else {
-  //       setRequirement("none")
-  //       setIsOpen(false)
-  //       setProfileComplete(true)
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching profile status:", error)
-  //     if (error.response?.status === 401) {
-  //       setIsOpen(true)
-  //     }
-  //   }
-  // }
   const fetchProfileStatus = async (userId) => {
     const token = Cookies.get("token")
-  
+
     if (!token) {
       setIsOpen(true)
       return
     }
-  
+
     try {
       const data = await fetchProfileStatusAPI(userId)
-      // console.log("SignUpPopup------", data);
-  
+      console.log("SignUpPopup------", data)
+
       if (data.usrMsg?.includes("First name")) {
         setRequirement("firstName")
         setIsOpen(true)
@@ -144,7 +102,7 @@ export default function SignupPopup() {
       }
     } catch (error) {
       // console.error("Error fetching profile status:", error)
-      if (error.response?.status === 401) {
+      if (error?.response?.status === 401) {
         setIsOpen(true)
       }
     }
@@ -153,19 +111,19 @@ export default function SignupPopup() {
   const handleAskLater = () => {
     setAskLaterClicked(true)
     setIsOpen(false)
-
+  
     if (askLaterTimer) {
       clearTimeout(askLaterTimer)
     }
-
+  
     const timer = setTimeout(() => {
       setIsOpen(true)
-      setShowAskLater(false)
+      setShowAskLater(true) // ✅ Keep it visible again
     }, ASK_LATER_DELAY)
-
+  
     setAskLaterTimer(timer)
   }
-
+  
   useEffect(() => {
     return () => {
       askLaterTimer && clearTimeout(askLaterTimer)
@@ -215,30 +173,23 @@ export default function SignupPopup() {
 
   const updateProfileMutation = useMutation({
     mutationFn: async (values) => {
-      const payload = {}
-
-      if (requirement === "firstName") {
-        payload.f_name = values.f_name
-      } else if (requirement === "lastName") {
-        payload.l_name = values.l_name
-      } else if (requirement === "education") {
-        payload.info = {
-          current_education: values.info.current_education,
-        }
-      } else if (requirement === "password") {
-        payload.password = values.password
+      console.log(values);
+      const payload = {
+        f_name: values.f_name,
+        password: values.password,
+        education: values.info.education,
       }
 
       return updateUserProfile({ userId, values: payload })
     },
     onSuccess: () => {
-      toast.success("Saved!")
+      toast.success("Profile updated successfully!")
       setIsOpen(false)
       setAskLaterClicked(false)
       setTimeout(() => fetchProfileStatus(userId), PROFILE_CHECK_DELAY)
     },
     onError: (error) => {
-      console.error("Update error:", error?.response?.data)
+      console.error("Update error:", error)
       toast.error(error.response?.data?.message || "Failed to update profile")
     },
   })
@@ -299,6 +250,8 @@ export default function SignupPopup() {
     setOtpTimer(60)
     sendOTPMutation.mutate({ mobile_no: mobileNumber })
   }
+ 
+  
 
   const handleVerifyAndSignup = async (otp, mobileNumber) => {
     if (!otp) {
@@ -341,9 +294,7 @@ export default function SignupPopup() {
   const getTitle = () => {
     switch (requirement) {
       case "firstName": return "Complete Your Profile"
-      case "lastName": return "Last Name Required"
-      case "education": return "Education Details"
-      case "password": return "Password Required"
+   
       default: return "Get Started"
     }
   }
@@ -386,7 +337,7 @@ export default function SignupPopup() {
 
   return (
     <>
-      {isOpen && !location.pathname.startsWith("/profile") && (
+     {isOpen && !location.pathname.startsWith("/profile") && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
             <div className="p-6">
@@ -395,16 +346,14 @@ export default function SignupPopup() {
               <Formik
                 initialValues={{
                   f_name: "",
-                  l_name: "",
                   mobile_no: "",
-                  info: { current_education: "" },
+                  info: { education: "" },
                   password: "",
                 }}
                 validationSchema={getValidationSchema(requirement)}
                 onSubmit={(values, { setSubmitting }) => {
-                  if (requirement !== "none") {
-                    updateProfileMutation.mutate(values)
-                  }
+                  // Always update the profile when Save is clicked
+                  updateProfileMutation.mutate(values)
                   setSubmitting(false)
                 }}
               >
@@ -427,7 +376,6 @@ export default function SignupPopup() {
                     />
                   ) : (
                     <ProfileForm
-                      requirement={requirement}
                       isLoading={updateProfileMutation.isLoading}
                       showAskLater={showAskLater}
                       onAskLater={handleAskLater}
@@ -452,3 +400,4 @@ export default function SignupPopup() {
     </>
   )
 }
+
