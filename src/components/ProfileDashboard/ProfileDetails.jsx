@@ -1,38 +1,39 @@
-"use client"
+"use client";
 
-import { useDispatch, useSelector } from "react-redux"
-import { getUser } from "./Api"
-import { useQuery } from "@tanstack/react-query"
-import { FaEnvelope, FaPhone, FaGraduationCap, FaEdit } from "react-icons/fa"
-import { useEffect, useState } from "react"
-import { setCurrentEducation } from "../../store-redux/educationSlice"
-import EducationFormModal from "./EducationFormModal"
-import { VscAdd } from "react-icons/vsc"
-import { MdEdit } from "react-icons/md"
-import EditEductionDetails from "./EditEductionDetails"
-import EditProfileModal from "./EditProfile"
-import Lotify from "../TestComp/Lotify"
-import LoadingProfilePage from "../loading-skeleton/LoadingProfilePage"
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "./Api";
+import { useQuery } from "@tanstack/react-query";
+import { FaEnvelope, FaPhone, FaGraduationCap, FaEdit, FaUserCircle } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { setCurrentEducation } from "../../store-redux/educationSlice";
+import EducationFormModal from "./EducationFormModal";
+import { VscAdd } from "react-icons/vsc";
+import { MdEdit } from "react-icons/md";
+import EditEductionDetails from "./EditEductionDetails";
+import EditProfileModal from "./EditProfile";
+import Lotify from "../TestComp/Lotify";
+import LoadingProfilePage from "../loading-skeleton/LoadingProfilePage";
+import { FaLocationDot } from "react-icons/fa6";
 
 const ProfileDetails = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const dispatch = useDispatch()
-  const { userId } = useSelector((state) => state.auth)
-  const [isListVisible, setIsListVisible] = useState(true)
-  const [isOpenEdit, setIsOpenEdit] = useState(false)
-  const [selectedEducation, setSelectedEducation] = useState(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [eduactionList , setEducationList] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
+  const { userId } = useSelector((state) => state.auth);
+  const [isListVisible, setIsListVisible] = useState(true);
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
+  const [selectedEducation, setSelectedEducation] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [eduactionList, setEducationList] = useState([]);
 
   const openEditModal = (edu) => {
-    setSelectedEducation(edu)
-    setIsOpenEdit(true)
-  }
+    setSelectedEducation(edu);
+    setIsOpenEdit(true);
+  };
 
   const { data, isPending, isError, error, refetch } = useQuery({
     queryKey: ["userData", userId],
     queryFn: () => getUser(userId),
-  })
+  });
 
   useEffect(() => {
     if (
@@ -42,52 +43,68 @@ const ProfileDetails = () => {
       dispatch(setCurrentEducation(data.data.info.current_education));
       setEducationList(data?.data?.info?.education?.education);
     }
-  }, [data, dispatch])
+  }, [data, dispatch]);
 
   // Calculate profile completion percentage
   const calculateProfileCompletion = (user) => {
-    if (!user) return 0
+    if (!user) return 0;
 
     // Define fields to check for completion
-    const fieldsToCheck = ["f_name", "l_name", "mobile_no", "email_id", "dob", "age", "profile_image"]
+    const fieldsToCheck = [
+      "f_name",
+      "l_name",
+      "mobile_no",
+      "email_id",
+      "dob",
+      "age",
+      "profile_image",
+    ];
 
     // Address fields
     const addressFields = user.address
-      ? ["line1", "dist", "state", "pincode"].filter((field) => Boolean(user.address[field])).length
-      : 0
+      ? ["line1", "dist", "state", "pincode"].filter((field) =>
+          Boolean(user.address[field])
+        ).length
+      : 0;
 
     // Education field
-    const hasEducation = user.info?.education?.length > 0
-    const hasCurrentEducation = Boolean(user.info?.current_education)
+    const hasEducation = user.info?.education?.length > 0;
+    const hasCurrentEducation = Boolean(user.info?.current_education);
 
     // Count completed fields
-    const completedFields = fieldsToCheck.filter((field) => Boolean(user[field])).length
+    const completedFields = fieldsToCheck.filter((field) =>
+      Boolean(user[field])
+    ).length;
 
     // Calculate percentage (base fields + address + education)
-    const totalPossibleFields = fieldsToCheck.length + 4 + 2
+    const totalPossibleFields = fieldsToCheck.length + 4 + 2;
     const totalCompletedFields =
-      completedFields + addressFields + (hasEducation ? 1 : 0) + (hasCurrentEducation ? 1 : 0)
+      completedFields +
+      addressFields +
+      (hasEducation ? 1 : 0) +
+      (hasCurrentEducation ? 1 : 0);
 
-    return Math.round((totalCompletedFields / totalPossibleFields) * 100)
-  }
+    return Math.round((totalCompletedFields / totalPossibleFields) * 100);
+  };
 
-  if (isPending)
-    return <LoadingProfilePage />;
+  if (isPending) return <LoadingProfilePage />;
 
   if (isError)
     return (
       <div className="text-center py-6">
-        <p className="text-red-500 bg-red-50 px-4 py-2 rounded-xl border border-red-100">Error: {error.message}</p>
+        <p className="text-red-500 bg-red-50 px-4 py-2 rounded-xl border border-red-100">
+          Error: {error.message}
+        </p>
       </div>
-    )
+    );
 
-  const user = data?.data
+  const user = data?.data;
   // console.log("user........................", user)
 
   // const educationList = data?.data?.info?.education || []
   // console.log("...................", educationList)
 
-  const completionPercentage = calculateProfileCompletion(user)
+  const completionPercentage = calculateProfileCompletion(user);
   // console.log("com........", completionPercentage)
 
   return (
@@ -237,9 +254,9 @@ const ProfileDetails = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-center gap-4">
                   <div className="p-3">
-                    <p className="w-10 h-10">
+                    <div className="w-10 h-10">
                       <Lotify icon="\Lottiefiles\Animation - 1742988633227 (1).json" />
-                    </p>
+                    </div>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Date of Birth</p>
@@ -250,9 +267,9 @@ const ProfileDetails = () => {
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="p-3">
-                    <p className=" w-10 h-10">
-                      <Lotify icon="\Lottiefiles\Animation - 1742989600076.json" />
-                    </p>
+                    <span className="w-10 h-10 flex items-center justify-start text-gray-800">
+                      <FaUserCircle className="w-5 h-5" />
+                    </span>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Age</p>
@@ -274,9 +291,9 @@ const ProfileDetails = () => {
 
               <div className="flex items-start gap-4">
                 <div className="p-3">
-                  <p className="w-12 h-12">
-                    <Lotify icon="\Lottiefiles\Animation - 1742988929198 (1).json" />
-                  </p>
+                  <span className="w-10 h-10 flex items-center justify-start text-red-500">
+                    <FaLocationDot className="w-5 h-5" />
+                  </span>
                 </div>
                 <div className="break-words">
                   <p className="font-medium text-gray-800">
@@ -469,6 +486,6 @@ const ProfileDetails = () => {
       </div>
     </>
   );
-}
+};
 
 export default ProfileDetails;

@@ -1,18 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import TagsSection from "./TagsSection";
-import { useSearchContext } from "../store/SearchContext";
 import { BACKEND_SERVER_IP } from "../Constant/constantData";
-import Lotify from "./TestComp/Lotify";
 import LoadingCard from "./loading-skeleton/LoadingCard";
 import CollegeSearchBar from "./SearchComp/CollegeSearchBar";
 import { useState } from "react";
 import dataNotFound from "../assets/images/dataNotFound.jpg";
-
-
+import { FaLocationDot } from "react-icons/fa6";
 
 const MultiCards = () => {
   const navigate = useNavigate();
-  // let { tags, collegesData,isLoading } = useSearchContext();
    const [searchCollegeData, setSearchCollegeData] = useState([]);
    const [isLoading , setIsLoading] = useState(true);
 
@@ -81,9 +76,9 @@ const MultiCards = () => {
                     {college.collegeName}
                   </h3>
                   <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
-                    <p className="w-8 h-8">
-                      <Lotify icon="\Lottiefiles\Animation - 1742988929198 (1).json" />
-                    </p>
+                    <span className="w-10 h-10 flex items-center justify-start text-red-500">
+                      <FaLocationDot className="w-5 h-5" />
+                    </span>
                     {college.address?.state}, {college.address?.dist}
                   </p>
                   <p className="text-gray-600 mt-2 text-sm line-clamp-3">

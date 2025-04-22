@@ -1,55 +1,79 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import {
-  getTest,
-  getResult,
-  getIQTestData,
-  deleteTest,
-  getIqTestCategory,
-} from "./Api";
+import { getResult, getIQTestData, deleteTest } from "./Api";
 import { FaBrain } from "react-icons/fa";
 import Swal from "sweetalert2";
 import IQTest from "./IQTest";
 import { useDispatch, useSelector } from "react-redux";
 import { setTestResult } from "../../store-redux/testResultSlice";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LoadingTestCard from "../loading-skeleton/LoadingTestCard";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { setResultsId } from "../../store-redux/resultSlice";
+import { BASE_URL } from "../../utils/constansts";
+import axios from "axios";
+import { getAuthHeader } from "../../utils/mics";
+import Breadcrumb from "./Breadcrumb";
 
 function TestCard() {
   const [selectedTest, setSelectedTest] = useState(null);
   const [testDuration, setTestDuration] = useState(0);
   const [testName, setTestName] = useState("");
   const [testId, setTestId] = useState(null);
-  const [testLevel, setTestLevel] = useState("all");
   const [resultId, setResultId] = useState();
   const [iqTestDataPayload, setIqTestDataPayload] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { userId } = useSelector((state) => state.auth);
-  const [newTestId ,setNewTestId] = useState(null);
-  const [submitTest , setSubmitTest] = useState(null);
-  const [resultsData ,setResultsData] = useState(null);
+  const [newTestId, setNewTestId] = useState(null);
+  const [submitTest, setSubmitTest] = useState(null);
+  const [resultsData, setResultsData] = useState(null);
 
   const token = Cookies.get("token");
   const decodedToken = jwtDecode(token);
   const userRole = decodedToken.role;
 
-  const { data, isPending, refetch } = useQuery({
-    queryKey: ["getTest", testLevel],
-    queryFn: () => getTest(testLevel),
-    staleTime: 0,
+  const { search } = useLocation();
+  const query = new URLSearchParams(search);
+  const categoryId = query.get("id");
+  const sub_Category = query.get("sub_category");
+  const sub_sub_Category = query.get("sub_sub_name");
+  const main_name = query.get("main_name");
+
+  const mainCategoryName = main_name;
+  const subCategoryName = sub_Category;
+  const subSubCategoryName = sub_sub_Category;
+
+  const {
+    data: test_List,
+    mutate: fetchTestList,
+    isLoading,
+    isError,
+  } = useMutation({
+    mutationFn: () =>
+      axios.post(
+        `${BASE_URL}/api/iqtest/get-iq-test-list-by-user`,
+        {
+          mainCategoryId: categoryId,
+          sub_category: sub_Category,
+          sub: sub_sub_Category,
+        },
+        {
+          headers: {
+            Authorization: getAuthHeader(),
+          },
+        }
+      ),
   });
 
-    const { data: TestCategory, refetch: getTestCategory } = useQuery({
-      queryKey: ["getTestCategory"],
-      queryFn: () => getIqTestCategory(),
-      staleTime: 0,
-    });
-  
-    const IqTestCategoryes = TestCategory?.data;
+  useEffect(() => {
+    if (categoryId && sub_Category && sub_sub_Category) {
+      fetchTestList();
+    }
+  }, [categoryId, sub_Category, sub_sub_Category]);
+
+  const iqtests = test_List?.data?.data;
 
   const getIQTestDataMutation = useMutation({
     mutationFn: getIQTestData,
@@ -77,9 +101,9 @@ function TestCard() {
     }
   }, [resultData?.data, dispatch, navigate]);
 
-  useEffect(() => {
-    refetch();
-  }, [testLevel, refetch]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [testLevel, refetch]);
 
   const deleteTestMutation = useMutation({
     mutationFn: deleteTest,
@@ -90,7 +114,7 @@ function TestCard() {
         text: "You can now re-attempt the test.",
         confirmButtonColor: "#28a745",
       }).then(() => {
-        refetch();
+        // refetch();
       });
     },
     onError: () => {
@@ -123,12 +147,17 @@ function TestCard() {
   };
 
   const handleResult = async (test) => {
-  if (test.attempted === 1) {
-    setTestId(test._id);
-    await fetchResult({ testID: test._id, userId });
-    return;
-  }
-};
+    if (test.attempted === 1) {
+      setTestId(test._id);
+      await fetchResult({ testID: test._id, userId });
+      return;
+    }
+  };
+
+  // const IqTestCategoryes = [
+  //   { _id: "all", main_category: "All" },
+  //   ...(TestCategory?.data || []),
+  // ];
 
   const handleTestClick = async (test) => {
     const isAccessible =
@@ -146,22 +175,6 @@ function TestCard() {
 
     const newIqTestDataPayload = { testID: test._id, userId };
 
-    // if (test?.attempted === 0 || test?.attempted === -1) {
-    //   Swal.fire({
-    //     title: `${test?.attempted === -1 ? "Resume" : "Start"} ${test.title}?`,
-    //     text: `Duration: ${test.testDuration.minutes} min | Total Marks: ${test.totalMarks}`,
-    //     icon: "info",
-    //     showCancelButton: true,
-    //     confirmButtonText: `${test?.attempted === -1 ? "Resume Test" : "Start Test"}`,
-    //     cancelButtonText: "Cancel",
-    //   }).then((result) => {
-    //     if (result.isConfirmed) {
-    //       setIqTestDataPayload(newIqTestDataPayload);
-    //       getIQTestDataMutation.mutate(newIqTestDataPayload);
-    //       setTestId(test._id);
-    //     }
-    //   });
-    // }
     if (test?.attempted === 0 || test?.attempted === -1) {
       Swal.fire({
         title: `${test?.attempted === -1 ? "Resume" : "Start"} ${test.title}?`,
@@ -248,34 +261,38 @@ function TestCard() {
       />
     );
   }
-  return (    
+  return (
     <div className="p-4">
-      <div className="mb-4">
+      <Breadcrumb
+        mainCategoryName={mainCategoryName}
+        subCategoryName={subCategoryName}
+        subSubCategoryName={subSubCategoryName}
+      />
+      {/* <div className="mb-4">
         <label className="block text-lg font-medium mb-2">
           IQ Test Level:
-          {IqTestCategoryes ?
-            (<select
+          {IqTestCategoryes ? (
+            <select
               className="p-2 ml-3 w-50 border rounded-lg"
               value={testLevel}
               onChange={(e) => setTestLevel(e.target.value)}
             >
               {IqTestCategoryes.map((testType) => (
-                <option
-                  key={testType.main_category}
-                  value={testType._id}
-                >
+                <option key={testType._id} value={testType._id}>
                   {testType.main_category}
                 </option>
               ))}
-            </select>):<h1 className="text-red-500">No test-level data found</h1>
-          }
+            </select>
+          ) : (
+            <h1 className="text-red-500">No test-level data found</h1>
+          )}
         </label>
-      </div>
-      {isPending ? (
+      </div> */}
+      {false ? (
         <LoadingTestCard />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data?.data?.map((test) => {
+        <div className="grid grid-cols-1  mt-5 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {iqtests?.map((test) => {
             const isAccessible =
               (userRole === "GUEST" && test.userType === "0") ||
               (userRole === "USER" &&
@@ -296,7 +313,7 @@ function TestCard() {
                 <p>
                   Main Category:{" "}
                   <span className="font-medium">
-                    {test.main_category || "N/A"}
+                    {test.main_category || main_name}
                   </span>
                 </p>
                 <p>
