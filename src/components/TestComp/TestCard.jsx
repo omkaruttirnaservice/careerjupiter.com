@@ -17,6 +17,7 @@ import { getAuthHeader } from "../../utils/mics";
 import Breadcrumb from "./Breadcrumb";
 
 function TestCard() {
+  console.log(2);
   const [selectedTest, setSelectedTest] = useState(null);
   const [testDuration, setTestDuration] = useState(0);
   const [testName, setTestName] = useState("");
