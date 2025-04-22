@@ -2,20 +2,19 @@ import axios from "axios";
 import { BASE_URL } from "../../utils/constansts";
 import { getAuthHeader } from "../../utils/mics";
 
-export const getTest = async (testLevel) => {
-  
-  const response = await axios.get(`${BASE_URL}/api/iqtest?type=${testLevel}`, {
-    headers: {
-      Authorization: getAuthHeader(),
-    },
-  });
-  return response.data;
-};
+// export const getTest = async (testLevel) => {
+//   const response = await axios.get(`${BASE_URL}/api/iqtest?type=${testLevel}`, {
+//     headers: {
+//       Authorization: getAuthHeader(),
+//     },
+//   });
+//   return response.data;
+// };
 
-export const getIqTestCategory = async () => {
-  const response = await axios.get(`${BASE_URL}/api/iq_category/all`);
-  return response.data;
-};
+// export const getIqTestCategory = async () => {
+//   const response = await axios.get(`${BASE_URL}/api/iq_category/all`);
+//   return response.data;
+// };
 
 export const getTestResult = async (testId) => {
   const response = await axios.get(`${BASE_URL}/api/result/${testId}`, {
@@ -60,7 +59,10 @@ export const sendUserOTP = async (payload) => {
 };
 
 export const verifyUserOTP = async (payload) => {
-  const response = await axios.post(`${BASE_URL}/api/auth/verify-otps`, payload);
+  const response = await axios.post(
+    `${BASE_URL}/api/auth/verify-otps`,
+    payload
+  );
   return response.data;
 };
 
@@ -78,8 +80,8 @@ export const deleteTest = async (userTestData) => {
 };
 
 export const updateTestProgress = (data) => {
-  console.log("updateTestProgress===",data);
-  
+  console.log("updateTestProgress===", data);
+
   return axios.put(`${BASE_URL}/api/iqtest/update`, {
     userId: data.userId,
     testID: data.iqTestId, //iqTestId: data.iqTestId,
@@ -91,13 +93,6 @@ export const updateTestProgress = (data) => {
   });
 };
 
-// {
- 
-//     "iqTestId": "67ff7fc19810df7dd6ef57e8",
-//   "testID": "67ff793456907ad17324b194",
-//   "userId": "67fceeb91cd644e6399fdf0d",
-
-//     "questionId": "67ff7fc19810df7dd6ef57ea",
-//     "selectedOption": "B",
-//     "duration": 1200
-// }
+export const getMainTest_Category = () => {
+  return axios.post(`${BASE_URL}/api/iq_category/main-categories`);
+};

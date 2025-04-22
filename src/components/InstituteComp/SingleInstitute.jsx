@@ -22,7 +22,7 @@ const fetchInstitute = async (id) => {
   }
   const result = await response.json();
 
-  console.log(result, "classs details");
+  // console.log(result, "classs details");
 
   if (result.success && result.data) {
     return result.data;

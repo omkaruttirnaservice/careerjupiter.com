@@ -1,7 +1,7 @@
 import React from "react";
 
 const CoursesFee = ({ coursesData }) => {
-  console.log("inside course component:", coursesData[0]?.courses);
+  // console.log("inside course component:", coursesData[0]?.courses);
 
     if (!coursesData[0]?.courses) {
       return (

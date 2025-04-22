@@ -26,7 +26,7 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
       fetchUserDetails(userId)
         .then((data) => {
           const mobile = data?.data?.mobile_no;
-          console.log(mobile , 'mobilelllll')
+          // console.log(mobile , 'mobilelllll')
           if (mobile) {
             setLoggedInMobile(mobile);
             Cookies.set("userMobile", mobile);
@@ -42,7 +42,7 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
     const mobile = Cookies.get("userMobile");
     if (id && mobile) {
       fetch(`/api/check-review?id=${id}&mobile=${mobile}`)
-        .then((res) => res.json())
+        // .then((res) => res.json())
         .then((data) => {
           if (data?.exists) {
             setHasReviewed(true);

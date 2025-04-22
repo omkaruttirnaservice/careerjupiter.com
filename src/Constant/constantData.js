@@ -911,6 +911,14 @@ export const educationOptions = [
 	"Post Graduation",
   ];
   
-  export const ASK_LATER_DELAY = 15000; // 15 seconds
-  export const PROFILE_CHECK_DELAY = 10000; // 10 seconds
-  export const PROFILE_POLL_INTERVAL = 10000; // 30 seconds
+//   export const ASK_LATER_DELAY = 15000; // 15 seconds
+//   export const PROFILE_CHECK_DELAY = 10000; // 10 seconds
+//   export const PROFILE_POLL_INTERVAL = 10000; // 30 
+//   export const SET_TIME = 5000;  // iq test popup 
+
+
+export const ASK_LATER_DELAY = 120000; // 2 minutes
+export const PROFILE_CHECK_DELAY = 120000; // 2 minutes
+export const PROFILE_POLL_INTERVAL = 120000; // 2 minutes
+export const SET_TIME = 90000;  // iq test popup 
+

@@ -39,7 +39,7 @@ const queryClient = new QueryClient({
 });
 
 function handleError(error) {
-  console.log(error, "-err");
+  // console.log(error, "-err");
   const data = error?.response?.data;
 
   toast.warning(data?.usrMsg || "Please try again later !");

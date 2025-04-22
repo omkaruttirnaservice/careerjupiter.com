@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation , useNavigate } from "react-router-dom"; // Import useLocation
-import { SET_TIME } from "../../utils/constansts";
+import { SET_TIME } from "../../Constant/constantData";
 import { createGuestUser } from "./Api";
 import { useMutation } from "@tanstack/react-query";
 import Cookies from "js-cookie";

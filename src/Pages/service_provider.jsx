@@ -12,7 +12,7 @@ const ServiceProvide = () => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="max-w-md sm:max-w-auto md:max-w-xl lg:max-w-2xl  mx-auto mt-10 bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200"
+      className="max-w-md sm:max-w-auto md:max-w-xl lg:max-w-2xl  mx-auto mt-23 bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200"
     >
       <img
         src="https://t4.ftcdn.net/jpg/00/88/68/17/360_F_88681735_DGekSlvZg1keWVRNtDinXmwERnJwokEs.jpg"
