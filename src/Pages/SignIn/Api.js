@@ -1,8 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "../../utils/constansts";
-// const api = axios.create({
-//   baseURL: "http://192.168.1.5:5000",
-// });
+
 
 export const userSignUp = async (data) => {
   return await axios.post(`${BASE_URL}/api/auth/signup`, data);
@@ -24,9 +22,12 @@ export const fetchProfileStatusAPI = async (userId) => {
 
 // Update user profile
 export const updateUserProfile = async ({ userId, values }) => {
-  const response = await axios.put(`${BASE_URL}/api/auth/${userId}`, values);
+  const response = await axios.put(`${BASE_URL}/api/auth/update-user-basic-profile/${userId}`, values);
+  console.log(response , 'error update')
   return response;
 };
+
+
 
 export const sendOTP = async (payload) => {
   const response = await axios.post(`${BASE_URL}/api/auth/send-otp`, payload);

@@ -1,11 +1,12 @@
 
-"use client"
+
 import { Field, ErrorMessage, useFormikContext } from "formik"
 import { useState, useEffect } from "react"
 import AlreadyRegisteredModal from "./AlreadyRegisteredModal"
 import { Navigate, useNavigate } from "react-router-dom"
 
 export default function MobileForm({
+
   onSendOtp,
   onVerifyAndSignup,
   otpSent,
@@ -16,6 +17,7 @@ export default function MobileForm({
   otpCooldown,
   otpTimer,
   isSendingOtp,
+
 }) {
   const { values, resetForm } = useFormikContext()
   const [otp, setOtp] = useState("")
@@ -61,7 +63,7 @@ export default function MobileForm({
             </button>
           </div>
 
-          {otpCooldown && (
+          {otpCooldown &&  (
             <p className="text-sm text-gray-500 mt-1">
               Resend OTP available in {otpTimer} seconds
             </p>
@@ -127,9 +129,9 @@ export default function MobileForm({
         <button
           type="button"
           onClick={onAskLater}
-          className="w-full mt-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition"
+          className="w-full mt-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-red-500 transition"
         >
-          Ask Me Later
+          CLOSE
         </button>
       )}
     </div>

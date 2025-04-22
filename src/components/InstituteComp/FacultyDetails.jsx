@@ -28,7 +28,7 @@ const FacultyDetails = () => {
   const faculty = institute?.class?.faculty_Details || [];
   // const staf_profile = institute?.class?.staff_profile || [];
   // console.log("profile",staf_profile)
-  console.log( " faculty details......",data.class.faculty_Details )
+  // console.log( " faculty details......",data.class.faculty_Details )
 
 
   return (

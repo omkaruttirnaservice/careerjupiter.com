@@ -7,7 +7,6 @@ const InstituteCard = ({ institute, onClick }) => {
   const discount = institute.discount || institute.discount === 0 ? institute.discount : null;
   const originalPrice = 10000;
   const discountedPrice = originalPrice * (1 - discount/100);
-
   return (
     <div
       className="max-w-2xl mt-5 rounded-lg overflow-hidden shadow-lg cursor-pointer hover:shadow-xl transition duration-300 transform hover:-translate-y-1 bg-white relative"

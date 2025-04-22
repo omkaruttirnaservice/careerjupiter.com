@@ -13,7 +13,7 @@ function Logout() {
 		Cookies.remove('userId');
 
 		dispatch(logout());
-		// window.location.reload();
+		window.location.reload();
 	}, [isLoggedIn]);
 
 	return <>{!isLoggedIn && <Navigate to="/" replace />}</>;
