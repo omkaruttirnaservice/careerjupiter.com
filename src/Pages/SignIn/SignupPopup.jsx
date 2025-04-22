@@ -80,7 +80,7 @@ export default function SignupPopup() {
     }
 
     try {
-      // const data = await fetchProfileStatusAPI(userId)
+      const data = await fetchProfileStatusAPI(userId)
       // console.log("SignUpPopup------", data)
 
       if (data.usrMsg?.includes("First name")) {
