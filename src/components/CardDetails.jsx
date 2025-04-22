@@ -97,9 +97,9 @@ const CardDetails = () => {
         href="tel:+1234567890"
         className="fixed mt-110  right-5  z-50 flex items-center   transition-all duration-300"
       >
-         <p className="w-28 h-28">
+         <span className="w-28 h-28">
           <Lotify icon="/public/Lottiefiles/Animation - 1743060162749.json" />
-        </p>
+        </span>
 
       </a>
       <div className="max-w-full mx-auto p-4 mt-15">
