@@ -9,7 +9,7 @@ const InstituteCard = ({ institute, onClick }) => {
   const discount = institute.discount || institute.discount === 0 ? institute.discount : null;
   const originalPrice = 10000; // Replace with actual price from your data
   const discountedPrice = originalPrice * (1 - discount/100);
-    console.log("institute data------", institute);
+    // console.log("institute data------", institute);
 
 
   return (

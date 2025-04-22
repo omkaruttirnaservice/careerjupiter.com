@@ -23,7 +23,6 @@ const getValidationSchema = (requirement) => {
           .matches(/^[6-9][0-9]{9}$/, "Contact number must start with 6-9 and be 10 digits")
           .required("Contact number is required"),
     f_name: requirement === "firstName" ? Yup.string().required("First Name is required") : Yup.string(),
-    l_name: requirement === "lastName" ? Yup.string().required("Last Name is required") : Yup.string(),
     info: Yup.object().shape({
       education: requirement === "education" 
         ? Yup.string().required("Current Education is required") 
@@ -32,7 +31,12 @@ const getValidationSchema = (requirement) => {
     password: requirement === "password"
       ? Yup.string().min(4, "Password must be at least 4 characters").required("Password is required")
       : Yup.string(),
+      confirmPassword: Yup.string()
+      .required("Confirm your password")
+      .oneOf([Yup.ref("password"), null], "Passwords must match") 
   })
+  
+
 }
 
 export default function SignupPopup() {
@@ -76,8 +80,8 @@ export default function SignupPopup() {
     }
 
     try {
-      const data = await fetchProfileStatusAPI(userId)
-      console.log("SignUpPopup------", data)
+      // const data = await fetchProfileStatusAPI(userId)
+      // console.log("SignUpPopup------", data)
 
       if (data.usrMsg?.includes("First name")) {
         setRequirement("firstName")
@@ -189,7 +193,7 @@ export default function SignupPopup() {
       setTimeout(() => fetchProfileStatus(userId), PROFILE_CHECK_DELAY)
     },
     onError: (error) => {
-      console.error("Update error:", error)
+      // console.error("Update error:", error)
       toast.error(error.response?.data?.message || "Failed to update profile")
     },
   })
@@ -268,7 +272,7 @@ export default function SignupPopup() {
 
       await handleSignUp(mobileNumber, otp)
     } catch (error) {
-      console.error("Error in verification:", error)
+      // console.error("Error in verification:", error)
       if (error?.response?.data?.statusCode === 400 && error?.response?.data?.data?.is_issued === true) {
         setIsAlreadyRegistered(true)
       }
@@ -304,7 +308,7 @@ export default function SignupPopup() {
 
     const token = Cookies.get("token")
     const storedUserId = Cookies.get("userId")
-    console.log(token)
+    // console.log(token)
     if (!token) {
       const timer = setTimeout(() => {
         setIsOpen(true)
