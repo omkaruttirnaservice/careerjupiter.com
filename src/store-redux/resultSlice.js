@@ -9,9 +9,6 @@ const resultSlice = createSlice({
   initialState,
   reducers: {
     setResultsId: (state, action) => {
-      console.log("-------------settting resut id");
-      console.log(action);
-      console.log("------------- ");
 
       state.resultsId = action.payload;
     },

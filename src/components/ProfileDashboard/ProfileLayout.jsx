@@ -55,7 +55,7 @@ function ProfileLayout() {
       {/* Mobile Sidebar (Drawer) */}
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm  z-50 md:hidden">
-          <div className="bg-gray-900 w-64 h-full p-5 relative text-white">
+          <div className="bg-blue-600 w-64 h-full p-5 relative text-white">
             <button
               className="absolute top-2 right-2 text-white"
               onClick={() => setSidebarOpen(false)}
@@ -69,7 +69,7 @@ function ProfileLayout() {
                   to={item.href}
                   className={({ isActive }) =>
                     `flex items-center p-3 rounded-md ${
-                      isActive ? "bg-gray-500" : "hover:bg-gray-500"
+                      isActive ? "bg-blue-300" : "hover:bg-blue-300"
                     }`
                   }
                   onClick={() => setSidebarOpen(false)}
@@ -92,7 +92,7 @@ function ProfileLayout() {
       )}
 
       {/* Desktop Sidebar */}
-      <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-gray-900 p-5 text-white">
+      <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-blue-600 p-5 text-white">
         <nav className="space-y-2">
           {navigation.map((item) => (
             <NavLink
@@ -100,7 +100,7 @@ function ProfileLayout() {
               to={item.href}
               className={({ isActive }) =>
                 `flex items-center p-3 rounded-md ${
-                  isActive ? "bg-gray-500" : "hover:bg-gray-500"
+                  isActive ? "bg-blue-300" : "hover:bg-blue-300"
                 }`
               }
             >
@@ -123,7 +123,7 @@ function ProfileLayout() {
       <div className="md:pl-64  mt-0">
         {/* Menu Button for Mobile View */}
         <button className="md:hidden p-3" onClick={() => setSidebarOpen(true)}>
-          <FaBars className="w-6 h-6 text-gray-600" />
+          <FaBars className="w-6 h-6 text-gray-900" />
         </button>
         {/* Page Content */}
         <div className="h-auto p-5">
