@@ -99,7 +99,6 @@ const MobileNumberPopup = ({
   const verifyOTPMutation = useMutation({
     mutationFn: verifyUserOTP,
     onSuccess: (response, variables) => {
-      console.log("respose",response);
       setVerifyOtpResponse(response?.data);
       Cookies.set("token", response?.data?.token, { expires: 1 });
       Cookies.set("userId", response?.data?.userId, { expires: 1 });

@@ -76,15 +76,13 @@ const Nav = () => {
 
               {/* Desktop Navigation */}
               <div className="hidden lg:flex md:items-center md:space-x-8">
-
-
-
                 <ul className="flex space-x-2 font-medium">
                   <li>
                     <Link
                       to="/"
-                      className={`px-3 py-2 rounded-md ${isActive("/") ? "text-blue-500" : "hover:text-blue-500"
-                        }`}
+                      className={`px-3 py-2 rounded-md ${
+                        isActive("/") ? "text-blue-500" : "hover:text-blue-500"
+                      }`}
                     >
                       Home
                     </Link>
@@ -103,8 +101,9 @@ const Nav = () => {
                         <li>
                           <Link
                             to="/my-eligibility"
-                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/my-eligibility") ? "text-blue-500" : ""
-                              }`}
+                            className={`block px-4 py-2 hover:bg-gray-300 ${
+                              isActive("/my-eligibility") ? "text-blue-500" : ""
+                            }`}
                           >
                             Search Eligibility
                           </Link>
@@ -112,8 +111,9 @@ const Nav = () => {
                         <li>
                           <Link
                             to="/college"
-                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/college") ? "text-blue-500" : ""
-                              }`}
+                            className={`block px-4 py-2 hover:bg-gray-300 ${
+                              isActive("/college") ? "text-blue-500" : ""
+                            }`}
                           >
                             Search College
                           </Link>
@@ -121,8 +121,9 @@ const Nav = () => {
                         <li>
                           <Link
                             to="/class"
-                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/class") ? "text-blue-500" : ""
-                              }`}
+                            className={`block px-4 py-2 hover:bg-gray-300 ${
+                              isActive("/class") ? "text-blue-500" : ""
+                            }`}
                           >
                             Search Class
                           </Link>
@@ -130,8 +131,9 @@ const Nav = () => {
                         <li>
                           <Link
                             to="/university"
-                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/university") ? "text-blue-500" : ""
-                              }`}
+                            className={`block px-4 py-2 hover:bg-gray-300 ${
+                              isActive("/university") ? "text-blue-500" : ""
+                            }`}
                           >
                             Search University
                           </Link>
@@ -143,8 +145,11 @@ const Nav = () => {
                   <li>
                     <Link
                       to="/service-provider"
-                      className={`px-3 py-2 rounded-md ${isActive("/service-provider") ? "text-blue-500" : "hover:text-blue-500"
-                        }`}
+                      className={`px-3 py-2 rounded-md ${
+                        isActive("/service-provider")
+                          ? "text-blue-500"
+                          : "hover:text-blue-500"
+                      }`}
                     >
                       Service Providers
                     </Link>
@@ -153,8 +158,11 @@ const Nav = () => {
                   <li>
                     <Link
                       to="/about-us"
-                      className={`px-3 py-2 rounded-md ${isActive("/about-us") ? "text-blue-500" : "hover:text-blue-500"
-                        }`}
+                      className={`px-3 py-2 rounded-md ${
+                        isActive("/about-us")
+                          ? "text-blue-500"
+                          : "hover:text-blue-500"
+                      }`}
                     >
                       About Us
                     </Link>
@@ -163,8 +171,11 @@ const Nav = () => {
                   <li>
                     <Link
                       to="/contact-us"
-                      className={`px-3 py-2 rounded-md ${isActive("/contact-us") ? "text-blue-500" : "hover:text-blue-500"
-                        }`}
+                      className={`px-3 py-2 rounded-md ${
+                        isActive("/contact-us")
+                          ? "text-blue-500"
+                          : "hover:text-blue-500"
+                      }`}
                     >
                       Contact Us
                     </Link>
@@ -180,9 +191,7 @@ const Nav = () => {
                     className="ml-2"
                     animate={{ x: [0, 10, 0] }}
                     transition={{ repeat: Infinity, duration: 1 }}
-                  >
-
-                  </motion.span>
+                  ></motion.span>
                 </button>
                 <button
                   onClick={handleClick}
@@ -317,11 +326,10 @@ const Nav = () => {
                   {!isLoggedIn && (
                     <>
                       <button
-                        onClick={() => dispatch(setIsOpen(true))}
+                        onClick={handleClick}
                         className="bg-red-600 text-white font-bold py-2 px-2 rounded-lg text-sm mx-2"
                       >
                         Go To IQ Test
-
                       </button>
                       <button
                         onClick={() => {
@@ -352,11 +360,10 @@ const Nav = () => {
                         Sign Out
                       </button>
                       <button
-                        onClick={() => dispatch(setIsOpen(true))}
+                        onClick={handleClick}
                         className="bg-red-600 text-white font-bold py-2 px-2 mt-3 w-full rounded-lg text-sm mx-2"
                       >
                         Go To IQ Test
-
                       </button>
                     </div>
                   )}

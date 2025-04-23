@@ -12,6 +12,7 @@ import MobileNumberPopup from "./MobileNumberPopup";
 import { setIqTestId } from "../../store-redux/iqTestSlice";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 const IQTest = ({
   questions,
@@ -35,6 +36,7 @@ const IQTest = ({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [isProgressSaved, setIsProgressSaved] = useState(true);
+  const [userRole , setUserRole] = useState(null);
   const [timeLeft, setTimeLeft] = useState(
     testDuration.minutes * 60 + testDuration.seconds
   );
@@ -53,9 +55,31 @@ const IQTest = ({
   const timeLeftRef = useRef(timeLeft);
   const testProgressRef = useRef(TestProgress);
 
-  const token = Cookies.get("token");
-  const decodedToken = jwtDecode(token);
-  const userRole = decodedToken.role;
+  // previce code ---------------
+
+  // const token = Cookies.get("token");
+  // const decodedToken = jwtDecode(token);
+  // const userRole = decodedToken.role;
+
+  // new code -----------------------
+
+
+ useEffect(() => {
+   const token = Cookies.get("token");
+
+   if (token && typeof token === "string") {
+     try {
+       const decodedToken = jwtDecode(token);
+       setUserRole(decodedToken.role);
+     } catch (err) {
+       console.error("Token decode error:", err);
+       toast.error("No user found.. Please login again.");
+     }
+   } else {
+     toast.error("No user found. Please login.");
+   }
+ }, []);
+
 
   // Update refs when state changes
   useEffect(() => {

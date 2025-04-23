@@ -15,6 +15,7 @@ import { BASE_URL } from "../../utils/constansts";
 import axios from "axios";
 import { getAuthHeader } from "../../utils/mics";
 import Breadcrumb from "./Breadcrumb";
+import { toast } from "react-toastify";
 
 function TestCard({ externalTestList, externalCompetedTestList }) {
   const [selectedTest, setSelectedTest] = useState(null);
@@ -29,10 +30,27 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
   const [newTestId, setNewTestId] = useState(null);
   const [submitTest, setSubmitTest] = useState(null);
   const [resultsData, setResultsData] = useState(null);
+  const [userRole, setUserRole] = useState(null);
 
-  const token = Cookies.get("token");
-  const decodedToken = jwtDecode(token);
-  const userRole = decodedToken.role;
+  // const token = Cookies.get("token");
+  // const decodedToken = jwtDecode(token);
+  // const userRole = decodedToken.role;
+
+   useEffect(() => {
+     const token = Cookies.get("token");
+
+     if (token && typeof token === "string") {
+       try {
+         const decodedToken = jwtDecode(token);
+         setUserRole(decodedToken.role);
+       } catch (err) {
+         console.error("Token decode error:", err);
+         toast.error("No user found.. Please login again.");
+       }
+     } else {
+       toast.error("No user found. Please login.");
+     }
+   }, []);
 
   const { search } = useLocation();
   const query = new URLSearchParams(search);
@@ -272,7 +290,7 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
         subCategoryName={subCategoryName}
         subSubCategoryName={subSubCategoryName}
       />
-      {false ? (
+      {isLoading ? (
         <LoadingTestCard />
       ) : (
         <div className="grid grid-cols-1  mt-5 sm:grid-cols-2 lg:grid-cols-3 gap-6">

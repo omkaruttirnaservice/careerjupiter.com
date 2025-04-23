@@ -4,6 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import { getInProgressTest } from "./Api";
 import { useEffect } from "react";
 import { getAuthHeader } from "../../utils/mics";
+import dataNotFound from "../../assets/images/dataNotFound.jpg";
+import LoadingTestCard from "../loading-skeleton/LoadingTestCard";
 
 const InProgressTest = () => {
   const { userId } = useSelector((state) => state.auth);
@@ -29,13 +31,25 @@ const InProgressTest = () => {
     }
   }, [userId, fetchInProgressTests]);
 
+  const testList = inProgressTestsData?.data?.data;
+
   return (
     <>
-      <h2 className="text-center text-white text-xl sm:text-2xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-yellow-300 to-yellow-600 py-3 px-8 rounded-2xl shadow-lg w-full max-w-2xl mx-auto">
-        In-Progress Test
-      </h2>
-      {isInProgressLoading && <p>Loading...</p>}
-      {isInProgressError && <p>Error: {inProgressError.message}</p>}
+      {!isInProgressLoading && !isInProgressError && testList?.length === 0 && (
+        <>
+          <div className="flex justify-center items-center flex-col mt-5">
+            <img
+              src={dataNotFound}
+              alt="No image found"
+              className="w-40 sm:w-56 md:w-64 lg:w-72 xl:w-80 object-contain"
+            />
+            <p className="text-center text-gray-800">
+              No In-progress test data found
+            </p>
+          </div>
+        </>
+      )}
+      {isInProgressLoading && <LoadingTestCard />}
       <TestCard externalTestList={inProgressTestsData?.data?.data || []} />
     </>
   );
