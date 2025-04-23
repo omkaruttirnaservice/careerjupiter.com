@@ -96,3 +96,19 @@ export const updateTestProgress = (data) => {
 export const getMainTest_Category = () => {
   return axios.post(`${BASE_URL}/api/iq_category/main-categories`);
 };
+
+export const getInProgressTest = (payload, config) => {
+  return axios.post(
+    `${BASE_URL}/api/iqtest/get-iq-test-list-by-user-in-progress`,
+    payload,
+    config
+  );
+};
+
+export const getCompletedTest = (payload, config) => {
+  return axios.post(
+    `${BASE_URL}/api/iqtest/get-iq-test-list-by-user-complete`,
+    payload,
+    config
+  );
+};

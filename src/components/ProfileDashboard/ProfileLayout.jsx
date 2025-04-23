@@ -6,6 +6,7 @@ import { FaUserLarge } from "react-icons/fa6";
 import { AiOutlineHome } from "react-icons/ai";
 import Swal from "sweetalert2"; // Import SweetAlert2
 import { MdIncompleteCircle } from "react-icons/md";
+import { GrCompliance } from "react-icons/gr";
 
 function ProfileLayout() {
   const navigate = useNavigate();
@@ -42,6 +43,11 @@ function ProfileLayout() {
       href: "/profile/in-progress-test",
       icon: MdIncompleteCircle,
     },
+    {
+      name: "Completed Test",
+      href: "/profile/completed-test",
+      icon: GrCompliance,
+    },
   ];
 
   return (
@@ -49,7 +55,7 @@ function ProfileLayout() {
       {/* Mobile Sidebar (Drawer) */}
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm  z-50 md:hidden">
-          <div className="bg-blue-600 w-64 h-full p-5 relative text-white">
+          <div className="bg-gray-900 w-64 h-full p-5 relative text-white">
             <button
               className="absolute top-2 right-2 text-white"
               onClick={() => setSidebarOpen(false)}
@@ -63,7 +69,7 @@ function ProfileLayout() {
                   to={item.href}
                   className={({ isActive }) =>
                     `flex items-center p-3 rounded-md ${
-                      isActive ? "bg-blue-500" : "hover:bg-blue-500"
+                      isActive ? "bg-gray-500" : "hover:bg-gray-500"
                     }`
                   }
                   onClick={() => setSidebarOpen(false)}
@@ -86,7 +92,7 @@ function ProfileLayout() {
       )}
 
       {/* Desktop Sidebar */}
-      <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-blue-600 p-5 text-white">
+      <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-gray-900 p-5 text-white">
         <nav className="space-y-2">
           {navigation.map((item) => (
             <NavLink
@@ -94,7 +100,7 @@ function ProfileLayout() {
               to={item.href}
               className={({ isActive }) =>
                 `flex items-center p-3 rounded-md ${
-                  isActive ? "bg-blue-300" : "hover:bg-blue-300"
+                  isActive ? "bg-gray-500" : "hover:bg-gray-500"
                 }`
               }
             >

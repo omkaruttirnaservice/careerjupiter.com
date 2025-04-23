@@ -36,6 +36,7 @@ import LoginPage from "../Pages/Login/LoginPage.jsx";
 import CreatePasswordPage from "../Pages/SignIn/CreatePasswordPage.jsx";
 import TestCard from "./TestComp/TestCard.jsx";
 import InProgressTest from "./TestComp/InProgressTest.jsx";
+import CompleteTest from "./TestComp/CompleteTest.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -207,6 +208,7 @@ export const router = createBrowserRouter([
 
       { path: "test", element: <QueryBasedComponent /> },
       { path: "in-progress-test", element: <InProgressTest /> },
+      { path: "completed-test", element: <CompleteTest /> },
     ],
     scrollRestoration: "manual",
   },
