@@ -16,7 +16,7 @@ import axios from "axios";
 import { getAuthHeader } from "../../utils/mics";
 import Breadcrumb from "./Breadcrumb";
 
-function TestCard() {
+function TestCard({ externalTestList, externalCompetedTestList }) {
   const [selectedTest, setSelectedTest] = useState(null);
   const [testDuration, setTestDuration] = useState(0);
   const [testName, setTestName] = useState("");
@@ -73,7 +73,12 @@ function TestCard() {
     }
   }, [categoryId, sub_Category, sub_sub_Category]);
 
-  const iqtests = test_List?.data?.data;
+  const iqtests =
+    externalTestList && externalTestList.length > 0
+      ? externalTestList
+      : externalCompetedTestList && externalCompetedTestList.length > 0
+        ? externalCompetedTestList
+        : test_List?.data?.data || [];
 
   const getIQTestDataMutation = useMutation({
     mutationFn: getIQTestData,
@@ -87,9 +92,6 @@ function TestCard() {
     },
   });
 
-  // const { mutate: fetchResult, data: resultData } = useMutation({
-  //   mutationFn: () => getResult({ testID: newTestId, userId }),
-  // });
   const { mutate: fetchResult, data: resultData } = useMutation({
     mutationFn: ({ testID, userId }) => getResult({ testID, userId }),
   });
@@ -100,10 +102,6 @@ function TestCard() {
       navigate("/profile/test/?type=result");
     }
   }, [resultData?.data, dispatch, navigate]);
-
-  // useEffect(() => {
-  //   refetch();
-  // }, [testLevel, refetch]);
 
   const deleteTestMutation = useMutation({
     mutationFn: deleteTest,
@@ -126,6 +124,13 @@ function TestCard() {
     },
   });
 
+  const showInstructionAndStart = (test) => {
+    const newIqTestDataPayload = { testID: test._id, userId };
+    setIqTestDataPayload(newIqTestDataPayload);
+    getIQTestDataMutation.mutate(newIqTestDataPayload);
+    setTestId(test._id);
+  };
+
   const handleDeleteTest = (test) => {
     setTestId(test._id);
     Swal.fire({
@@ -138,10 +143,14 @@ function TestCard() {
       confirmButtonText: "Yes, Re-Test!",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteTestMutation.mutate({
-          testID: test._id,
-          userId: userId,
-        });
+        deleteTestMutation.mutate(
+          { testID: test._id, userId },
+          {
+            onSuccess: () => {
+              showInstructionAndStart(test);
+            },
+          }
+        );
       }
     });
   };
@@ -153,11 +162,6 @@ function TestCard() {
       return;
     }
   };
-
-  // const IqTestCategoryes = [
-  //   { _id: "all", main_category: "All" },
-  //   ...(TestCategory?.data || []),
-  // ];
 
   const handleTestClick = async (test) => {
     const isAccessible =
@@ -268,26 +272,6 @@ function TestCard() {
         subCategoryName={subCategoryName}
         subSubCategoryName={subSubCategoryName}
       />
-      {/* <div className="mb-4">
-        <label className="block text-lg font-medium mb-2">
-          IQ Test Level:
-          {IqTestCategoryes ? (
-            <select
-              className="p-2 ml-3 w-50 border rounded-lg"
-              value={testLevel}
-              onChange={(e) => setTestLevel(e.target.value)}
-            >
-              {IqTestCategoryes.map((testType) => (
-                <option key={testType._id} value={testType._id}>
-                  {testType.main_category}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <h1 className="text-red-500">No test-level data found</h1>
-          )}
-        </label>
-      </div> */}
       {false ? (
         <LoadingTestCard />
       ) : (

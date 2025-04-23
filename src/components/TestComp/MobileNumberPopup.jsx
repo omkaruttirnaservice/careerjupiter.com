@@ -63,7 +63,7 @@ const MobileNumberPopup = ({
       setOtpSent(true);
       setIsMobileEditable(false);
       setTimer(60);
-      setOtpResponseId(data.data.userId);
+      setOtpResponseId(data.data.user_id);
     },
   });
 

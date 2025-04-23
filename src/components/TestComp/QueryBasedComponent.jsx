@@ -4,6 +4,7 @@ import TestResult from "./TestResult";
 import MainTest_Category from "./MainTest_Category";
 import SubTest_Category from "./SubTest_Category";
 import SubSubTest_Category from "./SubSubTest_Category";
+import InProgressTest from "./InProgressTest";
 
 const ComponentA = () => <h2>Component A</h2>;
 
@@ -21,7 +22,7 @@ const QueryBasedComponent = () => {
   };
 
   // return componentMap[type] || <TestCard />;
-   return componentMap[type] || <MainTest_Category />;
+  return componentMap[type] || <MainTest_Category />;
 };
 
 export default QueryBasedComponent;
