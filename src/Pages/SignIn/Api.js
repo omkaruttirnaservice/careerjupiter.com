@@ -23,7 +23,7 @@ export const fetchProfileStatusAPI = async (userId) => {
 // Update user profile
 export const updateUserProfile = async ({ userId, values }) => {
   const response = await axios.put(`${BASE_URL}/api/auth/update-user-basic-profile/${userId}`, values);
-  console.log(response , 'error update')
+  // console.log(response , 'error update')
   return response;
 };
 
