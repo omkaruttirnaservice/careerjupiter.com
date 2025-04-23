@@ -81,7 +81,7 @@ export default function SignupPopup() {
 
     try {
       const data = await fetchProfileStatusAPI(userId)
-      // console.log("SignUpPopup------", data)
+      // console.log("SignUpPopup------", data.usrMsg)
 
       if (data.usrMsg?.includes("First name")) {
         setRequirement("firstName")
@@ -104,6 +104,7 @@ export default function SignupPopup() {
         setIsOpen(false)
         setProfileComplete(true)
       }
+
     } catch (error) {
       // console.error("Error fetching profile status:", error)
       if (error?.response?.status === 401) {
@@ -190,7 +191,20 @@ export default function SignupPopup() {
       toast.success("Profile updated successfully!")
       setIsOpen(false)
       setAskLaterClicked(false)
-      setTimeout(() => fetchProfileStatus(userId), PROFILE_CHECK_DELAY)
+      // setTimeout(() => fetchProfileStatus(userId), PROFILE_CHECK_DELAY)
+      setTimeout(async () => {
+        try {
+          const response = await fetchProfileStatus(userId)
+          const userMsg = response?.data?.usrMsg
+          // console.log(response ,'updateprofilemutation')
+      
+          if (userMsg === "User data is complete") {
+            console.log("User data is complete. No need to call API again.")
+          } 
+        } catch (error) {
+          console.error("Error checking profile status:", error)
+        }
+      }, PROFILE_CHECK_DELAY)
     },
     onError: (error) => {
       // console.error("Update error:", error)
@@ -303,25 +317,62 @@ export default function SignupPopup() {
     }
   }
 
-  useEffect(() => {
-    if (["/profile", "/Sign-in", "/forget-password"].some(path => location.pathname.startsWith(path))) return;
+  // useEffect(() => {
 
-    const token = Cookies.get("token")
-    const storedUserId = Cookies.get("userId")
-    // console.log(token)
-    if (!token) {
-      const timer = setTimeout(() => {
-        setIsOpen(true)
-      }, PROFILE_CHECK_DELAY)
-      return () => clearTimeout(timer)
-    } else if (storedUserId) {
-      setUserId(storedUserId)
-      const timer = setTimeout(() => {
-        fetchProfileStatus(storedUserId)
-      }, PROFILE_CHECK_DELAY)
-      return () => clearTimeout(timer)
-    }
-  }, [location.pathname])
+  //   if (["/profile", "/Sign-in", "/forget-password"].some(path => location.pathname.startsWith(path))) return;
+
+  //   const token = Cookies.get("token")
+  //   const storedUserId = Cookies.get("userId")
+  //   // console.log(token)
+  //   if (!token) {
+  //     const timer = setTimeout(() => {
+  //       setIsOpen(true)
+  //     }, PROFILE_CHECK_DELAY)
+  //     return () => clearTimeout(timer)
+  //   } else if (storedUserId) {
+  //     setUserId(storedUserId)
+  //     const timer = setTimeout(() => {
+  //       fetchProfileStatus(storedUserId)
+  //     }, PROFILE_CHECK_DELAY)
+  //     return () => clearTimeout(timer)
+  //   }
+  // }, [location.pathname])
+
+
+useEffect(() => {
+  if (
+    ["/profile", "/Sign-in", "/forget-password"].some(path =>
+      location.pathname.startsWith(path)
+    )
+  ) return;
+
+  const token = Cookies.get("token");
+  const storedUserId = Cookies.get("userId");
+
+  if (!token) {
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+    }, PROFILE_CHECK_DELAY);
+
+    return () => clearTimeout(timer);
+
+  } else if (storedUserId && !profileComplete) {
+    setUserId(storedUserId);
+
+    const timer = setTimeout(async () => {
+      const response = await fetchProfileStatusAPI(storedUserId);
+      // console.log(response.usrMsg , '------------------res')
+
+      if (response.usrMsg === "User data is complete") {
+        setProfileComplete(true); 
+      }
+    }, PROFILE_CHECK_DELAY);
+
+    return () => clearTimeout(timer);
+  }
+
+}, [location.pathname, profileComplete]);
+
 
   useEffect(() => {
     if (["/profile", "/Sign-in", "/forget-password"].some(path => location.pathname.startsWith(path))) return;

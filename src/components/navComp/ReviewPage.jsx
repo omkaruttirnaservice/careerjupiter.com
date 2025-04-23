@@ -33,7 +33,7 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
           }
           setUserNameValue(data?.data?.f_name);
         })
-        .catch((error) => console.error("Error fetching user details:", error));
+        .catch((error) => ("Error fetching user details:", error));
     }
   }, []);
 
