@@ -30,9 +30,9 @@ const SignInPopup = ({ setShowSignUp, onSuccessfulSignIn }) => {
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      console.log(data, "-data");
+      // console.log(data, "-data");
       const parsedData = data.data.data;
-      console.log(parsedData, "-parsedData");
+      // console.log(parsedData, "-parsedData");
       const userId = parsedData.user_id || parsedData.user?._id;
 
       if (!userId) {

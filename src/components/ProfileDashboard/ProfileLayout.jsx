@@ -1,41 +1,56 @@
-
-import React, { useState } from 'react';
-import { FaBars, FaTimes } from 'react-icons/fa';
-import { LuLogOut, LuNotebookPen } from 'react-icons/lu';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { FaUserLarge } from 'react-icons/fa6';
-import { AiOutlineHome } from 'react-icons/ai';
-import Swal from 'sweetalert2'; // Import SweetAlert2
+import React, { useState } from "react";
+import { FaBars, FaTimes } from "react-icons/fa";
+import { LuLogOut, LuNotebookPen } from "react-icons/lu";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { FaUserLarge } from "react-icons/fa6";
+import { AiOutlineHome } from "react-icons/ai";
+import Swal from "sweetalert2"; // Import SweetAlert2
+import { MdIncompleteCircle } from "react-icons/md";
+import { GrCompliance } from "react-icons/gr";
 
 function ProfileLayout() {
-	const navigate = useNavigate();
-	const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-	// Function to show the SweetAlert confirmation before signout
-	const handleSignOut = () => {
-		Swal.fire({
-			title: 'Are you sure?',
-			text: 'You will be logged out!',
-			icon: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes, Sign Out!',
-		}).then((result) => {
-			if (result.isConfirmed) {
-				navigate('/signout'); // Redirect to signout page
-			}
-		});
-	};
+  // Function to show the SweetAlert confirmation before signout
+  const handleSignOut = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Sign Out!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/signout"); // Redirect to signout page
+      }
+    });
+  };
 
-	// Navigation Menu Items
-	const navigation = [
-		{ name: 'Home', href: '/', icon: AiOutlineHome },
-		{ name: 'My Profile', href: '/profile/personal-details', icon: FaUserLarge },
-		{ name: 'Test', href: '/profile/test', icon: LuNotebookPen },
-	];
+  // Navigation Menu Items
+  const navigation = [
+    { name: "Home", href: "/", icon: AiOutlineHome },
+    {
+      name: "My Profile",
+      href: "/profile/personal-details",
+      icon: FaUserLarge,
+    },
+    { name: "Test List", href: "/profile/test", icon: LuNotebookPen },
+    {
+      name: "In-Progress Test",
+      href: "/profile/in-progress-test",
+      icon: MdIncompleteCircle,
+    },
+    {
+      name: "Completed Test",
+      href: "/profile/completed-test",
+      icon: GrCompliance,
+    },
+  ];
 
-	return (
+  return (
     <>
       {/* Mobile Sidebar (Drawer) */}
       {sidebarOpen && (
@@ -54,7 +69,7 @@ function ProfileLayout() {
                   to={item.href}
                   className={({ isActive }) =>
                     `flex items-center p-3 rounded-md ${
-                      isActive ? "bg-blue-500" : "hover:bg-blue-500"
+                      isActive ? "bg-blue-300" : "hover:bg-blue-300"
                     }`
                   }
                   onClick={() => setSidebarOpen(false)}
@@ -108,7 +123,7 @@ function ProfileLayout() {
       <div className="md:pl-64  mt-0">
         {/* Menu Button for Mobile View */}
         <button className="md:hidden p-3" onClick={() => setSidebarOpen(true)}>
-          <FaBars className="w-6 h-6 text-gray-600" />
+          <FaBars className="w-6 h-6 text-gray-900" />
         </button>
         {/* Page Content */}
         <div className="h-auto p-5">
