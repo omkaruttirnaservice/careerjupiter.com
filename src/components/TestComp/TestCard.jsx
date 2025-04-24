@@ -36,6 +36,9 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
   // const decodedToken = jwtDecode(token);
   // const userRole = decodedToken.role;
 
+  const [loadingIQTest, setLoadingIQTest] = useState(false);
+
+
    useEffect(() => {
      const token = Cookies.get("token");
 
