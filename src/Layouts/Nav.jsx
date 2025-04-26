@@ -69,7 +69,7 @@ const Nav = () => {
             <nav className="flex justify-between items-center h-12 max-w-7xl mx-auto px-4">
               <Link
                 to="/"
-                className="font-extrabold text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600"
+                className=" mr-3 font-extrabold text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600"
               >
                 CAREER JUPITER
               </Link>
@@ -180,25 +180,42 @@ const Nav = () => {
                       Contact Us
                     </Link>
                   </li>
+                 
+                  <li>
+                    <Link
+                      to="/premium-services"
+                      className={`px-3 py-2 text-white font-bold   bg-pink-500 rounded-lg ${
+                        isActive("/premium-services")
+                          ? "text-white rounded-lg bg-pink-500"
+                          : ""
+                      }`}
+                    >
+                      Premium Services
+                    </Link>
+                  </li>
+                  
+
                 </ul>
                 {/* Check Eligibility Button */}
-                <button
+                {/* <button
                   onClick={handleScrollToSection}
-                  className="bg-gradient-to-r from-purple-500 to-pink-600 cursor-pointer text-white font-bold py-2 px-2 rounded-lg"
+                  className=" bg-gradient-to-r ml-8 from-purple-500 to-pink-600 cursor-pointer text-white font-bold py-2 px-2 rounded-lg"
                 >
                   Check Eligibility
                   <motion.span
-                    className="ml-2"
+                    className=""
                     animate={{ x: [0, 10, 0] }}
                     transition={{ repeat: Infinity, duration: 1 }}
                   ></motion.span>
-                </button>
+                </button> */}
                 <button
                   onClick={handleClick}
-                  className="bg-red-600 text-white font-bold py-2 px-2 rounded-lg text-md mx-4"
+                  className="bg-red-600  text-white font-bold py-2 px-2 rounded-lg text-sm mx-4"
                 >
                   Go To Test
                 </button>
+
+                
                 {!isLoggedIn && (
                   <>
                     <button
