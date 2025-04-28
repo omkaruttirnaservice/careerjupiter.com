@@ -17,7 +17,7 @@ const Nav = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isStudentsCornerOpen, setIsStudentsCornerOpen] = useState(false);
-   const authState = useSelector((state) => state.auth);
+  const authState = useSelector((state) => state.auth);
 
   const profilePic =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsEJHmI0MlIGvH9CYkbsLEWQ5_ee8Qtl5V-Q&s";
@@ -42,13 +42,13 @@ const Nav = () => {
     setShowConfirm(true);
   };
 
-    const handleClick = () => {
-      if (!authState.isLoggedIn) {
-        dispatch(setIsOpen(true));
-      } else {
-        navigate("/profile/test");
-      }
-    };
+  const handleClick = () => {
+    if (!authState.isLoggedIn) {
+      dispatch(setIsOpen(true));
+    } else {
+      navigate("/profile/test");
+    }
+  };
 
   const handleScrollToSection = () => {
     const section = document.getElementById("check-eligibility-section");
@@ -69,7 +69,7 @@ const Nav = () => {
             <nav className="flex justify-between items-center h-12 max-w-7xl mx-auto px-4">
               <Link
                 to="/"
-                className="font-extrabold text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600"
+                className=" mr-3 font-extrabold text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600"
               >
                 CAREER JUPITER
               </Link>
@@ -80,9 +80,8 @@ const Nav = () => {
                   <li>
                     <Link
                       to="/"
-                      className={`px-3 py-2 rounded-md ${
-                        isActive("/") ? "text-blue-500" : "hover:text-blue-500"
-                      }`}
+                      className={`px-3 py-2 rounded-md ${isActive("/") ? "text-blue-500" : "hover:text-blue-500"
+                        }`}
                     >
                       Home
                     </Link>
@@ -101,9 +100,8 @@ const Nav = () => {
                         <li>
                           <Link
                             to="/my-eligibility"
-                            className={`block px-4 py-2 hover:bg-gray-300 ${
-                              isActive("/my-eligibility") ? "text-blue-500" : ""
-                            }`}
+                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/my-eligibility") ? "text-blue-500" : ""
+                              }`}
                           >
                             Search Eligibility
                           </Link>
@@ -111,9 +109,8 @@ const Nav = () => {
                         <li>
                           <Link
                             to="/college"
-                            className={`block px-4 py-2 hover:bg-gray-300 ${
-                              isActive("/college") ? "text-blue-500" : ""
-                            }`}
+                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/college") ? "text-blue-500" : ""
+                              }`}
                           >
                             Search College
                           </Link>
@@ -121,9 +118,8 @@ const Nav = () => {
                         <li>
                           <Link
                             to="/class"
-                            className={`block px-4 py-2 hover:bg-gray-300 ${
-                              isActive("/class") ? "text-blue-500" : ""
-                            }`}
+                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/class") ? "text-blue-500" : ""
+                              }`}
                           >
                             Search Class
                           </Link>
@@ -131,9 +127,8 @@ const Nav = () => {
                         <li>
                           <Link
                             to="/university"
-                            className={`block px-4 py-2 hover:bg-gray-300 ${
-                              isActive("/university") ? "text-blue-500" : ""
-                            }`}
+                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/university") ? "text-blue-500" : ""
+                              }`}
                           >
                             Search University
                           </Link>
@@ -145,11 +140,10 @@ const Nav = () => {
                   <li>
                     <Link
                       to="/service-provider"
-                      className={`px-3 py-2 rounded-md ${
-                        isActive("/service-provider")
+                      className={`px-3 py-2 rounded-md ${isActive("/service-provider")
                           ? "text-blue-500"
                           : "hover:text-blue-500"
-                      }`}
+                        }`}
                     >
                       Service Providers
                     </Link>
@@ -158,11 +152,10 @@ const Nav = () => {
                   <li>
                     <Link
                       to="/about-us"
-                      className={`px-3 py-2 rounded-md ${
-                        isActive("/about-us")
+                      className={`px-3 py-2 rounded-md ${isActive("/about-us")
                           ? "text-blue-500"
                           : "hover:text-blue-500"
-                      }`}
+                        }`}
                     >
                       About Us
                     </Link>
@@ -171,34 +164,49 @@ const Nav = () => {
                   <li>
                     <Link
                       to="/contact-us"
-                      className={`px-3 py-2 rounded-md ${
-                        isActive("/contact-us")
+                      className={`px-3 py-2 rounded-md ${isActive("/contact-us")
                           ? "text-blue-500"
                           : "hover:text-blue-500"
-                      }`}
+                        }`}
                     >
                       Contact Us
                     </Link>
                   </li>
+
+                  <li>
+                    <Link
+                      to="/premium-services"
+                      className={`px-3 py-2 text-white font-bold   bg-pink-500 rounded-lg ${isActive("/premium-services")
+                          ? "text-white rounded-lg bg-pink-500"
+                          : ""
+                        }`}
+                    >
+                      Premium Services
+                    </Link>
+                  </li>
+
+
                 </ul>
                 {/* Check Eligibility Button */}
-                <button
+                {/* <button
                   onClick={handleScrollToSection}
-                  className="bg-gradient-to-r from-purple-500 to-pink-600 cursor-pointer text-white font-bold py-2 px-2 rounded-lg"
+                  className=" bg-gradient-to-r ml-8 from-purple-500 to-pink-600 cursor-pointer text-white font-bold py-2 px-2 rounded-lg"
                 >
                   Check Eligibility
                   <motion.span
-                    className="ml-2"
+                    className=""
                     animate={{ x: [0, 10, 0] }}
                     transition={{ repeat: Infinity, duration: 1 }}
                   ></motion.span>
-                </button>
+                </button> */}
                 <button
                   onClick={handleClick}
-                  className="bg-red-600 text-white font-bold py-2 px-2 rounded-lg text-md mx-4"
+                  className="bg-red-600  text-white font-bold py-2 px-2 rounded-lg text-sm mx-4"
                 >
                   Go To Test
                 </button>
+
+
                 {!isLoggedIn && (
                   <>
                     <button
@@ -322,6 +330,19 @@ const Nav = () => {
                     </div>
                   ))}
 
+
+                  <button className=" py-1   text-white font-bold  bg-pink-500 rounded-lg">
+                    <Link
+                      to="/premium-services"
+                      className={` ${isActive("/premium-services")
+                          ? ""
+                          : ""
+                        }`}
+                    >
+                      Premium Services
+                    </Link>
+                  </button>
+
                   {/* Sign In Buttons (non-logged in users) */}
                   {!isLoggedIn && (
                     <>
@@ -329,14 +350,14 @@ const Nav = () => {
                         onClick={handleClick}
                         className="bg-red-600 text-white font-bold py-2 px-2 rounded-lg text-sm mx-2"
                       >
-                        Go To IQ Test
+                        Go To Test
                       </button>
                       <button
                         onClick={() => {
                           navigate("/Sign-in");
                           setIsMobileMenuOpen(false);
                         }}
-                        className="bg-blue-600 text-white font-bold py-2 px-2 rounded-lg text-lg mx-2"
+                        className="bg-blue-600 text-white font-bold py-1 px-2 rounded-lg text-lg mx-2"
                       >
                         Sign in
                       </button>

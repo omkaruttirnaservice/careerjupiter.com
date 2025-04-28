@@ -37,6 +37,7 @@ import CreatePasswordPage from "../Pages/SignIn/CreatePasswordPage.jsx";
 import TestCard from "./TestComp/TestCard.jsx";
 import InProgressTest from "./TestComp/InProgressTest.jsx";
 import CompleteTest from "./TestComp/CompleteTest.jsx";
+import PremiumServices from "./premium-services/PremiumServices.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -79,6 +80,7 @@ export const router = createBrowserRouter([
       { path: "/contact-us", element: <ContactUs /> },
       { path: "/about-us", element: <AboutUs /> },
       { path: "/my-eligibility", element: <MyEligibility /> },
+   
       {
         path: "/contact-us",
         element: (
@@ -143,6 +145,7 @@ export const router = createBrowserRouter([
       { path: "reviews/:id", element: <ReviewPage /> },
       { path: "/service-provider", element: <ServiceProvide /> },
       { path: "/add-img", element: <AddImage /> },
+      { path: "/Premium-services", element: <PremiumServices /> },
     ],
   },
   // {

@@ -69,7 +69,7 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
   const {
     data: test_List,
     mutate: fetchTestList,
-    isLoading,
+    isPending,
     isError,
   } = useMutation({
     mutationFn: () =>
@@ -293,8 +293,10 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
         subCategoryName={subCategoryName}
         subSubCategoryName={subSubCategoryName}
       />
-      {isLoading ? (
+      {isPending ? (
+       
         <LoadingTestCard />
+       
       ) : (
         <div className="grid grid-cols-1  mt-5 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {iqtests?.map((test) => {
