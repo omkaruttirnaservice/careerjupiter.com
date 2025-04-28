@@ -885,10 +885,14 @@ export const navigation = [
   {
     name: "Students Corner",
     children: [
+		{name: "IQ Test", to: "/profile/test"},
+		{name: "Premium Services", to:"/premium-services"},
       { name: "Search Eligibility", to: "/my-eligibility" },
       { name: "Search College", to: "/college" },
       { name: "Search Class", to: "/class" },
       { name: "Search University", to: "/university" },
+	  
+	  
     ],
   },
   { name: "Service Providers", to: "/service-provider" },

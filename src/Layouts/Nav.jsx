@@ -95,8 +95,30 @@ const Nav = () => {
                       Students Corner
                     </Link>
 
-                    <div className="absolute hidden group-hover:block  w-40 bg-white mt-2 rounded z-10">
+                    <div className="absolute hidden group-hover:block  w-45 bg-white mt-2 rounded z-10">
                       <ul className="py-1">
+                      <li>
+                          <Link
+                            to="/profile/test"
+                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/my-eligibility") ? "text-blue-500" : ""
+                              }`}
+                          >
+                            IQ Test
+                          </Link>
+                        </li>
+
+                        <li>
+                          <Link
+                            to="/premium-services"
+                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/my-eligibility") ? "text-blue-500" : ""
+                              }`}
+                          >
+                            Premium-Services
+                          </Link>
+                        </li>
+
+                        
+
                         <li>
                           <Link
                             to="/my-eligibility"
@@ -384,7 +406,7 @@ const Nav = () => {
                         onClick={handleClick}
                         className="bg-red-600 text-white font-bold py-2 px-2 mt-3 w-full rounded-lg text-sm mx-2"
                       >
-                        Go To IQ Test
+                        Go To  Test
                       </button>
                     </div>
                   )}
