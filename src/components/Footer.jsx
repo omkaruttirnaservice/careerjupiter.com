@@ -150,18 +150,18 @@ const Footer = () => {
                   to="mailto:info@company.com"
                   className="hover:text-blue-400 transition-colors"
                 >
-                  info@company.com
+                  careerjupiter4u@gmail.com
                 </NavLink>
               </li>
-              <li>
-                Phone:{" "}
-                <NavLink
-                  to="tel:+1234567890"
-                  className="hover:text-blue-400 transition-colors"
-                >
-                  +1 234 567 890
-                </NavLink>
-              </li>
+              <a
+            href="https://whatsapp.com/channel/0029VbADrN54IBh95nFJiR3e"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center mr-20  justify-center w-[200px] h-[45px] bg-green-500 rounded-full text-white font-semibold hover:bg-green-600 transition"
+          >
+            <FaWhatsapp className="mr-2" size={24} /> 
+            <p className="font-bold"> Join WhatsApp</p>
+          </a>
               <li>Address: 123 Street, City, Country</li>
             </ul>
 
