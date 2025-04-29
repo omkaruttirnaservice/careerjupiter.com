@@ -66,11 +66,16 @@ const Nav = () => {
         {({ open }) => (
           <>
             {/* Navbar */}
+            
             <nav className="flex justify-between items-center h-12 max-w-7xl mx-auto px-4">
+            {/* <img className="w-20 h-13 cursor-pointer" src="/public/logo.png" alt="" /> */}
+              
+             
               <Link
                 to="/"
-                className=" mr-3 font-extrabold text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600"
+                className=" mr-3 font-extrabold text-xl text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-purple-600"
               >
+               
                 CAREER JUPITER
               </Link>
 

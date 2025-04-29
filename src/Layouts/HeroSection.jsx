@@ -12,6 +12,7 @@ import Flotingbutton from "./Flotingbutton";
 import SloganHomePage from "../components/SloganHomePage";
 
 import IQtestBanner from './IQtestBanner';
+import PremiumServices from "./PremiumServices";
 
 
 const HeroSection = () => {
@@ -40,6 +41,8 @@ const HeroSection = () => {
       <BestClass />
       <br />
       <BestUniversity />
+      <br />
+      <PremiumServices />
       <br/>
       <CheckEligibility />
       <br />
