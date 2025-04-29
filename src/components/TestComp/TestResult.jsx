@@ -372,15 +372,14 @@ function TestResult() {
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2 sm:h-2.5 mt-1">
                     <div
-                      className={`h-2 sm:h-2.5 rounded-full ${
-                        percentage >= 75
-                          ? "bg-green-600"
-                          : percentage >= 50
-                            ? "bg-blue-600"
-                            : percentage >= 25
-                              ? "bg-amber-500"
-                              : "bg-red-600"
-                      }`}
+                      className={`h-2 sm:h-2.5 rounded-full ${percentage >= 75
+                        ? "bg-green-600"
+                        : percentage >= 50
+                          ? "bg-blue-600"
+                          : percentage >= 25
+                            ? "bg-amber-500"
+                            : "bg-red-600"
+                        }`}
                       style={{ width: `${percentage}%` }}
                     ></div>
                   </div>
@@ -395,20 +394,27 @@ function TestResult() {
 
         {/* Result Message */}
         <div
-          className={`p-3 sm:p-4 md:p-5 flex items-center justify-center flex-col gap-1 sm:gap-2 ${
-            isPassed ? "bg-green-50" : "bg-red-50"
-          }`}
+          className={`p-3 sm:p-4 md:p-5 flex items-center justify-center flex-col gap-1 sm:gap-2 ${isPassed ? "bg-green-50" : "bg-red-50"
+            }`}
         >
           <div className="flex items-center gap-2">{resultIcon}</div>
           <p
-            className={`text-center text-sm sm:text-base md:text-lg font-medium ${
-              isPassed ? "text-green-700" : "text-red-700"
-            }`}
+            className={`text-center text-sm sm:text-base md:text-lg font-medium ${isPassed ? "text-green-700" : "text-red-700"
+              }`}
           >
             {passFailMessage}
             {resultEmoji}
           </p>
         </div>
+        <a
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          className=" ml-10 text-blue-600 hover:underline text-lg font-bold"
+        >
+          Download PDF
+        </a>
+
 
         {/* Action Buttons */}
         <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">

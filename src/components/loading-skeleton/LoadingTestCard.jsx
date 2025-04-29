@@ -14,7 +14,7 @@ function LoadingTestCard() {
         {[...Array(6)].map((_, index) => (
           <div
             key={index}
-            className="relative p-4 rounded-lg shadow-lg border transition-all duration-300 bg-white"
+            className="relative p-4 rounded-lg shadow-lg  transition-all duration-300 bg-white"
           >
             <div className="flex items-center space-x-3 mb-4">
               <Skeleton circle height={40} width={40} />

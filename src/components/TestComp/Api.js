@@ -37,7 +37,6 @@ export const getUserDetail = (id) => {
 };
 
 export const updateUserDetails = (data) => {
-  console.log({ data });
 
   return axios.put(`${BASE_URL}/api/auth/${data.userId}`, {
     f_name: data.f_name,
@@ -75,13 +74,10 @@ export const getIQTestData = async (payload) => {
 };
 
 export const deleteTest = async (userTestData) => {
-  console.log("inside delete api :", userTestData);
   return await axios.post(`${BASE_URL}/api/iqtest/delete`, userTestData);
 };
 
 export const updateTestProgress = (data) => {
-  console.log("updateTestProgress===", data);
-
   return axios.put(`${BASE_URL}/api/iqtest/update`, {
     userId: data.userId,
     testID: data.iqTestId, //iqTestId: data.iqTestId,
@@ -95,4 +91,20 @@ export const updateTestProgress = (data) => {
 
 export const getMainTest_Category = () => {
   return axios.post(`${BASE_URL}/api/iq_category/main-categories`);
+};
+
+export const getInProgressTest = (payload, config) => {
+  return axios.post(
+    `${BASE_URL}/api/iqtest/get-iq-test-list-by-user-in-progress`,
+    payload,
+    config
+  );
+};
+
+export const getCompletedTest = (payload, config) => {
+  return axios.post(
+    `${BASE_URL}/api/iqtest/get-iq-test-list-by-user-complete`,
+    payload,
+    config
+  );
 };
