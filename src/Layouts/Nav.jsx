@@ -50,6 +50,12 @@ const Nav = () => {
       }
     };
 
+//     const handleButtonClick = () => {
+//   dispatch(setIsOpen(true));
+//   handleClick();
+// };
+
+    
   const handleScrollToSection = () => {
     const section = document.getElementById("check-eligibility-section");
     if (section) {
@@ -59,6 +65,7 @@ const Nav = () => {
       window.scrollTo({ top: sectionPosition, behavior: "smooth" });
     }
   };
+  
 
   return (
     <div className="p-2 bg-gray-50 fixed top-0 left-0 w-full shadow-md z-50">
@@ -317,7 +324,8 @@ const Nav = () => {
                   {!isLoggedIn && (
                     <>
                       <button
-                        onClick={() => dispatch(setIsOpen(true))}
+                                          onClick={handleClick}
+
                         className="bg-red-600 text-white font-bold py-2 px-2 rounded-lg text-sm mx-2"
                       >
                         Go To IQ Test
@@ -352,7 +360,8 @@ const Nav = () => {
                         Sign Out
                       </button>
                       <button
-                        onClick={() => dispatch(setIsOpen(true))}
+                         onClick={handleClick}
+
                         className="bg-red-600 text-white font-bold py-2 px-2 mt-3 w-full rounded-lg text-sm mx-2"
                       >
                         Go To IQ Test
