@@ -38,13 +38,17 @@ import TestCard from "./TestComp/TestCard.jsx";
 import InProgressTest from "./TestComp/InProgressTest.jsx";
 import CompleteTest from "./TestComp/CompleteTest.jsx";
 import PremiumServices from "./premium-services/PremiumServices.jsx";
+import GuestHandler from "./GuestHandler.jsx";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <ExtraPopUp />,
-
-    children: [
+    element: 
+    <>
+    <ExtraPopUp />
+    <GuestHandler /> 
+    </>,
+children: [
       {
         path: "/",
         element: (
