@@ -119,9 +119,9 @@ export const router = createBrowserRouter([
       {
         path: "profile",
         element: <>
-          <ProtectedRoute>
+          {/* <ProtectedRoute> */}
             <ProfileLayout />
-          </ProtectedRoute>
+          {/* </ProtectedRoute> */}
         </>,
         children: [
           {
