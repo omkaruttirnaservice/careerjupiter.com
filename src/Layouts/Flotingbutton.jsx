@@ -1,8 +1,9 @@
-import { FaInstagram, FaYoutube } from "react-icons/fa";
+import { FaWhatsapp, FaYoutube } from "react-icons/fa";
 import { LuNotebookPen } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { setIsOpen } from "../store-redux/iqTestSlice";
+
 
 const Flotingbutton = () => {
   const dispatch = useDispatch();
@@ -10,11 +11,11 @@ const Flotingbutton = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-        if (!authState.isLoggedIn) {
-         dispatch(setIsOpen(true));
-        }else{
-             navigate("/profile/test");
-        }
+    if (!authState.isLoggedIn) {
+      dispatch(setIsOpen(true));
+    } else {
+      navigate("/profile/test");
+    }
   };
 
   return (
@@ -38,21 +39,24 @@ const Flotingbutton = () => {
 
         <div className="flex flex-col items-center gap-2 mt-3">
           <a
-            href="https://www.instagram.com"
+            href="https://whatsapp.com/channel/0029VbADrN54IBh95nFJiR3e"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center animate-bounce justify-center w-[35px] h-[35px] bg-pink-500 rounded-full text-white hover:bg-pink-600 transition"
+            className="flex items-center gap-2 animate-bounce justify-center w-[160px] h-[45px] bg-green-500 rounded-full text-white font-semibold hover:bg-green-600 transition"
           >
-            <FaInstagram size={20} />
+            <FaWhatsapp size={24} />
+            <p className="font-bold">Join WhatsApp</p>
           </a>
 
+
           <a
-            href="https://www.youtube.com"
+            href="https://www.youtube.com/@careerJupiter"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center animate-bounce justify-center w-[35px] h-[35px] bg-red-500 rounded-full text-white hover:bg-red-600 transition"
+            className="flex items-center gap-2 animate-bounce justify-center w-[160px] h-[45px] bg-red-500 rounded-full text-white hover:bg-red-600 transition"
           >
             <FaYoutube size={20} />
+            <p className="font-bold">Youtube</p>
           </a>
         </div>
       </div>
