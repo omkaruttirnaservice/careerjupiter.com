@@ -20,6 +20,9 @@ const GuestHandler = () => {
       Cookies.set("token", parsedData.token, { expires: 1 });
       Cookies.set("userId", parsedData.userId, { expires: 1 });
       dispatch(login(parsedData.userId));
+
+        // ✅ After setting cookies and login => Reload the page
+        window.location.reload();
     },
   });
 
