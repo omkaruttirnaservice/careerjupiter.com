@@ -38,11 +38,14 @@ import TestCard from "./TestComp/TestCard.jsx";
 import InProgressTest from "./TestComp/InProgressTest.jsx";
 import CompleteTest from "./TestComp/CompleteTest.jsx";
 import PremiumServices from "./premium-services/PremiumServices.jsx";
+import ProtectedRoute from "./ProtectedRoute.jsx";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <ExtraPopUp />,
+
+
 
     children: [
       {
@@ -80,7 +83,7 @@ export const router = createBrowserRouter([
       { path: "/contact-us", element: <ContactUs /> },
       { path: "/about-us", element: <AboutUs /> },
       { path: "/my-eligibility", element: <MyEligibility /> },
-   
+
       {
         path: "/contact-us",
         element: (
@@ -100,22 +103,26 @@ export const router = createBrowserRouter([
         ),
       },
 
-      {
-        path: "profile",
-        element: <ProfileLayout />,
-        children: [
-          {
-            path: "personal-details",
-            element: <ProfileDetails />,
-          },
-          { path: "test", element: <QueryBasedComponent /> },
-        ],
-        scrollRestoration: "manual",
-      },
+      // {
+      //   path: "profile",
+      //   element: <ProfileLayout />,
+      //   children: [
+      //     {
+      //       path: "personal-details",
+      //       element: <ProfileDetails />,
+      //     },
+      //     { path: "test", element: <QueryBasedComponent /> },
+      //   ],
+      //   scrollRestoration: "manual",
+      // },
 
       {
         path: "profile",
-        element: <ProfileLayout />,
+        element: <>
+          <ProtectedRoute>
+            <ProfileLayout />
+          </ProtectedRoute>
+        </>,
         children: [
           {
             path: "personal-details",
@@ -146,59 +153,45 @@ export const router = createBrowserRouter([
       { path: "/service-provider", element: <ServiceProvide /> },
       { path: "/add-img", element: <AddImage /> },
       { path: "/Premium-services", element: <PremiumServices /> },
+
+
+
+      { path: "college/:id", element: <CardDetails /> },
+      { path: "university/:id", element: <UniversityDetail /> },
+      { path: "class/:id", element: <SingleInstitute /> },
+
+      { path: "/dashboard", element: <Dashboard /> },
+
+      // { path: '/signin', element: <LoginPage /> },
+      { path: "/sign", element: <MultiStepForm /> },
+      { path: "/roadmap", element: <Roadmap /> },
+      { path: "/iq", element: <IQTest /> },
+
+      { path: "/my-eligibility", element: <MyEligibility /> },
+      { path: "/contact-us", element: <ContactUs /> },
+      { path: "/about-us", element: <AboutUs /> },
+      { path: "/my-eligibility", element: <MyEligibility /> },
+      {
+        path: "/contact-us",
+        element: (
+          <>
+            <ScrollToTop />
+            <ContactUs />
+          </>
+        ),
+      },
+      {
+        path: "/about-us",
+        element: (
+          <>
+            <ScrollToTop />
+            <AboutUs />
+          </>
+        ),
+      },
+
     ],
   },
-  // {
-  // 	path: '/coming-soon',
-  // 	element: <ComingSoon />,
-  // },
-
-  { path: "college/:id", element: <CardDetails /> },
-  { path: "university/:id", element: <UniversityDetail /> },
-  { path: "class/:id", element: <SingleInstitute /> },
-
-  { path: "/dashboard", element: <Dashboard /> },
-
-  // { path: '/signin', element: <LoginPage /> },
-  { path: "/sign", element: <MultiStepForm /> },
-  { path: "/roadmap", element: <Roadmap /> },
-  { path: "/iq", element: <IQTest /> },
-
-  { path: "/my-eligibility", element: <MyEligibility /> },
-  { path: "/contact-us", element: <ContactUs /> },
-  { path: "/about-us", element: <AboutUs /> },
-  { path: "/my-eligibility", element: <MyEligibility /> },
-  {
-    path: "/contact-us",
-    element: (
-      <>
-        <ScrollToTop />
-        <ContactUs />
-      </>
-    ),
-  },
-  {
-    path: "/about-us",
-    element: (
-      <>
-        <ScrollToTop />
-        <AboutUs />
-      </>
-    ),
-  },
-
-  // {
-  // 	path: 'profile',
-  // 	element: <ProfileLayout />,
-  // 	children: [
-  // 		{
-  // 			path: 'personal-details',
-  // 			element: <ProfileDetails />,
-  // 		},
-  // 		{ path: 'test', element: <QueryBasedComponent /> },
-  // 	],
-  // 	scrollRestoration: 'manual',
-  // },
 
   {
     path: "profile",

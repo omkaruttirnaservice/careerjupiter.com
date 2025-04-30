@@ -24,18 +24,21 @@ const PremiumServices = () => {
 
       {/* Foreground Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">
+        <h1 className="text-2xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">
           Premium Career Services For Students 🌟
         </h1>
-        <p className="text-lg md:text-xl mb-6 max-w-xl drop-shadow-md">
+        <p className="text-md md:text-xl mb-6 max-w-xl drop-shadow-md">
           Unlock expert guidance, resume support, and exclusive tools for a brighter future.
         </p>
         <button
           onClick={handleClick}
-          className="bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 hover:scale-105 text-white font-bold py-3 px-8 rounded-full shadow-xl transition-all duration-300"
+          className="md:w-160 w-100 cursor-pointer border-2 flex items-center justify-center gap-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 text-white px-6 py-3 rounded-full font-bold text-lg shadow-lg  transition-transform duration-300 hover:scale-105"
+        
         >
+          
+          
           🚀 Explore Premium
-        </button>
+        </button > 
       </div>
     </div>
   );

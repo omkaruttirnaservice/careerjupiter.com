@@ -406,14 +406,14 @@ function TestResult() {
             {resultEmoji}
           </p>
         </div>
-        <a
+        {/* <a
           href="#"
           target="_blank"
           rel="noopener noreferrer"
           className=" ml-10 text-blue-600 hover:underline text-lg font-bold"
         >
           Download PDF
-        </a>
+        </a> */}
 
 
         {/* Action Buttons */}
