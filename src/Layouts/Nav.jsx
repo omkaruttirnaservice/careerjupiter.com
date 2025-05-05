@@ -50,6 +50,12 @@ const Nav = () => {
     }
   };
 
+//     const handleButtonClick = () => {
+//   dispatch(setIsOpen(true));
+//   handleClick();
+// };
+
+    
   const handleScrollToSection = () => {
     const section = document.getElementById("check-eligibility-section");
     if (section) {
@@ -59,6 +65,7 @@ const Nav = () => {
       window.scrollTo({ top: sectionPosition, behavior: "smooth" });
     }
   };
+  
 
   return (
     <div className="p-2 bg-gray-50 fixed top-0 left-0 w-full shadow-md z-50">
