@@ -22,6 +22,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getUserDetail } from './Api';
 import ShareCertificatePopup from './ShareCertificatePopup';
 import IqTestReport from './IqTestReport';
+import zIndex from '@mui/material/styles/zIndex';
 
 
 function TestResult() {
@@ -58,6 +59,7 @@ function TestResult() {
     const [reportType, setReportType] = useState(0);
     const [testTitle, setTitle] = useState("");
     const [openCertificateSharePopup, setOpenCertificateSharePopup] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
 
 
     const { userId } = useSelector((state) => state.auth);
@@ -105,88 +107,77 @@ function TestResult() {
     };
 
     const handleDownloadReport = () => {
+        if (!iqTestReportRef.current) return;
+        
+        setIsDownloading(true); // start loading
         const input = iqTestReportRef.current;
-
-        // Add watermark text
         const watermarkText = "www.careerjupiter.com";
-        const watermarkStyle = {
-            position: 'absolute',
-            opacity: '0.2',
-            fontSize: '60px',
-            color: '#cccccc',
-            transform: 'rotate(-45deg)',
-            pointerEvents: 'none',
-            zIndex: -1
-        };
-
-        // Create watermark element
-        const watermark = document.createElement('div');
-        watermark.textContent = watermarkText;
-        Object.assign(watermark.style, watermarkStyle);
-
-        // Append watermark to the report
-        input.appendChild(watermark);
-
+        const dateTimeString = new Date().toLocaleString();
+    
         html2canvas(input, {
             scale: 2,
-            logging: true,
-            useCORS: true,
-            allowTaint: true
+            useCORS: true
         }).then((canvas) => {
-            // Remove watermark after capture
-            input.removeChild(watermark);
-
             const imgData = canvas.toDataURL('image/png', 1.0);
             const pdf = new jsPDF({
                 orientation: 'portrait',
                 unit: 'mm',
                 format: 'a4'
             });
-
-            const imgWidth = 210; // A4 width in mm
-            const pageHeight = 297; // A4 height in mm
+    
+            const pageWidth = 210;
+            const pageHeight = 297;
+            const marginTop = 10.58;
+            const marginBottom = 10.58;
+            const usableHeight = pageHeight - marginTop - marginBottom;
+    
+            const imgWidth = pageWidth;
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
+    
             let heightLeft = imgHeight;
-            let position = 0;
-
+            let position = marginTop;
+    
+            // First page
             pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-
-            // Add watermark to each page
-            const addWatermarkToPage = (pdf) => {
-                const pageCount = pdf.internal.getNumberOfPages();
-                for (let i = 1; i <= pageCount; i++) {
-                    pdf.setPage(i);
-                    pdf.setTextColor(200, 200, 200);
-                    pdf.setFontSize(40);
-                    pdf.text(watermarkText,
-                        pdf.internal.pageSize.getWidth() / 2,
-                        pdf.internal.pageSize.getHeight() / 2,
-                        { angle: -45, align: 'center' });
-                }
-            };
-
-            // Add new pages if content is longer than one page
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
+            addHeaderAndFooter(pdf, 1, dateTimeString, watermarkText, pageWidth, pageHeight);
+    
+            heightLeft -= usableHeight;
+            let pageNum = 2;
+    
+            while (heightLeft > 0) {
+                position = marginTop - (usableHeight * (pageNum - 1));
                 pdf.addPage();
                 pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
+                addHeaderAndFooter(pdf, pageNum, dateTimeString, watermarkText, pageWidth, pageHeight);
+                heightLeft -= usableHeight;
+                pageNum++;
             }
-
-            // Add watermark to all pages
-            addWatermarkToPage(pdf);
-
+    
             pdf.save(`${studentName.replace(/\s+/g, '_')}_IQ_Test_Report.pdf`);
         }).catch(error => {
             console.error('Error generating PDF:', error);
-            // Ensure watermark is removed even if error occurs
-            if (input.contains(watermark)) {
-                input.removeChild(watermark);
-            }
+        }).finally(() => {
+            setIsDownloading(false); // stop loading
         });
     };
+    
+
+// Helper to add watermark, date, and margins to each page
+const addHeaderAndFooter = (pdf, pageNumber, dateTime, watermarkText, pageWidth, pageHeight) => {
+    pdf.setTextColor(150, 150, 150);
+    pdf.setFontSize(12);
+    // Watermark in the center
+    pdf.setFontSize(40);
+    pdf.setTextColor(220, 220, 220);
+    pdf.text(watermarkText, pageWidth / 2, pageHeight / 2, {
+        angle: -45,
+        align: 'center',
+        zIndex:-1
+    });
+};
+
+    
+    
 
     useEffect(() => {
         if (resultData?.result) {
@@ -449,29 +440,54 @@ function TestResult() {
                         totalMarks={totalMarks} />
                 </div>
 
-
-                {/* {reportType === 1 && (
-                    <div className="flex justify-center my-2">
-                        <button
-                            onClick={handleDownloadReport}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className=" inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            Download Test Report
-                        </button>
-                    </div>
-                )} */}
-
                 {reportType === 1 && (
+                    // <div className="flex justify-center my-2">
+                    //     <button
+                    //         onClick={handleDownloadReport}
+                    //         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    //         disabled={!iqTestReportRef.current} // Disable if ref not ready
+                    //     >
+                    //         Download Test Report
+                    //     </button>
+                    // </div>
                     <div className="flex justify-center my-2">
-                        <button
-                            onClick={handleDownloadReport}
-                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            disabled={!iqTestReportRef.current} // Disable if ref not ready
-                        >
-                            Download Test Report
-                        </button>
-                    </div>
+    <button
+        onClick={handleDownloadReport}
+        className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 ${
+            isDownloading ? 'bg-indigo-300 cursor-not-allowed' : 'bg-indigo-100 hover:bg-indigo-200'
+        } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+        disabled={!iqTestReportRef.current || isDownloading}
+    >
+        {isDownloading ? (
+            <>
+                <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-indigo-700"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                >
+                    <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                    ></circle>
+                    <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                </svg>
+                Generating...
+            </>
+        ) : (
+            "Download Test Report"
+        )}
+    </button>
+</div>
+
                 )}
 
                 {reportType === 0 && (
