@@ -4,14 +4,15 @@ import awardImg from '../../assets/award.png';
 import logoImg from '../../assets/logo.png';
 import qrCode from '../../assets/QR_code.png';
 
+
 const Certificate = forwardRef(({ name, course }, ref) => {
     return (
         <div
             ref={ref}
             style={{
                 padding: '20px',
-                border: '2px solid #000',
-                width: '1000px',
+                width: '1050px',
+                height: '600px',
                 margin: '0 auto',
                 textAlign: 'center',
             }}>
@@ -26,22 +27,24 @@ const Certificate = forwardRef(({ name, course }, ref) => {
                 <h2 className="recipient">{name || 'student name'}</h2>
 
                 <p className="description">
-                Has Successfully completed first stage of <strong>{course}</strong> <br />
+                    Has Successfully completed  of <strong>{course}</strong> <br />
                     By which you can decide your career and education path.
                 </p>
 
                 <div className="award-section">
                     <img src={awardImg} alt="Award" className="award-img" />
+                    <p className="award-text">Careerjupiter.com</p>
                 </div>
 
-                <p className="website">CareerJupiter.com</p>
+            
+
 
                 <div className="qr-section">
                     <div className="qr-code">
-                    <img src={qrCode} alt="Award" className="award-img" />
+                        <img src={qrCode} alt="Award" className="award-img" />
                     </div>
                     <div className="qr-code">
-                    <img src={qrCode} alt="Award" className="award-img" />
+                        <img src={qrCode} alt="Award" className="award-img" />
                     </div>
                 </div>
             </div>
