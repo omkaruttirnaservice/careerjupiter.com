@@ -19,10 +19,11 @@ body {
 }
 
 .certificate-border {
-    border: 5px double #c49a5a;
+    border: 7px double gold;
     height: 100%;
-    padding: 30px;
+    padding: 20px;
     box-sizing: border-box;
+    box-sizing: inherit;
     position: relative;
 }
 
@@ -48,22 +49,25 @@ body {
 /* Certificate Title */
 .certificate-title {
     font-size: 70px;
-    color: #1e1e1e;
+    
     letter-spacing: 3px;
     margin: 0 auto;
     font-weight: bold;
     text-align: center;
     font-family: 'Times New Roman', Times, serif;
+    color: #333;
+    text-shadow: 2px 2px 0 white, 4px 4px 0 gold, 6px 6px 0 yellowgreen;
 }
 
 /* Subtitle */
 .subtitle {
     text-align: center;
     font-size: 26px;
-    color: #d6336c;
-    margin: 10px 0 20px 0;
+    color: red;
+    margin: 10px 0 0px 0;
+    font-weight: bold;
+    font-family: cursive;
 }
-
 /* Recipient Name */
 .recipient {
     text-align: center;
@@ -72,10 +76,10 @@ body {
     font-family: 'Georgia', serif;
     color: #2c3e50;
     text-decoration: none;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     letter-spacing: 1.2px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-    border-bottom: 2px solid #34495e;
+    border-bottom: 1px solid blue;
     display: inline-block;
     padding-bottom: 8px;
     text-transform: capitalize;
@@ -86,30 +90,39 @@ body {
 .description {
     text-align: center;
     font-size: 24px;
-    color: #d6336c;
+    color: red;
     margin-bottom: 30px;
+    font-weight: bold;
+    font-family: cursive;
 }
 
 /* Award Section */
 .award-section {
-    text-align: center;
-    margin: 20px 0;
-    justify-content: center;
     display: flex;
-}
-
-.award-img {
-    width: 140px;
+    flex-direction: column;
+    align-items: center; 
+  }
+  
+  .award-img {
+    width: 100px;
     height: auto;
-}
+  }
+  
+  .award-text {
+    margin-top: 8px; 
+    font-size: 20px;
+    color: blue;
+    font-family: cursive;
+  }
+  
 
 /* Website Name */
 .website {
     text-align: center;
-    font-size: 22px;
-    color: #000;
-    font-weight: bold;
-    margin-top: 20px;
+    font-size: 18px;
+    color: blue;
+    cursor: pointer;
+    font-family: cursive;
 }
 
 /* QR Code Section */
@@ -126,7 +139,6 @@ body {
 .qr-code {
     width: 120px;
     height: 120px;
-    background-color: #4a90e2;
     color: #ffffff;
     font-weight: bold;
     font-size: 16px;
