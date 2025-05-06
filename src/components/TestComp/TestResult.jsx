@@ -1,109 +1,4 @@
-// import React, { useState, useEffect } from "react";
-// import {
-//   FaCheckCircle,
-//   FaTimesCircle,
-//   FaQuestionCircle,
-//   FaTrophy,
-// } from "react-icons/fa";
-// import { useSelector } from "react-redux";
-// import ShareResultPopup from "./ShareResultPopup";
-
-// function TestResult() {
-//   const resultData = useSelector((state) => state.testResult?.resultData);
-//   const [openSharePopup, setOpenSharePopup] = useState(false);
-//   const [passFailMessage, setPassFailMessage] = useState("");
-//   const [resultIcon, setResultIcon] = useState(<FaQuestionCircle className="text-yellow-500 text-5xl" />);
-//   const [resultEmoji, setResultEmoji] = useState("🎉");
-
-//   if (!resultData)
-//     return (
-//       <div className="text-center text-xl font-semibold p-6">
-//         ⏳ Loading results...
-//       </div>
-//     );
-
-//   const {
-//     totalQuestions,
-//     correctAnswers,
-//     wrongAnswers,
-//     totalMarks,
-//     marksGained,
-//     passingMarks,
-//     _id,
-//   } = resultData?.result;
-
-//   const percentage = (marksGained / totalMarks) * 100;
-//   const isPassed = marksGained >= passingMarks;
-
-//   useEffect(() => {
-//     if (percentage >= 75) {
-//       setPassFailMessage("Congratulations! Keep up the great work! 😃");
-//       setResultIcon(<FaTrophy className="text-green-500 text-5xl" />);
-//       setResultEmoji("😃");
-//     } else if (percentage >= 50) {
-//       setPassFailMessage("Well done! You're on the right track! 🙂");
-//       setResultIcon(<FaCheckCircle className="text-blue-500 text-5xl" />);
-//       setResultEmoji("🙂");
-//     } else if (percentage >= 25) {
-//       setPassFailMessage("Good effort! Keep practicing, you're improving! 😢");
-//       setResultIcon(<FaCheckCircle className="text-blue-500 text-5xl" />);
-//       setResultEmoji("😢");
-//     } else {
-//       setPassFailMessage("Keep going! Every step is progress! 😢");
-//       setResultIcon(<FaTimesCircle className="text-red-500 text-5xl" />);
-//       setResultEmoji("😢");
-//     }
-//   }, [percentage]);
-
-//   return (
-//     <>
-//       <ShareResultPopup
-//         setOpenSharePopup={setOpenSharePopup}
-//         openSharePopup={openSharePopup}
-//         resultId={_id}
-//       />
-//       <div className="text-center space-y-4 p-4 border rounded-lg bg-gray-100">
-//         <h2 className="text-xl font-bold">Test Results {resultEmoji}</h2>
-//         <div className="grid grid-cols-3 gap-2">
-//           <div className="p-2 bg-blue-200 rounded">
-//             <p className="text-lg">Total Questions</p>
-//             <p className="text-xl font-bold">{totalQuestions}</p>
-//           </div>
-//           <div className="p-2 bg-green-200 rounded">
-//             <p className="text-lg">Correct Answers</p>
-//             <p className="text-xl font-bold">{correctAnswers}</p>
-//           </div>
-//           <div className="p-2 bg-red-200 rounded">
-//             <p className="text-lg">Wrong Answers</p>
-//             <p className="text-xl font-bold">{wrongAnswers}</p>
-//           </div>
-//         </div>
-//         <p className="text-lg font-semibold">
-//           Score: {marksGained} / {totalMarks} ({percentage.toFixed(2)}%)
-//         </p>
-//         <div
-//           className={`p-2 flex items-center flex-col gap-2 text-lg font-semibold ${
-//             isPassed ? "text-green-600" : "text-red-600"
-//           }`}
-//         >
-//           {resultIcon} {passFailMessage}
-//         </div>
-//         <div className="flex justify-center mt-4">
-//           <button
-//             className="px-4 cursor-pointer py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition"
-//             onClick={() => setOpenSharePopup(true)}
-//           >
-//             Share Your Result
-//           </button>
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
-// export default TestResult;
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
     FaCheckCircle,
     FaTimesCircle,
@@ -119,7 +14,15 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import TestResultSkeleton from '../loading-skeleton/TestResultSkeleton';
 import { FaShareAlt } from 'react-icons/fa';
 import { BASE_URL } from '../../utils/constansts';
+import Certificate from './Certificate';
 ChartJS.register(ArcElement, Tooltip, Legend);
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { useQuery } from '@tanstack/react-query';
+import { getUserDetail } from './Api';
+import ShareCertificatePopup from './ShareCertificatePopup';
+import IqTestReport from './IqTestReport';
+
 
 function TestResult() {
     const resultData = useSelector((state) => state.testResult?.resultData);
@@ -153,6 +56,137 @@ function TestResult() {
     const [marksGained, setMarksGained] = useState(0);
     const [passingMarks, setPassingMarks] = useState(0);
     const [reportType, setReportType] = useState(0);
+    const [testTitle, setTitle] = useState("");
+    const [openCertificateSharePopup, setOpenCertificateSharePopup] = useState(false);
+
+
+    const { userId } = useSelector((state) => state.auth);
+
+    const certificateRef = useRef();
+    const iqTestReportRef = useRef();
+    const [certificateData, setCertificateData] = useState({
+        name: 'John Doe',
+        title: 'React JS',
+    });
+
+    const { data: userData, isLoading: userLoading } = useQuery({
+        queryKey: ['userDetail', userId],
+        queryFn: () => getUserDetail(userId),
+        enabled: !!userId, // only run if userId exists
+    });
+
+    console.log("user data inside result page :", userData?.data?.data?.f_name);
+
+    const studentName = `${userData?.data?.data?.f_name} ${userData?.data?.data?.l_name}`
+
+
+    useEffect(() => {
+        if (userData) {
+            setCertificateData((prev) => ({
+                ...prev,
+                name: `${userData?.data?.data?.f_name} ${userData?.data?.data?.l_name} `,
+                title: testTitle
+            }));
+        }
+    }, [userData]);
+
+
+    const handleDownload = () => {
+        const input = certificateRef.current;
+        html2canvas(input).then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('l', 'mm', 'a4');
+            const width = 297;
+            // const height = (canvas.height * width) / canvas.width;
+            const height = 210;
+            pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+            pdf.save(`${certificateData.name}_certificate.pdf`);
+        });
+    };
+
+    const handleDownloadReport = () => {
+        const input = iqTestReportRef.current;
+
+        // Add watermark text
+        const watermarkText = "www.careerjupiter.com";
+        const watermarkStyle = {
+            position: 'absolute',
+            opacity: '0.2',
+            fontSize: '60px',
+            color: '#cccccc',
+            transform: 'rotate(-45deg)',
+            pointerEvents: 'none',
+            zIndex: -1
+        };
+
+        // Create watermark element
+        const watermark = document.createElement('div');
+        watermark.textContent = watermarkText;
+        Object.assign(watermark.style, watermarkStyle);
+
+        // Append watermark to the report
+        input.appendChild(watermark);
+
+        html2canvas(input, {
+            scale: 2,
+            logging: true,
+            useCORS: true,
+            allowTaint: true
+        }).then((canvas) => {
+            // Remove watermark after capture
+            input.removeChild(watermark);
+
+            const imgData = canvas.toDataURL('image/png', 1.0);
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            const imgWidth = 210; // A4 width in mm
+            const pageHeight = 297; // A4 height in mm
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            // Add watermark to each page
+            const addWatermarkToPage = (pdf) => {
+                const pageCount = pdf.internal.getNumberOfPages();
+                for (let i = 1; i <= pageCount; i++) {
+                    pdf.setPage(i);
+                    pdf.setTextColor(200, 200, 200);
+                    pdf.setFontSize(40);
+                    pdf.text(watermarkText,
+                        pdf.internal.pageSize.getWidth() / 2,
+                        pdf.internal.pageSize.getHeight() / 2,
+                        { angle: -45, align: 'center' });
+                }
+            };
+
+            // Add new pages if content is longer than one page
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            // Add watermark to all pages
+            addWatermarkToPage(pdf);
+
+            pdf.save(`${studentName.replace(/\s+/g, '_')}_IQ_Test_Report.pdf`);
+        }).catch(error => {
+            console.error('Error generating PDF:', error);
+            // Ensure watermark is removed even if error occurs
+            if (input.contains(watermark)) {
+                input.removeChild(watermark);
+            }
+        });
+    };
 
     useEffect(() => {
         if (resultData?.result) {
@@ -166,6 +200,7 @@ function TestResult() {
                 passingmarks: pM,
                 _id: id,
                 reportType: rT,
+                title: tl
             } = resultData?.result;
 
             setTotalQuestions(tQ);
@@ -176,6 +211,7 @@ function TestResult() {
             setPassingMarks(pM);
             set_id(id);
             setReportType(rT);
+            setTitle(tl);
 
             const calculatedPercentage = (mG / tM) * 100;
             setPercentage(calculatedPercentage);
@@ -365,15 +401,14 @@ function TestResult() {
                                     </div>
                                     <div className="w-full bg-gray-200 rounded-full h-2 sm:h-2.5 mt-1">
                                         <div
-                                            className={`h-2 sm:h-2.5 rounded-full ${
-                                                percentage >= 75
-                                                    ? 'bg-green-600'
-                                                    : percentage >= 50
-                                                      ? 'bg-blue-600'
-                                                      : percentage >= 25
+                                            className={`h-2 sm:h-2.5 rounded-full ${percentage >= 75
+                                                ? 'bg-green-600'
+                                                : percentage >= 50
+                                                    ? 'bg-blue-600'
+                                                    : percentage >= 25
                                                         ? 'bg-amber-500'
                                                         : 'bg-red-600'
-                                            }`}
+                                                }`}
                                             style={{ width: `${percentage}%` }}></div>
                                     </div>
                                     <div className="text-right text-xs sm:text-sm md:text-base mt-1 font-medium text-gray-700">
@@ -387,30 +422,81 @@ function TestResult() {
 
                 {/* Result Message */}
                 <div
-                    className={`p-3 sm:p-4 md:p-5 flex items-center justify-center flex-col gap-1 sm:gap-2 ${
-                        isPassed ? 'bg-green-50' : 'bg-red-50'
-                    }`}>
+                    className={`p-3 sm:p-4 md:p-5 flex items-center justify-center flex-col gap-1 sm:gap-2 ${isPassed ? 'bg-green-50' : 'bg-red-50'
+                        }`}>
                     <div className="flex items-center gap-2">{resultIcon}</div>
                     <p
-                        className={`text-center text-sm sm:text-base md:text-lg font-medium ${
-                            isPassed ? 'text-green-700' : 'text-red-700'
-                        }`}>
+                        className={`text-center text-sm sm:text-base md:text-lg font-medium ${isPassed ? 'text-green-700' : 'text-red-700'
+                            }`}>
                         {passFailMessage}
                         {resultEmoji}
                     </p>
                 </div>
 
-                {reportType === 1 && (
+                <div style={{
+                    position: 'absolute', top: '-10000px', left: '-10000px', width: '210mm', // Match A4 width
+                    background: 'white'
+                }}>
+                    <Certificate
+                        ref={certificateRef}
+                        name={certificateData.name}
+                        course={certificateData.title}
+                    />
+                    <IqTestReport
+                        ref={iqTestReportRef}
+                        studentName={studentName}
+                        studentScore={marksGained}
+                        totalMarks={totalMarks} />
+                </div>
+
+
+                {/* {reportType === 1 && (
                     <div className="flex justify-center my-2">
-                        <a
-                            href={`${BASE_URL}/reports/IQTest_Report.pdf`}
+                        <button
+                            onClick={handleDownloadReport}
                             target="_blank"
                             rel="noopener noreferrer"
                             className=" inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Download Test Report
-                        </a>
+                        </button>
+                    </div>
+                )} */}
+
+                {reportType === 1 && (
+                    <div className="flex justify-center my-2">
+                        <button
+                            onClick={handleDownloadReport}
+                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            disabled={!iqTestReportRef.current} // Disable if ref not ready
+                        >
+                            Download Test Report
+                        </button>
                     </div>
                 )}
+
+                {reportType === 0 && (
+                    <>
+                        <div className="flex justify-center my-2">
+                            <button
+                                className=" inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-orange-700 bg-orange-100 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                                onClick={handleDownload}>Download Certificate</button>
+                        </div>
+                        <div className="flex justify-center my-2">
+                            <button
+                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                onClick={() => setOpenCertificateSharePopup(true)}
+                            >
+                                Share Certificate
+                            </button>
+                        </div>
+                    </>
+                )}
+
+                <ShareCertificatePopup
+                    isOpen={openCertificateSharePopup}
+                    onClose={() => setOpenCertificateSharePopup(false)}
+                    shareUrl={`${BASE_URL}/certificates/${userId}.pdf`} // customize this URL if needed
+                />
 
                 {/* Action Buttons */}
                 <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">

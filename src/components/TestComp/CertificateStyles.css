@@ -1,0 +1,222 @@
+/* Basic Styling */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+/* Certificate Container */
+.certificate {
+    width: 1000px;
+    height: 700px;
+    margin: 50px auto;
+    background: #ffffff;
+    border: 15px groove #c49a5a;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.certificate-border {
+    border: 5px double #c49a5a;
+    height: 100%;
+    padding: 30px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Header Row - Logo + Title Side by Side */
+.header-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+/* Logo */
+.logo-img {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 150px;
+}
+
+/* Certificate Title */
+.certificate-title {
+    font-size: 70px;
+    color: #1e1e1e;
+    letter-spacing: 3px;
+    margin: 0 auto;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+/* Subtitle */
+.subtitle {
+    text-align: center;
+    font-size: 26px;
+    color: #d6336c;
+    margin: 10px 0 20px 0;
+}
+
+/* Recipient Name */
+.recipient {
+    text-align: center;
+    font-size: 48px;
+    font-weight: 600;
+    font-family: 'Georgia', serif;
+    color: #2c3e50;
+    text-decoration: none;
+    margin-bottom: 20px;
+    letter-spacing: 1.2px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid #34495e;
+    display: inline-block;
+    padding-bottom: 8px;
+    text-transform: capitalize;
+}
+
+
+/* Description */
+.description {
+    text-align: center;
+    font-size: 24px;
+    color: #d6336c;
+    margin-bottom: 30px;
+}
+
+/* Award Section */
+.award-section {
+    text-align: center;
+    margin: 20px 0;
+    justify-content: center;
+    display: flex;
+}
+
+.award-img {
+    width: 140px;
+    height: auto;
+}
+
+/* Website Name */
+.website {
+    text-align: center;
+    font-size: 22px;
+    color: #000;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+/* QR Code Section */
+.qr-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 80px;
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+}
+
+.qr-code {
+    width: 120px;
+    height: 120px;
+    background-color: #4a90e2;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+}
+
+/* Add these styles to your existing CSS */
+
+@media print {
+    @page {
+        size: A4 landscape;
+        margin: 0;
+    }
+
+    body {
+        background: none;
+        padding: 0;
+        margin: 0;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .container {
+        width: 297mm;
+        height: 210mm;
+        max-width: none;
+    }
+
+    .certificate {
+        width: 100%;
+        height: 100vh;
+        max-width: none;
+        margin: 0;
+        border: 15px groove #c49a5a !important;
+        box-shadow: none;
+        page-break-inside: avoid;
+    }
+
+    .certificate-border {
+        border: 3px double #c49a5a !important;
+    }
+
+    .print-button {
+        display: none !important;
+    }
+
+    .certificate-title {
+        color: #1e1e1e !important;
+        background: none;
+        -webkit-text-fill-color: initial;
+    }
+
+    .logo-img,
+    .award-img {
+        display: block !important;
+    }
+    .award-section {
+        /* text-align: center; */
+        /* margin: 20px 0; */
+        justify-content: center;
+        display: flex;
+    }
+
+    .qr-code {
+        background-color: #4a90e2 !important;
+        color: #ffffff !important;
+    }
+}
+
+.print-button {
+    position: relative;
+    /* bottom: 20px;
+    right: 20px; */
+    align-items: center;
+    padding: 10px 10px;
+    background: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* @media print {
+    
+    @page {
+      size: A4 landscape;
+  }
+  } */
