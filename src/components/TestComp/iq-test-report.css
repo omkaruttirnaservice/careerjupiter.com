@@ -1,0 +1,232 @@
+/* Base styles optimized for A4 printing */
+@page {
+    size: A4;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+    line-height: 1.4;
+    color: #000;
+    background-color: white;
+}
+
+/* Report container - sized for A4 */
+.report-container {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 15mm 20mm;
+    box-sizing: border-box;
+    background-color: white;
+    position: relative;
+}
+
+/* Header styling */
+header {
+    text-align: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.report-heading {
+    font-size: 18pt;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+/* Content container */
+.content {
+    position: relative;
+}
+
+/* Section titles */
+.section-title {
+    font-size: 14pt;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    page-break-after: avoid;
+    color: #333;
+}
+
+.sub-title {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+    color: #444;
+}
+
+/* Text styles */
+.paragraph {
+    text-align: justify;
+    margin-bottom: 10px;
+    orphans: 3;
+    widows: 3;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+/* Lists */
+.list,
+.numbered-list {
+    margin-top: 8px;
+    margin-bottom: 12px;
+    padding-left: 25px;
+}
+
+.list-item,
+.numbered-list-item {
+    margin-bottom: 4px;
+    text-align: justify;
+}
+
+/* Tables - optimized for print */
+.table,
+.document-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    page-break-inside: avoid;
+    font-size: 9pt;
+}
+
+.table-cell,
+.document-cell {
+    border: 1px solid #000;
+    padding: 5px;
+}
+
+.table-cell-center,
+.document-cell-center {
+    text-align: center;
+}
+
+.table-cell-left,
+.document-cell-left {
+    text-align: left;
+}
+
+/* Performance box */
+div[style*="backgroundColor: #e8f4fc"] {
+    background-color: #e8f4fc !important;
+    padding: 10px !important;
+    border-radius: 5px !important;
+    border-left: 4px solid #2196f3 !important;
+    margin: 15px 0 !important;
+    page-break-inside: avoid;
+}
+
+/* Disclaimer */
+.disclaimer {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    font-size: 10pt;
+    page-break-inside: avoid;
+}
+
+.disclaimer-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Occupation sections - optimized for print */
+.occupation-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.occupation-list {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+    break-inside: avoid;
+}
+
+.occupation-title {
+    font-weight: bold;
+    margin-bottom: 3px;
+    font-size: 10pt;
+}
+
+/* WhatsApp box */
+.whatsapp-box {
+    text-align: center;
+    margin-top: 30px;
+    padding: 15px;
+    border: 2px solid black;
+    font-weight: bold;
+    font-size: 14pt;
+    page-break-inside: avoid;
+}
+
+.whatsapp-box a {
+    color: #25d366;
+    text-decoration: none;
+}
+
+/* Page break controls */
+.page-break {
+    page-break-before: always;
+}
+
+/* Print-specific styles */
+@media print {
+    body {
+        background: white;
+    }
+
+    .report-container {
+        box-shadow: none;
+        margin: 0;
+        padding: 15mm 20mm;
+    }
+
+    /* Ensure tables don't break across pages */
+    table {
+        page-break-inside: avoid;
+    }
+
+    /* Ensure headings don't break from their content */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        page-break-after: avoid;
+    }
+
+    /* Ensure lists don't break in awkward places */
+    ul,
+    ol {
+        page-break-inside: avoid;
+    }
+
+    /* Hide any elements that shouldn't be printed */
+    .no-print {
+        display: none !important;
+    }
+
+    /* Ensure proper page breaks */
+    .section-title {
+        page-break-before: auto;
+    }
+
+    /* Force page breaks where needed */
+    .force-page-break {
+        page-break-before: always;
+    }
+}
