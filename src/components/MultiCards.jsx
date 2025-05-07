@@ -79,7 +79,7 @@ const MultiCards = () => {
                     <span className="w-10 h-10 flex items-center justify-start text-red-500">
                       <FaLocationDot className="w-5 h-5" />
                     </span>
-                    {college.address?.state} {college.address?.dist}
+                    {college?.address[0]?.state}
                   </p>
                   <p className="text-gray-600 mt-2 text-sm line-clamp-3">
                     {college.info?.description || "No description available."}
