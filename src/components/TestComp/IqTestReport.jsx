@@ -68,6 +68,8 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }
             }}>
                 <h4 style={{ margin: '0 0 10px 0', color: '#0d47a1' }}>Analysis:</h4>
                 <p style={{ margin: 0 }}>{grade}</p>
+                <h4 style={{ margin: '0 0 10px 0', color: '#0d47a1' }}>message:</h4>
+                <p style={{ margin: 0 }}>{message}</p>
             </div>
 
             <p style={{ textAlign: 'right', marginTop: '-20px' }}>
