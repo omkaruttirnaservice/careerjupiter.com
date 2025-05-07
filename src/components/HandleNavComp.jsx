@@ -4,12 +4,11 @@ import CoursesFee from "./navComp/CoursesFee";
 import Scholarship from "./navComp/Scholarship";
 import ReviewPage from "./navComp/ReviewPage";
 import PlacementDetails from "./navComp/PlacementDetails";
-import CutoffTable from "./navComp/CutoffTable";
-import Ranking from "./navComp/Ranking";
+
 import Gallery from "./navComp/Gallery";
-import News from "./navComp/News";
-import QuenAns from "./navComp/QuenAns";
+
 import Infrastructure from "./navComp/Infrastructure";
+import ContactDetails from "./ContactDetails";
 
 const HandleNavComp = ({
   navName,
@@ -18,22 +17,22 @@ const HandleNavComp = ({
   placementData,
   imageGallery,
   review,
+  Contact,
+
+
 }) => {
   const [navComp, setNavComp] = useState(<Overview />);
 
   const navItem = [
     // "Overview",
     "Courses & Fees",
-    // "Scholarship",
     "Placements",
-    // "CutOffs",
-    // "Ranking",
     "Infrastructure",
     "Gallery",
     "Reviews",
-    // "News",
-    // "QnA",
+    "Contact Details"
   ];
+  console.log(Contact , 'sdlkfjsldkfjsdklfjl')
 
   useEffect(() => {
     switch (navName) {
@@ -49,12 +48,7 @@ const HandleNavComp = ({
       case navItem[1]:
         setNavComp(<PlacementDetails placementData={placementData} />);
         break;
-      // case navItem[4]:
-      //   setNavComp(<CutoffTable />);
-      //   break;
-      // case navItem[5]:
-      //   setNavComp(<Ranking />);
-      //   break;
+      
       case navItem[2]:
         setNavComp(<Infrastructure infrastructure={infrastructure} />);
         break;
@@ -69,9 +63,11 @@ const HandleNavComp = ({
           />
         );
         break;
-      // case navItem[9]:
-      //   setNavComp(<News />);
-      //   break;
+      case navItem[5]:
+        setNavComp(
+        <ContactDetails college={Contact} />
+        );
+        break;
       // case navItem[10]:
       //   setNavComp(<QuenAns />);
       //   break;
