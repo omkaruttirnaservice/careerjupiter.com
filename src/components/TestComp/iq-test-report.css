@@ -56,11 +56,12 @@ header {
 }
 
 .sub-title {
+    page-break-before: always;
+    break-before: page;
     font-size: 12pt;
     font-weight: bold;
     margin-top: 15px;
     margin-bottom: 8px;
-    page-break-after: avoid;
     color: #444;
 }
 
@@ -180,6 +181,7 @@ div[style*="backgroundColor: #e8f4fc"] {
 /* Page break controls */
 .page-break {
     page-break-before: always;
+    break-before: page;
 }
 
 /* Print-specific styles */
@@ -187,6 +189,10 @@ div[style*="backgroundColor: #e8f4fc"] {
     body {
         background: white;
     }
+    .force-page-break {
+        page-break-before: always;
+        break-before: page;
+      }
 
     .report-container {
         box-shadow: none;
@@ -222,7 +228,8 @@ div[style*="backgroundColor: #e8f4fc"] {
 
     /* Ensure proper page breaks */
     .section-title {
-        page-break-before: auto;
+        page-break-before: always;
+        
     }
 
     /* Force page breaks where needed */
