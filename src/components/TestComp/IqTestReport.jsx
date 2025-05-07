@@ -1,46 +1,46 @@
 import React from "react"
 import "./iq-test-report.css"
 
-const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }, ref) => {
+const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks,course }, ref) => {
     const getGradeAndMessage = (studentScore) => {
         if (studentScore >= 27 && studentScore <= 30) {
             return {
                 grade: "Outstanding",
                 message:
-                    "Exceptional performance! You have outstanding cognitive abilities that place you in the top percentile.",
+                    "Competitive exams, UPSC, Medical,IITs,NDA,IPS,IFS etc.",
             }
         }
         if (studentScore >= 26 && studentScore <= 27) {
             return {
                 grade: "Excellent",
                 message:
-                    "Excellent results! Your strong aptitude skills indicate great potential for challenging academic and professional paths.",
+                    "State level PSC, grade 2 exams Govt exams, PSU exams,NITs, Pvt medical colleges, Govt Engineering College,CA,ICWQ,MSc from heritage institues.",
             }
         }
         if (studentScore >= 23 && studentScore <= 25) {
             return {
                 grade: "Very Good",
-                message: "Very good performance! With some focused improvement, you can reach excellent levels of achievement.",
+                message: "Reputed Pvt engineering colleges,Dental,BAMS, Government/reputed pvt polytechnics.",
             }
         }
         if (studentScore >= 20 && studentScore <= 22) {
             return {
                 grade: "Good",
                 message:
-                    "Good results! You have solid foundational skills that can be further developed with practice and dedication.",
+                    "polytechnic Diploma, Skill courses,ITI.",
             }
         }
         if (studentScore >= 14 && studentScore <= 19) {
             return {
                 grade: "Average",
                 message:
-                    "Average performance. Consider targeted practice and study to enhance your skills and improve your results.",
+                    "Hardwork and focus will give you success.",
             }
         }
         return {
             grade: "Below Average",
             message:
-                "Your current results indicate areas for improvement. With consistent effort and proper guidance, you can significantly enhance your performance.",
+                "It shows your lack of attention in the test or you didn't understand the statements/questions. Work hard.",
         }
     }
 
@@ -56,6 +56,9 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }
                         Student Name: <span style={{ fontWeight: "normal" }}>{studentName}</span>
                     </h3>
                     <h3 style={{ margin: "5px 0", fontWeight: "bold" }}>
+                        Test: <span style={{ fontWeight: "normal" }}>{course}</span>
+                    </h3>
+                    <h3 style={{ margin: "5px 0", fontWeight: "bold" }}>
                         Test Score:{" "}
                         <span style={{ fontWeight: "normal" }}>
                             {studentScore}/{totalMarks}
@@ -65,6 +68,12 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }
                     Performance:{" "}
                         <span style={{ fontWeight: "normal" }}>
                         {grade}
+                        </span>
+                    </h3>
+                    <h3 style={{ margin: "5px 0", fontWeight: "bold" }}>
+                    Career Opportunities:{" "}
+                        <span style={{ fontWeight: "normal" }}>
+                        {message}
                         </span>
                     </h3>
                 </div>
@@ -103,6 +112,18 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }
                     vocational) choices. It is important to know that students' interests, personal qualities, educational and
                     occupational information/requirements also play a crucial role in career planning.
                 </p>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                
+               
                 <h3 className="sub-title">How Information about Aptitude is Useful for Students?</h3>
                 <p className="paragraph">
                     Information about aptitude is useful for students in seeking academic and/or career guidance. It is to be used
@@ -160,6 +181,14 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }
                     writing such as English, social sciences, economics, mathematics, teaching, journalism and media studies,
                     advertising, law, library sciences, stenography, business development, etc.
                 </p>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
                 <p className="paragraph">
                     <span className="bold">2. Abstract Reasoning (AR)</span> involves abilities such as thinking logically,
                     managing time, and solving problems quickly and effectively. It requires to understand patterns, diagrams or
@@ -209,6 +238,20 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }
                     accountancy, computer sciences, statistics, all types of engineering, architecture, computer applications,
                     oceanography, geology, meteorology, actuarial sciences, etc.
                 </p>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                
                 <p className="paragraph">
                     <span className="bold">6. Spatial Aptitude (SA)</span> is the ability to imagine an object in space and decide
                     how it will look like when rotated in a given direction. In SA sub-test, the student is asked to identify how
@@ -223,6 +266,7 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }
                 <p className="paragraph">
                     astronomy, visual arts, animation, designing, urban/town planning, photography, multimedia, etc.
                 </p>
+              
                 <p className="paragraph">
                     <span className="bold">7. Perceptual Aptitude (PA)</span> invovles comparing visual information like letters,
                     numbers or combinations of letters/numbers, quickly and accurately. In PA sub-test, student is asked to
@@ -285,6 +329,25 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }
                         </li>
                     </ol>
                 </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
 
                 <h3 className="sub-title">What is beneficial and Successful career for you depending on your score.</h3>
                 <table className="table">
@@ -343,6 +406,34 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }
                         </tr>
                     </tbody>
                 </table>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                        
+               
+                
 
                 <div className="footnote">*-Subject to government reservation policies and norms for admissions</div>
 
@@ -487,6 +578,26 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }
                         <li>Language Aptitude</li>
                     </ul>
 
+
+                    <br />
+                <br/>
+                <br/>
+                <br/>
+                
+
+                <div className="footnote"></div>
+
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+
+                
+
                     <ul className="occupation-list">
                         <div className="occupation-title">19. Forensic Scientist</div>
                         <li>Abstract Reasoning</li>
@@ -509,6 +620,8 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }
                         <li>Numerical Aptitude</li>
                         <li>Abstract Reasoning</li>
                     </ul>
+                   
+                    
 
                     <ul className="occupation-list">
                         <div className="occupation-title">22. Jewellery Designer</div>
@@ -610,6 +723,24 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }
                     </ul>
                 </div>
 
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                
                 <h3 className="sub-title">List of Documents</h3>
                 <table className="document-table">
                     <tbody>
@@ -762,12 +893,27 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks }
                         </tr>
                     </tbody>
                 </table>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+               
 
-                <div className="whatsapp-box">
+                {/* <div className="whatsapp-box">
                     Click Here & Join
                     <br />
                     <a href="https://whatsapp.com/channel/0029VbADrN54IBh95nFJiR3e">WhatsApp Group</a>
-                </div>
+                </div> */}
             </div>
 
             {/* <p><b>Click Here & Join:</b> <a href="https://whatsapp.com/channel/0029VbADrN54IBh95nFJiR3e">WhatsApp Group</a></p> */}

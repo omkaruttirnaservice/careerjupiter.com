@@ -437,7 +437,8 @@ const addHeaderAndFooter = (pdf, pageNumber, dateTime, watermarkText, pageWidth,
                         ref={iqTestReportRef}
                         studentName={studentName}
                         studentScore={marksGained}
-                        totalMarks={totalMarks} />
+                        totalMarks={totalMarks}
+                        course={certificateData.title} />
                 </div>
 
 
