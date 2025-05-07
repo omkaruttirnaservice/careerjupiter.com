@@ -440,55 +440,21 @@ const addHeaderAndFooter = (pdf, pageNumber, dateTime, watermarkText, pageWidth,
                         totalMarks={totalMarks} />
                 </div>
 
-                {reportType === 1 && (
-                    // <div className="flex justify-center my-2">
-                    //     <button
-                    //         onClick={handleDownloadReport}
-                    //         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    //         disabled={!iqTestReportRef.current} // Disable if ref not ready
-                    //     >
-                    //         Download Test Report
-                    //     </button>
-                    // </div>
-                    <div className="flex justify-center my-2">
-    <button
-        onClick={handleDownloadReport}
-        className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 ${
-            isDownloading ? 'bg-indigo-300 cursor-not-allowed' : 'bg-indigo-100 hover:bg-indigo-200'
-        } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
-        disabled={!iqTestReportRef.current || isDownloading}
-    >
-        {isDownloading ? (
-            <>
-                <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-indigo-700"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                >
-                    <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                    ></circle>
-                    <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8v8H4z"
-                    ></path>
-                </svg>
-                Generating...
-            </>
-        ) : (
-            "Download Test Report"
-        )}
-    </button>
-</div>
 
-                )}
+                {/* {reportType === 1 && (
+                    <div className="flex justify-center my-2">
+                        <button
+                            onClick={handleDownloadReport}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className=" inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Download Test Report
+                        </button>
+                    </div>
+                )} */}
+
+                <div className="flex justify-center my-10">
+                    <div className="bg-white p-6 rounded-2xl shadow-xl border w-full max-w-md space-y-4">
 
                         {reportType === 1 && (
                             <button
