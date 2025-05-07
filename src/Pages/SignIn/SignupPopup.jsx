@@ -215,21 +215,22 @@ export default function SignupPopup() {
   const sendOTPMutation = useMutation({
     mutationFn: sendOTP,
     onSuccess: (data) => {
-      setReferenceId(data.data.reference_id)
-      setOtpSent(true)
-      toast.success("OTP sent successfully!")
+      setReferenceId(data.data.reference_id);
+      setOtpSent(true);
+      toast.success("OTP sent successfully!");
     },
-    onError: () => {
-      console.error("OTP Send Error:", error?.response?.data)
-
+    onError: (error) => {  // ✅ catch error here
+      console.error("OTP Send Error:", error?.response?.data);
+  
       if (error?.response?.data?.statusCode === 400 && error?.response?.data?.data?.is_issued === true) {
-        setIsAlreadyRegistered(true)
+        setIsAlreadyRegistered(true);
       } else {
-        toast.error(error?.response?.data?.usrMsg || "Failed to send OTP")
-        console.log(error?.response?.data?.usrMsg , 'sent otp errror msg')
+        toast.error(error?.response?.data?.usrMsg || "Failed to send OTP");
+        console.log(error?.response?.data?.usrMsg, 'sent otp error msg');
       }
     },
-  })
+  });
+  
 
   const verifyOTPMutation = useMutation({
     mutationFn: verifyOTP,
