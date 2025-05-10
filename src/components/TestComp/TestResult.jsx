@@ -20,7 +20,6 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getResult, getUserDetail, uploadCertificate, uploadReport } from './Api';
-import ShareCertificatePopup from './ShareCertificatePopup';
 import IqTestReport from './IqTestReport';
 import WhatsAppSharePopup from './WhatsAppSharePopup';
 import { setTestResult } from '../../store-redux/testResultSlice';
@@ -60,7 +59,6 @@ function TestResult() {
     const [passingMarks, setPassingMarks] = useState(0);
     const [reportType, setReportType] = useState(0);
     const [testTitle, setTitle] = useState("");
-    const [openCertificateSharePopup, setOpenCertificateSharePopup] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
     const [testId, setTestId] = useState(null);
     const [openWhatsappSharePopup, setOpenWhatsappSharePopup] = useState(false);
@@ -684,9 +682,17 @@ function TestResult() {
                             <button
                                 onClick={handleUploadReportPdf}
                                 className="w-full inline-flex items-center justify-center gap-3 px-6 py-3 text-base font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 transform hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-                                disabled={!iqTestReportRef.current}
+                                disabled={!iqTestReportRef.current || isDownloading}
                             >
-                                📄 Download Test Report
+                                
+                                {isDownloading ? (
+                                    <>
+                                        <div className="animate-spin h-5 w-5 border-4 border-white border-t-transparent rounded-full" />
+                                        Downloading Report...
+                                    </>
+                                ) : (
+                                    '📄 Download Test Report'
+                                )}
                             </button>
                         )}
 
@@ -695,27 +701,23 @@ function TestResult() {
                                 <button
                                     onClick={handleUploadCertificatePdf}
                                     className="w-full inline-flex items-center justify-center gap-3 px-6 py-3 text-base font-semibold text-white bg-orange-500 rounded-xl shadow-md hover:bg-orange-600 transform hover:scale-105 transition duration-300 ease-in-out"
+                                    disabled={isDownloading}
                                 >
-                                    🎓 Download Certificate
+                                    {isDownloading ? (
+                                        <> 
+                                            <div className="animate-spin h-5 w-5 border-4 border-white border-t-transparent rounded-full" />
+                                            Downloading Certificate...
+                                        </>
+                                    ) : (
+                                        '🎓 Download Certificate'
+                                    )}
                                 </button>
 
-                                <button
-                                    onClick={() => setOpenCertificateSharePopup(true)}
-                                    className="w-full inline-flex items-center justify-center gap-3 px-6 py-3 text-base font-semibold text-white bg-green-500 rounded-xl shadow-md hover:bg-green-600 transform hover:scale-105 transition duration-300 ease-in-out"
-                                >
-                                    📤 Share Certificate
-                                </button>
                             </>
                         )}
 
                     </div>
                 </div>
-
-                <ShareCertificatePopup
-                    isOpen={openCertificateSharePopup}
-                    onClose={() => setOpenCertificateSharePopup(false)}
-                    shareUrl={`${BASE_URL}/certificates/${userId}.pdf`}
-                />
 
                 {/* Action Buttons */}
                 <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
