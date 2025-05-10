@@ -135,7 +135,7 @@ children: [
         scrollRestoration: "manual",
       },
 
-      { path: "/test/result", element: <TestResult /> },
+      { path: "/test/report", element: <TestResult /> },
 
       {
         path: "/signout",
