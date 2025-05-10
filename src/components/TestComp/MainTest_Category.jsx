@@ -3,12 +3,11 @@ import { LuNotebookPen } from "react-icons/lu";
 import { FaUserGraduate } from "react-icons/fa";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GiGraduateCap } from "react-icons/gi";
-import { RiToolsFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { getMainTest_Category } from "./Api";
 import Breadcrumb from "./Breadcrumb";
-
+import Swal from "sweetalert2";
 const MainTest_Category = () => {
   const navigate = useNavigate();
 
@@ -25,9 +24,28 @@ const MainTest_Category = () => {
     fetchTestCategory();
   }, []);
 
+  useEffect(() => {
+    if (isError) {
+      Swal.fire({
+        title: "",
+        text: "We’re experiencing high traffic or a temporary issue. Please try again.",
+        icon: "info",
+        buttons: {
+          retry: {
+            text: "ok",
+            value: "retry",
+          },
+        },
+      }).then((value) => {
+        if (value === "retry") {
+          fetchTestCategory();
+        }
+      });
+    }
+  }, [isError, fetchTestCategory]);
+
   const handle_SubCategory = (id, name) => {
     navigate(`/profile/test?type=sub_category&id=${id}&main_name=${name}`);
-    fetchTestCategory();
   };
 
   return (
@@ -39,9 +57,7 @@ const MainTest_Category = () => {
 
       {isLoading ? (
         <p className="text-center text-gray-500">Loading...</p>
-      ) : isError ? (
-        <p className="text-center text-red-500">Failed to load categories.</p>
-      ) : (
+      ) : testCategory ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {testCategory?.data?.data.map((category, index) => {
             const icons = [
@@ -49,7 +65,6 @@ const MainTest_Category = () => {
               FaUserGraduate,
               FaChalkboardTeacher,
               GiGraduateCap,
-              RiToolsFill,
             ];
             const Icon = icons[index % icons.length];
 
@@ -66,7 +81,7 @@ const MainTest_Category = () => {
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 bg-blue-100 text-blue-600 rounded-full">
-                    <LuNotebookPen className="w-6 h-6" />
+                    <Icon className="w-6 h-6" />
                   </div>
                 </div>
 
@@ -84,7 +99,7 @@ const MainTest_Category = () => {
             );
           })}
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

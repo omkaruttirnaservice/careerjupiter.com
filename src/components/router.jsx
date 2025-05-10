@@ -39,6 +39,7 @@ import InProgressTest from "./TestComp/InProgressTest.jsx";
 import CompleteTest from "./TestComp/CompleteTest.jsx";
 import PremiumServices from "./premium-services/PremiumServices.jsx";
 import GuestHandler from "./GuestHandler.jsx";
+import TestResult from "./TestComp/TestResult.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -133,6 +134,8 @@ children: [
         ],
         scrollRestoration: "manual",
       },
+
+      // { path: "/profile/test/result", element: <TestResult /> },
 
       {
         path: "/signout",
