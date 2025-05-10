@@ -66,6 +66,8 @@ function TestResult() {
     const [openWhatsappSharePopup, setOpenWhatsappSharePopup] = useState(false);
     const [shareLink, setShareLink] = useState('');
     const [pdfStatus, setPdfStatus] = useState(null);
+    const [generateReportPdf, setGenerateReportPdf] = useState(false);
+    const [generateCertificatePdf, setGenerateCertificatePdf] = useState(false);
     const dispatch = useDispatch();
     const [searchParams] = useSearchParams();
 
@@ -85,6 +87,8 @@ function TestResult() {
         enabled: !!userId,
     });
 
+    const report_Type = searchParams.get('report_type');
+
     // get result directly
 
     const { mutate: fetchResult, data: resultTestData } = useMutation({
@@ -97,6 +101,7 @@ function TestResult() {
         const uid = searchParams.get('uid');
         const tid = searchParams.get('tid');
 
+
         if (uid && tid) {
             fetchResult({ userId: uid, testID: tid });
         }
@@ -105,9 +110,18 @@ function TestResult() {
     // ✅ Store in Redux once data comes in
     useEffect(() => {
         if (resultTestData?.data) {
+
+            console.log("after share result data::::::::::", resultTestData?.data);
+
             dispatch(setTestResult(resultTestData.data));
+            if (report_Type === "1") {
+                setGenerateReportPdf(true);
+            } else {
+                setGenerateCertificatePdf(true);
+            }
         }
-    }, [resultTestData?.data, dispatch]);
+    }, [resultTestData?.data, dispatch, report_Type]);
+
 
     useEffect(() => {
         if (resultDataFromRedux) {
@@ -205,6 +219,32 @@ function TestResult() {
             zIndex: -1
         });
     };
+
+    // auto download report and pdf
+
+        useEffect(() => {
+        let timeoutId;
+
+        if (generateReportPdf === true) {
+            timeoutId = setTimeout(() => {
+                handleReportDownload();
+                alert("Download report successfully");
+            }, 5000);
+        }
+        return () => clearTimeout(timeoutId);
+    }, [generateReportPdf]);
+
+            useEffect(() => {
+        let timeoutId;
+
+        if (generateCertificatePdf === true) {
+            timeoutId = setTimeout(() => {
+                handleCertificateDownload();
+                alert("Download certificate successfully");
+            }, 5000);
+        }
+        return () => clearTimeout(timeoutId);
+    }, [generateCertificatePdf]);
 
     useEffect(() => {
         if (resultData?.result) {
@@ -327,51 +367,6 @@ function TestResult() {
         }
     }, [uploadPdfResponse]);
 
-
-    // const handleUpload = () => {
-    //     const payload = {
-    //       userId: userId,
-    //       _id: _id,
-    //       reportType: reportType,
-    //       certificate: "file1",
-    //       report: "file2",
-    //     };
-    //   uploadPdf(payload); 
-    //   };
-
-    //   const handleUploadReportPdf = () => {
-    //     if (!iqTestReportRef.current) return;
-    //     setIsDownloading(true);
-
-    //     const input = iqTestReportRef.current;
-
-    //     html2canvas(input, {
-    //         scale: 1.5,
-    //         useCORS: true,
-    //     }).then((canvas) => {
-    //         const imgData = canvas.toDataURL('image/jpeg', 0.5);
-    //         const pdf = new jsPDF('p', 'mm', 'a4');
-    //         const width = 210;
-    //         const height = (canvas.height * width) / canvas.width;
-
-    //         pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-
-    //         const pdfBlob = pdf.output('blob'); // Convert to Blob
-
-    //         console.log("report blob +++++++++++++++++++++", pdfBlob);
-    //         console.log("PDF Blob size in MB:", (pdfBlob.size / (1024 * 1024)).toFixed(2), "MB");
-
-    //         const formData = new FormData();
-    //         formData.append('userId', userId);
-    //         formData.append('_id', _id);
-    //         formData.append('reportType', reportType);
-    //         formData.append('report', pdfBlob, `report.pdf`);
-
-    //         uploadPdf(formData); // Send FormData to the server
-    //     }).finally(() => {
-    //         setIsDownloading(false);
-    //     });
-    // };
 
     const handleUploadReportPdf = () => {
         if (!iqTestReportRef.current) return;
@@ -683,9 +678,9 @@ function TestResult() {
                 </div>
 
                 <div className="flex justify-center my-10">
-                    <div className="bg-white p-6 rounded-2xl shadow-xl border w-full max-w-md space-y-4">
+                    <div className=" p-6  w-full max-w-md space-y-4">
 
-                        {reportType === 1 && (
+                        {reportType === 1 && !generateReportPdf && (
                             <button
                                 onClick={handleUploadReportPdf}
                                 className="w-full inline-flex items-center justify-center gap-3 px-6 py-3 text-base font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 transform hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
@@ -695,7 +690,7 @@ function TestResult() {
                             </button>
                         )}
 
-                        {reportType === 0 && (
+                        {reportType === 0 && !generateCertificatePdf &&(
                             <>
                                 <button
                                     onClick={handleUploadCertificatePdf}
