@@ -19,7 +19,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getUserDetail, uploadResultPdf } from './Api';
+import { getUserDetail, uploadCertificate, uploadReport } from './Api';
 import ShareCertificatePopup from './ShareCertificatePopup';
 import IqTestReport from './IqTestReport';
 import WhatsAppSharePopup from './WhatsAppSharePopup';
@@ -63,6 +63,7 @@ function TestResult() {
     const [testId, setTestId] = useState(null);
     const [openWhatsappSharePopup, setOpenWhatsappSharePopup] = useState(false);
     const [shareLink, setShareLink] = useState('');
+    const [pdfStatus , setPdfStatus] = useState(null);
 
 
     const { userId } = useSelector((state) => state.auth);
@@ -102,68 +103,68 @@ function TestResult() {
         }
     }, [userData, testTitle]);
 
-    // const handleDownload = () => {
-    //     const input = certificateRef.current;
-    //     html2canvas(input).then((canvas) => {
-    //         const imgData = canvas.toDataURL('image/png');
-    //         const pdf = new jsPDF('l', 'mm', 'a4');
-    //         const width = 297;
-    //         const height = 210;
-    //         pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-    //         pdf.save(`${certificateData.name}_certificate.pdf`);
-    //     });
-    // };
+    const handleCertificateDownload = () => {
+        const input = certificateRef.current;
+        html2canvas(input).then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('l', 'mm', 'a4');
+            const width = 297;
+            const height = 210;
+            pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+            pdf.save(`${certificateData.name}_certificate.pdf`);
+        });
+    };
 
-    // const handleDownloadReport = () => {
-    //     if (!iqTestReportRef.current) return;
-    //     setIsDownloading(true);
-    //     const input = iqTestReportRef.current;
-    //     const watermarkText = "www.careerjupiter.com";
-    //     const dateTimeString = new Date().toLocaleString();
+    const handleReportDownload = () => {
+        if (!iqTestReportRef.current) return;
+        setIsDownloading(true);
+        const input = iqTestReportRef.current;
+        const watermarkText = "www.careerjupiter.com";
+        const dateTimeString = new Date().toLocaleString();
 
-    //     html2canvas(input, {
-    //         scale: 1.5,
-    //         useCORS: true
-    //     }).then((canvas) => {
-    //         const imgData = canvas.toDataURL('image/jpeg', 0.9);
-    //         const pdf = new jsPDF({
-    //             orientation: 'portrait',
-    //             unit: 'mm',
-    //             format: 'a4'
-    //         });
+        html2canvas(input, {
+            scale: 1.5,
+            useCORS: true
+        }).then((canvas) => {
+            const imgData = canvas.toDataURL('image/jpeg', 0.9);
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
 
-    //         const pageWidth = 210;
-    //         const pageHeight = 297;
-    //         const marginTop = 10.58;
-    //         const marginBottom = 10.58;
-    //         const usableHeight = pageHeight - marginTop - marginBottom;
+            const pageWidth = 210;
+            const pageHeight = 297;
+            const marginTop = 10.58;
+            const marginBottom = 10.58;
+            const usableHeight = pageHeight - marginTop - marginBottom;
 
-    //         const imgWidth = pageWidth;
-    //         const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            const imgWidth = pageWidth;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    //         let heightLeft = imgHeight;
-    //         let position = marginTop;
+            let heightLeft = imgHeight;
+            let position = marginTop;
 
-    //         pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-    //         addHeaderAndFooter(pdf, 1, dateTimeString, watermarkText, pageWidth, pageHeight);
+            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+            addHeaderAndFooter(pdf, 1, dateTimeString, watermarkText, pageWidth, pageHeight);
 
-    //         heightLeft -= usableHeight;
-    //         let pageNum = 2;
+            heightLeft -= usableHeight;
+            let pageNum = 2;
 
-    //         while (heightLeft > 0) {
-    //             position = marginTop - (usableHeight * (pageNum - 1));
-    //             pdf.addPage();
-    //             pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-    //             addHeaderAndFooter(pdf, pageNum, dateTimeString, watermarkText, pageWidth, pageHeight);
-    //             heightLeft -= usableHeight;
-    //             pageNum++;
-    //         }
+            while (heightLeft > 0) {
+                position = marginTop - (usableHeight * (pageNum - 1));
+                pdf.addPage();
+                pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+                addHeaderAndFooter(pdf, pageNum, dateTimeString, watermarkText, pageWidth, pageHeight);
+                heightLeft -= usableHeight;
+                pageNum++;
+            }
 
-    //         pdf.save(`${studentName.replace(/\s+/g, '_')}_IQ_Test_Report.pdf`);
-    //     }).finally(() => {
-    //         setIsDownloading(false);
-    //     });
-    // };
+            pdf.save(`${studentName.replace(/\s+/g, '_')}_IQ_Test_Report.pdf`);
+        }).finally(() => {
+            setIsDownloading(false);
+        });
+    };
 
     const addHeaderAndFooter = (pdf, pageNumber, dateTime, watermarkText, pageWidth, pageHeight) => {
         pdf.setTextColor(150, 150, 150);
@@ -227,10 +228,63 @@ function TestResult() {
         }
     }, [resultData]);
 
+    function generateShareableLink(originalUrl) {
+  try {
+    const url = new URL(originalUrl);
+    const pathname = url.pathname; // e.g. /report/abc/xyz or /certificate/abc/xyz
 
-    const { mutate: uploadPdf, data: uploadPdfResponse } = useMutation({
-        mutationFn: (payload) => uploadResultPdf(payload),
+    const pathParts = pathname.split("/").filter(Boolean); // remove empty parts
+    const type = pathParts[0]; // "report" or "certificate"
+    const ui = pathParts[1];
+    const ti = pathParts[2];
+
+    if (!ui || !ti) {
+      throw new Error("Invalid URL: missing ui or ti");
+    }
+
+    const report = type === "report" ? 1 : 0;
+    const shareableUrl = `${window.location.origin}/test/result?ui=${ui}&ti=${ti}&report=${report}`;
+
+    return shareableUrl;
+  } catch (error) {
+    console.error("Error generating shareable link:", error.message);
+    return null;
+  }
+}
+
+
+
+    const { mutate: uploadReportPdf, data: uploadPdfResponse } = useMutation({
+        mutationFn: (payload) => uploadReport(payload),
+        onSuccess: (response) => {
+        console.log("able to download report 1",response?.data?.report);
+        if(response?.data?.report){
+            handleReportDownload();
+            setPdfStatus(1);
+            setShareLink(generateShareableLink(response?.data?.report));
+            setOpenWhatsappSharePopup(true);
+        }
+        else{
+            console.log("unable to download report 2");
+        }
+    }
     });
+
+const { mutate: uploadCertificatePdf, data: uploadCertificatePdfResponse, isPending: isUploading } = useMutation({
+    mutationFn: (payload) => uploadCertificate(payload),
+    onSuccess: (response) => {
+        console.log("able to download certificate 1",response?.data?.certificate);
+        if(response?.data?.certificate){
+            handleCertificateDownload();
+            setPdfStatus(0);
+            setShareLink(generateShareableLink(response?.data?.certificate));
+            setOpenWhatsappSharePopup(true);
+        }
+        else{
+            console.log("unable to download certificate 2");
+        }
+    }
+});
 
     useEffect(() => {
         if (uploadPdfResponse?.data?.success) {
@@ -238,6 +292,8 @@ function TestResult() {
             const link = `${BASE_URL}/reports/${userId}.pdf`; // or extract from response
             setShareLink(link);
             setOpenWhatsappSharePopup(true);
+            console.log("response upload files +++++++",openWhatsappSharePopup);
+            
         }
     }, [uploadPdfResponse]);
 
@@ -330,7 +386,7 @@ function TestResult() {
             formData.append('reportType', reportType);
             formData.append('report', pdfBlob, `report.pdf`);
 
-            uploadPdf(formData);
+            uploadReportPdf(formData);
         }).finally(() => {
             setIsDownloading(false);
         });
@@ -366,7 +422,8 @@ function TestResult() {
             formData.append('reportType', reportType);
             formData.append('certificate', pdfBlob, `certificate.pdf`);
 
-            uploadPdf(formData);
+            uploadCertificatePdf(formData);
+
         }).finally(() => {
             setIsDownloading(false);
         });
@@ -438,6 +495,7 @@ function TestResult() {
 
             <WhatsAppSharePopup
                 isOpen={openWhatsappSharePopup}
+                pdfStatus={pdfStatus}
                 onClose={() => setOpenWhatsappSharePopup(false)}
                 shareLink={shareLink}
             />

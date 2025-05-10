@@ -109,7 +109,14 @@ export const getCompletedTest = (payload, config) => {
   );
 };
 
-export const uploadResultPdf = (payload) => {
+export const uploadReport = (payload) => {
+  return axios.post(
+    `${BASE_URL}/api/iqtest/upload-pdf`,
+    payload,
+  );
+};
+
+export const uploadCertificate = (payload) => {
   return axios.post(
     `${BASE_URL}/api/iqtest/upload-pdf`,
     payload,
