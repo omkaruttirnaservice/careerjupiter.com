@@ -7,7 +7,7 @@ import {
     FaClock,
     FaStar,
 } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ShareResultPopup from './ShareResultPopup';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
@@ -19,10 +19,12 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getUserDetail, uploadCertificate, uploadReport } from './Api';
+import { getResult, getUserDetail, uploadCertificate, uploadReport } from './Api';
 import ShareCertificatePopup from './ShareCertificatePopup';
 import IqTestReport from './IqTestReport';
 import WhatsAppSharePopup from './WhatsAppSharePopup';
+import { setTestResult } from '../../store-redux/testResultSlice';
+import { useSearchParams } from 'react-router-dom';
 
 function TestResult() {
     const resultDataFromRedux = useSelector((state) => state.testResult?.resultData);
@@ -63,7 +65,9 @@ function TestResult() {
     const [testId, setTestId] = useState(null);
     const [openWhatsappSharePopup, setOpenWhatsappSharePopup] = useState(false);
     const [shareLink, setShareLink] = useState('');
-    const [pdfStatus , setPdfStatus] = useState(null);
+    const [pdfStatus, setPdfStatus] = useState(null);
+    const dispatch = useDispatch();
+    const [searchParams] = useSearchParams();
 
 
     const { userId } = useSelector((state) => state.auth);
@@ -80,6 +84,30 @@ function TestResult() {
         queryFn: () => getUserDetail(userId),
         enabled: !!userId,
     });
+
+    // get result directly
+
+    const { mutate: fetchResult, data: resultTestData } = useMutation({
+        mutationFn: ({ testID, userId }) => getResult({ testID, userId }),
+    });
+
+
+    // 🔁 Trigger API call on mount if URL has valid params
+    useEffect(() => {
+        const uid = searchParams.get('uid');
+        const tid = searchParams.get('tid');
+
+        if (uid && tid) {
+            fetchResult({ userId: uid, testID: tid });
+        }
+    }, [searchParams, fetchResult]);
+
+    // ✅ Store in Redux once data comes in
+    useEffect(() => {
+        if (resultTestData?.data) {
+            dispatch(setTestResult(resultTestData.data));
+        }
+    }, [resultTestData?.data, dispatch]);
 
     useEffect(() => {
         if (resultDataFromRedux) {
@@ -229,62 +257,64 @@ function TestResult() {
     }, [resultData]);
 
     function generateShareableLink(originalUrl) {
-  try {
-    const url = new URL(originalUrl);
-    const pathname = url.pathname; // e.g. /report/abc/xyz or /certificate/abc/xyz
+        try {
+            const url = new URL(originalUrl);
+            const pathname = url.pathname; // e.g. /report/abc/xyz or /certificate/abc/xyz
 
-    const pathParts = pathname.split("/").filter(Boolean); // remove empty parts
-    const type = pathParts[0]; // "report" or "certificate"
-    const ui = pathParts[1];
-    const ti = pathParts[2];
+            const pathParts = pathname.split("/").filter(Boolean); // remove empty parts
+            const type = pathParts[0]; // "report" or "certificate"
+            const ui = pathParts[1];
+            const ti = pathParts[2];
 
-    if (!ui || !ti) {
-      throw new Error("Invalid URL: missing ui or ti");
+            if (!ui || !ti) {
+                throw new Error("Invalid URL: missing ui or ti");
+            }
+
+            const report = type === "report" ? 1 : 0;
+            const shareableUrl = `${window.location.origin}/test/report?uid=${ui}&tid=${ti}&report_type=${report}`;
+
+            return shareableUrl;
+        } catch (error) {
+            console.error("Error generating shareable link:", error.message);
+            return null;
+        }
     }
-
-    const report = type === "report" ? 1 : 0;
-    const shareableUrl = `${window.location.origin}/test/result?ui=${ui}&ti=${ti}&report=${report}`;
-
-    return shareableUrl;
-  } catch (error) {
-    console.error("Error generating shareable link:", error.message);
-    return null;
-  }
-}
 
 
 
     const { mutate: uploadReportPdf, data: uploadPdfResponse } = useMutation({
         mutationFn: (payload) => uploadReport(payload),
         onSuccess: (response) => {
-        console.log("able to download report 1",response?.data?.report);
-        if(response?.data?.report){
-            handleReportDownload();
-            setPdfStatus(1);
-            setShareLink(generateShareableLink(response?.data?.report));
-            setOpenWhatsappSharePopup(true);
+            console.log("able to download report 1", response?.data?.report);
+            if (response?.data?.report) {
+                handleReportDownload();
+                setPdfStatus(1);
+                setShareLink(generateShareableLink(response?.data?.report));
+                // setShareLink(response?.data?.report);
+                setOpenWhatsappSharePopup(true);
+            }
+            else {
+                console.log("unable to download report 2");
+            }
         }
-        else{
-            console.log("unable to download report 2");
-        }
-    }
     });
 
-const { mutate: uploadCertificatePdf, data: uploadCertificatePdfResponse, isPending: isUploading } = useMutation({
-    mutationFn: (payload) => uploadCertificate(payload),
-    onSuccess: (response) => {
-        console.log("able to download certificate 1",response?.data?.certificate);
-        if(response?.data?.certificate){
-            handleCertificateDownload();
-            setPdfStatus(0);
-            setShareLink(generateShareableLink(response?.data?.certificate));
-            setOpenWhatsappSharePopup(true);
+    const { mutate: uploadCertificatePdf, data: uploadCertificatePdfResponse, isPending: isUploading } = useMutation({
+        mutationFn: (payload) => uploadCertificate(payload),
+        onSuccess: (response) => {
+            console.log("able to download certificate 1", response?.data?.certificate);
+            if (response?.data?.certificate) {
+                handleCertificateDownload();
+                setPdfStatus(0);
+                setShareLink(generateShareableLink(response?.data?.certificate));
+                // setShareLink(response?.data?.certificate);
+                setOpenWhatsappSharePopup(true);
+            }
+            else {
+                console.log("unable to download certificate 2");
+            }
         }
-        else{
-            console.log("unable to download certificate 2");
-        }
-    }
-});
+    });
 
     useEffect(() => {
         if (uploadPdfResponse?.data?.success) {
@@ -292,8 +322,8 @@ const { mutate: uploadCertificatePdf, data: uploadCertificatePdfResponse, isPend
             const link = `${BASE_URL}/reports/${userId}.pdf`; // or extract from response
             setShareLink(link);
             setOpenWhatsappSharePopup(true);
-            console.log("response upload files +++++++",openWhatsappSharePopup);
-            
+            console.log("response upload files +++++++", openWhatsappSharePopup);
+
         }
     }, [uploadPdfResponse]);
 
@@ -382,7 +412,7 @@ const { mutate: uploadCertificatePdf, data: uploadCertificatePdfResponse, isPend
 
             const formData = new FormData();
             formData.append('userId', userId);
-            formData.append('_id', _id);
+            formData.append('testID', testId);
             formData.append('reportType', reportType);
             formData.append('report', pdfBlob, `report.pdf`);
 
@@ -418,7 +448,7 @@ const { mutate: uploadCertificatePdf, data: uploadCertificatePdfResponse, isPend
 
             const formData = new FormData();
             formData.append('userId', userId);
-            formData.append('_id', _id);
+            formData.append('testID', testId);
             formData.append('reportType', reportType);
             formData.append('certificate', pdfBlob, `certificate.pdf`);
 
