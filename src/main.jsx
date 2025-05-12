@@ -62,12 +62,13 @@
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider, QueryCache, MutationCache } from "@tanstack/react-query";
 import { Provider } from "react-redux";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import App from "./App.jsx";
 
 import reduxStore from "./store-redux/store.js";
 import AppLoader from "./components/AppLoader.jsx";
+import Swal from "sweetalert2";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -84,8 +85,20 @@ const queryClient = new QueryClient({
 
 function handleError(error) {
   const data = error?.response?.data;
-  toast.warning(data?.usrMsg || "Please try again later !");
+  if(error.message==="Network Error"){
+    console.log("error.message+++++++++ 1",error.message);
+    
+    Swal.fire({
+      icon: "info",
+      title: " Oops!",
+      text: "We're currently experiencing high traffic. Please try again in a few moments. Thank you for your patience!",
+    });
+  }else{
+    console.log("error.message+++++++++ 2",error.message);
+    toast.warning(data?.usrMsg || "Please try again later !");
+  }
 }
+
 
 createRoot(document.getElementById("root")).render(
   <>
