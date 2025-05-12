@@ -513,6 +513,8 @@ function TestResult() {
                 setOpenSharePopup={setOpenSharePopup}
                 openSharePopup={openSharePopup}
                 resultId={_id}
+                reportType={reportType}
+                testId={testId}
             />
 
             <WhatsAppSharePopup
