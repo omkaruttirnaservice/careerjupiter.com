@@ -328,8 +328,8 @@ function TestResult() {
             if (response?.data?.report) {
                 handleReportDownload();
                 setPdfStatus(1);
-                setShareLink(generateShareableLink(response?.data?.report));
-                // setShareLink(response?.data?.report);
+                // setShareLink(generateShareableLink(response?.data?.report));
+                setShareLink(response?.data?.report);
                 setOpenWhatsappSharePopup(true);
             }
             else {
@@ -513,6 +513,8 @@ function TestResult() {
                 setOpenSharePopup={setOpenSharePopup}
                 openSharePopup={openSharePopup}
                 resultId={_id}
+                reportType={reportType}
+                testId={testId}
             />
 
             <WhatsAppSharePopup
