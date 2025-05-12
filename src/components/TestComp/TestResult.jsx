@@ -23,7 +23,7 @@ import { getResult, getUserDetail, uploadCertificate, uploadReport } from './Api
 import IqTestReport from './IqTestReport';
 import WhatsAppSharePopup from './WhatsAppSharePopup';
 import { setTestResult } from '../../store-redux/testResultSlice';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { updateUserId } from '../../store-redux/AuthSlice';
 import AutoDownload from './AutoDownload';
 import { toast } from 'react-toastify';
@@ -61,7 +61,7 @@ function TestResult() {
     const [marksGained, setMarksGained] = useState(0);
     const [passingMarks, setPassingMarks] = useState(0);
     const [reportType, setReportType] = useState(0);
-    const [testTitle, setTitle] = useState("");
+    const [testTitle, setTitle] = useState('');
     const [isDownloading, setIsDownloading] = useState(false);
     const [testId, setTestId] = useState(null);
     const [openWhatsappSharePopup, setOpenWhatsappSharePopup] = useState(false);
@@ -71,7 +71,6 @@ function TestResult() {
     const [generateCertificatePdf, setGenerateCertificatePdf] = useState(false);
     const dispatch = useDispatch();
     const [searchParams] = useSearchParams();
-
 
     const { userId } = useSelector((state) => state.auth);
 
@@ -96,12 +95,10 @@ function TestResult() {
         mutationFn: ({ testID, userId }) => getResult({ testID, userId }),
     });
 
-
     // 🔁 Trigger API call on mount if URL has valid params
     useEffect(() => {
         const uid = searchParams.get('uid');
         const tid = searchParams.get('tid');
-
 
         if (uid && tid) {
             fetchResult({ userId: uid, testID: tid });
@@ -112,16 +109,14 @@ function TestResult() {
     // ✅ Store in Redux once data comes in
     useEffect(() => {
         if (resultTestData?.data) {
-
             dispatch(setTestResult(resultTestData.data));
-            if (report_Type === "1") {
+            if (report_Type === '1') {
                 setGenerateReportPdf(true);
             } else {
                 setGenerateCertificatePdf(true);
             }
         }
     }, [resultTestData?.data, dispatch, report_Type]);
-
 
     useEffect(() => {
         if (resultDataFromRedux) {
@@ -140,7 +135,7 @@ function TestResult() {
             setCertificateData((prev) => ({
                 ...prev,
                 name: `${userData?.data?.data?.f_name} ${userData?.data?.data?.l_name} `,
-                title: testTitle
+                title: testTitle,
             }));
         }
     }, [userData, testTitle]);
@@ -161,54 +156,79 @@ function TestResult() {
         if (!iqTestReportRef.current) return;
         setIsDownloading(true);
         const input = iqTestReportRef.current;
-        const watermarkText = "www.careerjupiter.com";
+        const watermarkText = 'www.careerjupiter.com';
         const dateTimeString = new Date().toLocaleString();
 
         html2canvas(input, {
             scale: 1.5,
-            useCORS: true
-        }).then((canvas) => {
-            const imgData = canvas.toDataURL('image/jpeg', 0.9);
-            const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4'
-            });
+            useCORS: true,
+        })
+            .then((canvas) => {
+                const imgData = canvas.toDataURL('image/jpeg', 0.9);
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4',
+                });
 
-            const pageWidth = 210;
-            const pageHeight = 297;
-            const marginTop = 10.58;
-            const marginBottom = 10.58;
-            const usableHeight = pageHeight - marginTop - marginBottom;
+                const pageWidth = 210;
+                const pageHeight = 297;
+                const marginTop = 10.58;
+                const marginBottom = 10.58;
+                const usableHeight = pageHeight - marginTop - marginBottom;
 
-            const imgWidth = pageWidth;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                const imgWidth = pageWidth;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-            let heightLeft = imgHeight;
-            let position = marginTop;
+                let heightLeft = imgHeight;
+                let position = marginTop;
 
-            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-            addHeaderAndFooter(pdf, 1, dateTimeString, watermarkText, pageWidth, pageHeight);
-
-            heightLeft -= usableHeight;
-            let pageNum = 2;
-
-            while (heightLeft > 0) {
-                position = marginTop - (usableHeight * (pageNum - 1));
-                pdf.addPage();
                 pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-                addHeaderAndFooter(pdf, pageNum, dateTimeString, watermarkText, pageWidth, pageHeight);
-                heightLeft -= usableHeight;
-                pageNum++;
-            }
+                addHeaderAndFooter(pdf, 1, dateTimeString, watermarkText, pageWidth, pageHeight);
 
-            pdf.save(`${studentName.replace(/\s+/g, '_')}_IQ_Test_Report.pdf`);
-        }).finally(() => {
-            setIsDownloading(false);
-        });
+                heightLeft -= usableHeight;
+                let pageNum = 2;
+
+                while (heightLeft > 0) {
+                    position = marginTop - usableHeight * (pageNum - 1);
+                    pdf.addPage();
+                    pdf.addImage(
+                        imgData,
+                        'JPEG',
+                        0,
+                        position,
+                        imgWidth,
+                        imgHeight,
+                        undefined,
+                        'FAST'
+                    );
+                    addHeaderAndFooter(
+                        pdf,
+                        pageNum,
+                        dateTimeString,
+                        watermarkText,
+                        pageWidth,
+                        pageHeight
+                    );
+                    heightLeft -= usableHeight;
+                    pageNum++;
+                }
+
+                pdf.save(`${studentName.replace(/\s+/g, '_')}_IQ_Test_Report.pdf`);
+            })
+            .finally(() => {
+                setIsDownloading(false);
+            });
     };
 
-    const addHeaderAndFooter = (pdf, pageNumber, dateTime, watermarkText, pageWidth, pageHeight) => {
+    const addHeaderAndFooter = (
+        pdf,
+        pageNumber,
+        dateTime,
+        watermarkText,
+        pageWidth,
+        pageHeight
+    ) => {
         pdf.setTextColor(150, 150, 150);
         pdf.setFontSize(12);
         pdf.setFontSize(40);
@@ -216,7 +236,7 @@ function TestResult() {
         pdf.text(watermarkText, pageWidth / 2, pageHeight / 2, {
             angle: -45,
             align: 'center',
-            zIndex: -1
+            zIndex: -1,
         });
     };
 
@@ -228,7 +248,7 @@ function TestResult() {
         if (generateReportPdf === true) {
             timeoutId = setTimeout(() => {
                 handleReportDownload();
-                toast.success("Download report successfully");
+                toast.success('Download report successfully');
             }, 5000);
         }
         return () => clearTimeout(timeoutId);
@@ -240,7 +260,7 @@ function TestResult() {
         if (generateCertificatePdf === true) {
             timeoutId = setTimeout(() => {
                 handleCertificateDownload();
-                toast.success("Download certificate successfully");
+                toast.success('Download certificate successfully');
             }, 5000);
         }
         return () => clearTimeout(timeoutId);
@@ -258,7 +278,7 @@ function TestResult() {
                 testID: tID,
                 _id: id,
                 reportType: rT,
-                title: tl
+                title: tl,
             } = resultData?.result;
 
             setTotalQuestions(tQ);
@@ -301,26 +321,24 @@ function TestResult() {
             const url = new URL(originalUrl);
             const pathname = url.pathname; // e.g. /report/abc/xyz or /certificate/abc/xyz
 
-            const pathParts = pathname.split("/").filter(Boolean); // remove empty parts
+            const pathParts = pathname.split('/').filter(Boolean); // remove empty parts
             const type = pathParts[0]; // "report" or "certificate"
             const ui = pathParts[1];
             const ti = pathParts[2];
 
             if (!ui || !ti) {
-                throw new Error("Invalid URL: missing ui or ti");
+                throw new Error('Invalid URL: missing ui or ti');
             }
 
-            const report = type === "report" ? 1 : 0;
+            const report = type === 'report' ? 1 : 0;
             const shareableUrl = `${window.location.origin}/test/report?uid=${ui}&tid=${ti}&report_type=${report}`;
 
             return shareableUrl;
         } catch (error) {
-            console.error("Error generating shareable link:", error.message);
+            console.error('Error generating shareable link:', error.message);
             return null;
         }
     }
-
-
 
     const { mutate: uploadReportPdf, data: uploadPdfResponse } = useMutation({
         mutationFn: (payload) => uploadReport(payload),
@@ -331,14 +349,17 @@ function TestResult() {
                 // setShareLink(generateShareableLink(response?.data?.report));
                 setShareLink(response?.data?.report);
                 setOpenWhatsappSharePopup(true);
+            } else {
+                console.log('unable to download report 2');
             }
-            else {
-                console.log("unable to download report 2");
-            }
-        }
+        },
     });
 
-    const { mutate: uploadCertificatePdf, data: uploadCertificatePdfResponse, isPending: isUploading } = useMutation({
+    const {
+        mutate: uploadCertificatePdf,
+        data: uploadCertificatePdfResponse,
+        isPending: isUploading,
+    } = useMutation({
         mutationFn: (payload) => uploadCertificate(payload),
         onSuccess: (response) => {
             if (response?.data?.certificate) {
@@ -346,24 +367,21 @@ function TestResult() {
                 setPdfStatus(0);
                 setShareLink(response?.data?.certificate);
                 setOpenWhatsappSharePopup(true);
+            } else {
+                console.log('unable to download certificate 2');
             }
-            else {
-                console.log("unable to download certificate 2");
-            }
-        }
+        },
     });
 
     // setShareLink(generateShareableLink(response?.data?.certificate));
 
     useEffect(() => {
         if (uploadPdfResponse?.data?.success) {
-            const link = `${BASE_URL}/reports/${userId}.pdf`; 
+            const link = `${BASE_URL}/reports/${userId}.pdf`;
             setShareLink(link);
             setOpenWhatsappSharePopup(true);
-
         }
     }, [uploadPdfResponse]);
-
 
     const handleUploadReportPdf = () => {
         if (!iqTestReportRef.current) return;
@@ -375,45 +393,50 @@ function TestResult() {
             scale: 1.2, // Reasonable quality
             useCORS: true,
             scrollY: -window.scrollY, // Ensures full capture even if scrolled
-        }).then((canvas) => {
-            const imgData = canvas.toDataURL('image/jpeg', 0.5);
-            const pdf = new jsPDF('p', 'mm', 'a4');
+        })
+            .then((canvas) => {
+                const imgData = canvas.toDataURL('image/jpeg', 0.5);
+                const pdf = new jsPDF('p', 'mm', 'a4');
 
-            const pdfWidth = 210;
-            const pdfHeight = 297;
-            const imgWidth = pdfWidth;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                const pdfWidth = 210;
+                const pdfHeight = 297;
+                const imgWidth = pdfWidth;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-            let heightLeft = imgHeight;
-            let position = 0;
+                let heightLeft = imgHeight;
+                let position = 0;
 
-            // Add the first page
-            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pdfHeight;
-
-            // Add remaining pages
-            while (heightLeft > 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
+                // Add the first page
                 pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
                 heightLeft -= pdfHeight;
-            }
 
-            const pdfBlob = pdf.output('blob');
-            console.log("PDF Blob size in MB:", (pdfBlob.size / (1024 * 1024)).toFixed(2), "MB");
+                // Add remaining pages
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pdfHeight;
+                }
 
-            const formData = new FormData();
-            formData.append('userId', userId);
-            formData.append('testID', testId);
-            formData.append('reportType', reportType);
-            formData.append('report', pdfBlob, `report.pdf`);
+                const pdfBlob = pdf.output('blob');
+                console.log(
+                    'PDF Blob size in MB:',
+                    (pdfBlob.size / (1024 * 1024)).toFixed(2),
+                    'MB'
+                );
 
-            uploadReportPdf(formData);
-        }).finally(() => {
-            setIsDownloading(false);
-        });
+                const formData = new FormData();
+                formData.append('userId', userId);
+                formData.append('testID', testId);
+                formData.append('reportType', reportType);
+                formData.append('report', pdfBlob, `report.pdf`);
+
+                uploadReportPdf(formData);
+            })
+            .finally(() => {
+                setIsDownloading(false);
+            });
     };
-
 
     const handleUploadCertificatePdf = () => {
         if (!certificateRef.current) return;
@@ -424,31 +447,35 @@ function TestResult() {
         html2canvas(input, {
             scale: 1.0,
             useCORS: true,
-        }).then((canvas) => {
-            const imgData = canvas.toDataURL('image/jpeg', 0.4);
-            const pdf = new jsPDF('l', 'mm', 'a4');
-            const width = 297;
-            const height = (canvas.height * width) / canvas.width;
+        })
+            .then((canvas) => {
+                const imgData = canvas.toDataURL('image/jpeg', 0.4);
+                const pdf = new jsPDF('l', 'mm', 'a4');
+                const width = 297;
+                const height = (canvas.height * width) / canvas.width;
 
-            pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+                pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
 
-            const pdfBlob = pdf.output('blob');
+                const pdfBlob = pdf.output('blob');
 
-            console.log("certificateBlob+++++++++++++++++++++", pdfBlob);
-            console.log("PDF Blob size in MB:", (pdfBlob.size / (1024 * 1024)).toFixed(2), "MB");
+                console.log('certificateBlob+++++++++++++++++++++', pdfBlob);
+                console.log(
+                    'PDF Blob size in MB:',
+                    (pdfBlob.size / (1024 * 1024)).toFixed(2),
+                    'MB'
+                );
 
+                const formData = new FormData();
+                formData.append('userId', userId);
+                formData.append('testID', testId);
+                formData.append('reportType', reportType);
+                formData.append('certificate', pdfBlob, `certificate.pdf`);
 
-            const formData = new FormData();
-            formData.append('userId', userId);
-            formData.append('testID', testId);
-            formData.append('reportType', reportType);
-            formData.append('certificate', pdfBlob, `certificate.pdf`);
-
-            uploadCertificatePdf(formData);
-
-        }).finally(() => {
-            setIsDownloading(false);
-        });
+                uploadCertificatePdf(formData);
+            })
+            .finally(() => {
+                setIsDownloading(false);
+            });
     };
 
     useEffect(() => {
@@ -523,7 +550,6 @@ function TestResult() {
                 onClose={() => setOpenWhatsappSharePopup(false)}
                 shareLink={shareLink}
             />
-
 
             <div className="bg-white shadow-md overflow-hidden max-w-6xl mx-auto">
                 {/* Header Section */}
@@ -627,14 +653,15 @@ function TestResult() {
                                     </div>
                                     <div className="w-full bg-gray-200 rounded-full h-2 sm:h-2.5 mt-1">
                                         <div
-                                            className={`h-2 sm:h-2.5 rounded-full ${percentage >= 75
-                                                ? 'bg-green-600'
-                                                : percentage >= 50
-                                                    ? 'bg-blue-600'
-                                                    : percentage >= 25
+                                            className={`h-2 sm:h-2.5 rounded-full ${
+                                                percentage >= 75
+                                                    ? 'bg-green-600'
+                                                    : percentage >= 50
+                                                      ? 'bg-blue-600'
+                                                      : percentage >= 25
                                                         ? 'bg-amber-500'
                                                         : 'bg-red-600'
-                                                }`}
+                                            }`}
                                             style={{ width: `${percentage}%` }}></div>
                                     </div>
                                     <div className="text-right text-xs sm:text-sm md:text-base mt-1 font-medium text-gray-700">
@@ -648,21 +675,36 @@ function TestResult() {
 
                 {/* Result Message */}
                 <div
-                    className={`p-3 sm:p-4 md:p-5 flex items-center justify-center flex-col gap-1 sm:gap-2 ${isPassed ? 'bg-green-50' : 'bg-red-50'
-                        }`}>
+                    className={`p-3 sm:p-4 md:p-5 flex items-center justify-center flex-col gap-1 sm:gap-2 ${
+                        isPassed ? 'bg-green-50' : 'bg-red-50'
+                    }`}>
                     <div className="flex items-center gap-2">{resultIcon}</div>
                     <p
-                        className={`text-center text-sm sm:text-base md:text-lg font-medium ${isPassed ? 'text-green-700' : 'text-red-700'
-                            }`}>
+                        className={`text-center text-sm sm:text-base md:text-lg font-medium ${
+                            isPassed ? 'text-green-700' : 'text-red-700'
+                        }`}>
                         {passFailMessage}
                         {resultEmoji}
                     </p>
                 </div>
 
-                <div style={{
-                    position: 'absolute', top: '-10000px', left: '-10000px', width: '210mm',
-                    background: 'white'
-                }}>
+                <div className="flex justify-center mt-3">
+                    <Link
+                        to={'/'}
+                        type="button"
+                        className="w-[20%] my-3 inline-flex items-center justify-center gap-3 px-6 py-3 text-base font-semibold text-white bg-orange-500 rounded-xl shadow-md hover:bg-orange-600 transform hover:scale-105 transition duration-300 ease-in-out">
+                        Go To Home
+                    </Link>
+                </div>
+
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '-10000px',
+                        left: '-10000px',
+                        width: '210mm',
+                        background: 'white',
+                    }}>
                     <Certificate
                         ref={certificateRef}
                         name={certificateData.name}
@@ -673,12 +715,12 @@ function TestResult() {
                         studentName={certificateData.name}
                         studentScore={marksGained}
                         totalMarks={totalMarks}
-                        course={certificateData.title} />
+                        course={certificateData.title}
+                    />
                 </div>
 
-                <div className="flex justify-center my-10">
-                    <div className=" p-6  w-full max-w-md space-y-4">
-
+                <div className="flex justify-center ">
+                    <div className="w-full max-w-md ">
                         {(generateReportPdf || generateCertificatePdf) && (
                             <AutoDownload
                                 generateReportPdf={generateReportPdf}
@@ -689,10 +731,8 @@ function TestResult() {
                         {reportType === 1 && !generateReportPdf && (
                             <button
                                 onClick={handleUploadReportPdf}
-                                className="w-full inline-flex items-center justify-center gap-3 px-6 py-3 text-base font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 transform hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-                                disabled={!iqTestReportRef.current || isDownloading}
-                            >
-
+                                className="w-full my-3 inline-flex items-center justify-center gap-3 px-6 py-3 text-base font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 transform hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={!iqTestReportRef.current || isDownloading}>
                                 {isDownloading ? (
                                     <>
                                         <div className="animate-spin h-5 w-5 border-4 border-white border-t-transparent rounded-full" />
@@ -708,9 +748,8 @@ function TestResult() {
                             <>
                                 <button
                                     onClick={handleUploadCertificatePdf}
-                                    className="w-full inline-flex items-center justify-center gap-3 px-6 py-3 text-base font-semibold text-white bg-orange-500 rounded-xl shadow-md hover:bg-orange-600 transform hover:scale-105 transition duration-300 ease-in-out"
-                                    disabled={isDownloading}
-                                >
+                                    className="w-full my-3 inline-flex items-center justify-center gap-3 px-6 py-3 text-base font-semibold text-white bg-orange-500 rounded-xl shadow-md hover:bg-orange-600 transform hover:scale-105 transition duration-300 ease-in-out"
+                                    disabled={isDownloading}>
                                     {isDownloading ? (
                                         <>
                                             <div className="animate-spin h-5 w-5 border-4 border-white border-t-transparent rounded-full" />
@@ -720,7 +759,6 @@ function TestResult() {
                                         '🎓 Download Certificate'
                                     )}
                                 </button>
-
                             </>
                         )}
                     </div>
