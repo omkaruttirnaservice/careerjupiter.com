@@ -1,10 +1,11 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useEffect } from "react";
 import { FaArrowLeft, FaUserGraduate } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../utils/constansts";
 import Breadcrumb from "./Breadcrumb";
+import LoadingTestCard from "../loading-skeleton/LoadingTestCard";
 
 const SubTest_Category = () => {
   const navigate = useNavigate();
@@ -13,21 +14,31 @@ const SubTest_Category = () => {
   const categoryId = query.get("id");
   const main_name = query.get("main_name");
 
+  // const {
+  //   data,
+  //   mutate: fetchSubCategories,
+  //   isLoading,
+  //   isError,
+  // } = useMutation({
+  //   mutationFn: () =>
+  //     axios.post(`${BASE_URL}/api/iq_category/sub-categories/${categoryId}`),
+  // });
+
+  // useEffect(() => {
+  //   if (categoryId) {
+  //     fetchSubCategories();
+  //   }
+  // }, [categoryId]);
+
   const {
     data,
-    mutate: fetchSubCategories,
     isLoading,
     isError,
-  } = useMutation({
-    mutationFn: () =>
+  } = useQuery({
+    queryKey: ["subTestCategory"],
+    queryFn: () =>
       axios.post(`${BASE_URL}/api/iq_category/sub-categories/${categoryId}`),
   });
-
-  useEffect(() => {
-    if (categoryId) {
-      fetchSubCategories();
-    }
-  }, [categoryId]);
 
   const testCategories = data?.data?.sub_category_name;
 
@@ -70,7 +81,7 @@ const SubTest_Category = () => {
       </h2>
 
       {isLoading ? (
-        <p className="text-center text-gray-500">Loading...</p>
+        <p className="text-center text-gray-500"><LoadingTestCard/></p>
       ) : isError ? (
         <p className="text-center text-red-500">
           Failed to load subcategories.

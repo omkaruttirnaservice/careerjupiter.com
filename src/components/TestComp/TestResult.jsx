@@ -79,7 +79,7 @@ function TestResult() {
         title: 'React JS',
     });
 
-    const { data: userData, isLoading: userLoading } = useQuery({
+    const { data: userData, isLoading: userLoading , refetch:getUserInfo } = useQuery({
         queryKey: ['userDetail', userId],
         queryFn: () => getUserDetail(userId),
         enabled: !!userId,
@@ -103,13 +103,12 @@ function TestResult() {
         if (uid && tid) {
             fetchResult({ userId: uid, testID: tid });
         }
+        getUserInfo();
     }, [searchParams, fetchResult]);
 
     // ✅ Store in Redux once data comes in
     useEffect(() => {
         if (resultTestData?.data) {
-
-            console.log("after share result data::::::::::", resultTestData?.data);
 
             dispatch(setTestResult(resultTestData.data));
             if (report_Type === "1") {
@@ -344,8 +343,8 @@ function TestResult() {
             if (response?.data?.certificate) {
                 handleCertificateDownload();
                 setPdfStatus(0);
-                setShareLink(generateShareableLink(response?.data?.certificate));
-                // setShareLink(response?.data?.certificate);
+                // setShareLink(generateShareableLink(response?.data?.certificate));
+                setShareLink(response?.data?.certificate);
                 setOpenWhatsappSharePopup(true);
             }
             else {
@@ -669,7 +668,7 @@ function TestResult() {
                     />
                     <IqTestReport
                         ref={iqTestReportRef}
-                        studentName={studentName}
+                        studentName={certificateData.name}
                         studentScore={marksGained}
                         totalMarks={totalMarks}
                         course={certificateData.title} />
