@@ -24,6 +24,9 @@ import IqTestReport from './IqTestReport';
 import WhatsAppSharePopup from './WhatsAppSharePopup';
 import { setTestResult } from '../../store-redux/testResultSlice';
 import { useSearchParams } from 'react-router-dom';
+import { updateUserId } from '../../store-redux/AuthSlice';
+import AutoDownload from './AutoDownload';
+import { toast } from 'react-toastify';
 
 function TestResult() {
     const resultDataFromRedux = useSelector((state) => state.testResult?.resultData);
@@ -79,7 +82,7 @@ function TestResult() {
         title: 'React JS',
     });
 
-    const { data: userData, isLoading: userLoading , refetch:getUserInfo } = useQuery({
+    const { data: userData, isLoading: userLoading } = useQuery({
         queryKey: ['userDetail', userId],
         queryFn: () => getUserDetail(userId),
         enabled: !!userId,
@@ -102,8 +105,8 @@ function TestResult() {
 
         if (uid && tid) {
             fetchResult({ userId: uid, testID: tid });
+            dispatch(updateUserId(uid));
         }
-        getUserInfo();
     }, [searchParams, fetchResult]);
 
     // ✅ Store in Redux once data comes in
@@ -219,25 +222,25 @@ function TestResult() {
 
     // auto download report and pdf
 
-        useEffect(() => {
+    useEffect(() => {
         let timeoutId;
 
         if (generateReportPdf === true) {
             timeoutId = setTimeout(() => {
                 handleReportDownload();
-                alert("Download report successfully");
+                toast.success("Download report successfully");
             }, 5000);
         }
         return () => clearTimeout(timeoutId);
     }, [generateReportPdf]);
 
-            useEffect(() => {
+    useEffect(() => {
         let timeoutId;
 
         if (generateCertificatePdf === true) {
             timeoutId = setTimeout(() => {
                 handleCertificateDownload();
-                alert("Download certificate successfully");
+                toast.success("Download certificate successfully");
             }, 5000);
         }
         return () => clearTimeout(timeoutId);
@@ -322,7 +325,6 @@ function TestResult() {
     const { mutate: uploadReportPdf, data: uploadPdfResponse } = useMutation({
         mutationFn: (payload) => uploadReport(payload),
         onSuccess: (response) => {
-            console.log("able to download report 1", response?.data?.report);
             if (response?.data?.report) {
                 handleReportDownload();
                 setPdfStatus(1);
@@ -339,7 +341,6 @@ function TestResult() {
     const { mutate: uploadCertificatePdf, data: uploadCertificatePdfResponse, isPending: isUploading } = useMutation({
         mutationFn: (payload) => uploadCertificate(payload),
         onSuccess: (response) => {
-            console.log("able to download certificate 1", response?.data?.certificate);
             if (response?.data?.certificate) {
                 handleCertificateDownload();
                 setPdfStatus(0);
@@ -355,11 +356,9 @@ function TestResult() {
 
     useEffect(() => {
         if (uploadPdfResponse?.data?.success) {
-            // Set the link returned from backend or use a fixed URL
-            const link = `${BASE_URL}/reports/${userId}.pdf`; // or extract from response
+            const link = `${BASE_URL}/reports/${userId}.pdf`; 
             setShareLink(link);
             setOpenWhatsappSharePopup(true);
-            console.log("response upload files +++++++", openWhatsappSharePopup);
 
         }
     }, [uploadPdfResponse]);
@@ -417,8 +416,8 @@ function TestResult() {
 
     const handleUploadCertificatePdf = () => {
         if (!certificateRef.current) return;
-        setIsDownloading(true);
 
+        setIsDownloading(true);
         const input = certificateRef.current;
 
         html2canvas(input, {
@@ -677,13 +676,20 @@ function TestResult() {
                 <div className="flex justify-center my-10">
                     <div className=" p-6  w-full max-w-md space-y-4">
 
+                        {(generateReportPdf || generateCertificatePdf) && (
+                            <AutoDownload
+                                generateReportPdf={generateReportPdf}
+                                generateCertificatePdf={generateCertificatePdf}
+                            />
+                        )}
+
                         {reportType === 1 && !generateReportPdf && (
                             <button
                                 onClick={handleUploadReportPdf}
                                 className="w-full inline-flex items-center justify-center gap-3 px-6 py-3 text-base font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 transform hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled={!iqTestReportRef.current || isDownloading}
                             >
-                                
+
                                 {isDownloading ? (
                                     <>
                                         <div className="animate-spin h-5 w-5 border-4 border-white border-t-transparent rounded-full" />
@@ -695,7 +701,7 @@ function TestResult() {
                             </button>
                         )}
 
-                        {reportType === 0 && !generateCertificatePdf &&(
+                        {reportType === 0 && !generateCertificatePdf && (
                             <>
                                 <button
                                     onClick={handleUploadCertificatePdf}
@@ -703,7 +709,7 @@ function TestResult() {
                                     disabled={isDownloading}
                                 >
                                     {isDownloading ? (
-                                        <> 
+                                        <>
                                             <div className="animate-spin h-5 w-5 border-4 border-white border-t-transparent rounded-full" />
                                             Downloading Certificate...
                                         </>
@@ -714,7 +720,6 @@ function TestResult() {
 
                             </>
                         )}
-
                     </div>
                 </div>
 
