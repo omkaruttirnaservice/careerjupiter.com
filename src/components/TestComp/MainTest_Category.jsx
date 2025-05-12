@@ -3,31 +3,39 @@ import { LuNotebookPen } from "react-icons/lu";
 import { FaUserGraduate } from "react-icons/fa";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GiGraduateCap } from "react-icons/gi";
-import { RiToolsFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getMainTest_Category } from "./Api";
 import Breadcrumb from "./Breadcrumb";
-
+import Swal from "sweetalert2";
+import LoadingTestCard from "../loading-skeleton/LoadingTestCard";
 const MainTest_Category = () => {
   const navigate = useNavigate();
 
-  const {
-    data: testCategory,
-    mutate: fetchTestCategory,
-    isLoading,
-    isError,
-  } = useMutation({
-    mutationFn: getMainTest_Category,
-  });
+  // const {
+  //   data: testCategory,
+  //   mutate: fetchTestCategory,
+  //   isLoading,
+  //   isError,
+  // } = useMutation({
+  //   mutationFn: getMainTest_Category,
+  // });
 
-  useEffect(() => {
-    fetchTestCategory();
-  }, []);
+  // useEffect(() => {
+  //   fetchTestCategory();
+  // }, []);
+
+  const {
+  data: testCategory,
+  isLoading,
+  isError,
+} = useQuery({
+  queryKey: ["mainTestCategory"],
+  queryFn: getMainTest_Category,
+});
 
   const handle_SubCategory = (id, name) => {
     navigate(`/profile/test?type=sub_category&id=${id}&main_name=${name}`);
-    fetchTestCategory();
   };
 
   return (
@@ -38,10 +46,8 @@ const MainTest_Category = () => {
       </h2>
 
       {isLoading ? (
-        <p className="text-center text-gray-500">Loading...</p>
-      ) : isError ? (
-        <p className="text-center text-red-500">Failed to load categories.</p>
-      ) : (
+        <p className="text-center text-gray-500"><LoadingTestCard/></p>
+      ) : testCategory ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {testCategory?.data?.data.map((category, index) => {
             const icons = [
@@ -49,7 +55,6 @@ const MainTest_Category = () => {
               FaUserGraduate,
               FaChalkboardTeacher,
               GiGraduateCap,
-              RiToolsFill,
             ];
             const Icon = icons[index % icons.length];
 
@@ -66,7 +71,7 @@ const MainTest_Category = () => {
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 bg-blue-100 text-blue-600 rounded-full">
-                    <LuNotebookPen className="w-6 h-6" />
+                    <Icon className="w-6 h-6" />
                   </div>
                 </div>
 
@@ -84,7 +89,7 @@ const MainTest_Category = () => {
             );
           })}
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

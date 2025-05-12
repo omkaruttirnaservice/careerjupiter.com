@@ -36,7 +36,7 @@ const IQTest = ({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [isProgressSaved, setIsProgressSaved] = useState(true);
-  const [userRole , setUserRole] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const [timeLeft, setTimeLeft] = useState(
     testDuration.minutes * 60 + testDuration.seconds
   );
@@ -64,21 +64,21 @@ const IQTest = ({
   // new code -----------------------
 
 
- useEffect(() => {
-   const token = Cookies.get("token");
+  useEffect(() => {
+    const token = Cookies.get("token");
 
-   if (token && typeof token === "string") {
-     try {
-       const decodedToken = jwtDecode(token);
-       setUserRole(decodedToken.role);
-     } catch (err) {
-       console.error("Token decode error:", err);
-       toast.error("No user found.. Please login again.");
-     }
-   } else {
-     toast.error("No user found. Please login.");
-   }
- }, []);
+    if (token && typeof token === "string") {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUserRole(decodedToken.role);
+      } catch (err) {
+        console.error("Token decode error:", err);
+        toast.error("No user found.. Please login again.");
+      }
+    } else {
+      toast.error("No user found. Please login.");
+    }
+  }, []);
 
 
   // Update refs when state changes
@@ -251,7 +251,7 @@ const IQTest = ({
         cancelButtonText: "No, Cancel",
         confirmButtonColor: "#28a745",
         cancelButtonColor: "#dc3545",
-      }).then((result) => {  
+      }).then((result) => {
         if (result.isConfirmed) {
           if (progressIntervalRef.current) {
             clearInterval(progressIntervalRef.current);
@@ -460,11 +460,10 @@ const IQTest = ({
                   <button
                     onClick={handleSubmit}
                     className={`flex items-center px-4 py-2 rounded transition-colors
-        ${
-          isProgressSaved
-            ? "bg-[#F7941D] text-white hover:bg-[#E88C19]"
-            : "bg-gray-300 text-gray-600 cursor-not-allowed"
-        }`}
+        ${isProgressSaved
+                        ? "bg-[#F7941D] text-white hover:bg-[#E88C19]"
+                        : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                      }`}
                     disabled={!isProgressSaved}
                   >
                     Submit <FaCheckCircle className="ml-1 sm:ml-2" />
@@ -483,13 +482,12 @@ const IQTest = ({
                   key={q._id}
                   onClick={() => setCurrentQuestion(index)}
                   className={`w-7 h-7 flex items-center justify-center transition-all duration-300 border-2
-              ${
-                currentQuestion === index
-                  ? "bg-blue-500 text-white border-blue-900"
-                  : answers[index]
-                    ? "bg-cyan-800 text-white border-cyan-900"
-                    : "bg-amber-400  text-black border-amber-600"
-              }
+              ${currentQuestion === index
+                      ? "bg-blue-500 text-white border-blue-900"
+                      : answers[index]
+                        ? "bg-cyan-800 text-white border-cyan-900"
+                        : "bg-amber-400  text-black border-amber-600"
+                    }
             `}
                 >
                   {index + 1}
