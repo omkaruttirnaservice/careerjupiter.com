@@ -343,8 +343,8 @@ function TestResult() {
             if (response?.data?.certificate) {
                 handleCertificateDownload();
                 setPdfStatus(0);
-                setShareLink(generateShareableLink(response?.data?.certificate));
-                // setShareLink(response?.data?.certificate);
+                // setShareLink(generateShareableLink(response?.data?.certificate));
+                setShareLink(response?.data?.certificate);
                 setOpenWhatsappSharePopup(true);
             }
             else {
