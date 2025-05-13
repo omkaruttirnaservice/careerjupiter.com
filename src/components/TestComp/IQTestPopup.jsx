@@ -33,6 +33,13 @@ const IQTestPopup = () => {
   });
 
   useEffect(() => {
+  // Ensure popup opens when visiting /iqtest/popup directly
+  if (location.pathname === "/iqtest/popup") {
+    dispatch(setIsOpen(true));
+  }
+}, [location.pathname]);
+
+  useEffect(() => {
     const hasSeenPopup = localStorage.getItem("hasSeenIQPopup");
 
     const excludedPaths = ["/Sign-in", "/forget-password", "/create-password"];

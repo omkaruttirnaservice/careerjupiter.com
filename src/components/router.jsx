@@ -40,6 +40,8 @@ import CompleteTest from "./TestComp/CompleteTest.jsx";
 import PremiumServices from "./premium-services/PremiumServices.jsx";
 import GuestHandler from "./GuestHandler.jsx";
 import TestResult from "./TestComp/TestResult.jsx";
+import IQTestPopup from "./TestComp/IQTestPopup.jsx";
+import ShareTestResult from "./TestComp/ShareTestResult.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -135,7 +137,9 @@ children: [
         scrollRestoration: "manual",
       },
 
-      { path: "/test/report", element: <TestResult /> },
+      { path: "/test/report", element: <ShareTestResult /> },
+
+      { path: "/iqtest/popup", element: <IQTestPopup /> },
 
       {
         path: "/signout",
