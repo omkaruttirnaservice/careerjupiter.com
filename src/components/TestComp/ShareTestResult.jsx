@@ -89,11 +89,12 @@ function ShareTestResult() {
         mutationFn: ({ testID, userId }) => getResult({ testID, userId }),
     });
 
+    const uid = searchParams.get('uid');
 
     const { data: userData, isLoading: userLoading, refetch: getUser } = useQuery({
-        queryKey: ['userDetail', userId],
-        queryFn: () => getUserDetail(userId),
-        enabled: !!userId,
+        queryKey: ['userDetail', uid],
+        queryFn: () => getUserDetail(uid),
+        enabled: !!uid,
     });
 
     // 🔁 Trigger API call on mount if URL has valid params
@@ -105,7 +106,7 @@ function ShareTestResult() {
             fetchResult({ userId: uid, testID: tid });
             dispatch(updateUserId(uid));
             setShowButton(true);
-            getUser();
+            // getUser();
         }
     }, [searchParams, fetchResult]);
 

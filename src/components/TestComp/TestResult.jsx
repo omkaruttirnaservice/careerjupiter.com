@@ -71,14 +71,16 @@ function TestResult() {
     const [generateCertificatePdf, setGenerateCertificatePdf] = useState(false);
     const dispatch = useDispatch();
     const [searchParams] = useSearchParams();
+    const [getCertificate , setGetCertificate] = useState("");
+    const [getReport , setGetReport] = useState("");
 
     const { userId } = useSelector((state) => state.auth);
 
     const certificateRef = useRef();
     const iqTestReportRef = useRef();
     const [certificateData, setCertificateData] = useState({
-        name: 'John Doe',
-        title: 'React JS',
+        name: 'Candidate Name',
+        title: 'IQ test',
     });
 
     const { data: userData, isLoading: userLoading } = useQuery({
@@ -87,36 +89,36 @@ function TestResult() {
         enabled: !!userId,
     });
 
-    const report_Type = searchParams.get('report_type');
+    // const report_Type = searchParams.get('report_type');
 
     // get result directly
 
-    const { mutate: fetchResult, data: resultTestData } = useMutation({
-        mutationFn: ({ testID, userId }) => getResult({ testID, userId }),
-    });
+    // const { mutate: fetchResult, data: resultTestData } = useMutation({
+    //     mutationFn: ({ testID, userId }) => getResult({ testID, userId }),
+    // });
 
     // 🔁 Trigger API call on mount if URL has valid params
-    useEffect(() => {
-        const uid = searchParams.get('uid');
-        const tid = searchParams.get('tid');
+    // useEffect(() => {
+    //     const uid = searchParams.get('uid');
+    //     const tid = searchParams.get('tid');
 
-        if (uid && tid) {
-            fetchResult({ userId: uid, testID: tid });
-            dispatch(updateUserId(uid));
-        }
-    }, [searchParams, fetchResult]);
+    //     if (uid && tid) {
+    //         fetchResult({ userId: uid, testID: tid });
+    //         dispatch(updateUserId(uid));
+    //     }
+    // }, [searchParams, fetchResult]);
 
     // ✅ Store in Redux once data comes in
-    useEffect(() => {
-        if (resultTestData?.data) {
-            dispatch(setTestResult(resultTestData.data));
-            if (report_Type === '1') {
-                setGenerateReportPdf(true);
-            } else {
-                setGenerateCertificatePdf(true);
-            }
-        }
-    }, [resultTestData?.data, dispatch, report_Type]);
+    // useEffect(() => {
+    //     if (resultTestData?.data) {
+    //         dispatch(setTestResult(resultTestData.data));
+    //         if (report_Type === '1') {
+    //             setGenerateReportPdf(true);
+    //         } else {
+    //             setGenerateCertificatePdf(true);
+    //         }
+    //     }
+    // }, [resultTestData?.data, dispatch, report_Type]);
 
     useEffect(() => {
         if (resultDataFromRedux) {
@@ -142,7 +144,9 @@ function TestResult() {
 
     const handleCertificateDownload = () => {
         const input = certificateRef.current;
-        html2canvas(input).then((canvas) => {
+        html2canvas(input ,  {
+            scale: 1
+        }).then((canvas) => {
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('l', 'mm', 'a4');
             const width = 297;
@@ -242,29 +246,29 @@ function TestResult() {
 
     // auto download report and pdf
 
-    useEffect(() => {
-        let timeoutId;
+    // useEffect(() => {
+    //     let timeoutId;
 
-        if (generateReportPdf === true) {
-            timeoutId = setTimeout(() => {
-                handleReportDownload();
-                toast.success('Download report successfully');
-            }, 5000);
-        }
-        return () => clearTimeout(timeoutId);
-    }, [generateReportPdf]);
+    //     if (generateReportPdf === true) {
+    //         timeoutId = setTimeout(() => {
+    //             handleReportDownload();
+    //             toast.success('Download report successfully');
+    //         }, 5000);
+    //     }
+    //     return () => clearTimeout(timeoutId);
+    // }, [generateReportPdf]);
 
-    useEffect(() => {
-        let timeoutId;
+    // useEffect(() => {
+    //     let timeoutId;
 
-        if (generateCertificatePdf === true) {
-            timeoutId = setTimeout(() => {
-                handleCertificateDownload();
-                toast.success('Download certificate successfully');
-            }, 5000);
-        }
-        return () => clearTimeout(timeoutId);
-    }, [generateCertificatePdf]);
+    //     if (generateCertificatePdf === true) {
+    //         timeoutId = setTimeout(() => {
+    //             handleCertificateDownload();
+    //             toast.success('Download certificate successfully');
+    //         }, 5000);
+    //     }
+    //     return () => clearTimeout(timeoutId);
+    // }, [generateCertificatePdf]);
 
     useEffect(() => {
         if (resultData?.result) {
@@ -279,6 +283,8 @@ function TestResult() {
                 _id: id,
                 reportType: rT,
                 title: tl,
+                certificate:ct,
+                report:rt
             } = resultData?.result;
 
             setTotalQuestions(tQ);
@@ -291,6 +297,8 @@ function TestResult() {
             setReportType(rT);
             setTitle(tl);
             setTestId(tID);
+            setGetCertificate(ct);
+            setGetReport(rt);
 
             const calculatedPercentage = (mG / tM) * 100;
             setPercentage(calculatedPercentage);
@@ -316,28 +324,34 @@ function TestResult() {
         }
     }, [resultData]);
 
-    function generateShareableLink(originalUrl) {
-        try {
-            const url = new URL(originalUrl);
-            const pathname = url.pathname;
+    useEffect(()=>{
+        if (resultData?.result) {
 
-            const pathParts = pathname.split('/').filter(Boolean);
-            const type = pathParts[0];
-            const ui = pathParts[1];
-            const ti = pathParts[2];
-
-            if (!ui || !ti) {
-                throw new Error('Invalid URL: missing ui or ti');
-            }
-
-            const report = type === 'report' ? 1 : 0;
-            const shareableUrl = `${window.location.origin}/test/report?uid=${ui}&tid=${ti}&report_type=${report}`;
-
-            return shareableUrl;
-        } catch (error) {
-            return null;
         }
-    }
+    }, [resultData]);
+
+    // function generateShareableLink(originalUrl) {
+    //     try {
+    //         const url = new URL(originalUrl);
+    //         const pathname = url.pathname;
+
+    //         const pathParts = pathname.split('/').filter(Boolean);
+    //         const type = pathParts[0];
+    //         const ui = pathParts[1];
+    //         const ti = pathParts[2];
+
+    //         if (!ui || !ti) {
+    //             throw new Error('Invalid URL: missing ui or ti');
+    //         }
+
+    //         const report = type === 'report' ? 1 : 0;
+    //         const shareableUrl = `${window.location.origin}/test/report?uid=${ui}&tid=${ti}&report_type=${report}`;
+
+    //         return shareableUrl;
+    //     } catch (error) {
+    //         return null;
+    //     }
+    // }
 
     const { mutate: uploadReportPdf, data: uploadPdfResponse } = useMutation({
         mutationFn: (payload) => uploadReport(payload),
@@ -693,14 +707,14 @@ function TestResult() {
 
                 <div className="flex justify-center ">
                     <div className="w-full max-w-md ">
-                        {(generateReportPdf || generateCertificatePdf) && (
+                        {/* {(generateReportPdf || generateCertificatePdf) && (
                             <AutoDownload
                                 generateReportPdf={generateReportPdf}
                                 generateCertificatePdf={generateCertificatePdf}
                             />
-                        )}
+                        )} */}
 
-                        {reportType === 1 && !generateReportPdf && (
+                        {reportType === 1 && !getReport && (
                             <button
                                 onClick={handleUploadReportPdf}
                                 className="w-full my-3 inline-flex items-center justify-center gap-3 px-6 py-3 text-base font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 transform hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
@@ -716,7 +730,7 @@ function TestResult() {
                             </button>
                         )}
 
-                        {reportType === 0 && !generateCertificatePdf && (
+                        {reportType === 0 && !getCertificate && (
                             <>
                                 <button
                                     onClick={handleUploadCertificatePdf}
@@ -730,6 +744,27 @@ function TestResult() {
                                     ) : (
                                         '🎓 Download Certificate'
                                     )}
+                                </button>
+                            </>
+                        )}
+
+                        {reportType === 1 && getReport && (
+                            <button
+                                onClick={handleReportDownload}
+                                className="w-full my-3 inline-flex items-center justify-center gap-3 px-6 py-3 text-base font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 transform hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    📄 Generate Test Report
+                            </button>
+                        )}
+
+                        {reportType === 0 && getCertificate &&(
+                            <>
+                                <button
+                                    onClick={handleCertificateDownload}
+                                    className="w-full my-3 inline-flex items-center justify-center gap-3 px-6 py-3 text-base font-semibold text-white bg-orange-500 rounded-xl shadow-md hover:bg-orange-600 transform hover:scale-105 transition duration-300 ease-in-out"
+                                    >
+                                            🎓 Generate Certificate
+
                                 </button>
                             </>
                         )}
