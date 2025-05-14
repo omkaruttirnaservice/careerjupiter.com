@@ -144,7 +144,9 @@ function TestResult() {
 
     const handleCertificateDownload = () => {
         const input = certificateRef.current;
-        html2canvas(input).then((canvas) => {
+        html2canvas(input ,  {
+            scale: 1
+        }).then((canvas) => {
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('l', 'mm', 'a4');
             const width = 297;
