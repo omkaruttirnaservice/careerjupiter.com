@@ -11,10 +11,10 @@ const ShareResultPopup = ({ setOpenSharePopup, openSharePopup, resultId, reportT
     const iqTestId = useSelector((state) => state.iqTest.iqTestId);
     const [deviceType, setDeviceType] = useState('');
 
-    const sharedDataMutation = useMutation({
-        mutationFn: sendShareState,
-        onSuccess: (data) => {},
-    });
+    // const sharedDataMutation = useMutation({
+    //     mutationFn: sendShareState,
+    //     onSuccess: (data) => {},
+    // });
 
     useEffect(() => {
         const userAgent = navigator.userAgent;
