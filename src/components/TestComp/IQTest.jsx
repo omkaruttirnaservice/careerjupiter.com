@@ -54,6 +54,8 @@ const IQTest = ({
   const progressIntervalRef = useRef(null);
   const timeLeftRef = useRef(timeLeft);
   const testProgressRef = useRef(TestProgress);
+  const hasSubmittedRef = useRef(false);
+
 
   // previce code ---------------
 
@@ -165,6 +167,9 @@ const IQTest = ({
   }, [questions, testId, userId]);
 
   const handleOptionSelect = (letter) => {
+
+    if (hasSubmittedRef.current) return;
+
     const newAnswers = [...answers];
     newAnswers[currentQuestion] = letter;
     setAnswers(newAnswers);
@@ -219,6 +224,10 @@ const IQTest = ({
   }, [questions, testId, userId]);
 
   const handleSubmit = async () => {
+      if (hasSubmittedRef.current) return; // prevent double call
+
+      hasSubmittedRef.current = true; // stop all future progress updates
+
     const latestUserRole = userRole;
     const allAnswered = answers.every((ans) => ans !== "");
 
@@ -263,21 +272,32 @@ const IQTest = ({
             setIsSubmitted(true);
             resultGenerationMutation.mutate(resultData);
           }
-        }
+        }else {
+      hasSubmittedRef.current = false; // allow resubmission if cancelled
+    }
       });
     }
   };
 
-  useEffect(() => {
-    if (isSubmitted) {
-      if (progressIntervalRef.current) {
-        clearInterval(progressIntervalRef.current);
-        progressIntervalRef.current = null;
-      }
-      return;
+   useEffect(()=>{
+    if(timeLeft=== 0){
+      handleSubmit();
     }
+  },[timeLeft]);
+
+    useEffect(() => {
+  if (isSubmitted || hasSubmittedRef.current) {
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current);
+      progressIntervalRef.current = null;
+    }
+    return;
+  }
 
     const updateProgress = () => {
+
+      if (hasSubmittedRef.current) return;
+
       const currentTimeLeft = timeLeftRef.current;
       const currentTestProgress = testProgressRef.current;
 
@@ -410,35 +430,6 @@ const IQTest = ({
                 <FaArrowLeft className="mr-1 sm:mr-2" /> Previous
               </button>
 
-              {/* {currentQuestion < questions.length - 1 ? (
-                <button
-                  onClick={handleNextQuestion}
-                  className={`flex items-center px-4 py-2 rounded transition-colors
-      ${
-        isProgressSaved
-          ? "bg-[#F7941D] text-white hover:bg-[#E88C19]"
-          : "bg-gray-300 text-gray-600 cursor-not-allowed"
-      }`}
-                  disabled={!isProgressSaved}
-                >
-                  Save & Next <FaArrowRight className="ml-1 sm:ml-2" />
-                </button>
-              ) : (
-                answers[currentQuestion] !== "" && (
-                  <button
-                    onClick={handleSubmit}
-                    className={`flex items-center px-4 py-2 rounded transition-colors
-        ${
-          isProgressSaved
-            ? "bg-[#F7941D] text-white hover:bg-[#E88C19]"
-            : "bg-gray-300 text-gray-600 cursor-not-allowed"
-        }`}
-                    disabled={!isProgressSaved}
-                  >
-                    Submit <FaCheckCircle className="ml-1 sm:ml-2" />
-                  </button>
-                )
-              )} */}
               {currentQuestion < questions.length - 1 ? (
                 answers[currentQuestion] === "" ? (
                   <button
