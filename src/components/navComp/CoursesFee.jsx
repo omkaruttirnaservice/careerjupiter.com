@@ -41,13 +41,7 @@ const CoursesFee = ({ coursesData }) => {
                     <th className="px-4 py-2 text-left whitespace-nowrap">
                     Medium
                     </th>
-                    <th className="px-4 py-2 text-left whitespace-nowrap">
-
-                    choiceCode
-                    </th>
-                    <th className="px-4 py-2 text-left whitespace-nowrap">
-                    mediumOfInstruction
-                    </th>
+                   
                     <th className="px-4 py-2 text-left whitespace-nowrap">
                     sanctionedIntake
                     </th>
@@ -74,13 +68,7 @@ const CoursesFee = ({ coursesData }) => {
                       <td className="px-4 py-2 whitespace-nowrap">
                         {course.mediumOfInstruction}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
-
-                        {course.choiceCode}
-                      </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
-                        {course.mediumOfInstruction}
-                      </td>
+                     
                       <td className="px-4 py-2 whitespace-nowrap">
 
                         {course.sanctionedIntake}
