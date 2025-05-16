@@ -258,7 +258,7 @@ export default function Roadmap() {
     queryFn: () => getSubType(typeId),
     enabled: !!typeId,
   });
-
+  
   useEffect(() => {
     if (subTypes?.data?.data) {
       setSubTypeOptions(subTypes.data.data);
@@ -286,28 +286,51 @@ export default function Roadmap() {
   };
 
   const navigateTo = (index) => {
-    const newPath = path.slice(0, index + 1);
-    setPath(newPath);
-    setTypeId(newPath[index]?.type_id);
-  };
+  const selectedItem = path[index];
 
-  const handleSelect = (option) => {
-    if (!option.roadmap) {
-      Swal.fire({
-        icon: "info",
-        title: "No Further Career Options",
-        text: "There are no further career paths available for this selection.",
-      });
-      return;
-    }
+  console.log("selectedItem",selectedItem);
+  
 
-    const nextType = option.roadmap?.type?.type || option.type;
-    const nextId = option.roadmap?.type?.type_id || option.type_id;
+  // Slice the path up to the clicked breadcrumb
+  const newPath = path.slice(0, index + 1);
+  setPath(newPath);
 
-    setPath([...path, { name: nextType, type_id: nextId }]);
-    setTypeId(nextId);
-    setSubTypeOptions(option.roadmap?.sub_type || []);
-  };
+  // Set the current typeId to trigger useQuery API
+  setTypeId(selectedItem.type_id);
+
+  // Optional: clear previous subType options until new data loads
+  setSubTypeOptions([]);
+};
+
+  const fetchNextSubTypes = (option) => {
+  if (option.roadmap?.type?._id) {
+    setTypeId(option.roadmap.type._id); // This triggers the query
+  }
+};
+
+const handleSelect = (option) => {
+  if (!option.roadmap) {
+    Swal.fire({
+      icon: "info",
+      title: "No Further Career Options",
+      text: "There are no further career paths available for this selection.",
+    });
+    return;
+  }
+
+  console.log("handleSelect option",option);
+  
+
+  const nextType = option.roadmap.type?.type || option.type;
+  const nextId = option.roadmap.type?._id || option.type._id;
+
+  setPath([...path, { name: nextType, type_id: nextId }]);
+  setSubTypeOptions(option.roadmap.sub_type || []);
+
+  // Fetch next sub types if available
+  fetchNextSubTypes(option);
+};
+
 
   return (
     <>
