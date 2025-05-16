@@ -10,7 +10,7 @@ import CardDetails from "../components/CardDetails";
 import InstituteMultiCard from "../components/InstituteComp/InstituteMultiCard";
 import SingleInstitute from "../components/InstituteComp/SingleInstitute";
 import MultiCards from "../components/MultiCards";
-import Roadmap from "../components/Roadmap";
+
 import UniversityDetail from "../components/UniversityComp/UniversityDetail";
 import UniversityMultiCard from "../components/UniversityComp/UniversityMultiCard";
 import ReviewPage from "../components/navComp/ReviewPage";
@@ -39,6 +39,10 @@ import InProgressTest from "./TestComp/InProgressTest.jsx";
 import CompleteTest from "./TestComp/CompleteTest.jsx";
 import PremiumServices from "./premium-services/PremiumServices.jsx";
 import GuestHandler from "./GuestHandler.jsx";
+import TestResult from "./TestComp/TestResult.jsx";
+import IQTestPopup from "./TestComp/IQTestPopup.jsx";
+import ShareTestResult from "./TestComp/ShareTestResult.jsx";
+import Roadmap from "./roadMap/Roadmap.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -133,6 +137,10 @@ children: [
         ],
         scrollRestoration: "manual",
       },
+
+      { path: "/test/report", element: <ShareTestResult /> },
+
+      { path: "/iqtest/popup", element: <IQTestPopup /> },
 
       {
         path: "/signout",

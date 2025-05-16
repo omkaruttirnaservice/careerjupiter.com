@@ -120,10 +120,7 @@ const IQTestReport = React.forwardRef(({ studentName, studentScore, totalMarks,c
                 <br/>
                 <br/>
                 <br/>
-                <br/>
-                <br/>
-                
-               
+
                 <h3 className="sub-title">How Information about Aptitude is Useful for Students?</h3>
                 <p className="paragraph">
                     Information about aptitude is useful for students in seeking academic and/or career guidance. It is to be used

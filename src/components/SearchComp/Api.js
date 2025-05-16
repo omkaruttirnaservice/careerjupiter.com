@@ -26,7 +26,7 @@ export const GetSearchClass = async ({ searchKey, category, type, dist }) => {
 };
 
 export const getCollegeCategory = async () => {
-  const response = await axios.get(`${BASE_URL}/api/college/search`);
+  const response = await axios.get(`${BASE_URL}/api/college/Category`);
   return response.data;
 };
 
