@@ -300,23 +300,24 @@ import { getSubType } from "./Api";
 
 // Expanded color palette
 const COLORS = {
-  primary: "#6366f1",
-  secondary: "#8b5cf6",
-  accent: "#ec4899",
-  success: "#10b981",
-  warning: "#f59e0b",
-  danger: "#ef4444",
-  info: "#3b82f6",
-  dark: "#1e293b",
-  light: "#f8fafc",
-  purple: "#a855f7",
-  pink: "#ec4899",
-  indigo: "#6366f1",
-  blue: "#3b82f6",
-  teal: "#14b8a6",
-  emerald: "#10b981",
-  amber: "#f59e0b"
+  primary: "#a5b4fc",   // Light Indigo
+  secondary: "#c4b5fd", // Light Purple
+  accent: "#f9a8d4",    // Light Pink
+  success: "#6ee7b7",   // Light Green
+  warning: "#fde68a",   // Soft Yellow
+  danger: "#fca5a5",    // Soft Red
+  info: "#93c5fd",      // Light Blue
+  dark: "#475569",      // Cool Gray
+  light: "#f1f5f9",     // Very Light Gray
+  purple: "#d8b4fe",    // Soft Lavender
+  pink: "#fbcfe8",      // Pastel Pink
+  indigo: "#c7d2fe",    // Soft Indigo
+  blue: "#bfdbfe",      // Light Sky Blue
+  teal: "#99f6e4",      // Minty Teal
+  emerald: "#a7f3d0",   // Light Emerald
+  amber: "#fde68a"      // Pastel Amber
 };
+
 
 // Icon mapping for different career types
 const CAREER_ICONS = {
@@ -349,12 +350,12 @@ const RoadmapNode = ({ node, onClick, isLast }) => {
   const isJob = node.type?.toLowerCase().includes("job");
   const careerIcon = getCareerIcon(node.type);
   const colors = [
-    "from-purple-400 to-pink-400",
-    "from-blue-400 to-teal-400",
-    "from-amber-400 to-orange-400",
-    "from-emerald-400 to-cyan-400",
-    "from-indigo-400 to-violet-400",
-    "from-rose-400 to-red-400"
+    "from-purple-300 to-pink-300",
+    "from-blue-300 to-teal-300",
+    "from-amber-300 to-orange-300",
+    "from-emerald-300 to-cyan-300",
+    "from-indigo-300 to-violet-300",
+    "from-rose-300 to-red-300"
   ];
   const randomColor = colors[Math.floor(Math.random() * colors.length)];
   
@@ -376,11 +377,11 @@ const RoadmapNode = ({ node, onClick, isLast }) => {
           {careerIcon}
         </div>
         <div className="flex-1">
-          <h3 className="font-bold text-white">{node.type}</h3>
-          <div className="flex items-center mt-2 text-sm text-white/90">
+          <h3 className="font-bold text-gray-800">{node.type}</h3>
+          {/* <div className="flex items-center mt-2 text-sm text-white/90">
             <FaClock className="mr-1" />
             <span>Duration: ~3 years</span>
-          </div>
+          </div> */}
           {node.roadmap && (
             // <div className="mt-2 flex items-center text-sm text-white">
             //   <FaLightbulb className="mr-1" />
@@ -461,7 +462,7 @@ const PathBreadcrumb = ({ item, index, isActive, onClick }) => {
 
 const WavyPath = ({ path }) => {
   return (
-    <div className="relative h-64 w-full my-12 overflow-hidden">
+    <div className="relative h-44 w-full my-4 overflow-hidden">
       {/* Wavy line */}
       <svg 
         viewBox="0 0 1200 300" 
@@ -629,9 +630,6 @@ export default function Roadmap() {
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-3 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-pink-500">
             Career Path
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Navigate your professional journey with our interactive, colorful roadmap
-          </p>
         </motion.header>
 
         {/* Controls */}
@@ -658,6 +656,23 @@ export default function Roadmap() {
             </motion.button>
           )}
         </div>
+
+        {/* Wavy Path Visualization */}
+        {path.length > 0 && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-0"
+          >
+            <h2 className="text-2xl font-semibold text-gray-700 mb-2 flex items-center justify-center">
+              <FaLayerGroup className="mr-3 text-indigo-500" />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-pink-500">
+                Your Career Journey
+              </span>
+            </h2>
+            <WavyPath path={path} />
+          </motion.div>
+        )}
 
         {/* Breadcrumb Navigation */}
         {path.length > 0 && (
@@ -686,23 +701,6 @@ export default function Roadmap() {
           </motion.div>
         )}
 
-        {/* Wavy Path Visualization */}
-        {path.length > 0 && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mb-12"
-          >
-            <h2 className="text-2xl font-semibold text-gray-700 mb-6 flex items-center justify-center">
-              <FaLayerGroup className="mr-3 text-indigo-500" />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-pink-500">
-                Your Career Journey
-              </span>
-            </h2>
-            <WavyPath path={path} />
-          </motion.div>
-        )}
-
         {/* Options Section */}
         <motion.section 
           layout
@@ -718,7 +716,7 @@ export default function Roadmap() {
               </>
             ) : (
               <>
-                <FaArrowRight className="mr-3 text-indigo-500" />
+                {/* <FaArrowRight className="mr-3 text-indigo-500" /> */}
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-pink-500">
                   Next Steps After {path[path.length - 1]?.name}
                 </span>
@@ -839,42 +837,6 @@ export default function Roadmap() {
               </ul>
             </div>
             <div className="hidden md:block flex-1">
-              <div className="relative h-64">
-                <div className="absolute w-full h-full">
-                  <svg 
-                    viewBox="0 0 400 300" 
-                    className="w-full h-full"
-                  >
-                    <path 
-                      d="M20,150 C100,50 300,250 380,150" 
-                      stroke="url(#gradient2)"
-                      strokeWidth="6"
-                      fill="none"
-                      strokeDasharray="8 4"
-                    />
-                    <defs>
-                      <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#a5b4fc" />
-                        <stop offset="100%" stopColor="#f0abfc" />
-                      </linearGradient>
-                    </defs>
-                    
-                    {/* Checkpoint markers */}
-                    <circle cx="20" cy="150" r="12" fill="#6366f1" stroke="white" strokeWidth="3">
-                      <animate attributeName="r" values="12;15;12" dur="2s" repeatCount="indefinite" />
-                    </circle>
-                    <circle cx="100" cy="50" r="10" fill="#8b5cf6" stroke="white" strokeWidth="3">
-                      <animate attributeName="r" values="10;13;10" dur="2s" repeatCount="indefinite" begin="0.5s" />
-                    </circle>
-                    <circle cx="300" cy="250" r="10" fill="#ec4899" stroke="white" strokeWidth="3">
-                      <animate attributeName="r" values="10;13;10" dur="2s" repeatCount="indefinite" begin="1s" />
-                    </circle>
-                    <circle cx="380" cy="150" r="12" fill="#3b82f6" stroke="white" strokeWidth="3">
-                      <animate attributeName="r" values="12;15;12" dur="2s" repeatCount="indefinite" begin="1.5s" />
-                    </circle>
-                  </svg>
-                </div>
-              </div>
             </div>
           </div>
         </motion.div>
