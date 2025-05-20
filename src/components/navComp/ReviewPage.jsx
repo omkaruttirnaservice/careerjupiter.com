@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { Navigate, useLocation, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ShowReviews from "./ReviewList";
 import { submitReview, fetchUserDetails } from "./Api";
 import Cookies from "js-cookie";
+
 
 const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
   const { id } = useParams();
@@ -19,6 +20,8 @@ const ReviewPage = ({ reviewCollegeName, reviewUniversityName }) => {
   const { pathname } = useLocation();
   const reviewType = pathname.split("/")[1];
 
+
+ 
   // Fetch user details
   useEffect(() => {
     const userId = Cookies.get("userId");
