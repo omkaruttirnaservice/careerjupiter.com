@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import Nav from "../../Layouts/Nav.jsx";
 import Footer from "../Footer.jsx";

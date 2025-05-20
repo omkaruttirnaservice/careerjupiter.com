@@ -98,8 +98,8 @@ const SignupPopup = ({ isOpen, onClose }) => {
       if (data.success) {
         Swal.fire({
           icon: 'success',
-          title: 'Verified Successfully!',
-          html: 'OTP verified and enquiry submitted.<br><b>We will contact you soon.</b>',
+          title: 'Inquiry Accepted!',
+          html: '<br><b>We will contact you soon.</b>',
           confirmButtonColor: '#6D28D9',
         }).then(() => onClose());
       } else {

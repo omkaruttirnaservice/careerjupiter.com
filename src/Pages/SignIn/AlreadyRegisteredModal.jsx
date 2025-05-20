@@ -1,4 +1,3 @@
-"use client";
 import PropTypes from "prop-types";
 import { Navigate, useNavigate } from "react-router-dom";
 
