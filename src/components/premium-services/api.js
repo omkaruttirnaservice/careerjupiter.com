@@ -1,8 +1,9 @@
 // api/enquiryApi.js
 import axios from 'axios';
+import { BASE_URL } from '../../utils/constansts';
 
 const API = axios.create({
-  baseURL: 'http://192.168.1.9:5000/api/enquiry',
+  baseURL: `${BASE_URL}/api/enquiry`,
   headers: {
     'Content-Type': 'application/json',
   },
