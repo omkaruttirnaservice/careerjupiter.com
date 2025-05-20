@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { fetchReviews } from "./Api";
 
@@ -49,6 +49,8 @@ const ShowReviews = ({userName}) => {
   const { id } = useParams();
   const { pathname } = useLocation();
   const reviewType = pathname.split("/")[1];
+    const navigate = useNavigate();
+
 
   // Fetch reviews using React Query
   const {
@@ -64,6 +66,25 @@ const ShowReviews = ({userName}) => {
   const sortedReviews = [...reviews].sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
+
+  const currentUrl = `${window.location.origin}/${reviewType}/${id}/review`;
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Write a Review",
+          text: "Click here to write your review.",
+          url: currentUrl,
+        })
+        .catch((err) => console.error("Sharing failed:", err));
+    } else {
+      window.open(
+        `https://wa.me/?text=${encodeURIComponent("Click here to write a review: " + currentUrl)}`,
+        "_blank"
+      );
+    }
+  };
 
   return (
     <div className="mt-3 bg-white p-2 rounded-lg shadow-lg max-w-4xl">
@@ -121,6 +142,19 @@ const ShowReviews = ({userName}) => {
           No reviews available for this yet.
         </p>
       )}
+        {/* Share Review Button */}
+      <div className="flex justify-end mb-4 px-2">
+        <button
+          onClick={handleShare}
+          className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded flex items-center gap-2"
+        >
+          <img
+            src="https://img.icons8.com/ios-filled/20/ffffff/share.png"
+            alt="share"
+          />
+          Share Review
+        </button>
+      </div>
     </div>
   );
 };
