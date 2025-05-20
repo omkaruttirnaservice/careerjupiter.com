@@ -1,5 +1,3 @@
-"use client";
-
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./Api";
 import { useQuery } from "@tanstack/react-query";

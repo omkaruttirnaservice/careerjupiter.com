@@ -1,6 +1,6 @@
 
 import { useEffect, useRef, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
   FaPhoneAlt,
   FaEnvelope,
@@ -219,6 +219,13 @@ const CardDetails = () => {
 >
   {/* Left Side - Main College Image */}
   <div className={college.imageGallery?.length > 0 ? "w-full md:w-1/2" : "w-full"}>
+    <div className="flex justify-center items-center">
+      <Link to="/service-provider">
+       <u className="text-blue-600"> <p className="text-blue-600 mb-2 text-center cursor-pointer hover:underline">
+          "Want to update college details? Just click here to make changes!"
+        </p></u>
+      </Link>
+    </div>
     <motion.img
       src={
         college.image?.trim()
@@ -232,6 +239,7 @@ const CardDetails = () => {
       transition={{ type: "spring", stiffness: 400 }}
     />
   </div>
+  
 
   {/* Right Side - Gallery Images (Only if exists) */}
   {college.imageGallery?.length > 0 && (
@@ -253,6 +261,7 @@ const CardDetails = () => {
 
       {college.imageGallery.length >= 2 && (
         <div className="grid grid-cols-2 gap-4 h-full">
+         
           {college.imageGallery.slice(0, 2).map((img, index) => (
             <motion.img
               key={index}

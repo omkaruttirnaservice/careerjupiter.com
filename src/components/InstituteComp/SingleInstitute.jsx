@@ -337,6 +337,7 @@ const SingleInstitute = () => {
           </div>
         </div>
       </div>
+      
 
       <div className="w-full bg-white py-6 px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -347,6 +348,7 @@ const SingleInstitute = () => {
         >
           {instituteClass?.info?.description && (
             <div className="mb-6 sm:mb-8 px-4 sm:px-6 md:px-8 py-5 bg-blue-50 rounded-2xl shadow-sm">
+              
               <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-2 sm:mb-3">
                 About Us
               </h2>

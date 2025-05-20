@@ -10,7 +10,7 @@ const SloganHomePage = ()=>{
               <span className="font-extrabold text-transparent bg-clip-text animated-gradient">
                 <Typewriter
                   options={{
-                    strings: ["Best College", "Best School", "Best Class"],
+                    strings: ["Best College", "Best School", "Best Class","Best Career Map"],
                     autoStart: true,
                     loop: true,
                   }}

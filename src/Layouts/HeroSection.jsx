@@ -13,6 +13,7 @@ import SloganHomePage from "../components/SloganHomePage";
 
 import IQtestBanner from './IQtestBanner';
 import PremiumServices from "./PremiumServices";
+import IQTestandRoadMapBanner from "./IQTestandRoadMapBanner";
 
 
 const HeroSection = () => {
@@ -46,6 +47,8 @@ const HeroSection = () => {
       <br/>
       <CheckEligibility />
       <br />
+      <IQTestandRoadMapBanner />
+      
     </>
   );
 };

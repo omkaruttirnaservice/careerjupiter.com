@@ -1,6 +1,9 @@
-// api/enquiryApi.js
 import axios from 'axios';
 import { BASE_URL } from '../../utils/constansts';
+<<<<<<< HEAD
+
+
+=======
 
 const API = axios.create({
   baseURL: `${BASE_URL}/api/enquiry`,
@@ -8,9 +11,10 @@ const API = axios.create({
     'Content-Type': 'application/json',
   },
 });
+>>>>>>> c9574584e5e88dbcc105095d47243dcb1347f56c
 
 export const sendOtp = async ({ name, mobile }) => {
-  const res = await API.post('/send-otp', {
+  const res = await axios.post(`${BASE_URL}/api/enquiry/send-otp`, {
     f_name: name,
     mobile_no: mobile,
     enqType: 'consulting',
@@ -19,7 +23,7 @@ export const sendOtp = async ({ name, mobile }) => {
 };
 
 export const verifyOtp = async ({ name, mobile, referenceId, otp }) => {
-  const res = await API.post('/verify-otp', {
+  const res = await axios.post(`${BASE_URL}/api/enquiry/verify-otp`, {
     f_name: name,
     mobile_no: mobile,
     reference_id: referenceId,
@@ -30,8 +34,7 @@ export const verifyOtp = async ({ name, mobile, referenceId, otp }) => {
 };
 
 export const addPremiumEnquiry = async ({ userId, token }) => {
-  const res = await API.post(
-    '/add',
+  const res = await axios.post(`${BASE_URL}/api/enquiry/add`,
     {
       enqType: 'Premium Service',
       userId,

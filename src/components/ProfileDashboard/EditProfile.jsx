@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { X } from "lucide-react";
@@ -301,7 +299,6 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 
 export default EditProfileModal;
 
-// "use client";
 
 // import { useEffect, useState } from "react";
 // import { useMutation } from "@tanstack/react-query";

@@ -1,4 +1,3 @@
-"use client";
 import { FiFilter, FiX } from "react-icons/fi";
 
 const FilterSection = ({
