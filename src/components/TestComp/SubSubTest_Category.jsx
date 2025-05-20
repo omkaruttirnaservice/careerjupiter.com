@@ -1,10 +1,11 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaArrowLeft, FaChalkboardTeacher } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../utils/constansts";
 import Breadcrumb from "./Breadcrumb";
+import LoadingTestCard from "../loading-skeleton/LoadingTestCard";
 
 const SubSubTest_Category = () => {
   const navigate = useNavigate();
@@ -15,24 +16,37 @@ const SubSubTest_Category = () => {
   const main_name = query.get("main_name");
   const [subSubName, setSubSubName] = useState(null);
 
-  const {
+  // const {
+  //   data,
+  //   mutate: fetchSubSubCategories,
+  //   isLoading,
+  //   isError,
+  // } = useMutation({
+  //   mutationFn: () =>
+  //     axios.post(`${BASE_URL}/api/iq_category/get-sub-sub-categories`, {
+  //       mainCategoryId: categoryId,
+  //       sub_category_name: sub_Category,
+  //     }),
+  // });
+
+  // useEffect(() => {
+  //   if (categoryId && sub_Category) {
+  //     fetchSubSubCategories();
+  //   }
+  // }, [categoryId, sub_Category]);
+
+    const {
     data,
-    mutate: fetchSubSubCategories,
     isLoading,
     isError,
-  } = useMutation({
-    mutationFn: () =>
+  } = useQuery({
+    queryKey: ["subSubTestCategory"],
+    queryFn: () =>
       axios.post(`${BASE_URL}/api/iq_category/get-sub-sub-categories`, {
         mainCategoryId: categoryId,
         sub_category_name: sub_Category,
       }),
   });
-
-  useEffect(() => {
-    if (categoryId && sub_Category) {
-      fetchSubSubCategories();
-    }
-  }, [categoryId, sub_Category]);
 
   const testCategories = data?.data?.sub_categories;
 
@@ -58,13 +72,6 @@ const SubSubTest_Category = () => {
 
   return (
     <div className=" max-w-7xl mx-auto">
-      {/* <button
-        onClick={handleBack}
-        className="flex items-center px-4 py-2 bg-purple-500 text-white font-semibold rounded-full shadow-md hover:bg-purple-600 transition duration-300 mb-4"
-      >
-        <FaArrowLeft className="mr-2" />
-        Back
-      </button> */}
 
       <Breadcrumb
         mainCategoryName={mainCategoryName}
@@ -77,7 +84,7 @@ const SubSubTest_Category = () => {
       </h2>
 
       {isLoading ? (
-        <p className="text-center text-gray-500">Loading...</p>
+        <p className="text-center text-gray-500"><LoadingTestCard/></p>
       ) : isError ? (
         <p className="text-center text-red-500">Failed to load data.</p>
       ) : (

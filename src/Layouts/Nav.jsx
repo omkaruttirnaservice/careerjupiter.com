@@ -121,6 +121,16 @@ const Nav = () => {
 
                         <li>
                           <Link
+                            to="/roadmap"
+                            className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/my-eligibility") ? "text-blue-500" : ""
+                              }`}
+                          >
+                            Career Map
+                          </Link>
+                        </li>
+
+                        <li>
+                          <Link
                             to="/premium-services"
                             className={`block px-4 py-2 hover:bg-gray-300 ${isActive("/my-eligibility") ? "text-blue-500" : ""
                               }`}
@@ -170,6 +180,7 @@ const Nav = () => {
                       </ul>
                     </div>
                   </li>
+                  
 
                   <li>
                     <Link

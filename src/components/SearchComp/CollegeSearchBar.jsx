@@ -48,6 +48,7 @@ const CollegeSearchBar = ({ setSearchCollegeData, setIsLoading }) => {
     queryFn: getCollegeCategory,
     refetchOnWindowFocus: false,
   });
+  
 
   const { data: collegeDist } = useQuery({
     queryKey: ["college-district"],
@@ -150,9 +151,9 @@ const CollegeSearchBar = ({ setSearchCollegeData, setIsLoading }) => {
               onChange={(e) => setCollegeCategoryValue(e.target.value)}
             >
               <option value="">Category</option>
-              {collegeCategory?.categories?.map((cate) => (
-                <option key={cate.category} value={cate.category}>
-                  {capitalize(cate.category)}
+              {collegeCategory?.data?.map((category) => (
+                <option key={category} value={category}>
+                  {capitalize(category)}
                 </option>
               ))}
             </select>

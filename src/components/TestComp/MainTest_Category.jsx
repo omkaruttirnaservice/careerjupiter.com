@@ -4,45 +4,35 @@ import { FaUserGraduate } from "react-icons/fa";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GiGraduateCap } from "react-icons/gi";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getMainTest_Category } from "./Api";
 import Breadcrumb from "./Breadcrumb";
 import Swal from "sweetalert2";
+import LoadingTestCard from "../loading-skeleton/LoadingTestCard";
 const MainTest_Category = () => {
   const navigate = useNavigate();
 
+  // const {
+  //   data: testCategory,
+  //   mutate: fetchTestCategory,
+  //   isLoading,
+  //   isError,
+  // } = useMutation({
+  //   mutationFn: getMainTest_Category,
+  // });
+
+  // useEffect(() => {
+  //   fetchTestCategory();
+  // }, []);
+
   const {
-    data: testCategory,
-    mutate: fetchTestCategory,
-    isLoading,
-    isError,
-  } = useMutation({
-    mutationFn: getMainTest_Category,
-  });
-
-  useEffect(() => {
-    fetchTestCategory();
-  }, []);
-
-  useEffect(() => {
-    if (isError) {
-      Swal.fire({
-        title: "",
-        text: "We’re experiencing high traffic or a temporary issue. Please try again.",
-        icon: "info",
-        buttons: {
-          retry: {
-            text: "ok",
-            value: "retry",
-          },
-        },
-      }).then((value) => {
-        if (value === "retry") {
-          fetchTestCategory();
-        }
-      });
-    }
-  }, [isError, fetchTestCategory]);
+  data: testCategory,
+  isLoading,
+  isError,
+} = useQuery({
+  queryKey: ["mainTestCategory"],
+  queryFn: getMainTest_Category,
+});
 
   const handle_SubCategory = (id, name) => {
     navigate(`/profile/test?type=sub_category&id=${id}&main_name=${name}`);
@@ -56,7 +46,7 @@ const MainTest_Category = () => {
       </h2>
 
       {isLoading ? (
-        <p className="text-center text-gray-500">Loading...</p>
+        <p className="text-center text-gray-500"><LoadingTestCard/></p>
       ) : testCategory ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {testCategory?.data?.data.map((category, index) => {
