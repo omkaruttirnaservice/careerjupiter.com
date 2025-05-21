@@ -1,17 +1,7 @@
 import axios from 'axios';
 import { BASE_URL } from '../../utils/constansts';
-<<<<<<< HEAD
 
 
-=======
-
-const API = axios.create({
-  baseURL: `${BASE_URL}/api/enquiry`,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
->>>>>>> c9574584e5e88dbcc105095d47243dcb1347f56c
 
 export const sendOtp = async ({ name, mobile }) => {
   const res = await axios.post(`${BASE_URL}/api/enquiry/send-otp`, {

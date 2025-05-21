@@ -50,7 +50,7 @@ const ServiceProvide = () => {
         onClick={handleRegisterClassClick}
       />
       <Card
-        title="Register Your College"
+        title="Edit Your College Details"
         description="Get your college listed and reach students nationwide!"
         image="https://media.istockphoto.com/id/1456749194/photo/college-students-arriving-for-night-school.jpg?s=612x612&w=0&k=20&c=qz7RMdg4cgioWYuKIQ0r4iZ7itIbTrhORTcr-y0K2Rk="
         buttonText="Register College"

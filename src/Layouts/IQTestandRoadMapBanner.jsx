@@ -7,7 +7,7 @@ const IQTestandRoadMapBanner = () => {
   return (
     <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto px-4 sm:px-6">
     
-      <div className="relative w-full h-[300px] sm:h-[350px] md:h-[450px] overflow-hidden rounded-xl shadow-lg group">
+      <div className="relative w-full h-[300px] sm:h-[350px] md:h-[450px]  rounded-xl shadow-lg group">
         <img
           src="/roadmap.png"
           alt="Road Map"
@@ -25,7 +25,7 @@ const IQTestandRoadMapBanner = () => {
       </div>
 
      
-      <div className="relative w-full h-[300px] sm:h-[350px] md:h-[450px] overflow-hidden rounded-xl shadow-lg group">
+      <div className="relative w-full h-[300px] sm:h-[350px] md:h-[450px] rounded-xl shadow-lg group">
         <img
           src="https://cdn11.bigcommerce.com/s-aqhrs1x7/images/stencil/1280x1280/products/3923/10149/TY0301300_IQ_1__75257.1671250549.jpg?c=2"
           alt="IQ Test"
