@@ -220,11 +220,7 @@ const CardDetails = () => {
   {/* Left Side - Main College Image */}
   <div className={college.imageGallery?.length > 0 ? "w-full md:w-1/2" : "w-full"}>
     <div className="flex justify-center items-center">
-      <Link to="/service-provider">
-       <u className="text-blue-600"> <p className="text-blue-600 mb-2 text-center cursor-pointer hover:underline">
-          "Want to update college details? Just click here to make changes!"
-        </p></u>
-      </Link>
+     
     </div>
     <motion.img
       src={
@@ -425,6 +421,12 @@ const CardDetails = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
         >
+           <Link to="/service-provider">
+       <u className="text-blue-600"> <p className="text-blue-600 mb-2 text-center cursor-pointer hover:underline">
+          "Want to update college details? Just click here to make changes!"
+        </p></u>
+      </Link>
+      <br/>
           <div className="flex justify-center px-4">
             <div className="w-full max-w-6xl">
               <div className="flex overflow-x-auto scrollbar-hide pb-2">
@@ -448,7 +450,9 @@ const CardDetails = () => {
                       {each}
                     </motion.button>
                   ))}
+                  
                 </div>
+                
               </div>
             </div>
           </div>
