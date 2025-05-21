@@ -43,11 +43,13 @@ const HeroSection = () => {
       <br />
       <BestUniversity />
       <br />
+      <IQTestandRoadMapBanner />
+      <br/>
       <PremiumServices />
       <br/>
       <CheckEligibility />
       <br />
-      <IQTestandRoadMapBanner />
+    
       
     </>
   );
