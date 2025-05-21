@@ -149,34 +149,41 @@ const CardDetails = () => {
   return (
     <>
       <Nav />
-      <AnimatePresence>
-        <motion.a
-          href={`tel:${college.contactDetails}`}
-          className="fixed mt-110 right-5 z-50 flex items-center transition-all duration-300"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onHoverStart={() => setIsHovered(true)}
-          onHoverEnd={() => setIsHovered(false)}
-        >
-          <motion.span
-            className="w-28 h-28"
-            animate={isHovered ? { rotate: 10 } : { rotate: 0 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <Lotify icon="/public/Lottiefiles/Animation - 1743060162749.json" />
-          </motion.span>
+     <AnimatePresence>
+      <motion.a
+        href={`tel:${college.contactDetails}`}
+        className="fixed bottom-10 right-5 z-50 flex items-center"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
+      >
+        {/* "Call Now" text on the LEFT side */}
+        <AnimatePresence>
           {isHovered && (
             <motion.span
-              className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium ml-2"
+              className=" bg-blue-600 text-white px-2 py-2 rounded-full text-sm font-semibold shadow-lg"
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
+              transition={{ duration: 0.2 }}
             >
               Call Now
             </motion.span>
           )}
-        </motion.a>
-      </AnimatePresence>
+        </AnimatePresence>
+
+        {/* Lottie icon on the RIGHT */}
+        <motion.span
+          className="w-30 h-30"
+          animate={isHovered ? { rotate: 10 } : { rotate: 0 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          <Lotify icon="/public/Lottiefiles/Animation - 1743060162749.json" />
+        </motion.span>
+      </motion.a>
+    </AnimatePresence>
+
 
       <motion.div
         className="max-w-full mx-auto p-4 mt-15"
