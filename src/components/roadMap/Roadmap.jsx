@@ -849,11 +849,18 @@ function Roadmap() {
                   >
                     Go Back One Step
                   </motion.button>
+                  
                 )}
               </div>
+              
             </motion.div>
+          
           )}
+          
         </motion.section>
+
+        <TopOptions navigate={navigate} />
+
 
         {/* Info Section */}
         <motion.div
@@ -863,14 +870,13 @@ function Roadmap() {
           className="bg-gradient-to-r from-indigo-600 to-purple-700 rounded-3xl p-8 text-white shadow-2xl"
         >
           {/* Added TopOptions component at the top of the blue div */}
-          <TopOptions navigate={navigate} />
-          <hr/>
-          <center>
+        
+          
           <h3 className="text-2xl font-bold mb-6 m-5 flex justify-center">
                 <FaLightbulb className="mr-3 text-yellow-300" />
                 How to Navigate Your Career Journey
               </h3>
-              </center>
+              
               
           <div className="flex flex-col md:flex-row items-center gap-8">
             

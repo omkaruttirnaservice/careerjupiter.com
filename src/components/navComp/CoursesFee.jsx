@@ -17,14 +17,14 @@ const CoursesFee = ({ coursesData }) => {
         <div className="flex flex-col gap-6 ">
           {/* Course Fee Table */}
           <div className="w-full">
-            <h2 className="text-2xl font-bold text-indigo-700 mb-4">
+            <h2 className="text-2xl font-bold text-black mb-4">
               <center>
               Course Details
               </center>
             </h2>
             <div className="overflow-x-auto">
               <table className="w-full text-sm md:text-base border-collapse min-w-max">
-                <thead className="bg-indigo-500 text-white">
+                <thead className="bg-gray-200 text-black">
                   <tr>
                     <th className="px-4 py-2 text-left whitespace-nowrap">
                       Course
