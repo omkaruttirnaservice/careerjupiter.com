@@ -12,15 +12,18 @@ import { BASE_URL } from "../../utils/constansts";
 export const GetSearchCollege = async ({ searchKey, category, type, dist }) => {
   // if (!type) return;
   const response = await axios.get(
-    `${BASE_URL}/api/search/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}`
+    `${BASE_URL}/api/search/college/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}`
   );
+
+  // console.log(response.data , 'respose getserach college')
   return response.data;
+
 };
 
 export const GetSearchClass = async ({ searchKey, category, type, dist }) => {
   // if (!type) return;
   const response = await axios.get(
-    `${BASE_URL}/api/search/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}`
+    `${BASE_URL}/api/search/class/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}`
   );
   return response.data;
 };
@@ -36,7 +39,9 @@ export const getCollegeDist = async () => {
 };
 
 export const getClassCategory = async () => {
-  const response = await axios.get(`${BASE_URL}/api/class/search`);
+  const response = await axios.get(`${BASE_URL}/api/class/Category`);
+    // console.log(response.data, "responpasdof catory")
+
   return response.data;
 };
 
