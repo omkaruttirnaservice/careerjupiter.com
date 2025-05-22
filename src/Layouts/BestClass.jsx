@@ -23,7 +23,7 @@ const BestClass = () => {
         </p>
         <button
           onClick={handleSearch}
-          className="w-full cursor-pointer border-2 flex items-center justify-center gap-3 bg-blue-500 text-white px-6 py-3 rounded-full font-semibold text-lg transition-transform duration-300 hover:scale-105"
+          className="w-full cursor-pointer border-1 flex items-center justify-center gap-3 bg-blue-500 text-white px-6 py-3 rounded-full font-semibold text-lg transition-transform duration-300 hover:scale-105"
         >
           <FaSearch /> Search Class
           <motion.img
