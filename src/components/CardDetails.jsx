@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
@@ -87,13 +86,14 @@ const CardDetails = () => {
   });
 
   const college = data?.college;
-  console.log(college, "collegsssss");
+  // console.log(college, "collegsssss");
   const courses = data?.courses;
   const infrastructure = data?.infrastructure;
   const placements = data?.placements;
   const imageGallery = data?.college?.imageGallery;
   const typeOfCourse = data?.college?.typeOfCourse;
   const subCategory = data?.college?.subCategory;
+
   const Contact = {
     phone: data?.college?.contactDetails || "Not Available",
     email: data?.college?.email_id || "Not Available",
@@ -104,19 +104,19 @@ const CardDetails = () => {
       district: data?.college?.address?.[0]?.dist || "",
       state: data?.college?.address?.[0]?.state || "Maharashtra",
       pincode: data?.college?.address?.[0]?.pincode || "",
-      fullAddress: [
-        data?.college?.address?.[0]?.line1,
-        data?.college?.address?.[0]?.line2,
-        data?.college?.address?.[0]?.dist,
-        data?.college?.address?.[0]?.state,
-        data?.college?.address?.[0]?.pincode
-      ].filter(Boolean).join(", ") || "Address not available"
+      fullAddress:
+        [
+          data?.college?.address?.[0]?.line1,
+          data?.college?.address?.[0]?.line2,
+          data?.college?.address?.[0]?.dist,
+          data?.college?.address?.[0]?.state,
+          data?.college?.address?.[0]?.pincode,
+        ]
+          .filter(Boolean)
+          .join(", ") || "Address not available",
     },
-    
-   
   };
-  console.log(ContactDetails , 'ContactDetails')
-
+  // console.log(Contact , 'ContactDetails')
 
   if (!college) {
     return <p className="text-center text-gray-600 mt-8">No data found.</p>;
@@ -150,33 +150,38 @@ const CardDetails = () => {
     <>
       <Nav />
       <AnimatePresence>
-        <motion.a
-          href={`tel:${college.contactDetails}`}
-          className="fixed mt-110 right-5 z-50 flex items-center transition-all duration-300"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onHoverStart={() => setIsHovered(true)}
-          onHoverEnd={() => setIsHovered(false)}
-        >
-          <motion.span
-            className="w-28 h-28"
-            animate={isHovered ? { rotate: 10 } : { rotate: 0 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <Lotify icon="/public/Lottiefiles/Animation - 1743060162749.json" />
-          </motion.span>
+      <motion.a
+        href={`tel:${college.contactDetails}`}
+        className="fixed bottom-10 right-5 z-50 flex items-center"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
+      >
+        {/* "Call Now" text on the LEFT side */}
+        <AnimatePresence>
           {isHovered && (
             <motion.span
-              className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium ml-2"
+              className=" bg-blue-600 text-white px-2 py-2 rounded-full text-sm font-semibold shadow-lg"
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
+              transition={{ duration: 0.2 }}
             >
               Call Now
             </motion.span>
           )}
-        </motion.a>
-      </AnimatePresence>
+        </AnimatePresence>
+        {/* Lottie icon on the RIGHT */}
+        <motion.span
+          className="w-30 h-30"
+          animate={isHovered ? { rotate: 10 } : { rotate: 0 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          <Lotify icon="/public/Lottiefiles/Animation - 1743060162749.json" />
+        </motion.span>
+      </motion.a>
+    </AnimatePresence>
 
       <motion.div
         className="max-w-full mx-auto p-4 mt-15"
@@ -212,67 +217,67 @@ const CardDetails = () => {
 
         {/* Image and Gallery Section */}
         <motion.div
-  className="w-full flex flex-col md:flex-row gap-2"
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.4 }}
->
-  {/* Left Side - Main College Image */}
-  <div className={college.imageGallery?.length > 0 ? "w-full md:w-1/2" : "w-full"}>
-    <div className="flex justify-center items-center">
-     
-    </div>
-    <motion.img
-      src={
-        college.image?.trim()
-          ? `${BACKEND_SERVER_IP}${college.image}`
-          : "https://cdn.pixabay.com/photo/2017/09/01/13/56/university-2704306_640.jpg"
-      }
-      alt={college.collegeName || "College Image"}
-      className="rounded-lg w-full h-72 object-cover shadow-lg"
-      loading="lazy"
-      whileHover={{ scale: 1.02 }}
-      transition={{ type: "spring", stiffness: 400 }}
-    />
-  </div>
-  
-
-  {/* Right Side - Gallery Images (Only if exists) */}
-  {college.imageGallery?.length > 0 && (
-    <motion.div
-      className="w-full md:w-1/2"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {college.imageGallery.length === 1 && (
-        <motion.img
-          src={`${BACKEND_SERVER_IP}${college.imageGallery[0]}`}
-          alt="Gallery Image 1"
-          className="rounded-lg w-full h-72 object-cover shadow-lg"
-          variants={itemVariants}
-          whileHover={{ scale: 1.02 }}
-        />
-      )}
-
-      {college.imageGallery.length >= 2 && (
-        <div className="grid grid-cols-2 gap-4 h-full">
-         
-          {college.imageGallery.slice(0, 2).map((img, index) => (
+          className="w-full flex flex-col md:flex-row gap-2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          {/* Left Side - Main College Image */}
+          <div
+            className={
+              college.imageGallery?.length > 0 ? "w-full md:w-1/2" : "w-full"
+            }
+          >
+            <div className="flex justify-center items-center"></div>
             <motion.img
-              key={index}
-              src={`${BACKEND_SERVER_IP}${img}`}
-              alt={`Gallery Image ${index + 1}`}
-              className="rounded-lg w-full h-full min-h-[160px] max-h-[280px] object-cover shadow-md"
-              variants={itemVariants}
-              whileHover={{ scale: 1.05 }}
+              src={
+                college.image?.trim()
+                  ? `${BACKEND_SERVER_IP}${college.image}`
+                  : "https://cdn.pixabay.com/photo/2017/09/01/13/56/university-2704306_640.jpg"
+              }
+              alt={college.collegeName || "College Image"}
+              className="rounded-lg w-full h-72 object-cover shadow-lg"
+              loading="lazy"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 400 }}
             />
-          ))}
-        </div>
-      )}
-    </motion.div>
-  )}
-</motion.div>
+          </div>
+
+          {/* Right Side - Gallery Images (Only if exists) */}
+          {college.imageGallery?.length > 0 && (
+            <motion.div
+              className="w-full md:w-1/2"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {college.imageGallery.length === 1 && (
+                <motion.img
+                  src={`${BACKEND_SERVER_IP}${college.imageGallery[0]}`}
+                  alt="Gallery Image 1"
+                  className="rounded-lg w-full h-72 object-cover shadow-lg"
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02 }}
+                />
+              )}
+
+              {college.imageGallery.length >= 2 && (
+                <div className="grid grid-cols-2 gap-4 h-full">
+                  {college.imageGallery.slice(0, 2).map((img, index) => (
+                    <motion.img
+                      key={index}
+                      src={`${BACKEND_SERVER_IP}${img}`}
+                      alt={`Gallery Image ${index + 1}`}
+                      className="rounded-lg w-full h-full min-h-[160px] max-h-[280px] object-cover shadow-md"
+                      variants={itemVariants}
+                      whileHover={{ scale: 1.05 }}
+                    />
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
+        </motion.div>
 
         {/* College Info Section */}
         <motion.div
@@ -282,7 +287,7 @@ const CardDetails = () => {
           transition={{ delay: 0.5 }}
         >
           {/* Left Side - Course Fee Details with div layout */}
-          <div className="bg-gray-50 p-4 md:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow h-full">
+          <div className="bg-gray-20 p-4 md:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow h-full">
             <h2 className="text-2xl font-bold text-black mb-6 border-b pb-2">
               Stream Intake (Academic Year 2025-26)
             </h2>
@@ -421,12 +426,16 @@ const CardDetails = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
         >
-           <Link to="/service-provider">
-       <u className="text-blue-600"> <p className="text-blue-600 mb-2 text-center cursor-pointer hover:underline">
-          "Want to update college details? Just click here to make changes!"
-        </p></u>
-      </Link>
-      <br/>
+          <Link to="/service-provider">
+            <u className="text-blue-600">
+              {" "}
+              <p className="text-blue-600 mb-2 text-center cursor-pointer hover:underline">
+                "Want to update college details? Just click here to
+                make changes!"
+              </p>
+            </u>
+          </Link>
+          <br />
           <div className="flex justify-center px-4">
             <div className="w-full max-w-6xl">
               <div className="flex overflow-x-auto scrollbar-hide pb-2">
@@ -450,9 +459,7 @@ const CardDetails = () => {
                       {each}
                     </motion.button>
                   ))}
-                  
                 </div>
-                
               </div>
             </div>
           </div>
@@ -476,7 +483,6 @@ const CardDetails = () => {
             Contact={Contact}
             logo={college.logo}
           />
-          
         </motion.div>
       </motion.div>
     </>

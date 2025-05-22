@@ -55,11 +55,11 @@ const ClassSearchBar = ({
     setIsLoading(isPending);
   }, [isPending]);
 
-    useEffect(() => {
-      if (isError) {
-        setSearchClassData([]);
-      }
-    }, [isError]);
+  useEffect(() => {
+    if (isError) {
+      setSearchClassData([]);
+    }
+  }, [isError]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -119,9 +119,9 @@ const ClassSearchBar = ({
               onChange={(e) => setClassCategoryValue(e.target.value)}
             >
               <option value="">Category</option>
-              {ClassCategory?.categories?.map((cate) => (
-                <option key={cate.category} value={cate.category}>
-                  {capitalize(cate.category)}
+              {ClassCategory?.data?.map((cate) => (
+                <option key={cate} value={cate}>
+                  {capitalize(cate)}
                 </option>
               ))}
             </select>

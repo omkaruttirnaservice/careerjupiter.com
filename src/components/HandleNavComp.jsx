@@ -32,7 +32,7 @@ const HandleNavComp = ({
     "Reviews",
     "Contact Details"
   ];
-  console.log(Contact , 'sdlkfjsldkfjsdklfjl')
+  // console.log(Contact , 'sdlkfjsldkfjsdklfjl')
 
   useEffect(() => {
     switch (navName) {
