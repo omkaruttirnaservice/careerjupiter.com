@@ -24,7 +24,7 @@ const IqBanner = () => {
         </p>
         <button
           onClick={() => navigate("/profile/test")}
-          className="w-fit px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white rounded-full font-semibold text-lg shadow-md hover:shadow-lg flex items-center gap-2 transition-all duration-300"
+          className=" hover:scale-105 w-fit px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-1 rounded-full font-semibold text-lg shadow-md hover:shadow-lg flex items-center gap-2 transition-all duration-300"
         >
           <span>Take the IQ Test</span>
           <ArrowRight className="w-5 h-5" />

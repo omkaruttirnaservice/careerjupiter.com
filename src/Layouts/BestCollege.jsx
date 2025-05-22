@@ -33,7 +33,7 @@ const BestCollege = () => {
         </p>
         <button
           onClick={handleSearch}
-          className="w-full cursor-pointer border-2 flex items-center justify-center gap-3 bg-green-400 text-white px-2 py-2 rounded-full font-semibold text-lg hover:bg-green-500 transition-transform duration-300 hover:scale-105"
+          className="w-full cursor-pointer border-1 flex items-center justify-center gap-3 bg-green-400 text-white px-2 py-2 rounded-full font-semibold text-lg hover:bg-green-500 transition-transform duration-300 hover:scale-105"
         >
           <FaSearch /> Search College
           <motion.span
