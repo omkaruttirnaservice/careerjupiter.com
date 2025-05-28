@@ -13,7 +13,9 @@ import SloganHomePage from "../components/SloganHomePage";
 
 import IQtestBanner from './IQtestBanner';
 import PremiumServices from "./PremiumServices";
-import IQTestandRoadMapBanner from "./IQTestandRoadMapBanner";
+import CareerRoadmapBanner from "./CareerRoadmapBanner";
+import IqBanner from "./IqBanner";
+
 
 
 const HeroSection = () => {
@@ -30,21 +32,22 @@ const HeroSection = () => {
         <Flotingbutton />
       </div>
 
-      <br/>
+   
       <SloganHomePage/>
       <IQtestBanner />
       <Carouseldiv />
-      <br />
       <Logopage />
       <br />
+      <CareerRoadmapBanner />
+      <br/>
       <BestCollege />
       <br />
       <BestClass />
       <br />
       <BestUniversity />
       <br />
-      <IQTestandRoadMapBanner />
-      <br/>
+       <IqBanner />
+       <br/>
       <PremiumServices />
       <br/>
       <CheckEligibility />

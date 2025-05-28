@@ -149,7 +149,9 @@ const CardDetails = () => {
   return (
     <>
       <Nav />
+
       <AnimatePresence>
+
       <motion.a
         href={`tel:${college.contactDetails}`}
         className="fixed bottom-10 right-5 z-50 flex items-center"
@@ -172,6 +174,7 @@ const CardDetails = () => {
             </motion.span>
           )}
         </AnimatePresence>
+
         {/* Lottie icon on the RIGHT */}
         <motion.span
           className="w-30 h-30"
