@@ -63,3 +63,5 @@ export const getUniversityDist = async () => {
   const response = await axios.get(`${BASE_URL}/api/university/search/Dist`);
   return response.data;
 };
+
+
