@@ -1,119 +1,200 @@
-import { useState, useEffect } from "react";
-import { IoSearchOutline } from "react-icons/io5";
+
+
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { BASE_URL } from "../../utils/constansts";
+import { IoSearchOutline } from "react-icons/io5";
+import { getUniversityCategory, getUniversityDist, GetSearchUniversity } from "./Api";
+import { useEffect, useState } from "react";
+import { capitalize } from "../../utils/constansts";
 
-// API कॉल्स
-const getUniversityCategory = async () => {
-  const response = await axios.get(`${BASE_URL}/api/university/search/Allcat`);
-  return response.data;
-};
-
-const getUniversityDist = async () => {
-  const response = await axios.get(`${BASE_URL}/api/university/search/Dist`);
-  return response.data;
-};
-
-// सर्च API
-const searchUniversity = async (params = {}) => {
-  const response = await axios.get(`${BASE_URL}/api/search/university`, {
-    params: {
-      ...params,
-      type: "university",
-    },
-  });
-  return response.data?.results || [];
-};
-
-const UniversitySearchBar = ({ onSearchResults, setIsLoading }) => {
-  const [searchKey, setSearchKey] = useState("");
-  const [universityDistValue, setUniversityDistValue] = useState("");
+const UniversitySearchBar = ({
+  setQuery,
+  query,
+  setSearchUniversityData,
+  setIsLoading,
+}) => {
   const [universityCategoryValue, setUniversityCategoryValue] = useState("");
+  const [universityDistValue, setUniversityDistValue] = useState("");
+  const [universitySearchParams, setUniversitySearchParams] = useState({
+    searchKey: "",
+    category: "",
+    type: "university",
+    dist: "",
+  });
 
-  const { data: categoryData } = useQuery({
+  const { data: UniversityCategory } = useQuery({
     queryKey: ["university-category"],
     queryFn: getUniversityCategory,
     refetchOnWindowFocus: false,
   });
 
-  const { data: districtData } = useQuery({
+  const { data: UniversityDist } = useQuery({
     queryKey: ["university-district"],
     queryFn: getUniversityDist,
     refetchOnWindowFocus: false,
   });
 
-  // सर्च फंक्शन
-  const performSearch = async () => {
-    setIsLoading(true);
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["universities", universitySearchParams],
+    queryFn: () => GetSearchUniversity(universitySearchParams),
+    enabled: universitySearchParams?.type ? true : false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
 
-    const params = {
-      searchKey: searchKey.trim(),
-      district: universityDistValue,
-      category: universityCategoryValue,
-    };
+  console.log(universitySearchParams , 'query fin ')
 
-    try {
-      const results = await searchUniversity(params);
-      onSearchResults(results);
-    } catch (err) {
-      console.error("Search failed", err);
-    } finally {
+
+
+  useEffect(() => {
+    handleUniversitySearch();
+  }, []);
+
+  useEffect(() => {
+    if (data?.data) {
+      setSearchUniversityData(data.data);
       setIsLoading(false);
     }
+  }, [data]);
+
+  useEffect(() => {
+    setIsLoading(isPending);
+  }, [isPending]);
+
+  useEffect(() => {
+    if (isError) {
+      setSearchUniversityData([]);
+    }
+  }, [isError]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      handleUniversitySearch();
+    }, 1500);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [universitySearchParams, query]);
+
+  const handleUniversitySearch = () => {
+    setUniversitySearchParams((prev) => {
+      const newParams = {
+        searchKey: query || "",
+        category: universityCategoryValue,
+        type: "university",
+        dist: universityDistValue,
+      };
+      return newParams;
+    });
   };
 
-  // सर्च लोड होण्यावर
-  useEffect(() => {
-    performSearch();
-  }, [searchKey, universityDistValue, universityCategoryValue]);
+  
+
+  const handleInputChange = (e) => {
+  const inputValue = e.target.value;
+  setQuery(inputValue);
+  setIsLoading(true);
+  
+  // Clear previous timeout
+  if (searchTimeout) clearTimeout(searchTimeout);
+  
+  // Set new timeout
+  setSearchTimeout(setTimeout(() => {
+    handleUniversitySearch();
+  }, 500));
+};
+
+useEffect(() => {
+  if (data) {
+    setSearchUniversityData(data); // <- Wrong structure
+    setIsLoading(false);
+  }
+}, [data]);
 
   return (
-    <div className="w-full max-w-5xl mt-18 justify-center p-6 mx-auto">
-      <div className="hidden md:flex w-full border-2 border-gray-400 bg-white rounded-full overflow-hidden mx-auto">
-        <input
-          type="text"
-          className="px-4 py-3 w-full focus:outline-none"
-          placeholder="Search University"
-          value={searchKey}
-          onChange={(e) => setSearchKey(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && performSearch()}
-        />
+    <>
+      <div className="w-full sticky top-16 z-20 bg-white">
+        <div className="w-full max-w-6xl mx-auto px-4 py-3">
+          {/* Desktop Layout */}
+          <div className="hidden md:flex w-full bg-white border border-gray-200 rounded-full shadow-sm overflow-hidden">
+            <input
+              type="text"
+              className="px-6 py-3 w-full text-gray-700 placeholder-gray-400 focus:outline-none"
+              placeholder="Search University"
+              value={query}
+              onChange={handleInputChange}
+            />
 
-        <select
-          className="px-4 py-3 border-l border-gray-300 cursor-pointer"
-          value={universityDistValue}
-          onChange={(e) => setUniversityDistValue(e.target.value)}
-        >
-          <option value="">All Districts</option>
-          {districtData?.data?.map((district) => (
-            <option key={district} value={district}>
-              {district}
-            </option>
-          ))}
-        </select>
+            <select
+              className="px-4 py-3 text-gray-700 border-l border-gray-200 bg-white cursor-pointer focus:outline-none"
+              onChange={(e) => setUniversityDistValue(e.target.value)}
+            >
+              <option value="">District</option>
+              {UniversityDist?.data.map((district) => (
+                <option key={district} value={district}>
+                  {capitalize(district)}
+                </option>
+              ))}
+            </select>
 
-        <select
-          className="px-4 py-3 border-l border-gray-300 cursor-pointer"
-          value={universityCategoryValue}
-          onChange={(e) => setUniversityCategoryValue(e.target.value)}
-        >
-          <option value="">All Categories</option>
-          {categoryData?.data?.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
+            <select
+              className="px-4 py-3 text-gray-700 border-l cursor-pointer border-gray-200 bg-white focus:outline-none"
+              onChange={(e) => setUniversityCategoryValue(e.target.value)}
+            >
+              <option value="">Category</option>
+              {UniversityCategory?.data?.map((cate) => (
+                <option key={cate} value={cate}>
+                  {capitalize(cate)}
+                </option>
+              ))}
+            </select>
 
-        <button
-          className="rounded-r-full px-6 py-3 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none"
-          onClick={performSearch}
-        >
-          <IoSearchOutline className="text-2xl" />
-        </button>
+            <button className="bg-gradient-to-r from-purple-500 to-blue-500 px-6 py-3 text-white flex items-center justify-center hover:from-purple-600 hover:to-blue-600 transition-colors duration-200">
+              <IoSearchOutline className="text-2xl" />
+            </button>
+          </div>
+
+          {/* Mobile Layout */}
+          <div className="flex flex-col space-y-3 md:hidden w-full mt-4">
+            <input
+              type="text"
+              className="px-4 py-3 w-full border bg-white border-gray-300 rounded-lg focus:outline-none text-gray-700 placeholder-gray-400"
+              placeholder="Search University"
+              value={query}
+              onChange={handleInputChange}
+            />
+
+            <select
+              className="px-4 py-3 w-full border border-gray-300 rounded-lg text-gray-700 bg-white focus:outline-none"
+              onChange={(e) => setUniversityDistValue(e.target.value)}
+            >
+              <option value="">District</option>
+              {UniversityDist?.data.map((district) => (
+                <option key={district} value={district}>
+                  {capitalize(district)}
+                </option>
+              ))}
+            </select>
+
+            <select
+              className="px-4 py-3 w-full border border-gray-300 rounded-lg text-gray-700 bg-white focus:outline-none"
+              onChange={(e) => setUniversityCategoryValue(e.target.value)}
+            >
+              <option value="">Category</option>
+              {UniversityCategory?.data?.map((cate) => (
+                <option key={cate} value={cate}>
+                  {capitalize(cate)}
+                </option>
+              ))}
+            </select>
+
+            <button className="w-full px-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white flex items-center justify-center hover:from-purple-600 hover:to-blue-600 transition-colors duration-200">
+              <IoSearchOutline className="text-2xl" />
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
