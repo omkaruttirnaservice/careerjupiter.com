@@ -1,40 +1,22 @@
-// UniApi.js
-import axios from "axios";
+// import axios from "axios";
+// import { BASE_URL } from "../../utils/constansts";
 
-const BASE_URL = "http://192.168.1.7:5000/api";
+// export const getUniversityCategory = async () => {
+//   const response = await axios.get(`${BASE_URL}/api/university/search/Allcat`);
+//   return response.data;
+// };
 
-const api = axios.create({
-  baseURL: BASE_URL,
-});
+// export const getUniversityDist = async () => {
+//   const response = await axios.get(`${BASE_URL}/api/university/search/Dist`);
+//   return response.data;
+// };
 
-export const getUniversityCategory = async () => {
-  try {
-    const response = await api.get("/university/search/Allcat");
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || "Failed to fetch categories");
-  }
-};
-
-export const getUniversityDist = async () => {
-  try {
-    const response = await api.get("/university/search/Dist");
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || "Failed to fetch districts");
-  }
-};
-
-export const searchUniversity = async (params = {}) => {
-  try {
-    const response = await api.get("/search/university", { 
-      params: {
-        ...params,
-        type: "university"
-      } 
-    });
-    return response.data?.results || response.data || [];
-  } catch (error) {
-    throw new Error(error.response?.data?.message || "Search failed");
-  }
-};
+// export const searchUniversity = async (params = {}) => {
+//   const response = await axios.get(`${BASE_URL}/api/search/university`, {
+//     params: {
+//       ...params,
+//       type: "university",
+//     },
+//   });
+//   return response.data?.results || [];
+// };

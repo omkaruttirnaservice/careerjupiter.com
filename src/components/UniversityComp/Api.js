@@ -21,6 +21,18 @@ export const fetchUniversities = async () => {
 	}
 };
 
+
+export const searchUniversity = async (params = {}) => {
+  const response = await axios.get(`${BASE_URL}/api/search/university`, {
+    params: {
+      ...params,
+      type: "university",
+    },
+  });
+  return response.data?.results || [];
+};
+
+
 // Fetch a single university by ID
 export const fetchUniversityById = async (id) => {
 	try {
