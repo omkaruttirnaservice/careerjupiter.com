@@ -13,7 +13,7 @@ import {
   FaImages,
   FaStar,
   FaRupeeSign,
-  FaUsers
+  FaUsers,
 } from "react-icons/fa";
 import { fetchUniversityById } from "./Api";
 import { motion } from "framer-motion";
@@ -21,6 +21,7 @@ import Nav from "../../Layouts/Nav";
 import ReviewPage from "../navComp/ReviewPage";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import { BASE_URL } from "../../utils/constansts";
 
 const UniversityDetail = () => {
   const { id } = useParams();
@@ -50,7 +51,9 @@ const UniversityDetail = () => {
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="text-center p-8 bg-white rounded-xl shadow-lg max-w-md">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-red-600 mb-2">Error loading data</h2>
+          <h2 className="text-2xl font-bold text-red-600 mb-2">
+            Error loading data
+          </h2>
           <p className="text-gray-700 mb-6">{error.message}</p>
           <button
             onClick={() => window.location.reload()}
@@ -68,7 +71,7 @@ const UniversityDetail = () => {
   // Helper functions
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
@@ -86,19 +89,28 @@ const UniversityDetail = () => {
       <Nav />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 pb-10">
         {/* Hero Banner */}
-        <div className="relative w-full mt-5 h-64 md:h-80 lg:h-96 overflow-hidden">
+        {/* const BASE_URL = "https://yourdomain.com"; // Update as needed */}
+        <div className="relative w-full mt-15 h-96 md:h-96 lg:h-96 overflow-hidden">
           {uni.image ? (
             <LazyLoadImage
-              src={uni.image}
+              src={
+                uni.image.startsWith("http")
+                  ? uni.image
+                  : `${BASE_URL}${uni.image}`
+              }
               alt={uni.universityName}
               effect="blur"
               className="absolute inset-0 w-full h-full object-cover"
               wrapperClassName="absolute inset-0"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/default-university.jpg"; // Add a fallback image
+              }}
             />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600"></div>
           )}
-          <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center text-white px-4 text-center">
+          <div className="absolute inset-0 bg-black/70  flex flex-col justify-center items-center text-white  text-center">
             <motion.h1
               className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 drop-shadow-lg"
               initial={{ opacity: 0, y: 20 }}
@@ -121,15 +133,14 @@ const UniversityDetail = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.6 }}
             >
-              <FaStar className="text-yellow-400 mr-1" />
-              <span className="font-medium">4.8</span>
-              <span className="mx-2">•</span>
+             
               <FaMapMarkerAlt className="mr-1" />
               <span>{uni.address.state}</span>
             </motion.div>
           </div>
         </div>
-
+        
+        
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8">
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -142,7 +153,12 @@ const UniversityDetail = () => {
             <StatCard
               icon={<FaGraduationCap className="text-purple-500" />}
               title="Courses"
-              value={courses?.reduce((acc, block) => acc + (block.courses?.length || 0), 0) || 0}
+              value={
+                courses?.reduce(
+                  (acc, block) => acc + (block.courses?.length || 0),
+                  0
+                ) || 0
+              }
               color="bg-purple-100 text-purple-800"
             />
             <StatCard
@@ -154,7 +170,11 @@ const UniversityDetail = () => {
             <StatCard
               icon={<FaRupeeSign className="text-orange-500" />}
               title="Avg. Fees"
-              value={courses?.[0]?.courses?.[0]?.annualFees ? `₹${formatNumber(courses[0].courses[0].annualFees)}` : "N/A"}
+              value={
+                courses?.[0]?.courses?.[0]?.annualFees
+                  ? `₹${formatNumber(courses[0].courses[0].annualFees)}`
+                  : "N/A"
+              }
               color="bg-orange-100 text-orange-800"
             />
           </div>
@@ -163,14 +183,19 @@ const UniversityDetail = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
               {/* About */}
-              <Section title="About University" icon={<FaUniversity className="text-indigo-500" />}>
+              <Section
+                title="About University"
+                icon={<FaUniversity className="text-indigo-500" />}
+              >
                 <div className="bg-white p-6 rounded-xl shadow-sm">
                   <p className="text-gray-700 leading-relaxed">
                     {uni.info?.description || "No description available."}
                   </p>
                   {uni.info?.highlights && (
                     <div className="mt-4">
-                      <h4 className="font-semibold text-gray-800 mb-2">Key Highlights:</h4>
+                      <h4 className="font-semibold text-gray-800 mb-2">
+                        Key Highlights:
+                      </h4>
                       <ul className="space-y-2">
                         {uni.info.highlights.map((highlight, i) => (
                           <li key={i} className="flex items-start">
@@ -185,7 +210,10 @@ const UniversityDetail = () => {
               </Section>
 
               {/* Location */}
-              <Section title="Location & Contact" icon={<FaMapMarkerAlt className="text-green-500" />}>
+              <Section
+                title="Location & Contact"
+                icon={<FaMapMarkerAlt className="text-green-500" />}
+              >
                 <div className="bg-white p-6 rounded-xl shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
@@ -194,7 +222,9 @@ const UniversityDetail = () => {
                     <div className="space-y-2 text-gray-700">
                       <p>{uni.address.line1}</p>
                       <p>{uni.address.line2}</p>
-                      <p>{uni.address.dist}, {uni.address.state}</p>
+                      <p>
+                        {uni.address.dist}, {uni.address.state}
+                      </p>
                       <p>Pincode: {uni.address.pincode}</p>
                     </div>
                   </div>
@@ -203,7 +233,10 @@ const UniversityDetail = () => {
                       <FaPhoneAlt className="mr-2 text-blue-500" /> Contact
                     </h3>
                     <div className="space-y-2 text-gray-700">
-                      <p><span className="font-medium">Phone:</span> {uni.contactDetails || "N/A"}</p>
+                      <p>
+                        <span className="font-medium">Phone:</span>{" "}
+                        {uni.contactDetails || "N/A"}
+                      </p>
                       <p>
                         <span className="font-medium">Website:</span>{" "}
                         {uni.websiteURL ? (
@@ -215,7 +248,9 @@ const UniversityDetail = () => {
                           >
                             {uni.websiteURL}
                           </a>
-                        ) : "N/A"}
+                        ) : (
+                          "N/A"
+                        )}
                       </p>
                     </div>
                   </div>
@@ -223,31 +258,66 @@ const UniversityDetail = () => {
               </Section>
 
               {/* Admission Info */}
-              <Section title="Admission Process" icon={<FaCalendarAlt className="text-blue-500" />}>
+              <Section
+                title="Admission Process"
+                icon={<FaCalendarAlt className="text-blue-500" />}
+              >
                 <div className="bg-white p-6 rounded-xl shadow-sm">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <h3 className="font-semibold text-gray-800 mb-3">Dates</h3>
+                      <h3 className="font-semibold text-gray-800 mb-3">
+                        Dates
+                      </h3>
                       <div className="space-y-2">
-                        <InfoItem label="Start Date" value={formatDate(uni.admissionEntranceDetails?.admissionStartDate)} />
-                        <InfoItem label="End Date" value={formatDate(uni.admissionEntranceDetails?.admissionEndDate)} />
-                        <InfoItem label="Last Year Cutoff" value={uni.admissionEntranceDetails?.lastYearCutoffMarks ? `${uni.admissionEntranceDetails.lastYearCutoffMarks}%` : "N/A"} />
+                        <InfoItem
+                          label="Start Date"
+                          value={formatDate(
+                            uni.admissionEntranceDetails?.admissionStartDate
+                          )}
+                        />
+                        <InfoItem
+                          label="End Date"
+                          value={formatDate(
+                            uni.admissionEntranceDetails?.admissionEndDate
+                          )}
+                        />
+                        <InfoItem
+                          label="Last Year Cutoff"
+                          value={
+                            uni.admissionEntranceDetails?.lastYearCutoffMarks
+                              ? `${uni.admissionEntranceDetails.lastYearCutoffMarks}%`
+                              : "N/A"
+                          }
+                        />
                       </div>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-800 mb-3">Requirements</h3>
+                      <h3 className="font-semibold text-gray-800 mb-3">
+                        Requirements
+                      </h3>
                       <div className="space-y-2">
-                        <InfoItem 
-                          label="Entrance Exams" 
-                          value={uni.entrance_exam_required?.join(", ") || "Not Specified"} 
+                        <InfoItem
+                          label="Entrance Exams"
+                          value={
+                            uni.entrance_exam_required?.join(", ") ||
+                            "Not Specified"
+                          }
                         />
-                        <InfoItem 
-                          label="Quota System" 
-                          value={uni.admissionEntranceDetails?.quotaSystem?.join(", ") || "N/A"} 
+                        <InfoItem
+                          label="Quota System"
+                          value={
+                            uni.admissionEntranceDetails?.quotaSystem?.join(
+                              ", "
+                            ) || "N/A"
+                          }
                         />
-                        <InfoItem 
-                          label="Scholarships" 
-                          value={uni.admissionEntranceDetails?.scholarshipsAvailable?.join(", ") || "N/A"} 
+                        <InfoItem
+                          label="Scholarships"
+                          value={
+                            uni.admissionEntranceDetails?.scholarshipsAvailable?.join(
+                              ", "
+                            ) || "N/A"
+                          }
                         />
                       </div>
                     </div>
@@ -268,7 +338,10 @@ const UniversityDetail = () => {
               </Section>
 
               {/* Courses */}
-              <Section title="Courses Offered" icon={<FaGraduationCap className="text-indigo-500" />}>
+              <Section
+                title="Courses Offered"
+                icon={<FaGraduationCap className="text-indigo-500" />}
+              >
                 <div className="space-y-4">
                   {courses?.length > 0 ? (
                     courses.map((courseBlock) =>
@@ -296,13 +369,21 @@ const UniversityDetail = () => {
                           </div>
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                            <InfoItem label="Duration" value={`${course.duration} months`} />
-                            <InfoItem label="Eligibility" value={course.eligibility} />
+                            <InfoItem
+                              label="Duration"
+                              value={`${course.duration} months`}
+                            />
+                            <InfoItem
+                              label="Eligibility"
+                              value={course.eligibility}
+                            />
                           </div>
 
                           {course.subCategory?.length > 0 && (
                             <div className="mt-4">
-                              <p className="text-sm font-medium text-gray-600 mb-2">Specializations:</p>
+                              <p className="text-sm font-medium text-gray-600 mb-2">
+                                Specializations:
+                              </p>
                               <div className="flex flex-wrap gap-2">
                                 {course.subCategory.map((sub, i) => (
                                   <span
@@ -320,7 +401,9 @@ const UniversityDetail = () => {
                     )
                   ) : (
                     <div className="bg-white p-6 rounded-xl shadow-sm text-center">
-                      <p className="text-gray-500">No course information available</p>
+                      <p className="text-gray-500">
+                        No course information available
+                      </p>
                     </div>
                   )}
                 </div>
@@ -391,9 +474,12 @@ const UniversityDetail = () => {
                             : "Not Available"
                         }
                       />
-                      {infrastructure.infrastructure[0].sportsFacilities?.length > 0 && (
+                      {infrastructure.infrastructure[0].sportsFacilities
+                        ?.length > 0 && (
                         <div>
-                          <p className="font-medium text-gray-700 mb-2">Sports Facilities:</p>
+                          <p className="font-medium text-gray-700 mb-2">
+                            Sports Facilities:
+                          </p>
                           <div className="flex flex-wrap gap-2">
                             {infrastructure.infrastructure[0].sportsFacilities.map(
                               (sport, i) => (
@@ -435,7 +521,9 @@ const UniversityDetail = () => {
                       <FacilityItem
                         icon="👨‍🎓"
                         label="Students Placed"
-                        value={formatNumber(placements[0].placement[0].noOfStudents)}
+                        value={formatNumber(
+                          placements[0].placement[0].noOfStudents
+                        )}
                       />
                       {placements[0].placement[0].topRecruiters && (
                         <div>
@@ -477,7 +565,7 @@ const UniversityDetail = () => {
                         onClick={() => handleGalleryImageClick(i)}
                       >
                         <LazyLoadImage
-                          src={img}
+                          src={`${BASE_URL}${img}`}
                           alt={`Campus ${i + 1}`}
                           effect="blur"
                           className="h-32 w-full object-cover hover:opacity-90 transition-opacity"
@@ -499,7 +587,10 @@ const UniversityDetail = () => {
           </div>
 
           {/* Full Infrastructure Section */}
-          <Section title="Detailed Infrastructure" icon={<FaBuilding className="text-blue-500" />}>
+          <Section
+            title="Detailed Infrastructure"
+            icon={<FaBuilding className="text-blue-500" />}
+          >
             {infrastructure?.infrastructure?.length > 0 ? (
               <div className="bg-white p-6 rounded-xl shadow-sm">
                 {infrastructure.infrastructure.map((infra, idx) => (
@@ -509,11 +600,22 @@ const UniversityDetail = () => {
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-medium text-gray-700 mb-2">Basic Facilities</h4>
+                        <h4 className="font-medium text-gray-700 mb-2">
+                          Basic Facilities
+                        </h4>
                         <div className="space-y-3">
-                          <InfoItem label="Campus Area" value={infra.campusArea} />
-                          <InfoItem label="Classrooms" value={infra.numberOfClassrooms} />
-                          <InfoItem label="Laboratories" value={infra.numberOfLabs} />
+                          <InfoItem
+                            label="Campus Area"
+                            value={infra.campusArea}
+                          />
+                          <InfoItem
+                            label="Classrooms"
+                            value={infra.numberOfClassrooms}
+                          />
+                          <InfoItem
+                            label="Laboratories"
+                            value={infra.numberOfLabs}
+                          />
                           <InfoItem
                             label="Library"
                             value={infra.library?.size || "N/A"}
@@ -521,7 +623,9 @@ const UniversityDetail = () => {
                         </div>
                       </div>
                       <div>
-                        <h4 className="font-medium text-gray-700 mb-2">Additional Facilities</h4>
+                        <h4 className="font-medium text-gray-700 mb-2">
+                          Additional Facilities
+                        </h4>
                         <div className="space-y-3">
                           <InfoItem
                             label="Hostel"
@@ -533,9 +637,7 @@ const UniversityDetail = () => {
                           />
                           <InfoItem
                             label="Transport"
-                            value={
-                              infra.transportFacility?.join(", ") || "N/A"
-                            }
+                            value={infra.transportFacility?.join(", ") || "N/A"}
                           />
                           {infra.sportsFacilities?.length > 0 && (
                             <div>
@@ -570,7 +672,10 @@ const UniversityDetail = () => {
           </Section>
 
           {/* Detailed Placement Section */}
-          <Section title="Placement Details" icon={<FaBriefcase className="text-green-500" />}>
+          <Section
+            title="Placement Details"
+            icon={<FaBriefcase className="text-green-500" />}
+          >
             {placements?.length > 0 ? (
               <div className="bg-white p-6 rounded-xl shadow-sm">
                 {placements.map((placementBlock) =>
@@ -662,7 +767,6 @@ const UniversityDetail = () => {
           {/* Reviews Section */}
           <ReviewPage />
         </div>
-
         {/* Image Gallery Modal */}
         {showGalleryModal && uni.imageGallery?.length > 0 && (
           <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">

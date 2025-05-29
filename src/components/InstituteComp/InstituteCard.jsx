@@ -3,10 +3,13 @@ import { BACKEND_SERVER_IP } from "../../Constant/constantData";
 import { FaLocationDot } from "react-icons/fa6";
 
 const InstituteCard = ({ institute, onClick }) => {
-  const imageUrl = institute.image ? `${BACKEND_SERVER_IP}${institute.image}` : null;
-  const discount = institute.discount || institute.discount === 0 ? institute.discount : null;
+  const imageUrl = institute.image
+    ? `${BACKEND_SERVER_IP}${institute.image}`
+    : null;
+  const discount =
+    institute.discount || institute.discount === 0 ? institute.discount : null;
   const originalPrice = 10000;
-  const discountedPrice = originalPrice * (1 - discount/100);
+  const discountedPrice = originalPrice * (1 - discount / 100);
   return (
     <div
       className="max-w-2xl mt-5 rounded-lg overflow-hidden shadow-lg cursor-pointer hover:shadow-xl transition duration-300 transform hover:-translate-y-1 bg-white relative"
@@ -36,15 +39,21 @@ const InstituteCard = ({ institute, onClick }) => {
           />
         )}
         <span className="absolute text-xl z-10  px-3 py-1 rounded-lg">
-          {institute?.className || "No Image Available"}
+          {/* {institute?.className || "No Image Available"} */}
         </span>
+      </div>
+
+      <div className="flex items-center  text-black">
+        <h1 className="text-xl font-bold ml-5 mt-3">
+          {institute?.className }
+        </h1>
       </div>
 
       {/* Discount Price Section - Now properly aligned like in your image */}
       {discount !== null && (
-        <div className="px-6 pt-4">
-          <div className="flex items-center gap-4 mb-2">
-            <div className="bg-red-600 text-white px-3 py-1 rounded-md text-lg font-bold">
+        <div className="px-5 pt-2">
+          <div className="flex items-center gap-6 mb-1">
+            <div className="bg-red-600 text-white px-3 py-1 rounded-md text-md font-bold">
               {discount}% OFF
             </div>
             <div className="text-gray-700">
@@ -56,7 +65,7 @@ const InstituteCard = ({ institute, onClick }) => {
               </span>
             </div>
           </div>
-          <div className="text-sm text-green-600 font-medium mb-3">
+          <div className="text-sm text-green-600 font-medium ">
             Save ₹{(originalPrice - discountedPrice).toFixed(0)}
           </div>
         </div>
@@ -64,7 +73,7 @@ const InstituteCard = ({ institute, onClick }) => {
 
       {/* Institute Details */}
       <div className="p-6 pt-2">
-        <div className="flex ml-2 items-center space-x-2 text-sm text-gray-700 mb-3">
+        <div className="flex  items-center space-x-2 text-sm text-gray-700 ">
           <FaTags className="text-blue-500" />
           <p>
             <strong>Category : </strong>
@@ -84,23 +93,33 @@ const InstituteCard = ({ institute, onClick }) => {
         </div>
 
         <div className="flex items-center space-x-2 text-sm text-gray-700">
-          <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
-            <span className="w-10 h-10 flex items-center justify-start text-red-500">
-              <FaLocationDot className="w-5 h-5" />
+          <p className="text-gray-500 text-sm mt-1 flex items-start gap-1">
+            <span className=" w-3 h-8 flex items-center justify-start text-red-500">
+              <FaLocationDot className="h-5" />
             </span>
-            <span>
-              <strong>Location :</strong>{" "}
-              {Array.isArray(institute.address) && institute.address.length > 0
-                ? `${institute.address.length} address${institute.address.length > 1 ? "es" : ""} available`
-                : "No address available"}
+            <span className="flex flex-col ml-2">
+              {institute.address?.length > 0 ? (
+                institute.address.map((addr, index) => (
+                  <span key={addr._id} className="mt-2">
+                    {addr.line1 && <span>{addr.line1}, </span>}
+                    {addr.line2 && <span>{addr.line2}, </span>}
+                    {addr.taluka && <span>{addr.taluka}, </span>}
+                    {addr.dist && <span>{addr.dist}, </span>}
+                    {addr.state && <span>{addr.state} - </span>}
+                    {addr.pincode && <span>{addr.pincode}</span>}
+                  </span>
+                ))
+              ) : (
+                <span>No address available</span>
+              )}
             </span>
           </p>
         </div>
 
-        <p className="text-gray-600 text-sm mt-4 line-clamp-3">
+        {/* <p className="text-gray-600 text-sm mt-4 line-clamp-3">
           Description :{" "}
           {institute.info?.description || "No description available."}
-        </p>
+        </p> */}
       </div>
     </div>
   );

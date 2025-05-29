@@ -299,7 +299,7 @@ const SingleInstitute = () => {
       )}
       <div className="flex items-center justify-center bg-gray-100 relative">
         <div className="w-full relative">
-          <div className="w-full h-auto relative">
+          <div className="w-full h-auto mt-16 relative">
             <img
               src={
                 instituteClass?.image
