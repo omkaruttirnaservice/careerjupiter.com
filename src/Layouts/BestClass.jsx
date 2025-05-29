@@ -43,7 +43,7 @@ const BestClass = () => {
         <img
           src="https://t3.ftcdn.net/jpg/03/35/00/02/360_F_335000208_XJyUUnkg2TPfrMfiHPWW9LtCvea3x46K.jpg"
           alt="Class Illustration"
-          className="cursor-pointer rounded-lg shadow-lg w-full max-w-md transition-transform duration-500 hover:scale-105"
+          className="cursor-pointer rounded-lg shadow-lg w-full max-w-md transition-transform duration-500 "
         />
       </div>
     </div>
