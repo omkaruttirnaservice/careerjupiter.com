@@ -12,15 +12,15 @@ const Gallery = ({ imageGallery }) => {
    }
 
   return (
-    <div className=" h-auto p-8 w-full">
+    <div className=" h-auto p-2 w-full">
       <h1 className="text-2xl md:text-3xl font-extrabold text-center mb-5 text-grey-700">
-        College Gallery
+        College Image Gallery 
       </h1>
 
       <div className="">
      
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {imageGallery.map((image) => (
             <div className="rounded-lg overflow-hidden shadow-lg transform transition-all hover:scale-105">
               <img

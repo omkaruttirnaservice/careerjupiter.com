@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { FaUniversity, FaSchool } from "react-icons/fa";
 
 const gradientButtonStyles =
-  "relative px-6 py-3 rounded-full text-white font-semibold text-sm overflow-hidden bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-[length:200%_200%]";
+  "relative px-5 py-3 sm:px-6 sm:py-3 rounded-full text-white font-semibold text-xs sm:text-sm overflow-hidden bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-[length:200%_200%]";
 
 const TopOptions = ({ navigate }) => {
   return (
