@@ -9,7 +9,7 @@ const PremiumServices = () => {
   };
 
   return (
-    <div className="relative h-[70vh] w-full">
+    <div className="relative h-[50vh] w-full">
       {/* Background Image with overlay */}
       <div
         className="absolute inset-0 bg-cover bg-center"

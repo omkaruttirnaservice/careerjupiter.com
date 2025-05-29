@@ -19,7 +19,7 @@ const BestCollege = () => {
         <img
           src="https://media.istockphoto.com/id/1072194864/photo/the-graduation-day-is-finally-here.jpg?s=612x612&w=0&k=20&c=DTlXxmE4alF7LihCc5GEijS4vprLei8Ro_JUT-Am4aM="
           alt="College Illustration"
-          className="cursor-pointer rounded-lg shadow-lg w-full max-w-md transition-transform duration-500 hover:scale-105"
+          className="cursor-pointer rounded-lg shadow-lg w-full max-w-md transition-transform duration-500"
         />
       </div>
 
