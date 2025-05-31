@@ -8,8 +8,8 @@ const ScrollToTop = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "instant" }); // Try "instant" instead of "smooth"
-    }); // Small delay to wait for DOM updates
+      window.scrollTo({ top: 0, behavior: "instant" }); 
+    }); 
   }, [pathname]);
 
   return null;

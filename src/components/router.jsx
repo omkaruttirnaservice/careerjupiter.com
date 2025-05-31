@@ -50,6 +50,7 @@ export const router = createBrowserRouter([
     element: 
     <>
     <ExtraPopUp />
+    <ScrollToTop/>
     <GuestHandler /> 
     </>,
  children: [
