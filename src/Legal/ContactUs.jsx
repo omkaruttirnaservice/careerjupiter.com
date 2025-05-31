@@ -39,6 +39,12 @@
 import React from 'react';
 import Footer from '../components/Footer';
 import Nav from '../Layouts/Nav.jsx';
+import { 
+  FaGlobe, 
+  FaFacebook, 
+  FaInstagram, 
+  FaWhatsapp 
+} from 'react-icons/fa';
 
 const ContactUs = () => {
   return (
@@ -91,16 +97,44 @@ const ContactUs = () => {
               </ul>
             </div>
 
-            <div className="bg-[#f0fdf4] p-6 rounded-xl shadow-md hover:shadow-xl transition">
-              <h3 className="text-xl font-semibold text-green-700 mb-2">Follow Us</h3>
-              <p className="text-gray-700">Stay connected and updated through our social handles:</p>
-              <div className="flex space-x-4 mt-4">
-                <a href="#" className="text-blue-600 text-xl hover:text-blue-800 transition">🌐</a>
-                <a href="#" className="text-indigo-600 text-xl hover:text-indigo-800 transition">📘</a>
-                <a href="#" className="text-pink-600 text-xl hover:text-pink-800 transition">📷</a>
-                <a href="#" className="text-green-600 text-xl hover:text-green-800 transition">💬</a>
-              </div>
-            </div>
+           <div className="bg-[#f0fdf4] p-6 rounded-xl shadow-md hover:shadow-xl transition">
+  <h3 className="text-xl font-semibold text-green-700 mb-2">Follow Us</h3>
+  <p className="text-gray-700 mb-4">Stay connected and updated through our social handles:</p>
+  <div className="flex space-x-4">
+    <a 
+      href="#" 
+      className="flex flex-col items-center text-blue-600 hover:text-blue-800 transition"
+      aria-label="Website"
+    >
+      <FaGlobe className="text-2xl" />
+      <span className="text-xs mt-1">Website</span>
+    </a>
+    <a 
+      href="#" 
+      className="flex flex-col items-center text-blue-700 hover:text-blue-900 transition"
+      aria-label="Facebook"
+    >
+      <FaFacebook className="text-2xl" />
+      <span className="text-xs mt-1">Facebook</span>
+    </a>
+    <a 
+      href="#" 
+      className="flex flex-col items-center text-pink-600 hover:text-pink-800 transition"
+      aria-label="Instagram"
+    >
+      <FaInstagram className="text-2xl" />
+      <span className="text-xs mt-1">Instagram</span>
+    </a>
+    <a 
+      href="#" 
+      className="flex flex-col items-center text-green-600 hover:text-green-800 transition"
+      aria-label="WhatsApp"
+    >
+      <FaWhatsapp className="text-2xl" />
+      <span className="text-xs mt-1">WhatsApp</span>
+    </a>
+  </div>
+</div>
           </div>
         {/* </div> */}
       </div>

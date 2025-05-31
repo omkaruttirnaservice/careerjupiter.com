@@ -1,6 +1,8 @@
 import { FaTags, FaMapMarkerAlt } from "react-icons/fa";
 import { BACKEND_SERVER_IP } from "../../Constant/constantData";
 import { FaLocationDot } from "react-icons/fa6";
+import { useState } from "react";
+
 
 const InstituteCard = ({ institute, onClick }) => {
   const imageUrl = institute.image
@@ -10,6 +12,7 @@ const InstituteCard = ({ institute, onClick }) => {
     institute.discount || institute.discount === 0 ? institute.discount : null;
   const originalPrice = 10000;
   const discountedPrice = originalPrice * (1 - discount / 100);
+  const [showAllCategories, setShowAllCategories] = useState(false);
   return (
     <div
       className="max-w-2xl mt-5 rounded-lg overflow-hidden shadow-lg cursor-pointer hover:shadow-xl transition duration-300 transform hover:-translate-y-1 bg-white relative"
@@ -73,24 +76,29 @@ const InstituteCard = ({ institute, onClick }) => {
 
       {/* Institute Details */}
       <div className="p-6 pt-2">
-        <div className="flex  items-center space-x-2 text-sm text-gray-700 ">
-          <FaTags className="text-blue-500" />
-          <p>
-            <strong>Category : </strong>
-            {institute.category?.length > 0 ? (
-              <>
-                {institute.category[0]}
-                {institute.category.length > 1 && (
-                  <span className="text-blue-600 ml-1 cursor-pointer hover:underline">
-                    +{institute.category.length - 1} more
-                  </span>
-                )}
-              </>
-            ) : (
-              "N/A"
-            )}
-          </p>
-        </div>
+    <div className="flex items-center space-x-2 text-sm text-gray-700">
+  <FaTags className="text-blue-500" />
+  <p>
+    <strong>Category : </strong>
+    {institute.category?.length > 0 ? (
+      <>
+        {institute.category[0]}
+        {institute.category.length > 1 && (
+          <div className="relative inline-block group">
+            <span className="text-blue-600 ml-1 cursor-pointer hover:underline">
+              +{institute.category.length - 1} more
+            </span>
+            <div className="absolute hidden group-hover:block z-10 bg-white p-2 shadow-lg rounded border border-gray-200 text-sm">
+              {institute.category.slice(1).join(", ")}
+            </div>
+          </div>
+        )}
+      </>
+    ) : (
+      "N/A"
+    )}
+  </p>
+</div>
 
         <div className="flex items-center space-x-2 text-sm text-gray-700">
           <p className="text-gray-500 text-sm mt-1 flex items-start gap-1">

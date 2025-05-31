@@ -52,7 +52,7 @@ export const router = createBrowserRouter([
     <ExtraPopUp />
     <GuestHandler /> 
     </>,
-children: [
+ children: [
       {
         path: "/",
         element: (
