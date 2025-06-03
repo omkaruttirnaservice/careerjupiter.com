@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import Nav from "../../Layouts/Nav.jsx";
 import Footer from "../Footer.jsx";
@@ -81,9 +79,9 @@ const PremiumServices = () => {
 
       if (!userId) {
         Swal.fire({
-          icon: "error",
-          title: "Authentication Error",
-          text: "Could not identify your account. Please try logging in again.",
+          icon: "info",
+          title: "Oops!",
+          text: "We're currently experiencing high traffic. Please try again in a few moments. Thank you for your patience!",
           confirmButtonColor: "#DC2626",
         });
         return;
@@ -109,10 +107,10 @@ const PremiumServices = () => {
     } catch (error) {
       console.error("Error processing request:", error);
       Swal.fire({
-        icon: "error",
-        title: "Error!",
-        text: "Could not process your request. Please try again.",
-        confirmButtonColor: "#DC2626",
+        icon: "info",
+        title: "Oops!",
+        text: "We're currently experiencing high traffic. Please try again in a few moments. Thank you for your patience!",
+        confirmButtonColor: "blue",
       });
     }
   };

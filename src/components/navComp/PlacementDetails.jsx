@@ -1,7 +1,7 @@
 import React from "react";
 
 const PlacementDetails = ({ placementData }) => {
-  const placement = placementData[0];
+  const placement = placementData?.[0]?.placement?.[0];
 
   if (!placement) {
     return (
@@ -116,14 +116,15 @@ const PlacementDetails = ({ placementData }) => {
                 Top Recruiters
               </h3>
               <div className="flex flex-wrap gap-2">
-                {placement.topRecruiters.map((recruiter, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1.5 bg-white/10 text-white/90 rounded-full text-sm font-medium"
-                  >
-                    {recruiter}
-                  </span>
-                ))}
+                 {placement.topRecruiters &&
+                  placement.topRecruiters.split(",").map((recruiter, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1.5 bg-white/10 text-white/90 rounded-full text-sm font-medium"
+                    >
+                      {recruiter.trim()}
+                    </span>
+                  ))}
               </div>
             </div>
             <div className="bg-white/10 p-2 rounded-lg">

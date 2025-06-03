@@ -315,7 +315,7 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
               >
                 <div className="flex items-center space-x-3 mb-4">
                   <FaBrain className="text-blue-500 text-4xl" />
-                  <h2 className="text-xl font-semibold">{test.title}</h2>
+                  <h2 className="text-xl font-semibold">{test.title || "N/A"}</h2>
                 </div>
                 <p>
                   Main Category:{" "}

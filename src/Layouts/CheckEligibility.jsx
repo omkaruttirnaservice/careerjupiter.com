@@ -31,7 +31,7 @@ const CheckEligibility = () => {
 	
 
 	return (
-		<div id='check-eligibility-section' className="relative h-130 flex justify-center items-center">
+		<div id='check-eligibility-section' className="relative h-80 flex justify-center items-center">
 			{/* Background Image with Blur & Opacity */}
 			<div
 				className="absolute inset-0 bg-cover bg-center"

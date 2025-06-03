@@ -12,7 +12,7 @@ const BestUniversity = () => {
   };
 
   return (
-    <div id='search-university' className="w-full min-h-100 flex flex-col items-center justify-center bg-cover bg-center relative p-6 rounded-lg"
+    <div id='search-university' className="w-full min-h-80 flex flex-col items-center justify-center bg-cover bg-center relative p-6 rounded-lg"
       style={{ backgroundImage: "url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHVuaXZlcnNpdHl8ZW58MHx8fHwxNjc4MDMwMjUw&ixlib=rb-1.2.1&q=80&w=1080')" }}>
       
       {/* Overlay */}
@@ -20,15 +20,15 @@ const BestUniversity = () => {
 
       {/* Content */}
       <div className="z-10 text-center text-white max-w-2xl ">
-        <h1 className="text-xl md:text-4xl font-bold flex items-center ml-7 md:ml-21 gap-3">
-          <FaCrown className="text-yellow-400 animate-pulse text-3xl md:text-4xl" /> SEARCH BEST UNIVERSITY
+        <h1 className=" md:text-4xl font-bold flex items-center ml-7 md:ml-21 gap-3">
+          <FaCrown className="text-yellow-400 animate-pulse text-xl md:text-4xl" /> SEARCH BEST UNIVERSITY
         </h1>
         <p className="text-lg mt-5 mb-6">
           Unleash your potential by exploring top universities designed to match your aspirations and build a successful future.
         </p>
         <button
           onClick={handleSearch}
-          className="w-full cursor-pointer border-2 flex items-center justify-center gap-3 bg-blue-500 text-white px-6 py-3 rounded-full font-bold text-lg shadow-lg hover:bg-blue-600 transition-transform duration-300 hover:scale-105"
+          className="w-full cursor-pointer border-1 flex items-center justify-center gap-3 bg-blue-500 text-white px-2 py-3 rounded-full font-bold text-lg shadow-lg hover:bg-blue-600 transition-transform duration-300 hover:scale-105"
         >
           <FaSearch /> Search Universities
 

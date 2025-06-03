@@ -224,9 +224,9 @@ const IQTest = ({
   }, [questions, testId, userId]);
 
   const handleSubmit = async () => {
-      if (hasSubmittedRef.current) return; // prevent double call
+    if (hasSubmittedRef.current) return; // prevent double call
 
-      hasSubmittedRef.current = true; // stop all future progress updates
+    hasSubmittedRef.current = true; // stop all future progress updates
 
     const latestUserRole = userRole;
     const allAnswered = answers.every((ans) => ans !== "");
@@ -272,27 +272,27 @@ const IQTest = ({
             setIsSubmitted(true);
             resultGenerationMutation.mutate(resultData);
           }
-        }else {
-      hasSubmittedRef.current = false; // allow resubmission if cancelled
-    }
+        } else {
+          hasSubmittedRef.current = false; // allow resubmission if cancelled
+        }
       });
     }
   };
 
-   useEffect(()=>{
-    if(timeLeft=== 0){
+  useEffect(() => {
+    if (timeLeft === 0) {
       handleSubmit();
     }
-  },[timeLeft]);
+  }, [timeLeft]);
 
-    useEffect(() => {
-  if (isSubmitted || hasSubmittedRef.current) {
-    if (progressIntervalRef.current) {
-      clearInterval(progressIntervalRef.current);
-      progressIntervalRef.current = null;
+  useEffect(() => {
+    if (isSubmitted || hasSubmittedRef.current) {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+        progressIntervalRef.current = null;
+      }
+      return;
     }
-    return;
-  }
 
     const updateProgress = () => {
 
@@ -375,10 +375,17 @@ const IQTest = ({
         <div className="flex flex-col lg:flex-row p-2 sm:p-4 bg-gray-100 gap-4">
           <div className="flex-1 w-full bg-white p-3 sm:p-6 rounded-lg shadow-md">
             <div className="h-auto min-h-[15vh] md:min-h-[20vh] w-full">
-              <div className="bg-[#2C4167] text-white w-10 h-10 flex items-center justify-center text-xl font-bold rounded-sm">
-                {currentQuestion + 1}
+              <div className="flex items-center space-x-4">
+                <div className="bg-[#2C4167] text-white w-10 h-10 flex items-center justify-center text-xl font-bold rounded-sm">
+                  {currentQuestion + 1}
+                </div>
+                <h1 className="text-xl font-bold"> Chapter :  </h1>
+                <div className="text-lg font-bold">
+                  {questions[currentQuestion].chapterName || "N/A"}
+                </div>
               </div>
               <div className="flex items-center w-full h-30 mb-4">
+
                 <h2 className="text-lg sm:text-xl font-medium text-[#2C4167]">
                   {questions[currentQuestion].question}
                 </h2>

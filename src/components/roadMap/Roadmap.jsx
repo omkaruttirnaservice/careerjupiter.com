@@ -25,7 +25,7 @@
 //     queryFn: () => getSubType(typeId),
 //     enabled: !!typeId,
 //   });
-  
+
 //   useEffect(() => {
 //     if (subTypes?.data?.data) {
 //       setSubTypeOptions(subTypes.data.data);
@@ -56,7 +56,6 @@
 //   const selectedItem = path[index];
 
 //   console.log("selectedItem",selectedItem);
-  
 
 //   // Slice the path up to the clicked breadcrumb
 //   const newPath = path.slice(0, index + 1);
@@ -86,7 +85,6 @@
 //   }
 
 //   console.log("handleSelect option",option);
-  
 
 //   const nextType = option.roadmap.type?.type || option.type;
 //   const nextId = option.roadmap.type?._id || option.type._id;
@@ -97,7 +95,6 @@
 //   // Fetch next sub types if available
 //   fetchNextSubTypes(option);
 // };
-
 
 //   return (
 //     <>
@@ -238,7 +235,6 @@
 //                     )}
 //                   </p>
 
-
 //                   <div className="mt-3 flex justify-end">
 //                     <span className="text-indigo-600 flex items-center text-sm font-medium">
 //                       Explore <FaArrowRight className="ml-1" />
@@ -272,8 +268,6 @@ import { useState, useEffect } from "react";
 import {
   FaGraduationCap,
   FaBriefcase,
-  FaArrowRight,
-  FaClock,
   FaChevronRight,
   FaHome,
   FaRedo,
@@ -290,134 +284,174 @@ import {
   FaPalette,
   FaChartLine,
   FaUniversity,
-  FaHeartbeat
+  FaHeartbeat,
+  FaArrowLeft, // For back button
 } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import SearchRoadmap from "./SearchRoadmap";
 import { getSubType } from "./Api";
+import { useNavigate } from "react-router-dom";
+import TopOptions from "./topOption"; // Import the TopOptions component
 
 // Expanded color palette
 const COLORS = {
-  primary: "#6366f1",
-  secondary: "#8b5cf6",
-  accent: "#ec4899",
-  success: "#10b981",
-  warning: "#f59e0b",
-  danger: "#ef4444",
-  info: "#3b82f6",
-  dark: "#1e293b",
-  light: "#f8fafc",
-  purple: "#a855f7",
-  pink: "#ec4899",
-  indigo: "#6366f1",
-  blue: "#3b82f6",
-  teal: "#14b8a6",
-  emerald: "#10b981",
-  amber: "#f59e0b"
+  primary: "#a5b4fc", // Light Indigo
+  secondary: "#c4b5fd", // Light Purple
+  accent: "#f9a8d4", // Light Pink
+  success: "#6ee7b7", // Light Green
+  warning: "#fde68a", // Soft Yellow
+  danger: "#fca5a5", // Soft Red
+  info: "#93c5fd", // Light Blue
+  dark: "#475569", // Cool Gray
+  light: "#f1f5f9", // Very Light Gray
+  purple: "#d8b4fe", // Soft Lavender
+  pink: "#fbcfe8", // Pastel Pink
+  indigo: "#c7d2fe", // Soft Indigo
+  blue: "#bfdbfe", // Light Sky Blue
+  teal: "#99f6e4", // Minty Teal
+  emerald: "#a7f3d0", // Light Emerald
+  amber: "#fde68a", // Pastel Amber
 };
 
 // Icon mapping for different career types
 const CAREER_ICONS = {
-  "engineering": <FaCode className="text-blue-500" />,
-  "medical": <FaHeartbeat className="text-red-500" />,
-  "design": <FaPalette className="text-purple-500" />,
-  "business": <FaChartLine className="text-emerald-500" />,
-  "science": <FaFlask className="text-amber-500" />,
-  "education": <FaUniversity className="text-indigo-500" />,
-  "management": <FaUserTie className="text-teal-500" />,
-  "default": <FaBriefcase className="text-gray-500" />
+  engineering: <FaCode className="text-blue-500" />,
+  medical: <FaHeartbeat className="text-red-500" />,
+  design: <FaPalette className="text-purple-500" />,
+  business: <FaChartLine className="text-emerald-500" />,
+  science: <FaFlask className="text-amber-500" />,
+  education: <FaUniversity className="text-indigo-500" />,
+  management: <FaUserTie className="text-teal-500" />,
+  default: <FaBriefcase className="text-gray-500" />,
 };
 
 const getCareerIcon = (type) => {
   if (!type) return CAREER_ICONS.default;
-  
+
   const lowerType = type.toLowerCase();
   if (lowerType.includes("engineer")) return CAREER_ICONS.engineering;
-  if (lowerType.includes("medical") || lowerType.includes("doctor") || lowerType.includes("nurse")) return CAREER_ICONS.medical;
+  if (
+    lowerType.includes("medical") ||
+    lowerType.includes("doctor") ||
+    lowerType.includes("nurse")
+  )
+    return CAREER_ICONS.medical;
   if (lowerType.includes("design")) return CAREER_ICONS.design;
-  if (lowerType.includes("business") || lowerType.includes("manager")) return CAREER_ICONS.business;
-  if (lowerType.includes("science") || lowerType.includes("research")) return CAREER_ICONS.science;
-  if (lowerType.includes("teacher") || lowerType.includes("professor") || lowerType.includes("education")) return CAREER_ICONS.education;
-  if (lowerType.includes("executive") || lowerType.includes("director") || lowerType.includes("ceo")) return CAREER_ICONS.management;
-  
+  if (lowerType.includes("business") || lowerType.includes("manager"))
+    return CAREER_ICONS.business;
+  if (lowerType.includes("science") || lowerType.includes("research"))
+    return CAREER_ICONS.science;
+  if (
+    lowerType.includes("teacher") ||
+    lowerType.includes("professor") ||
+    lowerType.includes("education")
+  )
+    return CAREER_ICONS.education;
+  if (
+    lowerType.includes("executive") ||
+    lowerType.includes("director") ||
+    lowerType.includes("ceo")
+  )
+    return CAREER_ICONS.management;
+
   return CAREER_ICONS.default;
 };
 
-const RoadmapNode = ({ node, onClick, isLast }) => {
+// Back button component - now a standalone component to be placed below the cards
+const BackButton = ({ onClick }) => {
+  return (
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={onClick}
+      className="flex items-center justify-center gap-2 bg-white text-indigo-600 px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all border-2 border-indigo-200 mx-auto mt-8"
+    >
+      <FaArrowLeft className="text-indigo-500" />
+      <span className="font-medium">Go Back One Step</span>
+    </motion.button>
+  );
+};
+
+const RoadmapNode = ({ node, onClick }) => {
   const isJob = node.type?.toLowerCase().includes("job");
   const careerIcon = getCareerIcon(node.type);
   const colors = [
-    "from-purple-400 to-pink-400",
-    "from-blue-400 to-teal-400",
-    "from-amber-400 to-orange-400",
-    "from-emerald-400 to-cyan-400",
-    "from-indigo-400 to-violet-400",
-    "from-rose-400 to-red-400"
+    "from-purple-300 to-pink-300",
+    "from-blue-300 to-teal-300",
+    "from-amber-300 to-orange-300",
+    "from-emerald-300 to-cyan-300",
+    "from-indigo-300 to-violet-300",
+    "from-rose-300 to-red-300",
   ];
   const randomColor = colors[Math.floor(Math.random() * colors.length)];
-  
+  const isLast = !node.roadmap;
+
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.03 }}
       transition={{ duration: 0.3 }}
       onClick={onClick}
-      className={`relative p-4 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${isLast ? "ring-2 ring-white shadow-xl" : "shadow-lg hover:shadow-xl"} bg-gradient-to-br ${randomColor}`}
+      className={`relative p-4 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
+        isLast ? "ring-2 ring-white shadow-xl" : "shadow-lg hover:shadow-xl"
+      } bg-gradient-to-br ${randomColor}`}
     >
       {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-16 h-16 rounded-full bg-white/10 -mr-4 -mt-4"></div>
       <div className="absolute bottom-0 left-0 w-12 h-12 rounded-full bg-white/10 -ml-4 -mb-4"></div>
-      
-      <div className="relative z-10 flex items-start space-x-3">
-        <div className={`p-3 rounded-xl bg-white/20 backdrop-blur-sm text-white`}>
+
+      <div className="relative z-10 flex items-space-x-3">
+        <div
+          className={`p-3 rounded-xl bg-white/20 backdrop-blur-sm text-white`}
+        >
           {careerIcon}
         </div>
         <div className="flex-1">
-          <h3 className="font-bold text-white">{node.type}</h3>
-          <div className="flex items-center mt-2 text-sm text-white/90">
-            <FaClock className="mr-1" />
-            <span>Duration: ~3 years</span>
-          </div>
+          <h3 className="font-bold text-gray-800">{node.type}</h3>
           {node.roadmap && (
-            // <div className="mt-2 flex items-center text-sm text-white">
-            //   <FaLightbulb className="mr-1" />
-            //   <span>{node.roadmap.sub_type?.length || 0} paths available</span>
-            // </div>
-<div
-  className="mt-2 flex items-center text-sm font-semibold text-red-500 drop-shadow-[0_0_16px_#dc2626] animate-pulse"
-  style={{ animationDuration: '700ms', animationTimingFunction: 'linear' }}
->
-  <FaLightbulb
-    className="mr-2 text-red-600 drop-shadow-[0_0_20px_#dc2626] animate-pulse"
-    style={{ animationDuration: '700ms', animationTimingFunction: 'linear' }}
-  />
-  <span
-    className="text-black drop-shadow-[0_0_10px_#dc2626] tracking-wide uppercase animate-pulse"
-    style={{ animationDuration: '700ms', animationTimingFunction: 'linear' }}
-  >
-    {node.roadmap.sub_type?.length || 0} paths available
-  </span>
-</div>
-
+            <div
+              className="mt-2 flex items-center text-sm font-semibold text-red-500 drop-shadow-[0_0_16px_#dc2626] animate-pulse"
+              style={{
+                animationDuration: "700ms",
+                animationTimingFunction: "linear",
+              }}
+            >
+              <FaLightbulb
+                className="mr-2 text-red-600 drop-shadow-[0_0_20px_#dc2626] animate-pulse"
+                style={{
+                  animationDuration: "700ms",
+                  animationTimingFunction: "linear",
+                }}
+              />
+              <span
+                className="text-black drop-shadow-[0_0_10px_#dc2626] tracking-wide uppercase animate-pulse"
+                style={{
+                  animationDuration: "700ms",
+                  animationTimingFunction: "linear",
+                }}
+              >
+                {node.roadmap.sub_type?.length || 0} paths available
+              </span>
+            </div>
           )}
         </div>
       </div>
-      
+
       {!isLast && (
         <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2">
-          <motion.div 
+          <motion.div
             animate={{ y: [0, 5, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5 }}
+            transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
             className="text-white/80"
           >
             <FaChevronRight />
           </motion.div>
         </div>
       )}
-      
+
       {isLast && (
         <div className="absolute top-2 right-2 text-yellow-300">
           <FaStar />
@@ -435,41 +469,40 @@ const PathBreadcrumb = ({ item, index, isActive, onClick }) => {
     "bg-blue-500 text-white",
     "bg-teal-500 text-white",
     "bg-emerald-500 text-white",
-    "bg-amber-500 text-white"
+    "bg-amber-500 text-white",
   ];
   const colorClass = colors[index % colors.length] || colors[0];
-  
+
   return (
-    <motion.div 
-      whileHover={{ scale: 1.05 }}
-      className="flex items-center"
-    >
+    <motion.div whileHover={{ scale: 1.05 }} className="flex items-center">
       <button
         onClick={onClick}
-        className={`flex items-center px-4 py-2 rounded-full ${isActive ? "ring-2 ring-white ring-offset-2 shadow-lg " + colorClass : colorClass + " opacity-80 hover:opacity-100"}`}
+        className={`flex items-center px-4 py-2 rounded-full ${
+          isActive
+            ? "ring-2 ring-white ring-offset-2 shadow-lg " + colorClass
+            : colorClass + " opacity-80 hover:opacity-100"
+        }`}
       >
         {index === 0 && <FaHome className="mr-2" />}
         <span>{item.name}</span>
         {isActive && <FaMedal className="ml-2" />}
       </button>
-      {!isActive && (
-        <FaChevronRight className="mx-2 text-gray-400" />
-      )}
+      {!isActive && <FaChevronRight className="mx-2 text-gray-400" />}
     </motion.div>
   );
 };
 
 const WavyPath = ({ path }) => {
   return (
-    <div className="relative h-64 w-full my-12 overflow-hidden">
+    <div className="relative h-44 w-full my-4 overflow-hidden">
       {/* Wavy line */}
-      <svg 
-        viewBox="0 0 1200 300" 
+      <svg
+        viewBox="0 0 1200 300"
         className="absolute top-0 left-0 w-full h-full"
         preserveAspectRatio="none"
       >
-        <path 
-          d="M0,150 C150,50 450,250 600,150 C750,50 1050,250 1200,150" 
+        <path
+          d="M0,150 C150,50 450,250 600,150 C750,50 1050,250 1200,150"
           stroke="url(#gradient)"
           strokeWidth="8"
           fill="none"
@@ -482,13 +515,20 @@ const WavyPath = ({ path }) => {
           </linearGradient>
         </defs>
       </svg>
-      
+
       {/* Checkpoints along the wavy path */}
       {path.map((step, index) => {
-        const position = (index + 1) / (path.length + 1) * 100;
-        const colors = ["#8b5cf6", "#ec4899", "#6366f1", "#3b82f6", "#10b981", "#f59e0b"];
+        const position = ((index + 1) / (path.length + 1)) * 100;
+        const colors = [
+          "#8b5cf6",
+          "#ec4899",
+          "#6366f1",
+          "#3b82f6",
+          "#10b981",
+          "#f59e0b",
+        ];
         const color = colors[index % colors.length];
-        
+
         return (
           <motion.div
             key={index}
@@ -499,19 +539,23 @@ const WavyPath = ({ path }) => {
             style={{
               left: `${position}%`,
               top: `calc(50% - 40px + ${Math.sin(index) * 30}px)`,
-              transform: 'translateX(-50%)'
+              transform: "translateX(-50%)",
             }}
           >
-            <div 
+            <div
               className={`w-12 h-12 rounded-full flex items-center justify-center text-white shadow-xl`}
-              style={{ 
+              style={{
                 backgroundColor: color,
-                border: '3px solid white'
+                border: "3px solid white",
               }}
             >
-              {index === 0 ? <FaGraduationCap /> : 
-               index === path.length - 1 ? <FaRocket /> : 
-               <FaBriefcase />}
+              {index === 0 ? (
+                <FaGraduationCap />
+              ) : index === path.length - 1 ? (
+                <FaRocket />
+              ) : (
+                <FaBriefcase />
+              )}
             </div>
             <motion.div
               initial={{ scale: 0 }}
@@ -527,18 +571,19 @@ const WavyPath = ({ path }) => {
   );
 };
 
-export default function Roadmap() {
+function Roadmap() {
   const [path, setPath] = useState([]);
   const [showSearchPopup, setShowSearchPopup] = useState(false);
   const [typeId, setTypeId] = useState("");
   const [subTypeOption, setSubTypeOptions] = useState([]);
+  const navigate = useNavigate(); // For navigation to routes
 
   const { data: subTypes } = useQuery({
     queryKey: ["subType", typeId],
     queryFn: () => getSubType(typeId),
     enabled: !!typeId,
   });
-  
+
   useEffect(() => {
     if (subTypes?.data?.data) {
       setSubTypeOptions(subTypes.data.data);
@@ -553,6 +598,23 @@ export default function Roadmap() {
       }, 1000);
       localStorage.setItem("visitedRoadmap", "true");
     }
+  }, []);
+
+  // Add event listener for browser back button
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      // Show confirmation dialog when user tries to navigate away
+      const confirmationMessage =
+        "Are you sure you want to exit the career map?";
+      e.returnValue = confirmationMessage;
+      return confirmationMessage;
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, []);
 
   const handleSearchSelect = (selectedItem) => {
@@ -581,15 +643,63 @@ export default function Roadmap() {
     }
   };
 
+  // Function to go back one step
+  const handleBackStep = () => {
+    if (path.length > 1) {
+      const newPath = path.slice(0, path.length - 1);
+      setPath(newPath);
+      setTypeId(newPath[newPath.length - 1].type_id);
+    }
+  };
+
+  // Modified handleSelect function to show buttons instead of popup
   const handleSelect = (option) => {
     if (!option.roadmap) {
+      // Get the current path name (e.g., "BCA", "ITI")
+      const currentPathName = option.type || path[path.length - 1]?.name || "";
+
+      // Show buttons instead of the popup
       Swal.fire({
-        icon: "info",
-        title: "Destination Reached!",
-        text: "You've arrived at your career destination. Consider specializing or exploring related fields.",
-        background: '#fff',
+        title: "What would you like to do next?",
+        html: `
+          <div class="flex flex-col gap-4 mt-4">
+            <button id="college-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-3 rounded-lg transition-all flex items-center justify-center gap-2">
+              <i class="fas fa-university"></i>
+              Search your best college for ${currentPathName}
+            </button>
+            <button id="class-btn" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-3 rounded-lg transition-all flex items-center justify-center gap-2">
+              <i class="fas fa-school"></i>
+              Search your best class
+            </button>
+            <button id="iq-test-btn" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-lg transition-all flex items-center justify-center gap-2">
+              <i class="fas fa-brain"></i>
+              Take the IQ Test for check your IQ level
+            </button>
+          </div>
+        `,
+        showConfirmButton: false,
+        background: "#fff",
         color: COLORS.dark,
-        confirmButtonColor: COLORS.purple,
+        showCloseButton: true,
+        didOpen: () => {
+          // Add event listeners to buttons
+          document
+            .getElementById("college-btn")
+            .addEventListener("click", () => {
+              Swal.close();
+              navigate("/college");
+            });
+          document.getElementById("class-btn").addEventListener("click", () => {
+            Swal.close();
+            navigate("/class");
+          });
+          document
+            .getElementById("iq-test-btn")
+            .addEventListener("click", () => {
+              Swal.close();
+              navigate("/profile/test");
+            });
+        },
       });
       return;
     }
@@ -614,14 +724,18 @@ export default function Roadmap() {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
-        <motion.header 
+        <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 text-center"
         >
           <motion.div
             animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ repeat: Infinity, repeatType: "reverse", duration: 3 }}
+            transition={{
+              repeat: Number.POSITIVE_INFINITY,
+              repeatType: "reverse",
+              duration: 3,
+            }}
             className="inline-flex items-center justify-center p-4 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full mb-4 shadow-lg"
           >
             <FaRoute className="text-white text-3xl" />
@@ -629,9 +743,6 @@ export default function Roadmap() {
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-3 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-pink-500">
             Career Path
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Navigate your professional journey with our interactive, colorful roadmap
-          </p>
         </motion.header>
 
         {/* Controls */}
@@ -645,7 +756,7 @@ export default function Roadmap() {
             <FaSearch className="text-indigo-500" />
             <span className="font-medium">Search Career Path</span>
           </motion.button>
-          
+
           {path.length > 0 && (
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
@@ -659,22 +770,40 @@ export default function Roadmap() {
           )}
         </div>
 
-        {/* Breadcrumb Navigation */}
+        {/* Wavy Path Visualization */}
         {path.length > 0 && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mb-8 bg-white/80 backdrop-blur-sm p-4 rounded-2xl shadow-sm"
+            className="mb-0"
           >
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              <PathBreadcrumb 
-                item={{ name: "Start" }} 
-                index={-1} 
+            <h2 className="text-2xl font-semibold text-gray-700 mb-2 flex items-center justify-center">
+              <FaLayerGroup className="mr-3 text-indigo-500" />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-pink-500">
+                Your Career Journey
+              </span>
+            </h2>
+            <WavyPath path={path} />
+          </motion.div>
+        )}
+
+        {/* Breadcrumb Navigation */}
+
+        {path.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-4 sm:mb-8 bg-white/80 backdrop-blur-sm p-2 sm:p-4 rounded-xl sm:rounded-2xl shadow-sm"
+          >
+            <div className="custom-scrollbar overflow-x-auto whitespace-nowrap pb-2 px-1 sm:px-2 flex items-center gap-2 text-xs sm:text-sm">
+              <PathBreadcrumb
+                item={{ name: "Start" }}
+                index={-1}
                 onClick={resetPath}
                 isActive={false}
               />
               {path.map((item, index) => (
-                <PathBreadcrumb 
+                <PathBreadcrumb
                   key={index}
                   item={item}
                   index={index}
@@ -686,28 +815,8 @@ export default function Roadmap() {
           </motion.div>
         )}
 
-        {/* Wavy Path Visualization */}
-        {path.length > 0 && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mb-12"
-          >
-            <h2 className="text-2xl font-semibold text-gray-700 mb-6 flex items-center justify-center">
-              <FaLayerGroup className="mr-3 text-indigo-500" />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-pink-500">
-                Your Career Journey
-              </span>
-            </h2>
-            <WavyPath path={path} />
-          </motion.div>
-        )}
-
         {/* Options Section */}
-        <motion.section 
-          layout
-          className="mb-12"
-        >
+        <motion.section layout className="mb-12">
           <h2 className="text-2xl font-semibold text-gray-700 mb-6 flex items-center justify-center">
             {path.length === 0 ? (
               <>
@@ -718,7 +827,6 @@ export default function Roadmap() {
               </>
             ) : (
               <>
-                <FaArrowRight className="mr-3 text-indigo-500" />
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-pink-500">
                   Next Steps After {path[path.length - 1]?.name}
                 </span>
@@ -727,32 +835,39 @@ export default function Roadmap() {
           </h2>
 
           {subTypeOption.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {subTypeOption.map((option, idx) => (
-                <RoadmapNode 
-                  key={option._id} 
-                  node={option} 
-                  onClick={() => handleSelect(option)}
-                  isLast={!option.roadmap}
-                />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {subTypeOption.map((option, idx) => (
+                  <RoadmapNode
+                    key={option._id}
+                    node={option}
+                    onClick={() => handleSelect(option)}
+                  />
+                ))}
+              </div>
+
+              {/* Back button below the cards */}
+              {path.length > 1 && <BackButton onClick={handleBackStep} />}
+            </>
           ) : path.length === 0 ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="bg-white rounded-2xl p-8 text-center shadow-xl max-w-2xl mx-auto border-2 border-indigo-100"
             >
-              <motion.div
+              {/* <motion.div
                 animate={{ y: [0, -5, 0] }}
-                transition={{ repeat: Infinity, duration: 2 }}
+                transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
                 className="inline-flex p-4 bg-gradient-to-r from-indigo-100 to-pink-100 rounded-full mb-4 shadow-md"
               >
                 <FaSearch className="text-indigo-600 text-3xl" />
-              </motion.div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">Start Exploring Career Paths</h3>
+              </motion.div> */}
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                Start Exploring Career Paths
+              </h3>
               <p className="text-gray-600 mb-6 text-lg">
-                Discover your ideal career trajectory with our interactive roadmap explorer
+                Discover your ideal career trajectory with our interactive
+                roadmap explorer
               </p>
               <motion.button
                 whileHover={{ scale: 1.05, y: -2 }}
@@ -772,9 +887,12 @@ export default function Roadmap() {
               <div className="inline-flex p-4 bg-gradient-to-r from-green-100 to-teal-100 rounded-full mb-4 shadow-md">
                 <FaRocket className="text-green-600 text-3xl" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">Destination Achieved!</h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                Destination Achieved!
+              </h3>
               <p className="text-gray-600 mb-6 text-lg">
-                You've reached {path[path.length - 1]?.name}. This could be your dream career destination!
+                You've reached {path[path.length - 1]?.name}. This could be your
+                dream career destination!
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <motion.button
@@ -785,96 +903,80 @@ export default function Roadmap() {
                 >
                   Explore New Path
                 </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => navigateTo(path.length - 2)}
-                  className="bg-white text-indigo-600 px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all font-medium border-2 border-indigo-200"
-                >
-                  Go Back One Step
-                </motion.button>
+                {path.length > 1 && (
+                  <motion.button
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => navigateTo(path.length - 2)}
+                    className="bg-white text-indigo-600 px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all font-medium border-2 border-indigo-200"
+                  >
+                    Go Back One Step
+                  </motion.button>
+                )}
               </div>
             </motion.div>
           )}
         </motion.section>
 
+        <TopOptions navigate={navigate} />
+
         {/* Info Section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="bg-gradient-to-r from-indigo-600 to-purple-700 rounded-3xl p-8 text-white shadow-2xl"
+          className="bg-gradient-to-r from-indigo-600 to-purple-700 rounded-2xl sm:rounded-3xl p-4 sm:p-8 text-white shadow-2xl"
         >
-          <div className="flex flex-col md:flex-row items-center gap-8">
+          {/* Title */}
+          <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center justify-center text-center">
+            <FaLightbulb className="mr-2 sm:mr-3 text-yellow-300" />
+            How to Navigate Your Career Journey
+          </h3>
+
+          {/* Content Section */}
+          <div className="flex flex-col md:flex-row gap-6 sm:gap-8">
+            {/* Left List */}
             <div className="flex-1">
-              <h3 className="text-2xl font-bold mb-4 flex items-center">
-                <FaLightbulb className="mr-3 text-yellow-300" />
-                How to Navigate Your Career Journey
-              </h3>
               <ul className="space-y-4">
                 <li className="flex items-start">
-                  <span className="inline-flex items-center justify-center bg-white/20 rounded-full p-2 mr-4">
-                    <FaSearch className="text-white" />
+                  <span className="inline-flex items-center justify-center bg-white/20 rounded-full p-2 mr-3 sm:mr-4">
+                    <FaSearch className="text-white text-base sm:text-lg" />
                   </span>
-                  <span className="text-lg">Search for specific careers or browse our suggestions</span>
+                  <span className="text-sm sm:text-lg">
+                    Search for specific careers or browse our suggestions
+                  </span>
                 </li>
                 <li className="flex items-start">
-                  <span className="inline-flex items-center justify-center bg-white/20 rounded-full p-2 mr-4">
-                    <FaChevronRight className="text-white" />
+                  <span className="inline-flex items-center justify-center bg-white/20 rounded-full p-2 mr-3 sm:mr-4">
+                    <FaChevronRight className="text-white text-base sm:text-lg" />
                   </span>
-                  <span className="text-lg">Click on any career node to explore subsequent options</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="inline-flex items-center justify-center bg-white/20 rounded-full p-2 mr-4">
-                    <FaHome className="text-white" />
+                  <span className="text-sm sm:text-lg">
+                    Click on any career node to explore subsequent options
                   </span>
-                  <span className="text-lg">Use the breadcrumbs to navigate back to previous steps</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="inline-flex items-center justify-center bg-white/20 rounded-full p-2 mr-4">
-                    <FaRedo className="text-white" />
-                  </span>
-                  <span className="text-lg">Start over anytime to explore different career trajectories</span>
                 </li>
               </ul>
             </div>
-            <div className="hidden md:block flex-1">
-              <div className="relative h-64">
-                <div className="absolute w-full h-full">
-                  <svg 
-                    viewBox="0 0 400 300" 
-                    className="w-full h-full"
-                  >
-                    <path 
-                      d="M20,150 C100,50 300,250 380,150" 
-                      stroke="url(#gradient2)"
-                      strokeWidth="6"
-                      fill="none"
-                      strokeDasharray="8 4"
-                    />
-                    <defs>
-                      <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#a5b4fc" />
-                        <stop offset="100%" stopColor="#f0abfc" />
-                      </linearGradient>
-                    </defs>
-                    
-                    {/* Checkpoint markers */}
-                    <circle cx="20" cy="150" r="12" fill="#6366f1" stroke="white" strokeWidth="3">
-                      <animate attributeName="r" values="12;15;12" dur="2s" repeatCount="indefinite" />
-                    </circle>
-                    <circle cx="100" cy="50" r="10" fill="#8b5cf6" stroke="white" strokeWidth="3">
-                      <animate attributeName="r" values="10;13;10" dur="2s" repeatCount="indefinite" begin="0.5s" />
-                    </circle>
-                    <circle cx="300" cy="250" r="10" fill="#ec4899" stroke="white" strokeWidth="3">
-                      <animate attributeName="r" values="10;13;10" dur="2s" repeatCount="indefinite" begin="1s" />
-                    </circle>
-                    <circle cx="380" cy="150" r="12" fill="#3b82f6" stroke="white" strokeWidth="3">
-                      <animate attributeName="r" values="12;15;12" dur="2s" repeatCount="indefinite" begin="1.5s" />
-                    </circle>
-                  </svg>
-                </div>
-              </div>
+
+            {/* Right List - Hidden on small screens */}
+            <div className="flex flex-col md:flex-1">
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <span className="inline-flex items-center justify-center bg-white/20 rounded-full p-2 mr-3 sm:mr-4">
+                    <FaHome className="text-white text-base sm:text-lg" />
+                  </span>
+                  <span className="text-sm sm:text-lg">
+                    Use the breadcrumbs to navigate back to previous steps
+                  </span>
+                </li>
+                <li className="flex items-start">
+                  <span className="inline-flex items-center justify-center bg-white/20 rounded-full p-2 mr-3 sm:mr-4">
+                    <FaRedo className="text-white text-base sm:text-lg" />
+                  </span>
+                  <span className="text-sm sm:text-lg">
+                    Start over anytime to explore different career trajectories
+                  </span>
+                </li>
+              </ul>
             </div>
           </div>
         </motion.div>
@@ -882,3 +984,5 @@ export default function Roadmap() {
     </div>
   );
 }
+
+export default Roadmap;

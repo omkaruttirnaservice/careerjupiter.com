@@ -33,7 +33,7 @@ function TestClock({
     <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4 px-2 sm:px-4">
       <div className="relative w-full sm:w-3/4 md:w-2/3 lg:w-1/2 flex flex-col justify-start">
         <h1 className="text-lg sm:text-xl md:text-xl font-bold mb-1 sm:mb-2">
-          {title}
+          {title || "N/A"}
         </h1>
 
         <div

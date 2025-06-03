@@ -61,9 +61,18 @@
 
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router.jsx";
+// import ScrollToTop from "../Layouts/ScrollToTop.jsx";
 
 const AppLoader = () => {
-  return <RouterProvider router={router} />;
+
+
+  return (
+  <>
+   {/* <ScrollToTop />  */}
+  <RouterProvider router={router} />;
+
+  </>
+  )
 };
 
 export default AppLoader;

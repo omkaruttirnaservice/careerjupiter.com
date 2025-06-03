@@ -12,32 +12,20 @@ import {
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white mt-6">
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        {/* Grid layout with 2 columns on mobile and 4 columns on larger screens */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
             <h2 className="text-lg font-bold mb-4">Company</h2>
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               <li>
-                <NavLink
-                  to="/"
-                  className="hover:text-blue-400 transition-colors"
-                >
+                <NavLink to="/" className="hover:text-blue-400 transition-colors">
                   Home
                 </NavLink>
               </li>
-              {/* <li>
-                <NavLink
-                  to=""
-                  className="hover:text-blue-400 transition-colors"
-                >
-                  Students Corner
-                </NavLink>
-              </li> */}
               <li>
                 <NavLink
-                  to="services-provieder"
+                  to="/service-provider"
                   className="hover:text-blue-400 transition-colors"
                 >
                   Service Providers
@@ -65,7 +53,7 @@ const Footer = () => {
           {/* Services */}
           <div>
             <h2 className="text-lg font-bold mb-4">Services</h2>
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               <li>
                 <NavLink
                   to="/college"
@@ -90,50 +78,30 @@ const Footer = () => {
                   Search University
                 </NavLink>
               </li>
-              {/* <li>
-                <NavLink
-                  to=""
-                  className="hover:text-blue-400 transition-colors"
-                >
-                  Check Eligibility
-                </NavLink>
-              </li> */}
             </ul>
           </div>
 
           {/* Resources */}
           <div>
             <h2 className="text-lg font-bold mb-4">Resources</h2>
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               <li>
-                <NavLink
-                  to="#"
-                  className="hover:text-blue-400 transition-colors"
-                >
+                <NavLink to="#" className="hover:text-blue-400 transition-colors">
                   Help Center
                 </NavLink>
               </li>
               <li>
-                <NavLink
-                  to="#"
-                  className="hover:text-blue-400 transition-colors"
-                >
+                <NavLink to="#" className="hover:text-blue-400 transition-colors">
                   Guides
                 </NavLink>
               </li>
               <li>
-                <NavLink
-                  to="#"
-                  className="hover:text-blue-400 transition-colors"
-                >
+                <NavLink to="#" className="hover:text-blue-400 transition-colors">
                   Privacy Policy
                 </NavLink>
               </li>
               <li>
-                <NavLink
-                  to="#"
-                  className="hover:text-blue-400 transition-colors"
-                >
+                <NavLink to="#" className="hover:text-blue-400 transition-colors">
                   Terms of Service
                 </NavLink>
               </li>
@@ -143,76 +111,82 @@ const Footer = () => {
           {/* Contact + Social */}
           <div>
             <h2 className="text-lg font-bold mb-4">Contact Us</h2>
-            <ul className="space-y-3">
+            <ul className="space-y-2 text-sm">
               <li>
                 Email:{" "}
-                <NavLink
-                  to="mailto:info@company.com"
+                <a
+                  href="mailto:careerjupiter4u@gmail.com"
                   className="hover:text-blue-400 transition-colors"
                 >
                   careerjupiter4u@gmail.com
-                </NavLink>
+                </a>
               </li>
-              <a
-            href="https://whatsapp.com/channel/0029VbADrN54IBh95nFJiR3e"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center mr-20  justify-center w-[200px] h-[45px] bg-green-500 rounded-full text-white font-semibold hover:bg-green-600 transition"
-          >
-            <FaWhatsapp className="mr-2" size={24} /> 
-            <p className="font-bold"> Join WhatsApp</p>
-          </a>
               <li>Address: 123 Street, City, Country</li>
             </ul>
 
-            {/* Follow Us (center on mobile) */}
-            <h2 className="text-lg font-bold mt-6 mb-4 text-center"></h2>
-            <div className="flex justify-center md:mr-23  md:gap-4 gap-3">
-              <NavLink
-                to="#"
+            <div className="mt-4">
+              <a
+                href="https://whatsapp.com/channel/0029VbADrN54IBh95nFJiR3e"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-50 md:w-50 sm:w-auto px-4 py-2 bg-green-500 rounded-full text-white font-semibold hover:bg-green-600 transition"
+              >
+                <FaWhatsapp className="mr-2" size={18} />
+                <span>Join WhatsApp</span>
+              </a>
+            </div>
+
+            <div className="flex justify-start sm:justify-start mt-5 gap-4 flex-wrap">
+              <a
+                href="#"
+                aria-label="Facebook"
                 className="text-xl text-blue-600 hover:opacity-75 transition-opacity"
               >
                 <FaFacebookF />
-              </NavLink>
-              <NavLink
-                to="#"
+              </a>
+              <a
+                href="#"
+                aria-label="Instagram"
                 className="text-xl text-pink-500 hover:opacity-75 transition-opacity"
               >
                 <FaInstagram />
-              </NavLink>
-              <NavLink
-                to="#"
+              </a>
+              <a
+                href="#"
+                aria-label="Twitter"
                 className="text-xl text-sky-400 hover:opacity-75 transition-opacity"
               >
                 <FaTwitter />
-              </NavLink>
-              <NavLink
-                to="#"
+              </a>
+              <a
+                href="#"
+                aria-label="YouTube"
                 className="text-xl text-red-600 hover:opacity-75 transition-opacity"
               >
                 <FaYoutube />
-              </NavLink>
-              <NavLink
-                to="#"
+              </a>
+              <a
+                href="#"
+                aria-label="LinkedIn"
                 className="text-xl text-blue-800 hover:opacity-75 transition-opacity"
               >
                 <FaLinkedin />
-              </NavLink>
-              <NavLink
-                to="#"
+              </a>
+              <a
+                href="#"
+                aria-label="WhatsApp"
                 className="text-xl text-green-500 hover:opacity-75 transition-opacity"
               >
                 <FaWhatsapp />
-              </NavLink>
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Bottom copyright text */}
+        {/* Footer Bottom */}
         <div className="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-400">
           © {new Date().getFullYear()}{" "}
-          <span className="text-white font-semibold">Career Jupiter</span>.
-          All rights reserved.
+          <span className="text-white font-semibold">Career Jupiter</span>. All rights reserved.
         </div>
       </div>
     </footer>
