@@ -9,3 +9,4 @@ export const getCollege = async (id) => {
 	// console.log(response.data.data , 'get college ')
 	return response.data.data;
 };
+
