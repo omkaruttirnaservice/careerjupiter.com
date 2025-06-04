@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
-import { getCollegeCategory, getCollegeDist, GetSearchCollege } from "./Api";
+import {
+  getCollegeCategory,
+  getCollegeDist,
+  GetSearchCollege,
+  getCollegeRoadmaps,
+} from "./Api";
 import { useQuery } from "@tanstack/react-query";
 import { capitalize } from "../../utils/constansts";
 
@@ -13,6 +18,7 @@ const CollegeSearchBar = ({ setSearchCollegeData, setIsLoading }) => {
   const [collegeCategoryValue, setCollegeCategoryValue] = useState("");
   const [collegeDistValue, setCollegeDistValue] = useState("");
   const [collegeQuery, setCollegeQuery] = useState("");
+  const [collegeRoadmapValue, setCollegeRoadmapValue] = useState("");
 
   useEffect(() => {
     const currentWord = dynamicWords[currentWordIndex];
@@ -52,11 +58,18 @@ const CollegeSearchBar = ({ setSearchCollegeData, setIsLoading }) => {
     refetchOnWindowFocus: false,
   });
 
+  const { data: collegeRoadmaps } = useQuery({
+    queryKey: ["college-roadmaps"],
+    queryFn: getCollegeRoadmaps,
+    refetchOnWindowFocus: false,
+  });
+
   const [collegeSearchParams, setCollegeSearchParams] = useState({
     searchKey: "",
     category: "",
     type: null,
     dist: "",
+    roadmap: "",
   });
 
   const { data, isPending, isError } = useQuery({
@@ -108,6 +121,7 @@ const CollegeSearchBar = ({ setSearchCollegeData, setIsLoading }) => {
       category: collegeCategoryValue,
       type: "college",
       dist: collegeDistValue,
+      roadmap: collegeRoadmapValue,
     });
   };
 
@@ -148,6 +162,19 @@ const CollegeSearchBar = ({ setSearchCollegeData, setIsLoading }) => {
             ))}
           </select>
 
+          <select
+            className="px-4 py-3 text-gray-700 border-l border-gray-200 bg-white focus:outline-none cursor-pointer"
+            onChange={(e) => setCollegeRoadmapValue(e.target.value)}
+          >
+            <option value="">Roadmap</option>
+            {collegeRoadmaps?.data?.map((roadmap) => (
+              <option key={roadmap} value={roadmap}>
+                {capitalize(roadmap.split("/").pop().replace(/-/g, " "))}{" "}
+                {/* Optional formatting */}
+              </option>
+            ))}
+          </select>
+
           <button className="bg-gradient-to-r from-purple-500 to-blue-500 px-6 py-3 text-white flex items-center justify-center hover:from-purple-600 hover:to-blue-600 transition-colors duration-200 rounded-r-full">
             <IoSearchOutline className="text-2xl" />
           </button>
@@ -183,6 +210,18 @@ const CollegeSearchBar = ({ setSearchCollegeData, setIsLoading }) => {
             {collegeCategory?.data?.map((cate) => (
               <option key={cate} value={cate}>
                 {capitalize(cate)}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="px-4 py-2 w-full border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none cursor-pointer"
+            onChange={(e) => setCollegeRoadmapValue(e.target.value)}
+          >
+            <option value="">Roadmap</option>
+            {collegeRoadmaps?.data?.map((roadmap) => (
+              <option key={roadmap} value={roadmap}>
+                {capitalize(roadmap.split("/").pop().replace(/-/g, " "))}
               </option>
             ))}
           </select>

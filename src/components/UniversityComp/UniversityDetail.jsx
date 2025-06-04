@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   FaMapMarkerAlt,
@@ -27,6 +27,7 @@ const UniversityDetail = () => {
   const { id } = useParams();
   const [activeGalleryImage, setActiveGalleryImage] = useState(0);
   const [showGalleryModal, setShowGalleryModal] = useState(false);
+  const navigate = useNavigate();
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["university", id],
@@ -133,14 +134,26 @@ const UniversityDetail = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.6 }}
             >
-             
               <FaMapMarkerAlt className="mr-1" />
               <span>{uni.address.state}</span>
             </motion.div>
+
+            <button
+              onClick={() => navigate("/university")}
+              className="relative bg-none text-cyan-700 cursor-pointer flex items-center gap-2 p-2 pl-0 text-base no-underline 
+             group transition-all duration-300 ease-in-out hover:pl-2 hover:gap-3"
+            >
+              <span className="absolute left-0 w-0 h-px bg-white bottom-0 transition-all duration-300 ease-in-out group-hover:w-full"></span>
+              <span className="transition-transform duration-300 ease-in-out group-hover:-translate-x-1">
+                ←
+              </span>
+              <span className="transition-all duration-300 ease-in-out">
+                BACK
+              </span>
+            </button>
           </div>
         </div>
-        
-        
+
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8">
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">

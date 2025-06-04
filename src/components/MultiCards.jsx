@@ -11,7 +11,6 @@ const MultiCards = () => {
    const [searchCollegeData, setSearchCollegeData] = useState([]);
    const [isLoading , setIsLoading] = useState(true);
 
-  //  console.log("new api college data", searchCollegeData);
    
 
   return (

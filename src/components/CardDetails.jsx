@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useParams,
+  useSearchParams,
+  useNavigate,
+} from "react-router-dom";
 import {
   FaPhoneAlt,
   FaEnvelope,
@@ -42,6 +47,7 @@ const CardDetails = () => {
   const sectionRef = useRef(null);
   const tabRefs = useRef({});
   const [isManualClick, setIsManualClick] = useState(false);
+  const navigate = useNavigate();
 
   const handleNavName = (tabName) => {
     setNavName(tabName);
@@ -151,40 +157,39 @@ const CardDetails = () => {
       <Nav />
 
       <AnimatePresence>
-
-      <motion.a
-        href={`tel:${college.contactDetails}`}
-        className="fixed bottom-10 right-5 z-50 flex items-center"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onHoverStart={() => setIsHovered(true)}
-        onHoverEnd={() => setIsHovered(false)}
-      >
-        {/* "Call Now" text on the LEFT side */}
-        <AnimatePresence>
-          {isHovered && (
-            <motion.span
-              className=" bg-blue-600 text-white px-2 py-2 rounded-full text-sm font-semibold shadow-lg"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              transition={{ duration: 0.2 }}
-            >
-              Call Now
-            </motion.span>
-          )}
-        </AnimatePresence>
-
-        {/* Lottie icon on the RIGHT */}
-        <motion.span
-          className="w-30 h-30"
-          animate={isHovered ? { rotate: 10 } : { rotate: 0 }}
-          transition={{ type: "spring", stiffness: 300 }}
+        <motion.a
+          href={`tel:${college.contactDetails}`}
+          className="fixed bottom-10 right-5 z-50 flex items-center"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onHoverStart={() => setIsHovered(true)}
+          onHoverEnd={() => setIsHovered(false)}
         >
-          <Lotify icon="/public/Lottiefiles/Animation - 1743060162749.json" />
-        </motion.span>
-      </motion.a>
-    </AnimatePresence>
+          {/* "Call Now" text on the LEFT side */}
+          <AnimatePresence>
+            {isHovered && (
+              <motion.span
+                className=" bg-blue-600 text-white px-2 py-2 rounded-full text-sm font-semibold shadow-lg"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                Call Now
+              </motion.span>
+            )}
+          </AnimatePresence>
+
+          {/* Lottie icon on the RIGHT */}
+          <motion.span
+            className="w-30 h-30"
+            animate={isHovered ? { rotate: 10 } : { rotate: 0 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <Lotify icon="/public/Lottiefiles/Animation - 1743060162749.json" />
+          </motion.span>
+        </motion.a>
+      </AnimatePresence>
 
       <motion.div
         className="max-w-full mx-auto p-4 mt-15"
@@ -192,6 +197,29 @@ const CardDetails = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
+        <button
+          onClick={() => navigate("/college")}
+          style={{
+            background: "none",
+            border: "blue",
+            color: "blue",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "5px",
+            padding: "0",
+            fontSize: "1rem",
+            textDecoration: "none",
+
+          }}
+          onMouseOver={(e) =>
+            (e.currentTarget.style.textDecoration = "underline")
+          }
+          onMouseOut={(e) => (e.currentTarget.style.textDecoration = "none")}
+        >
+          ← BACK
+        </button>
+
         {/* College Name at the Top */}
         <motion.h1
           className="text-2xl font-extrabold text-center text-gray-900 mb-6 xs:text-1xl sm:text-1xl md:text-3xl lg:text-4xl"

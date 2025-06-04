@@ -1,10 +1,10 @@
 import axios from "axios";
 import { BASE_URL } from "../../utils/constansts";
 
-export const GetSearchCollege = async ({ searchKey, category, type, dist }) => {
+export const GetSearchCollege = async ({ searchKey, category, type, dist , roadmap }) => {
   // if (!type) return;
   const response = await axios.get(
-    `${BASE_URL}/api/search/college/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}`
+    `${BASE_URL}/api/search/college/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}&roadmap=${roadmap}`
   );
 
   // console.log(response.data , 'respose getserach college')
@@ -20,7 +20,10 @@ export const GetSearchClass = async ({ searchKey, category, type, dist }) => {
   return response.data;
 };
 
-
+export const getCollegeRoadmaps = async () => {
+  const res = await fetch(`${BASE_URL}/api/college/roadmap`);
+  return res.json();
+};
 
 export const GetSearchUniversity = async ({ searchKey, category, type, dist }) => {
   const response = await axios.get(
