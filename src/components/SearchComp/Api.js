@@ -28,10 +28,10 @@ export const GetSearchCollege = async ({
   return response.data
 }
 
-export const GetSearchClass = async ({ searchKey, category, type, dist }) => {
+export const GetSearchClass = async ({ searchKey, category, type, dist , page = 1  }) => {
   // if (!type) return;
   const response = await axios.get(
-    `${BASE_URL}/api/search/class/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}`
+    `${BASE_URL}/api/search/class/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}&p=${page}`
   );
   return response.data;
 };
