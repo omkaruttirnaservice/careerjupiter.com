@@ -13,7 +13,7 @@ const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white mt-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
             <h2 className="text-lg font-bold mb-4">Company</h2>
@@ -125,16 +125,17 @@ const Footer = () => {
             </ul>
 
             <div className="mt-4">
-              <a
-                href="https://whatsapp.com/channel/0029VbADrN54IBh95nFJiR3e"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-50 md:w-50 sm:w-auto px-4 py-2 bg-green-500 rounded-full text-white font-semibold hover:bg-green-600 transition"
-              >
-                <FaWhatsapp className="mr-2" size={18} />
-                <span>Join WhatsApp</span>
-              </a>
-            </div>
+  <a
+    href="https://whatsapp.com/channel/0029VbADrN54IBh95nFJiR3e"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-green-500 rounded-full text-white font-semibold hover:bg-green-600 transition"
+  >
+    <FaWhatsapp className="mr-2" size={18} />
+    <span>Join WhatsApp</span>
+  </a>
+</div>
+
 
             <div className="flex justify-start sm:justify-start mt-5 gap-4 flex-wrap">
               <a
