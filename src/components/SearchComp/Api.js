@@ -13,11 +13,11 @@ import { BASE_URL } from "../../utils/constansts";
 // };
 
 export const GetSearchCollege = async ({
-  searchKey = "",
-  category = "",
-  type = "",
-  dist = "",
-  roadmap = "",
+  searchKey ,
+  category ,
+  type ,
+  dist ,
+  roadmap ,
   page = 1,
 }) => {
   // Add page parameter to the API call
@@ -80,9 +80,9 @@ export const getCollegeRoadmaps = async () => {
   return res.json();
 };
 
-export const GetSearchUniversity = async ({ searchKey, category, type, dist }) => {
+export const GetSearchUniversity = async ({ searchKey, category, type, dist, page, limit }) => {
   const response = await axios.get(
-    `${BASE_URL}/api/search/university/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}`
+    `${BASE_URL}/api/search/university/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}&p=${page}&pt=${limit}`
   );
   console.log(response.data.data.results, 'university ');
   return response.data.data;
