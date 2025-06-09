@@ -202,14 +202,17 @@
 
 
 import { useQuery } from "@tanstack/react-query"
-import { IoSearchOutline } from "react-icons/io5"
 import { getUniversityCategory, getUniversityDist, GetSearchUniversity } from "./Api"
 import { useEffect, useState } from "react"
 import { capitalize } from "../../utils/constansts"
+import { IoSearchOutline, IoChevronUp, IoChevronDown } from "react-icons/io5";
+
 
 const UniversitySearchBar = ({ setQuery, query, setSearchUniversityData, setIsLoading }) => {
   const [universityCategoryValue, setUniversityCategoryValue] = useState("")
   const [universityDistValue, setUniversityDistValue] = useState("")
+  const [showUniversityFilters, setShowUniversityFilters] = useState(true);
+
   const [universitySearchParams, setUniversitySearchParams] = useState({
     searchKey: "",
     category: "",
@@ -353,47 +356,69 @@ const UniversitySearchBar = ({ setQuery, query, setSearchUniversityData, setIsLo
 
           {/* Mobile Layout */}
           <div className="flex flex-col space-y-3 md:hidden w-full mt-4">
-            <input
-              type="text"
-              className="px-4 py-3 w-full border bg-white border-gray-300 rounded-lg focus:outline-none text-gray-700 placeholder-gray-400"
-              placeholder="Search University"
-              value={query}
-              onChange={handleInputChange}
-            />
+  {/* Conditional Filter Section */}
+  {showUniversityFilters && (
+    <>
+      <input
+        type="text"
+        className="px-4 py-3 w-full border bg-white border-gray-300 rounded-lg focus:outline-none text-gray-700 placeholder-gray-400"
+        placeholder="Search University"
+        value={query}
+        onChange={handleInputChange}
+      />
 
-            <select
-              className="px-4 py-3 w-full border border-gray-300 rounded-lg text-gray-700 bg-white focus:outline-none"
-              value={universityDistValue}
-              onChange={handleDistrictChange}
-            >
-              <option value="">District</option>
-              {UniversityDist?.data?.map((district) => (
-                <option key={district} value={district}>
-                  {capitalize(district)}
-                </option>
-              ))}
-            </select>
+      <select
+        className="px-4 py-3 w-full border border-gray-300 rounded-lg text-gray-700 bg-white focus:outline-none"
+        value={universityDistValue}
+        onChange={handleDistrictChange}
+      >
+        <option value="">District</option>
+        {UniversityDist?.data?.map((district) => (
+          <option key={district} value={district}>
+            {capitalize(district)}
+          </option>
+        ))}
+      </select>
 
-            <select
-              className="px-4 py-3 w-full border border-gray-300 rounded-lg text-gray-700 bg-white focus:outline-none"
-              value={universityCategoryValue}
-              onChange={handleCategoryChange}
-            >
-              <option value="">Category</option>
-              {UniversityCategory?.data?.map((cate) => (
-                <option key={cate} value={cate}>
-                  {capitalize(cate)}
-                </option>
-              ))}
-            </select>
+      <select
+        className="px-4 py-3 w-full border border-gray-300 rounded-lg text-gray-700 bg-white focus:outline-none"
+        value={universityCategoryValue}
+        onChange={handleCategoryChange}
+      >
+        <option value="">Category</option>
+        {UniversityCategory?.data?.map((cate) => (
+          <option key={cate} value={cate}>
+            {capitalize(cate)}
+          </option>
+        ))}
+      </select>
+    </>
+  )}
 
-            <button
-              className="w-full px-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white flex items-center justify-center hover:from-purple-600 hover:to-blue-600 transition-colors duration-200"
-              onClick={handleUniversitySearch}
-            >
-              <IoSearchOutline className="text-2xl" />
-            </button>
-          </div>
+  {/* Always-visible Search Button */}
+  <button
+    className="w-full px-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white flex items-center justify-center hover:from-purple-600 hover:to-blue-600 transition-colors duration-200"
+    onClick={handleUniversitySearch}
+  >
+    <IoSearchOutline className="text-2xl" />
+  </button>
+
+  {/* Toggle Filter Button */}
+  <div className="flex justify-end w-full">
+    <button
+      onClick={() => setShowUniversityFilters(!showUniversityFilters)}
+      className="text-lg text-blue-600 underline mr-3 flex items-center space-x-1"
+    >
+      <span>{showUniversityFilters ? "Less" : "Search More"}</span>
+      {showUniversityFilters ? (
+        <IoChevronUp className="text-xl" />
+      ) : (
+        <IoChevronDown className="text-xl" />
+      )}
+    </button>
+  </div>
+</div>
+
         </div>
       </div>
     </>
