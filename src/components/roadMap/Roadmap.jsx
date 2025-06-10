@@ -119,7 +119,7 @@ const RoadmapNode = ({ node, onClick, navigate }) => {
 
   const handleIconClick = (e, type) => {
     e.stopPropagation()
-    const queryParams = new URLSearchParams({ id: node._id })
+    const queryParams = new URLSearchParams({ roadmap: node._id })
 
     switch (type) {
       case "college":
