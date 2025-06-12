@@ -13,11 +13,11 @@ import { BASE_URL } from "../../utils/constansts";
 // };
 
 export const GetSearchCollege = async ({
-  searchKey = "",
-  category = "",
-  type = "",
-  dist = "",
-  roadmap = "",
+  searchKey ,
+  category ,
+  type ,
+  dist ,
+  roadmap ,
   page = 1,
 }) => {
   // Add page parameter to the API call
@@ -28,22 +28,127 @@ export const GetSearchCollege = async ({
   return response.data
 }
 
-export const GetSearchClass = async ({ searchKey, category, type, dist , page = 1  }) => {
-  // if (!type) return;
-  const response = await axios.get(
-    `${BASE_URL}/api/search/class/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}&p=${page}`
-  );
-  return response.data;
+export const getCollegeRoadmapsById = async (roadmapId) => {
+  const res = await fetch(`${BASE_URL}/api/roadmap/${roadmapId}/colleges`);
+  if (!res.ok) {
+    throw new Error('Failed to fetch college roadmaps');
+  }
+  return res.json();
 };
+
+// export const GetSearchClass = async ({ searchKey, category, type, dist , page = 1,  limit = 10,  }) => {
+//   // if (!type) return;
+//   const response = await axios.get(
+//     `${BASE_URL}/api/search/class/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}&p=${page}&limit=${limit}`
+//   );
+//   return response.data;
+// };
+
+
+// export const GetSearchClass = async ({
+//   searchKey ,
+//   category ,
+//   type = "class",
+//   dist ,
+  
+//   page ,
+//   limit ,
+// }) => {
+//   try {
+//     const response = await axios.get(
+//       `${BASE_URL}/api/search/class/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}&p=${page}&pt=${limit}`,
+//     )
+//     const responseData = response.data.data || response.data
+
+//     if (page === 1) {
+//       return {
+//         results: responseData.results || responseData,
+//         totalResults:
+//           responseData.totalResults || (responseData.results ? responseData.results.length : responseData.length),
+//         currentPage: 1,
+//         hasNextPage: false,
+//       }
+//     }
+
+//     return {
+//       results: responseData.results || responseData,
+//       totalResults:
+//         responseData.totalResults || (responseData.results ? responseData.results.length : responseData.length),
+//       currentPage: page,
+//       hasNextPage: false, 
+//     }
+//   } catch (error) {
+//     console.error("API Error:", error)
+//     throw error
+//   }
+// }
+
+
+
+export const GetSearchClass = async ({
+  searchKey = "",
+  category = "",
+  type = "class",
+  dist = "",
+  roadmap = "", // ✅ Add roadmap parameter
+  page = 1,
+  limit = 50,
+}) => {
+  try {
+    // ✅ Build URL with all parameters including roadmap
+    const params = new URLSearchParams({
+      searchKey: searchKey || "",
+      category: category || "",
+      type: type || "class",
+      dist: dist || "",
+      p: page.toString(),
+      pt: limit.toString(),
+    })
+
+    // ✅ Only add roadmap if it exists
+    if (roadmap) {
+      params.append("roadmap", roadmap)
+    }
+
+    const url = `${BASE_URL}/api/search/class/?${params.toString()}`
+
+    // console.log("Final API URL:", url) // Debug log
+
+    const response = await axios.get(url)
+    const responseData = response.data.data || response.data
+
+    if (page === 1) {
+      return {
+        results: responseData.results || responseData,
+        totalResults:
+          responseData.totalResults || (responseData.results ? responseData.results.length : responseData.length),
+        currentPage: 1,
+        hasNextPage: false,
+      }
+    }
+
+    return {
+      results: responseData.results || responseData,
+      totalResults:
+        responseData.totalResults || (responseData.results ? responseData.results.length : responseData.length),
+      currentPage: page,
+      hasNextPage: false,
+    }
+  } catch (error) {
+    console.error("API Error:", error)
+    throw error
+  }
+}
+
 
 export const getCollegeRoadmaps = async () => {
   const res = await fetch(`${BASE_URL}/api/college/roadmap`);
   return res.json();
 };
 
-export const GetSearchUniversity = async ({ searchKey, category, type, dist }) => {
+export const GetSearchUniversity = async ({ searchKey, category, type, dist, page, limit }) => {
   const response = await axios.get(
-    `${BASE_URL}/api/search/university/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}`
+    `${BASE_URL}/api/search/university/?searchKey=${searchKey}&category=${category}&type=${type}&dist=${dist}&p=${page}&pt=${limit}`
   );
   console.log(response.data.data.results, 'university ');
   return response.data.data;
