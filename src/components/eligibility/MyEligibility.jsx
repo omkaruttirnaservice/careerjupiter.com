@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCutoffs, fetchEligibleColleges } from "./Api"; // Import the API functions
+import { fetchCutoffs, fetchEligibleColleges, getCurrentEducaion, getDist } from "./Api"; // Import the API functions
 import { useLocation } from "react-router-dom";
 import Nav from "../../Layouts/Nav";
 import Footer from "../Footer";
@@ -28,17 +28,36 @@ const MyEligibility = () => {
   const [cutoffRange, setCutoffRange] = useState({ min: "", max: "" });
   const [selectedBranch, setSelectedBranch] = useState("");
   const [cutoffs, setCutoffs] = useState([]);
-  const [districts, setDistricts] = useState([]);
   const [casteOptions, setCasteOptions] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [collegesData, setCollegesData] = useState([]);
   const [givenData, setGivenData] = useState([]);
 
-  // Define education options
-  const educationOptions = {
-    "10th": [],
-    "12th": ["JEE", "NEET", "CET"],
-  };
+  const [districts, setDistricts] = useState([]);
+  const [currentEducation, setCurrentEducation] = useState([]);
+  const [subBranch , setSubBranch] = useState([]);
+
+  // -------------------------------------------------------------
+
+    const { data:district } = useQuery({ 
+    queryKey: ['dist'], 
+    queryFn: getDist 
+  });
+
+  useEffect(()=>{
+    setDistricts(district?.data?.data);
+  },[district]);
+
+    const { data:CurrentEducaion  } = useQuery({ 
+    queryKey: ['currentEducation'], 
+    queryFn: getCurrentEducaion 
+  });
+
+  useEffect(()=>{
+    setCurrentEducation(CurrentEducaion?.data?.data);
+  },[CurrentEducaion]);
+
+  // -------------------------------------------------------------
 
   // Fetch cutoffs using TanStack Query
   const { data: cutoffsData, isLoading: isCutoffsLoading } = useQuery({
@@ -47,34 +66,34 @@ const MyEligibility = () => {
   });
 
   // Extract unique districts and castes from cutoff data
-  useEffect(() => {
-    if (cutoffsData) {
-      setCutoffs(cutoffsData);
+  // useEffect(() => {
+  //   if (cutoffsData) {
+  //     setCutoffs(cutoffsData);
 
-      // Extract unique districts
-      const uniqueDistricts = [
-        ...new Set(
-          cutoffsData
-            .map((item) => item.collegeId?.address?.dist)
-            .filter(Boolean)
-        ),
-      ];
-      setDistricts(uniqueDistricts);
+  //     // Extract unique districts
+  //     const uniqueDistricts = [
+  //       ...new Set(
+  //         cutoffsData
+  //           .map((item) => item.collegeId?.address?.dist)
+  //           .filter(Boolean)
+  //       ),
+  //     ];
+  //     // setDistricts(uniqueDistricts);
 
-      // Extract unique castes from the first cutoff marks (assuming all have the same structure)
-      if (cutoffsData.length > 0 && cutoffsData[0].cutoff?.marks) {
-        const casteList = Object.keys(cutoffsData[0].cutoff.marks);
-        setCasteOptions(casteList);
-      }
-    }
-  }, [cutoffsData]);
+  //     // Extract unique castes from the first cutoff marks (assuming all have the same structure)
+  //     if (cutoffsData.length > 0 && cutoffsData[0].cutoff?.marks) {
+  //       const casteList = Object.keys(cutoffsData[0].cutoff.marks);
+  //       setCasteOptions(casteList);
+  //     }
+  //   }
+  // }, [cutoffsData]);
 
-  const { data, isPending, refetch } = useQuery({
-    queryKey: ["getTest", collegesData],
-    queryFn: () => fetchEligibleColleges(collegesData),
-    staleTime: 0,
-    enabled: !!collegesData,
-  });
+  // const { data, isPending, refetch } = useQuery({
+  //   queryKey: ["getTest", collegesData],
+  //   queryFn: () => fetchEligibleColleges(collegesData),
+  //   staleTime: 0,
+  //   enabled: !!collegesData,
+  // });
 
   const handleFetch = () => {
     const newCollegesData = {
@@ -88,9 +107,9 @@ const MyEligibility = () => {
     refetch();
   };
 
-  useEffect(() => {
-    setGivenData(data?.data);
-  }, [data]);
+  // useEffect(() => {
+  //   setGivenData(data?.data);
+  // }, [data]);
 
   useEffect(() => {
     applyAllFilters();
@@ -298,7 +317,7 @@ const MyEligibility = () => {
     <>
       <Nav />
       <div className="p-8 mt-12 flex justify-center items-center">
-        <div className="w-full max-w-4xl space-y-8">
+        <div className="w-full  space-y-8">
           <h1 className="text-3xl font-bold text-center text-gray-800">
             Check Your Eligibility
           </h1>
@@ -306,7 +325,6 @@ const MyEligibility = () => {
           <SearchForm
             selectedEducation={selectedEducation}
             handleEducationChange={handleEducationChange}
-            educationOptions={educationOptions}
             selectedExam={selectedExam}
             setSelectedExam={setSelectedExam}
             examOptions={examOptions}
@@ -323,6 +341,9 @@ const MyEligibility = () => {
             getBranchOptions={getBranchOptions}
             handleFetch={handleFetch}
             isSearching={isSearching}
+            currentEducation={currentEducation}
+            subBranch={subBranch}
+            setSubBranch={setSubBranch}
           />
 
           <FilterSection
