@@ -1,11 +1,11 @@
 import { MapPin, Users, BookOpen, Search } from "lucide-react";
 import { useState } from "react";
 import { getEligibleColleges } from "./Api";
+import CollegeList from "./college-list"
 
 const SearchForm = ({
   selectedExam,
   setSelectedExam,
-  examOptions,
   percentage1,
   setPercentage,
   selectedDistrict,
@@ -13,55 +13,50 @@ const SearchForm = ({
   districts,
   selectedCaste,
   handleCasteChange,
-  casteOptions,
   selectedBranch,
   setSelectedBranch,
   currentEducation,
   subBranch,
-  setSubBranch
+  setSubBranch,
+  castList
 }) => {
+  const [selectedEducation, setSelectedEducation] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [collegeData, setCollegeData] = useState([]);
+  const [exams , setExams] = useState([]); 
 
-    const [selectedEducation, setSelectedEducation] = useState("");
-    const [isSearching, setIsSearching] = useState(false);
-
-
-    // Handle when education is selected
   const handleEducationChange = (selected) => {
     setSelectedEducation(selected);
-    // Find the matching education by its category
-    const matching = currentEducation.find(
-      (item) => item.category === selected
-    );
+    const matching = currentEducation.find((item) => item.category === selected);
     if (matching) {
       setSubBranch(matching.subCategory);
+      setExams(matching.entrance_exam_required);
     } else {
       setSubBranch([]);
+      setExams([]);
     }
   };
 
+
   const handleFetch = async () => {
-
-  setIsSearching(true);
-  
-  try {
-    const response = await getEligibleColleges({ 
-      percentage: percentage1, 
-      caste: selectedCaste, 
-      category: selectedEducation, 
-      district: selectedDistrict, 
-      subCategory: selectedBranch 
-    });
-
-    console.log("Eligible Colleges", response.data);
-    // Handle response as per your application
-  } catch (error) {
-    console.error(error);
-    alert("Failed to fetch eligible colleges.");
-  } finally {
-    setIsSearching(false);
-  }
-};
-  
+    setIsSearching(true);
+    try {
+      const response = await getEligibleColleges({
+        percentage: percentage1,
+        caste: selectedCaste,
+        category: selectedEducation,
+        district: selectedDistrict,
+        subCategory: selectedBranch
+      });
+      console.log("Eligible Colleges", response?.data?.data);
+      setCollegeData(response?.data?.data || []);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to fetch eligible colleges.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   return (
     <div className="w-full md:w-[80%] mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 my-4 md:my-8">
@@ -100,7 +95,7 @@ const SearchForm = ({
                 className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer text-sm"
               >
                 <option value="">Select Exam</option>
-                {examOptions.map((exam, index) => (
+                {exams?.map((exam, index) => (
                   <option key={index} value={exam}>
                     {exam}
                   </option>
@@ -125,9 +120,8 @@ const SearchForm = ({
         </div>
       </div>
 
-      {/* Combined Location & Category + Course Selection */}
+      {/* Location & Category + Course Selection */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Location & Category */}
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-green-100 rounded-lg">
@@ -161,9 +155,9 @@ const SearchForm = ({
                 className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm cursor-pointer"
               >
                 <option value="">Select Category</option>
-                {casteOptions.map((caste, index) => (
-                  <option key={index} value={caste}>
-                    {caste}
+                {castList?.map((cast, index) => (
+                  <option key={index} value={cast.caste}>
+                    {cast.caste}
                   </option>
                 ))}
               </select>
@@ -171,7 +165,6 @@ const SearchForm = ({
           </div>
         </div>
 
-        {/* Course Selection */}
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-purple-100 rounded-lg">
@@ -180,44 +173,56 @@ const SearchForm = ({
             <h2 className="text-base font-semibold text-gray-700">Course Selection</h2>
           </div>
 
-          <div className="space-y-4">
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-600">Preferred Branch/Course</label>
-              <select
-                value={selectedBranch}
-                onChange={(e) => setSelectedBranch(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm cursor-pointer"
-              >
-                <option value="">Select Branch</option>
-                {subBranch.map((branch, index) => (
-                  <option key={index} value={branch}>
-                    {branch}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div>
+            <label className="block mb-1 text-sm font-medium text-gray-600">Preferred Branch/Course</label>
+            <select
+              value={selectedBranch}
+              onChange={(e) => setSelectedBranch(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm cursor-pointer"
+            >
+              <option value="">Select Branch</option>
+              {subBranch.map((branch, index) => (
+                <option key={index} value={branch}>
+                  {branch}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
+
       <div className="pt-10 flex justify-center">
-              <button
-                onClick={handleFetch}
-                disabled={isSearching}
-                className="w-full sm:w-auto px-6 py-2  bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
-              >
-                {isSearching ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Searching...</span>
-                  </>
-                ) : (
-                  <>
-                    <Search className="w-4 h-4" />
-                    <span>Search Colleges</span>
-                  </>
-                )}
-              </button>
-            </div>
+        <button
+          onClick={handleFetch}
+          disabled={isSearching}
+          className="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+        >
+          {isSearching ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <span>Searching...</span>
+            </>
+          ) : (
+            <>
+              <Search className="w-4 h-4" />
+              <span>Search Colleges</span>
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Render CollegeList below SearchForm */}
+      <div className="mt-8">
+        {collegeData.length > 0 ? (
+          <CollegeList givenData={collegeData} />
+        ) : (
+          !isSearching && (
+            <p className="text-center text-gray-500">
+              No colleges found matching your criteria.
+            </p>
+          )
+        )}
+      </div>
     </div>
   );
 };
