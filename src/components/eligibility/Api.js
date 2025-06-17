@@ -11,6 +11,11 @@ export const getCurrentEducaion = () => {
   return axios.get(`${BASE_URL}/api/college/categories/all`);
 };
 
+//get cast education
+export const getCastList = () => {
+  return axios.get(`${BASE_URL}/api/caste/all`);
+};
+
 // get Eligible Colleges
 export const getEligibleColleges = ({
   percentage,

@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCutoffs, fetchEligibleColleges, getCurrentEducaion, getDist } from "./Api"; // Import the API functions
+import { fetchCutoffs, fetchEligibleColleges, getCastList, getCurrentEducaion, getDist } from "./Api"; // Import the API functions
 import { useLocation } from "react-router-dom";
 import Nav from "../../Layouts/Nav";
 import Footer from "../Footer";
 import SearchForm from "./search-form";
 import FilterSection from "./filter-section";
-import CollegeList from "./college-list";
 
 const MyEligibility = () => {
   const location = useLocation();
@@ -27,8 +26,6 @@ const MyEligibility = () => {
   const [ratingFilter, setRatingFilter] = useState("");
   const [cutoffRange, setCutoffRange] = useState({ min: "", max: "" });
   const [selectedBranch, setSelectedBranch] = useState("");
-  const [cutoffs, setCutoffs] = useState([]);
-  const [casteOptions, setCasteOptions] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [collegesData, setCollegesData] = useState([]);
   const [givenData, setGivenData] = useState([]);
@@ -36,6 +33,7 @@ const MyEligibility = () => {
   const [districts, setDistricts] = useState([]);
   const [currentEducation, setCurrentEducation] = useState([]);
   const [subBranch , setSubBranch] = useState([]);
+  const [castList , setCastList] = useState([]);
 
   // -------------------------------------------------------------
 
@@ -57,43 +55,18 @@ const MyEligibility = () => {
     setCurrentEducation(CurrentEducaion?.data?.data);
   },[CurrentEducaion]);
 
+      const { data:casts } = useQuery({ 
+    queryKey: ['cast'], 
+    queryFn: getCastList 
+  });
+  
+
+  useEffect(()=>{
+    setCastList(casts?.data?.data?.castes);
+  },[casts]);
+
   // -------------------------------------------------------------
 
-  // Fetch cutoffs using TanStack Query
-  const { data: cutoffsData, isLoading: isCutoffsLoading } = useQuery({
-    queryKey: ["cutoffs"],
-    queryFn: fetchCutoffs, // Use the imported function
-  });
-
-  // Extract unique districts and castes from cutoff data
-  // useEffect(() => {
-  //   if (cutoffsData) {
-  //     setCutoffs(cutoffsData);
-
-  //     // Extract unique districts
-  //     const uniqueDistricts = [
-  //       ...new Set(
-  //         cutoffsData
-  //           .map((item) => item.collegeId?.address?.dist)
-  //           .filter(Boolean)
-  //       ),
-  //     ];
-  //     // setDistricts(uniqueDistricts);
-
-  //     // Extract unique castes from the first cutoff marks (assuming all have the same structure)
-  //     if (cutoffsData.length > 0 && cutoffsData[0].cutoff?.marks) {
-  //       const casteList = Object.keys(cutoffsData[0].cutoff.marks);
-  //       setCasteOptions(casteList);
-  //     }
-  //   }
-  // }, [cutoffsData]);
-
-  // const { data, isPending, refetch } = useQuery({
-  //   queryKey: ["getTest", collegesData],
-  //   queryFn: () => fetchEligibleColleges(collegesData),
-  //   staleTime: 0,
-  //   enabled: !!collegesData,
-  // });
 
   const handleFetch = () => {
     const newCollegesData = {
@@ -152,38 +125,6 @@ const MyEligibility = () => {
       );
     }
 
-    // Apply branch filter
-    if (selectedBranch) {
-      filtered = filtered.filter((college) => {
-        // Check if the college has the selected branch in cutoffs
-        const collegeCutoffs = cutoffs.filter(
-          (cutoff) =>
-            cutoff.collegeId?._id === college._id &&
-            cutoff.branch_name === selectedBranch
-        );
-        return collegeCutoffs.length > 0;
-      });
-    }
-
-    // Apply cutoff range filter
-    if (cutoffRange.min || cutoffRange.max) {
-      filtered = filtered.filter((college) => {
-        // Find the cutoff for this college and selected branch/caste
-        const collegeCutoff = cutoffs.find(
-          (cutoff) =>
-            cutoff.collegeId?._id === college._id &&
-            (!selectedBranch || cutoff.branch_name === selectedBranch)
-        );
-
-        if (!collegeCutoff) return false;
-
-        const cutoffValue = collegeCutoff.cutoff.marks[selectedCaste] || 0;
-        const min = cutoffRange.min ? Number.parseInt(cutoffRange.min) : 0;
-        const max = cutoffRange.max ? Number.parseInt(cutoffRange.max) : 100;
-
-        return cutoffValue >= min && cutoffValue <= max;
-      });
-    }
 
     // Apply sort order
     if (sortOrder) {
@@ -249,17 +190,6 @@ const MyEligibility = () => {
     setActiveFilters(newActiveFilters);
   };
 
-  // Helper function to get cutoff for a college
-  const getCutoffForCollege = (collegeId, branch, caste) => {
-    const collegeCutoff = cutoffs.find(
-      (cutoff) =>
-        cutoff.collegeId?._id === collegeId &&
-        (!branch || cutoff.branch_name === branch)
-    );
-
-    if (!collegeCutoff) return 0;
-    return collegeCutoff.cutoff.marks[caste] || 0;
-  };
 
   // Handle sort change
   const handleSortChange = (sort) => {
@@ -306,12 +236,6 @@ const MyEligibility = () => {
     setActiveFilters(activeFilters.filter((filter) => filter.id !== filterId));
   };
 
-  // Get unique branches from cutoffs
-  const getBranchOptions = () => {
-    if (!cutoffs.length) return [];
-    const branches = [...new Set(cutoffs.map((cutoff) => cutoff.branch_name))];
-    return branches.filter(Boolean);
-  };
 
   return (
     <>
@@ -335,15 +259,14 @@ const MyEligibility = () => {
             districts={districts}
             selectedCaste={selectedCaste}
             handleCasteChange={handleCasteChange}
-            casteOptions={casteOptions}
             selectedBranch={selectedBranch}
             setSelectedBranch={setSelectedBranch}
-            getBranchOptions={getBranchOptions}
             handleFetch={handleFetch}
             isSearching={isSearching}
             currentEducation={currentEducation}
             subBranch={subBranch}
             setSubBranch={setSubBranch}
+            castList={castList}
           />
 
           <FilterSection
@@ -358,14 +281,6 @@ const MyEligibility = () => {
             collegeType={collegeType}
             handleCollegeTypeChange={handleCollegeTypeChange}
             handleApplyFilters={handleApplyFilters}
-          />
-
-          <CollegeList
-            givenData={givenData}
-            selectedCaste={selectedCaste}
-            getCutoffForCollege={getCutoffForCollege}
-            selectedBranch={selectedBranch}
-            cutoffs={cutoffs}
           />
         </div>
       </div>
