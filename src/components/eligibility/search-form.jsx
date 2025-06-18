@@ -2,6 +2,9 @@ import { MapPin, Users, BookOpen, Search } from "lucide-react";
 import { useState } from "react";
 import { getEligibleColleges } from "./Api";
 import CollegeList from "./college-list"
+import { useDispatch } from "react-redux";
+import { setCollegeList, setSearchParams } from "../../store-redux/eligibilitySlice";
+
 
 const SearchForm = ({
   selectedExam,
@@ -24,6 +27,8 @@ const SearchForm = ({
   const [isSearching, setIsSearching] = useState(false);
   const [collegeData, setCollegeData] = useState([]);
   const [exams , setExams] = useState([]); 
+  const dispatch = useDispatch();
+
 
   const handleEducationChange = (selected) => {
     setSelectedEducation(selected);
@@ -38,25 +43,59 @@ const SearchForm = ({
   };
 
 
-  const handleFetch = async () => {
-    setIsSearching(true);
-    try {
-      const response = await getEligibleColleges({
-        percentage: percentage1,
-        caste: selectedCaste,
-        category: selectedEducation,
-        district: selectedDistrict,
-        subCategory: selectedBranch
-      });
-      console.log("Eligible Colleges", response?.data?.data);
-      setCollegeData(response?.data?.data || []);
-    } catch (error) {
-      console.error(error);
-      alert("Failed to fetch eligible colleges.");
-    } finally {
-      setIsSearching(false);
-    }
+  // const handleFetch = async () => {
+  //   setIsSearching(true);
+  //   try {
+  //     const response = await getEligibleColleges({
+  //       percentage: percentage1,
+  //       caste: selectedCaste,
+  //       category: selectedEducation,
+  //       district: selectedDistrict,
+  //       subCategory: selectedBranch
+  //     });
+  //     console.log("Eligible Colleges", response?.data?.data);
+  //     setCollegeData(response?.data?.data || []);
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert("Failed to fetch eligible colleges.");
+  //   } finally {
+  //     setIsSearching(false);
+  //   }
+  // };
+
+
+const handleFetch = async () => {
+  setIsSearching(true);
+
+  const searchPayload = {
+    percentage: percentage1,
+    caste: selectedCaste,
+    category: selectedEducation,
+    district: selectedDistrict,
+    subCategory: selectedBranch,
   };
+
+  try {
+    // Save the filters to Redux
+    dispatch(setSearchParams(searchPayload));
+
+    // Fetch data
+    const response = await getEligibleColleges(searchPayload);
+    const colleges = response?.data?.data || [];
+
+    // Save to Redux
+    dispatch(setCollegeList(colleges));
+
+    // Optional: set local state for immediate use
+    setCollegeData(colleges);
+  } catch (error) {
+    console.error("Failed to fetch eligible colleges:", error);
+    alert("Failed to fetch eligible colleges.");
+  } finally {
+    setIsSearching(false);
+  }
+};
+
 
   return (
     <div className="w-full md:w-[80%] mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 my-4 md:my-8">
