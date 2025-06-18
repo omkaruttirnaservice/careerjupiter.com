@@ -1,5 +1,5 @@
 import { MapPin, Users, BookOpen, Search } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getEligibleColleges } from "./Api";
 import CollegeList from "./college-list";
 import { useDispatch } from "react-redux";
@@ -20,6 +20,8 @@ const SearchForm = ({
   currentEducation,
   category,
 }) => {
+  const dispatch = useDispatch();
+
   const [selectedEducation, setSelectedEducation] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [collegeData, setCollegeData] = useState([]);
@@ -28,7 +30,33 @@ const SearchForm = ({
   const [selectedCategory, setSelectedCategory] = useState("");
   const [availableSubCategories, setAvailableSubCategories] = useState([]);
 
-  const dispatch = useDispatch();
+  // Restore from localStorage on mount
+  useEffect(() => {
+    const savedForm = JSON.parse(localStorage.getItem("eligibilityForm")) || {};
+    const savedCollegeData = JSON.parse(localStorage.getItem("collegeData")) || [];
+
+    setSelectedEducation(savedForm.selectedEducation || "");
+    setSelectedExam(savedForm.selectedExam || "");
+    setPercentage(savedForm.percentage1 || "");
+    handleDistrictChange(savedForm.selectedDistrict || "");
+    handleCasteChange(savedForm.selectedCaste || "");
+    setSelectedCategory(savedForm.selectedCategory || "");
+    setSelectedBranch(savedForm.selectedBranch || "");
+    setCollegeData(savedCollegeData);
+
+    // Auto-load exam and caste options if education is already selected
+    const eduMatch = currentEducation?.find(item => item.nextLearn === savedForm.selectedEducation);
+    if (eduMatch) {
+      setExams(eduMatch.exam || []);
+      setCasts(eduMatch.caste || []);
+    }
+
+    // Auto-load branch options
+    const catMatch = category?.find(item => item.category === savedForm.selectedCategory);
+    if (catMatch) {
+      setAvailableSubCategories(catMatch.subCategory || []);
+    }
+  }, [currentEducation, category]);
 
   const handleEducationChange = (selected) => {
     setSelectedEducation(selected);
@@ -65,16 +93,51 @@ const SearchForm = ({
       const colleges = response?.data?.data || [];
       dispatch(setCollegeList(colleges));
       setCollegeData(colleges);
+
+      // Save to localStorage
+      const formValues = {
+        selectedEducation,
+        selectedExam,
+        percentage1,
+        selectedDistrict,
+        selectedCaste,
+        selectedCategory,
+        selectedBranch,
+      };
+      localStorage.setItem("eligibilityForm", JSON.stringify(formValues));
+      localStorage.setItem("collegeData", JSON.stringify(colleges));
     } catch (error) {
       console.error("Error fetching colleges:", error);
-      alert("Something went wrong while fetching colleges.");
     } finally {
       setIsSearching(false);
     }
   };
 
   return (
-    <div className="w-full md:w-[90%] mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 my-6">
+      <div className="w-full md:w-[90%] mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 my-6 relative">
+  {/* Clear History Button */}
+  <button
+    onClick={() => {
+      localStorage.removeItem("eligibilityForm");
+      localStorage.removeItem("collegeData");
+
+      setSelectedEducation("");
+      setSelectedExam("");
+      setPercentage("");
+      handleDistrictChange("");
+      handleCasteChange("");
+      setSelectedCategory("");
+      setSelectedBranch("");
+      setCollegeData([]);
+      setExams([]);
+      setCasts([]);
+      setAvailableSubCategories([]);
+    }}
+    className="absolute top-4 right-4 text-sm px-4 py-1 bg-red-100 text-red-600 border border-red-300 rounded-md hover:bg-red-200 transition"
+  >
+    Clear History
+  </button>
+
       {/* Academic Info */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-4">
