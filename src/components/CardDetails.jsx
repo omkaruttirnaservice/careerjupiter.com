@@ -27,6 +27,7 @@ import CoursesFee from "./navComp/CoursesFee";
 import CoursesSection from "./CourseSection";
 import CollegeCoursesTable from "./CourseSection";
 import ContactDetails from "./ContactDetails";
+import { useLocation } from "react-router-dom";
 
 const CardDetails = () => {
   const navItem = [
@@ -48,6 +49,11 @@ const CardDetails = () => {
   const tabRefs = useRef({});
   const [isManualClick, setIsManualClick] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+// const navigate = useNavigate();
+
+
+const status = location.state?.status;
 
   const handleNavName = (tabName) => {
     setNavName(tabName);
@@ -197,7 +203,7 @@ const CardDetails = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <button
+        {/* <button
           onClick={() => navigate("/college")}
           style={{
             background: "none",
@@ -218,7 +224,36 @@ const CardDetails = () => {
           onMouseOut={(e) => (e.currentTarget.style.textDecoration = "none")}
         >
           ← BACK
-        </button>
+        </button> */}
+
+        <button
+  onClick={() => {
+    if (status === true) {
+      navigate("/college");
+    } else {
+      navigate("/my-eligibility");
+    }
+  }}
+  style={{
+    background: "none",
+    border: "blue",
+    color: "blue",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: "5px",
+    padding: "0",
+    fontSize: "1rem",
+    textDecoration: "none",
+  }}
+  onMouseOver={(e) =>
+    (e.currentTarget.style.textDecoration = "underline")
+  }
+  onMouseOut={(e) => (e.currentTarget.style.textDecoration = "none")}
+>
+  ← BACK
+</button>
+
 
         {/* College Name at the Top */}
         <motion.h1

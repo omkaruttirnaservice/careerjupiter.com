@@ -6,7 +6,7 @@ import iqTestSlice from "./iqTestSlice";
 import userRoleSlice from "./userRoleSlice";
 import resultSlice from "./resultSlice";
 import roadmapReducer from "./roadmapSlice"; 
-
+import eligibilityReducer from "./eligibilitySlice";
 
 const store = configureStore({
   reducer: {
@@ -17,7 +17,7 @@ const store = configureStore({
     userRole: userRoleSlice,
     result: resultSlice,
         roadmap: roadmapReducer,
-
+ eligibility: eligibilityReducer,
   },
 });
 

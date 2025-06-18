@@ -246,7 +246,8 @@ const MultiCards = () => {
                 <div
                   key={`${college._id}-${index}`}
                   className="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-transform duration-200 cursor-pointer"
-                  onClick={() => navigate(`/college/${college._id}`)}
+                  // onClick={() => navigate(`/college/${college._id}`)}
+                  onClick={() => navigate(`/college/${college._id}`, { state: { status: true } })}
                 >
                   <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
                     <img
