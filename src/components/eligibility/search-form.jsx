@@ -1,10 +1,9 @@
 import { MapPin, Users, BookOpen, Search } from "lucide-react";
 import { useState } from "react";
 import { getEligibleColleges } from "./Api";
-import CollegeList from "./college-list"
+import CollegeList from "./college-list";
 import { useDispatch } from "react-redux";
 import { setCollegeList, setSearchParams } from "../../store-redux/eligibilitySlice";
-
 
 const SearchForm = ({
   selectedExam,
@@ -19,89 +18,66 @@ const SearchForm = ({
   selectedBranch,
   setSelectedBranch,
   currentEducation,
-  subBranch,
-  setSubBranch,
-  castList
+  category,
 }) => {
   const [selectedEducation, setSelectedEducation] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [collegeData, setCollegeData] = useState([]);
-  const [exams , setExams] = useState([]); 
-  const dispatch = useDispatch();
+  const [exams, setExams] = useState([]);
+  const [casts, setCasts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [availableSubCategories, setAvailableSubCategories] = useState([]);
 
+  const dispatch = useDispatch();
 
   const handleEducationChange = (selected) => {
     setSelectedEducation(selected);
-    const matching = currentEducation.find((item) => item.category === selected);
-    if (matching) {
-      setSubBranch(matching.subCategory);
-      setExams(matching.entrance_exam_required);
+    const match = currentEducation.find((item) => item?.nextLearn === selected);
+    if (match) {
+      setCasts(match.caste || []);
+      setExams(match.exam || []);
     } else {
-      setSubBranch([]);
+      setCasts([]);
       setExams([]);
     }
   };
 
-
-  // const handleFetch = async () => {
-  //   setIsSearching(true);
-  //   try {
-  //     const response = await getEligibleColleges({
-  //       percentage: percentage1,
-  //       caste: selectedCaste,
-  //       category: selectedEducation,
-  //       district: selectedDistrict,
-  //       subCategory: selectedBranch
-  //     });
-  //     console.log("Eligible Colleges", response?.data?.data);
-  //     setCollegeData(response?.data?.data || []);
-  //   } catch (error) {
-  //     console.error(error);
-  //     alert("Failed to fetch eligible colleges.");
-  //   } finally {
-  //     setIsSearching(false);
-  //   }
-  // };
-
-
-const handleFetch = async () => {
-  setIsSearching(true);
-
-  const searchPayload = {
-    percentage: percentage1,
-    caste: selectedCaste,
-    category: selectedEducation,
-    district: selectedDistrict,
-    subCategory: selectedBranch,
+  const handleCategoryChange = (value) => {
+    setSelectedCategory(value);
+    const matched = category.find((cat) => cat.category === value);
+    setAvailableSubCategories(matched?.subCategory || []);
+    setSelectedBranch("");
   };
 
-  try {
-    // Save the filters to Redux
-    dispatch(setSearchParams(searchPayload));
+  const handleFetch = async () => {
+    setIsSearching(true);
+    const payload = {
+      percentage: percentage1,
+      caste: selectedCaste,
+      category: selectedCategory,
+      district: selectedDistrict,
+      subCategory: selectedBranch,
+    };
 
-    // Fetch data
-    const response = await getEligibleColleges(searchPayload);
-    const colleges = response?.data?.data || [];
-
-    // Save to Redux
-    dispatch(setCollegeList(colleges));
-
-    // Optional: set local state for immediate use
-    setCollegeData(colleges);
-  } catch (error) {
-    console.error("Failed to fetch eligible colleges:", error);
-    alert("Failed to fetch eligible colleges.");
-  } finally {
-    setIsSearching(false);
-  }
-};
-
+    try {
+      dispatch(setSearchParams(payload));
+      const response = await getEligibleColleges(payload);
+      const colleges = response?.data?.data || [];
+      dispatch(setCollegeList(colleges));
+      setCollegeData(colleges);
+    } catch (error) {
+      console.error("Error fetching colleges:", error);
+      alert("Something went wrong while fetching colleges.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   return (
-    <div className="w-full md:w-[80%] mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 my-4 md:my-8">
-      {/* Academic Information */}
+    <div className="w-full md:w-[90%] mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 my-6">
+      {/* Academic Info */}
       <div className="mb-6">
-        <div className="flex items-center gap-3 mb-3">
+        <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-blue-100 rounded-lg">
             <BookOpen className="w-5 h-5 text-blue-600" />
           </div>
@@ -114,13 +90,11 @@ const handleFetch = async () => {
             <select
               value={selectedEducation}
               onChange={(e) => handleEducationChange(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm cursor-pointer"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
             >
               <option value="">Select Current Education</option>
-              {currentEducation?.map((education, index) => (
-                <option key={index} value={education.category}>
-                  {education.category}
-                </option>
+              {currentEducation?.map((edu, idx) => (
+                <option key={idx} value={edu.nextLearn}>{edu.nextLearn}</option>
               ))}
             </select>
           </div>
@@ -131,13 +105,11 @@ const handleFetch = async () => {
               <select
                 value={selectedExam}
                 onChange={(e) => setSelectedExam(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer text-sm"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
               >
                 <option value="">Select Exam</option>
-                {exams?.map((exam, index) => (
-                  <option key={index} value={exam}>
-                    {exam}
-                  </option>
+                {exams?.map((exam, idx) => (
+                  <option key={idx} value={exam}>{exam}</option>
                 ))}
               </select>
             </div>
@@ -150,7 +122,7 @@ const handleFetch = async () => {
               value={percentage1}
               onChange={(e) => setPercentage(e.target.value)}
               placeholder="Enter percentage"
-              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm cursor-pointer"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
               min="0"
               max="100"
               step="0.01"
@@ -159,10 +131,11 @@ const handleFetch = async () => {
         </div>
       </div>
 
-      {/* Location & Category + Course Selection */}
+      {/* Location + Category & Course */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Location & Caste */}
         <div>
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-green-100 rounded-lg">
               <MapPin className="w-5 h-5 text-green-600" />
             </div>
@@ -175,61 +148,73 @@ const handleFetch = async () => {
               <select
                 value={selectedDistrict}
                 onChange={(e) => handleDistrictChange(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm cursor-pointer"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 text-sm"
               >
                 <option value="">Select District</option>
-                {districts?.map((district, index) => (
-                  <option key={index} value={district}>
-                    {district}
-                  </option>
+                {districts?.map((district, idx) => (
+                  <option key={idx} value={district}>{district}</option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="block mb-1 text-sm font-medium text-gray-600">Category</label>
+              <label className="block mb-1 text-sm font-medium text-gray-600">Caste Category</label>
               <select
                 value={selectedCaste}
                 onChange={(e) => handleCasteChange(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm cursor-pointer"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 text-sm"
               >
                 <option value="">Select Category</option>
-                {castList?.map((cast, index) => (
-                  <option key={index} value={cast.caste}>
-                    {cast.caste}
-                  </option>
+                {casts?.map((cast, idx) => (
+                  <option key={idx} value={cast}>{cast}</option>
                 ))}
               </select>
             </div>
           </div>
         </div>
 
+        {/* Future Eligibility + Branch */}
         <div>
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-purple-100 rounded-lg">
               <Users className="w-5 h-5 text-purple-600" />
             </div>
             <h2 className="text-base font-semibold text-gray-700">Course Selection</h2>
           </div>
 
-          <div>
-            <label className="block mb-1 text-sm font-medium text-gray-600">Preferred Branch/Course</label>
-            <select
-              value={selectedBranch}
-              onChange={(e) => setSelectedBranch(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm cursor-pointer"
-            >
-              <option value="">Select Branch</option>
-              {subBranch.map((branch, index) => (
-                <option key={index} value={branch}>
-                  {branch}
-                </option>
-              ))}
-            </select>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-1 text-sm font-medium text-gray-600">Future Eligibility</label>
+              <select
+                value={selectedCategory}
+                onChange={(e) => handleCategoryChange(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-sm"
+              >
+                <option value="">Select Future Eligibility</option>
+                {category?.map((cat, idx) => (
+                  <option key={idx} value={cat.category}>{cat.category}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block mb-1 text-sm font-medium text-gray-600">Preferred Branch/Course</label>
+              <select
+                value={selectedBranch}
+                onChange={(e) => setSelectedBranch(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-sm"
+              >
+                <option value="">Select Branch</option>
+                {availableSubCategories?.map((branch, idx) => (
+                  <option key={idx} value={branch}>{branch}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       </div>
 
+      {/* Search Button */}
       <div className="pt-10 flex justify-center">
         <button
           onClick={handleFetch}
@@ -250,16 +235,12 @@ const handleFetch = async () => {
         </button>
       </div>
 
-      {/* Render CollegeList below SearchForm */}
+      {/* College List */}
       <div className="mt-8">
         {collegeData.length > 0 ? (
           <CollegeList givenData={collegeData} />
         ) : (
-          !isSearching && (
-            <p className="text-center text-gray-500">
-              No colleges found matching your criteria.
-            </p>
-          )
+          !isSearching && <p className="text-center text-gray-500">No colleges found matching your criteria.</p>
         )}
       </div>
     </div>

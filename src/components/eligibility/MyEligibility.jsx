@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCutoffs, fetchEligibleColleges, getCastList, getCurrentEducaion, getDist } from "./Api"; // Import the API functions
+import { fetchCutoffs, fetchEligibleColleges, getCastList, getDist, getFutureCategory } from "./Api"; // Import the API functions
 import { useLocation } from "react-router-dom";
 import Nav from "../../Layouts/Nav";
 import Footer from "../Footer";
@@ -34,6 +34,7 @@ const MyEligibility = () => {
   const [currentEducation, setCurrentEducation] = useState([]);
   const [subBranch , setSubBranch] = useState([]);
   const [castList , setCastList] = useState([]);
+  const [category , setCategory] = useState([]);
 
   // -------------------------------------------------------------
 
@@ -46,24 +47,45 @@ const MyEligibility = () => {
     setDistricts(district?.data?.data);
   },[district]);
 
-    const { data:CurrentEducaion  } = useQuery({ 
+    const { data:FutureCategory  } = useQuery({ 
     queryKey: ['currentEducation'], 
-    queryFn: getCurrentEducaion 
+    queryFn: getFutureCategory 
   });
 
   useEffect(()=>{
-    setCurrentEducation(CurrentEducaion?.data?.data);
-  },[CurrentEducaion]);
+    setCategory(FutureCategory?.data?.data);
+  },[FutureCategory]);
 
-      const { data:casts } = useQuery({ 
+      const { data:educationData } = useQuery({ 
     queryKey: ['cast'], 
     queryFn: getCastList 
   });
   
+  const {
+  data,
+  refetch,
+  isFetching,
+} = useQuery({
+  queryKey: ['eligibleColleges', collegesData],
+  queryFn: () => fetchEligibleColleges(collegesData),
+  enabled: false,
+});
+
+useEffect(() => {
+  if (data?.data) {
+    setColleges(data.data);
+  }
+}, [data]);
+
 
   useEffect(()=>{
-    setCastList(casts?.data?.data?.castes);
-  },[casts]);
+    setCurrentEducation(educationData?.data?.data?.castes);
+  },[educationData]);
+
+
+  console.log('====================================');
+  console.log("FutureCategory", category);
+  console.log('====================================');
 
   // -------------------------------------------------------------
 
@@ -267,6 +289,7 @@ const MyEligibility = () => {
             subBranch={subBranch}
             setSubBranch={setSubBranch}
             castList={castList}
+            category={category}
           />
 
           <FilterSection
