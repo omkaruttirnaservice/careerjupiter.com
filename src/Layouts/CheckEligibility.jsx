@@ -13,19 +13,12 @@ const CheckEligibility = () => {
 			return;
 		}
 	
-		setError(''); // Clear error if input is valid
+		setError('');
 		document.getElementById('container').classList.add('fade-out');
-	
-		// SPGE madhun percentage calculate karne (Assume SPGE / 10 formula)
-		let percentage = parseFloat(inputValue); 
-		if (percentage > 10) {
-			percentage = percentage; // Already percentage
-		} else {
-			percentage = percentage * 10; // Convert SPGE to Percentage
-		}
+
 	
 		setTimeout(() => {
-			navigate('/my-eligibility', { state: { percentage } });
+			navigate('/my-eligibility', { state: { inputValue } });
 		}, 600);
 	};
 	
