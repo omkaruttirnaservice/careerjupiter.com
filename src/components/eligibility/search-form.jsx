@@ -29,8 +29,12 @@ const SearchForm = ({
   const [casts, setCasts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [availableSubCategories, setAvailableSubCategories] = useState([]);
+  const [per, setPer] = useState("");
 
-  // Restore from localStorage on mount
+  useEffect(() => {
+    setPer(percentage1);
+  }, [percentage1]);
+
   useEffect(() => {
     const savedForm = JSON.parse(localStorage.getItem("eligibilityForm")) || {};
     const savedCollegeData = JSON.parse(localStorage.getItem("collegeData")) || [];
@@ -44,14 +48,12 @@ const SearchForm = ({
     setSelectedBranch(savedForm.selectedBranch || "");
     setCollegeData(savedCollegeData);
 
-    // Auto-load exam and caste options if education is already selected
     const eduMatch = currentEducation?.find(item => item.nextLearn === savedForm.selectedEducation);
     if (eduMatch) {
       setExams(eduMatch.exam || []);
       setCasts(eduMatch.caste || []);
     }
 
-    // Auto-load branch options
     const catMatch = category?.find(item => item.category === savedForm.selectedCategory);
     if (catMatch) {
       setAvailableSubCategories(catMatch.subCategory || []);
@@ -80,7 +82,7 @@ const SearchForm = ({
   const handleFetch = async () => {
     setIsSearching(true);
     const payload = {
-      percentage: percentage1,
+      percentage: per,
       caste: selectedCaste,
       category: selectedCategory,
       district: selectedDistrict,
@@ -94,11 +96,10 @@ const SearchForm = ({
       dispatch(setCollegeList(colleges));
       setCollegeData(colleges);
 
-      // Save to localStorage
       const formValues = {
         selectedEducation,
         selectedExam,
-        percentage1,
+        percentage1: per,
         selectedDistrict,
         selectedCaste,
         selectedCategory,
@@ -114,29 +115,29 @@ const SearchForm = ({
   };
 
   return (
-      <div className="w-full md:w-[90%] mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 my-6 relative">
-  {/* Clear History Button */}
-  <button
-    onClick={() => {
-      localStorage.removeItem("eligibilityForm");
-      localStorage.removeItem("collegeData");
+    <div className="w-full md:w-[90%] mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 my-6 relative">
+      {/* Clear History Button */}
+      <button
+        onClick={() => {
+          localStorage.removeItem("eligibilityForm");
+          localStorage.removeItem("collegeData");
 
-      setSelectedEducation("");
-      setSelectedExam("");
-      setPercentage("");
-      handleDistrictChange("");
-      handleCasteChange("");
-      setSelectedCategory("");
-      setSelectedBranch("");
-      setCollegeData([]);
-      setExams([]);
-      setCasts([]);
-      setAvailableSubCategories([]);
-    }}
-    className="absolute top-4 right-4 text-sm px-4 py-1 bg-red-100 text-red-600 border border-red-300 rounded-md hover:bg-red-200 transition"
-  >
-    Clear History
-  </button>
+          setSelectedEducation("");
+          setSelectedExam("");
+          setPercentage("");
+          handleDistrictChange("");
+          handleCasteChange("");
+          setSelectedCategory("");
+          setSelectedBranch("");
+          setCollegeData([]);
+          setExams([]);
+          setCasts([]);
+          setAvailableSubCategories([]);
+        }}
+        className="absolute top-4 right-4 text-sm px-4 py-1 bg-red-100 text-red-600 border border-red-300 rounded-md hover:bg-red-200 transition"
+      >
+        Clear History
+      </button>
 
       {/* Academic Info */}
       <div className="mb-6">
@@ -182,8 +183,8 @@ const SearchForm = ({
             <label className="block mb-1 text-sm font-medium text-gray-600">Percentage/Score</label>
             <input
               type="number"
-              value={percentage1}
-              onChange={(e) => setPercentage(e.target.value)}
+              value={per}
+              onChange={(e) => setPer(e.target.value)}
               placeholder="Enter percentage"
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
               min="0"
@@ -194,85 +195,74 @@ const SearchForm = ({
         </div>
       </div>
 
-      {/* Location + Category & Course */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Location & Caste */}
-        <div>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <MapPin className="w-5 h-5 text-green-600" />
-            </div>
-            <h2 className="text-base font-semibold text-gray-700">Location & Category</h2>
+      {/* Grouped Dropdowns in One Line */}
+      <div className="mb-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 bg-green-100 rounded-lg">
+            <MapPin className="w-5 h-5 text-green-600" />
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-600">Preferred District</label>
-              <select
-                value={selectedDistrict}
-                onChange={(e) => handleDistrictChange(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 text-sm"
-              >
-                <option value="">Select District</option>
-                {districts?.map((district, idx) => (
-                  <option key={idx} value={district}>{district}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-600">Caste Category</label>
-              <select
-                value={selectedCaste}
-                onChange={(e) => handleCasteChange(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 text-sm"
-              >
-                <option value="">Select Category</option>
-                {casts?.map((cast, idx) => (
-                  <option key={idx} value={cast}>{cast}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+          <h2 className="text-base font-semibold text-gray-700">Course & Location Preferences</h2>
         </div>
 
-        {/* Future Eligibility + Branch */}
-        <div>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <Users className="w-5 h-5 text-purple-600" />
-            </div>
-            <h2 className="text-base font-semibold text-gray-700">Course Selection</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* 1. Future Eligibility */}
+          <div>
+            <label className="block mb-1 text-sm font-medium text-gray-600">Future Eligibility</label>
+            <select
+              value={selectedCategory}
+              onChange={(e) => handleCategoryChange(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-sm"
+            >
+              <option value="">Select Future Eligibility</option>
+              {category?.map((cat, idx) => (
+                <option key={idx} value={cat.category}>{cat.category}</option>
+              ))}
+            </select>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-600">Future Eligibility</label>
-              <select
-                value={selectedCategory}
-                onChange={(e) => handleCategoryChange(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-sm"
-              >
-                <option value="">Select Future Eligibility</option>
-                {category?.map((cat, idx) => (
-                  <option key={idx} value={cat.category}>{cat.category}</option>
-                ))}
-              </select>
-            </div>
+          {/* 2. Caste Category */}
+          <div>
+            <label className="block mb-1 text-sm font-medium text-gray-600">Caste Category</label>
+            <select
+              value={selectedCaste}
+              onChange={(e) => handleCasteChange(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 text-sm"
+            >
+              <option value="">Select Category</option>
+              {casts?.map((cast, idx) => (
+                <option key={idx} value={cast}>{cast}</option>
+              ))}
+            </select>
+          </div>
 
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-600">Preferred Branch/Course</label>
-              <select
-                value={selectedBranch}
-                onChange={(e) => setSelectedBranch(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-sm"
-              >
-                <option value="">Select Branch</option>
-                {availableSubCategories?.map((branch, idx) => (
-                  <option key={idx} value={branch}>{branch}</option>
-                ))}
-              </select>
-            </div>
+          {/* 3. Preferred District */}
+          <div>
+            <label className="block mb-1 text-sm font-medium text-gray-600">Preferred District</label>
+            <select
+              value={selectedDistrict}
+              onChange={(e) => handleDistrictChange(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 text-sm"
+            >
+              <option value="">Select District</option>
+              {districts?.map((district, idx) => (
+                <option key={idx} value={district}>{district}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* 4. Preferred Branch */}
+          <div>
+            <label className="block mb-1 text-sm font-medium text-gray-600">Preferred Branch/Course</label>
+            <select
+              value={selectedBranch}
+              onChange={(e) => setSelectedBranch(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-sm"
+            >
+              <option value="">Select Branch</option>
+              {availableSubCategories?.map((branch, idx) => (
+                <option key={idx} value={branch}>{branch}</option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
