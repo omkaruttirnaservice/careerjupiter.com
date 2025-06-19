@@ -8,7 +8,7 @@ export const getDist = () => {
 
 //get current education
 export const getFutureCategory = () => {
-  return axios.get(`${BASE_URL}/api/college/categories/all`);
+  return axios.get(`${BASE_URL}/api/college/all-category`);
 };
 
 //get cast education

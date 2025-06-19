@@ -2,6 +2,8 @@
 
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../utils/constansts";
+import { BACKEND_SERVER_IP } from "../../Constant/constantData";
 
 const CollegeList = () => {
   const navigate = useNavigate();
@@ -23,13 +25,14 @@ const CollegeList = () => {
           className="shadow-md hover:shadow-2xl transition-transform p-4 bg-white flex flex-col overflow-hidden rounded-lg hover:scale-105 duration-300"
         >
           <img
-            src={
-              college.image ||
-              "https://www.shutterstock.com/image-photo/group-students-digital-tablet-laptop-600nw-2347371743.jpg"
-            }
-            alt="College"
-            className="h-34 object-cover"
-          />
+  src={
+    college?.image?.trim()
+      ? `${BACKEND_SERVER_IP}${college.image}`
+      : "https://www.shutterstock.com/image-photo/group-students-digital-tablet-laptop-600nw-2347371743.jpg"
+  }
+  alt="College"
+  className="h-34 object-cover"
+/>
 
           <div className="p-3 flex-1 flex flex-col gap-2">
             <h2 className="text-base font-bold text-gray-800 truncate">
