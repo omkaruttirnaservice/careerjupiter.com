@@ -122,3 +122,17 @@ export const uploadCertificate = (payload) => {
     payload,
   );
 };
+
+//for only roadmap by id 
+
+
+
+
+export const getRoadmapTests = async (roadmapId) => {
+  const response = await axios.get(`${BASE_URL}/api/search/iQtest?roadmap=${roadmapId}`, {
+    headers: {
+      Authorization: getAuthHeader(),
+    },
+  })
+  return response.data
+}

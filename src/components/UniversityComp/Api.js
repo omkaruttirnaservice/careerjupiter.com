@@ -6,10 +6,7 @@ export const getUniversity = async (id) => {
 	const response = await axios.get(`${BASE_URL}/api/university/${id}`);
 	return JSON.parse(response.data.data);
 };
-// Base API URL
-// const BASE_URL = 'http://192.168.1.5:5000';
 
-// Fetch all universities
 export const fetchUniversities = async () => {
 	try {
 		const response = await axios.get(`${BASE_URL}/api/university/all`);

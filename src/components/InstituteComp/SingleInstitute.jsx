@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams ,useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "../../utils/constansts";
 import { BACKEND_SERVER_IP } from "../../Constant/constantData";
@@ -41,6 +41,7 @@ const SingleInstitute = () => {
   const { id } = useParams();
   const [showDiscountPopup, setShowDiscountPopup] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const navigate = useNavigate()
 
   // Auto-show the floating icon after 3 seconds
   useEffect(() => {
@@ -321,6 +322,22 @@ const SingleInstitute = () => {
               <h1 className="text-white text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold mb-2 md:mb-4">
                 {instituteClass?.className || "Class Name"}
               </h1>
+
+
+              <button
+              onClick={() => navigate("/class")}
+              className="relative bg-none text-white cursor-pointer flex items-center gap-2 p-2 pl-0 text-2xl no-underline 
+             group transition-all duration-300 ease-in-out hover:pl-2 hover:gap-3"
+            >
+              <span className="absolute left-0 w-0 h-px bg-white bottom-0 transition-all duration-300 ease-in-out group-hover:w-full"></span>
+              <span className="transition-transform duration-300 ease-in-out group-hover:-translate-x-1">
+                ←
+              </span>
+              <span className="transition-all duration-300 ease-in-out">
+                BACK
+              </span>
+            </button>
+              
               {instituteClass?.Category?.length > 0 && (
                 <div className="flex flex-wrap justify-center gap-2 mt-2">
                   {instituteClass.Category.map((category, index) => (

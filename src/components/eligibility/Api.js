@@ -1,12 +1,43 @@
-// api.js
 import axios from "axios";
 import { BASE_URL } from "../../utils/constansts";
 
-// Create an Axios instance
-// const axiosInstance = axios.create({
-//   baseURL: "http://192.168.1.20:5000", // Your API base URL
-// });
- 
+//get dist
+export const getDist = () => {
+  return axios.get(`${BASE_URL}/api/college/Dist`);
+};
+
+//get current education
+export const getFutureCategory = () => {
+  return axios.get(`${BASE_URL}/api/college/all-category`);
+};
+
+//get cast education
+export const getCastList = () => {
+  return axios.get(`${BASE_URL}/api/caste/all`);
+};
+
+// get Eligible Colleges
+export const getEligibleColleges = ({
+  percentage,
+  caste,
+  category,
+  district,
+  subCategory,
+}) => {
+  return axios.get(
+    `${BASE_URL}/api/eligibility/colleges/eligible`,
+    {
+      params: {
+        percentage,
+        caste,
+        category,
+        district,
+        subCategory,
+      },
+    }
+  );
+};
+
 // Fetch cutoffs
 export const fetchCutoffs = async () => {
   const response = await axios.get(`${BASE_URL}/api/cutoff/all`);
