@@ -69,31 +69,64 @@ const SearchForm = ({
     }
   }, [currentEducation, category]);
 
-  const handleFetchColleges = async (values) => {
-    setIsSearching(true);
-    const payload = {
-      percentage: values.percentage,
-      caste: values.selectedCaste,
-      category: values.selectedCategory,
-      district: values.selectedDistrict,
-      subCategory: values.selectedBranch || "",
-    };
+  // const handleFetchColleges = async (values) => {
+  //   setIsSearching(true);
+  //   const payload = {
+  //     percentage: values.percentage,
+  //     caste: values.selectedCaste,
+  //     category: values.selectedCategory,
+  //     district: values.selectedDistrict,
+  //     subCategory: values.selectedBranch || "",
+  //   };
 
-    try {
-      dispatch(setSearchParams(payload));
-      const response = await getEligibleColleges(payload);
-      const colleges = response?.data?.data || [];
-      dispatch(setCollegeList(colleges));
-      setCollegeData(colleges);
+  //   try {
+  //     dispatch(setSearchParams(payload));
+  //     const response = await getEligibleColleges(payload);
+  //     const colleges = response?.data?.data || [];
+  //     dispatch(setCollegeList(colleges));
+  //     setCollegeData(colleges);
 
-      localStorage.setItem("eligibilityForm", JSON.stringify(values));
-      localStorage.setItem("collegeData", JSON.stringify(colleges));
-    } catch (error) {
-      console.error("API error:", error);
-    } finally {
-      setIsSearching(false);
-    }
+  //     localStorage.setItem("eligibilityForm", JSON.stringify(values));
+  //     localStorage.setItem("collegeData", JSON.stringify(colleges));
+  //   } catch (error) {
+  //     console.error("API error:", error);
+  //   } finally {
+  //     setIsSearching(false);
+  //   }
+  // };
+
+const handleFetchColleges = async (values) => {
+  setIsSearching(true);
+
+  // Clear local storage before fetching new data
+  localStorage.removeItem("collegeData");
+  setCollegeData([]);
+
+  const payload = {
+    percentage: values.percentage,
+    caste: values.selectedCaste,
+    category: values.selectedCategory,
+    district: values.selectedDistrict,
+    subCategory: values.selectedBranch || "",
   };
+
+  try {
+    dispatch(setSearchParams(payload));
+    const response = await getEligibleColleges(payload);
+    const colleges = response?.data?.data || [];
+
+    dispatch(setCollegeList(colleges));
+    setCollegeData(colleges);
+
+    localStorage.setItem("eligibilityForm", JSON.stringify(values));
+    localStorage.setItem("collegeData", JSON.stringify(colleges)); // set after successful fetch
+  } catch (error) {
+    console.error("API error:", error);
+  } finally {
+    setIsSearching(false);
+  }
+};
+
 
   const handleEducationChange = (value, setFieldValue) => {
     setSelectedEducation(value);

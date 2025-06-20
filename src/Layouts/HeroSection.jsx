@@ -40,6 +40,8 @@ const HeroSection = () => {
       <br />
       <CareerRoadmapBanner />
       <br/>
+       <CheckEligibility />
+      <br />
       <BestCollege />
       <br />
       <BestClass />
@@ -50,9 +52,7 @@ const HeroSection = () => {
        <br/>
       <PremiumServices />
       <br/>
-      <CheckEligibility />
-      <br />
-    
+     
       
     </>
   );
