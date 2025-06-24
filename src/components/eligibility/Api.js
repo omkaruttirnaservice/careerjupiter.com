@@ -51,3 +51,35 @@ export const fetchEligibleColleges = async (selectedData) => {
   );
   return response.data;
 };
+
+// 🔹 Logs user activity
+// export const logUserActivity = ({ userId, collegeId, token }) =>
+//   axios.post(
+//     `${BASE_URL}/api/user/activity`,
+//     { userId, collegeId },
+//     { headers: { Authorization: `Bearer ${token}` } }
+//   );
+
+  
+// 🔹 Sends OTP
+export const sendOtp = (mobile_no) => {
+  return axios.post(`${BASE_URL}/api/auth/send-otp`, {
+    mobile_no,
+    role: "USER",
+  });
+};
+
+
+// 🔹 Verifies OTP
+export const verifyOtp = (mobile_no, otp, reference_id) => {
+  return axios.post(`${BASE_URL}/api/auth/verify-otp`, {
+    mobile_no,
+    otp,
+    reference_id, // 🆕 Required now
+  });
+};
+
+
+// 🔹 Logs in user (signup if needed)
+export const userLogin = (mobile_no) =>
+  axios.post(`${BASE_URL}/api/auth/user-login`, { mobile_no });

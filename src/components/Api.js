@@ -10,3 +10,10 @@ export const getCollege = async (id) => {
 	return response.data.data;
 };
 
+// 🔹 Logs user activity
+export const logUserActivity = ({ userId, collegeId, token }) =>
+  axios.post(
+    `${BASE_URL}/api/user/activity`,
+    { userId, collegeId },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );

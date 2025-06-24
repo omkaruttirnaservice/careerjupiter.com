@@ -9,6 +9,10 @@ import { FaLocationDot } from "react-icons/fa6"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { GetSearchCollege } from "./SearchComp/Api"
 import { useSearchParams } from "react-router-dom"
+import Cookies from "js-cookie";
+import { logUserActivity } from "./Api"; // or wherever it's defined
+import OtpLoginPopup from "./eligibility/OtpLoginPopup"; // adjust path accordingly
+
 
 const MultiCards = () => {
   const navigate = useNavigate()
@@ -39,6 +43,9 @@ const MultiCards = () => {
 
   const [isRoadmapMode, setIsRoadmapMode] = useState(!!roadmapIdFromURL)
   const [showOtherColleges, setShowOtherColleges] = useState(false)
+  const [showOtpPopup, setShowOtpPopup] = useState(false);
+const [selectedCollegeId, setSelectedCollegeId] = useState("");
+
 
   // Initial load when roadmap is in URL
   useEffect(() => {
@@ -112,6 +119,31 @@ const MultiCards = () => {
       setSearchCollegeData({ results: [], pagination: {} })
     }
   }
+
+  const handleCollegeClick = async (college) => {
+  const token = Cookies.get("token");
+  const userId = Cookies.get("userId");
+
+  if (token && userId) {
+    try {
+      await logUserActivity({ userId, collegeId: college._id, token });
+      // navigate(`/college/${college._id}`, {
+      //   state: { status: false, searchData: college },
+      // });
+
+      navigate(`/college/${college._id}`, {
+  state: { status: true, searchData: college },
+});
+
+    } catch (error) {
+      console.error("User activity API error:", error);
+    }
+  } else {
+    setSelectedCollegeId(college._id);
+    setShowOtpPopup(true);
+  }
+};
+
 
   const fetchMoreData = async () => {
     if (page >= searchCollegeData.pagination?.totalPages) {
@@ -247,7 +279,9 @@ const MultiCards = () => {
                   key={`${college._id}-${index}`}
                   className="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-transform duration-200 cursor-pointer"
                   // onClick={() => navigate(`/college/${college._id}`)}
-                  onClick={() => navigate(`/college/${college._id}`, { state: { status: true } })}
+                  // onClick={() => navigate(`/college/${college._id}`, { state: { status: true } })}
+                  onClick={() => handleCollegeClick(college)}
+
                 >
                   <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
                     <img
@@ -311,6 +345,11 @@ const MultiCards = () => {
           </InfiniteScroll>
         </div>
       )}
+{showOtpPopup && (
+  <OtpLoginPopup onClose={() => setShowOtpPopup(false)} collegeId={selectedCollegeId} />
+)}
+
+
     </>
   )
 }
