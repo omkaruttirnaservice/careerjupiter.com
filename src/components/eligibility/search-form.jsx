@@ -11,6 +11,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Flotingbutton from "../../Layouts/Flotingbutton";
 import { FaWhatsapp } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
+
 
 // const SearchForm = ({
 //   selectedExam,
@@ -67,6 +69,8 @@ const SearchForm = ({
   selectedDistrict: "",
   selectedBranch: "",
 });
+const location = useLocation();
+const percentageFromRoute = location?.state?.inputValue || "";
 
 
   const validationSchema = Yup.object({
@@ -81,16 +85,20 @@ const SearchForm = ({
     selectedDistrict: Yup.string().required("Required"),
   });
 
-useEffect(() => {
+
+  useEffect(() => {
   const savedForm = JSON.parse(localStorage.getItem("eligibilityForm")) || {};
   const savedCollegeData = JSON.parse(localStorage.getItem("collegeData")) || [];
 
   if (!currentEducation || !category) return;
 
+  // Check localStorage first, then fallback to route percentage
+  const fallbackPercentage = savedForm.percentage || percentageFromRoute || "";
+
   setInitialFormValues({
     selectedEducation: savedForm.selectedEducation || "",
     selectedExam: savedForm.selectedExam || "",
-    percentage: savedForm.percentage || "",
+    percentage: fallbackPercentage,
     selectedCategory: savedForm.selectedCategory || "",
     selectedCaste: savedForm.selectedCaste || "",
     selectedDistrict: savedForm.selectedDistrict || "",
@@ -99,7 +107,7 @@ useEffect(() => {
 
   setSelectedEducation(savedForm.selectedEducation || "");
   setSelectedExam(savedForm.selectedExam || "");
-  setPercentage(savedForm.percentage || "");
+  setPercentage(fallbackPercentage);
   setSelectedCategory(savedForm.selectedCategory || "");
   setSelectedBranch(savedForm.selectedBranch || "");
   setCollegeData(savedCollegeData);
@@ -108,18 +116,58 @@ useEffect(() => {
     (item) => item.nextLearn === savedForm.selectedEducation
   );
   if (eduMatch) {
-    setExamOptions(eduMatch.exam || []); // ✅ use setExamOptions from props
+    setExamOptions(eduMatch.exam || []);
     setCasts(eduMatch.caste || []);
   }
 
-const catMatch = category.find(
-  (item) => item.category === savedForm.selectedCategory
-);
-if (catMatch) {
-  const subCats = catMatch.subCategory?.flat() || [];
-  setAvailableSubCategories(subCats);
-}
+  const catMatch = category.find(
+    (item) => item.category === savedForm.selectedCategory
+  );
+  if (catMatch) {
+    const subCats = catMatch.subCategory?.flat() || [];
+    setAvailableSubCategories(subCats);
+  }
 }, [currentEducation, category]);
+
+// useEffect(() => {
+//   const savedForm = JSON.parse(localStorage.getItem("eligibilityForm")) || {};
+//   const savedCollegeData = JSON.parse(localStorage.getItem("collegeData")) || [];
+
+//   if (!currentEducation || !category) return;
+
+//   setInitialFormValues({
+//     selectedEducation: savedForm.selectedEducation || "",
+//     selectedExam: savedForm.selectedExam || "",
+//     percentage: savedForm.percentage || "",
+//     selectedCategory: savedForm.selectedCategory || "",
+//     selectedCaste: savedForm.selectedCaste || "",
+//     selectedDistrict: savedForm.selectedDistrict || "",
+//     selectedBranch: savedForm.selectedBranch || "",
+//   });
+
+//   setSelectedEducation(savedForm.selectedEducation || "");
+//   setSelectedExam(savedForm.selectedExam || "");
+//   setPercentage(savedForm.percentage || "");
+//   setSelectedCategory(savedForm.selectedCategory || "");
+//   setSelectedBranch(savedForm.selectedBranch || "");
+//   setCollegeData(savedCollegeData);
+
+//   const eduMatch = currentEducation.find(
+//     (item) => item.nextLearn === savedForm.selectedEducation
+//   );
+//   if (eduMatch) {
+//     setExamOptions(eduMatch.exam || []); // ✅ use setExamOptions from props
+//     setCasts(eduMatch.caste || []);
+//   }
+
+// const catMatch = category.find(
+//   (item) => item.category === savedForm.selectedCategory
+// );
+// if (catMatch) {
+//   const subCats = catMatch.subCategory?.flat() || [];
+//   setAvailableSubCategories(subCats);
+// }
+// }, [currentEducation, category]);
 
 
   // useEffect(() => {
