@@ -9,6 +9,11 @@ import { FaLocationDot } from "react-icons/fa6"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { GetSearchCollege } from "./SearchComp/Api"
 import { useSearchParams } from "react-router-dom"
+import Cookies from "js-cookie";
+import { logUserActivity } from "./Api"; // or wherever it's defined
+import OtpLoginPopup from "./eligibility/OtpLoginPopup"; // adjust path accordingly
+import { FaWhatsapp } from "react-icons/fa"
+
 
 const MultiCards = () => {
   const navigate = useNavigate()
@@ -39,6 +44,9 @@ const MultiCards = () => {
 
   const [isRoadmapMode, setIsRoadmapMode] = useState(!!roadmapIdFromURL)
   const [showOtherColleges, setShowOtherColleges] = useState(false)
+  const [showOtpPopup, setShowOtpPopup] = useState(false);
+const [selectedCollegeId, setSelectedCollegeId] = useState("");
+
 
   // Initial load when roadmap is in URL
   useEffect(() => {
@@ -112,6 +120,31 @@ const MultiCards = () => {
       setSearchCollegeData({ results: [], pagination: {} })
     }
   }
+
+  const handleCollegeClick = async (college) => {
+  const token = Cookies.get("token");
+  const userId = Cookies.get("userId");
+
+  if (token && userId) {
+    try {
+      await logUserActivity({ userId, collegeId: college._id, token });
+      // navigate(`/college/${college._id}`, {
+      //   state: { status: false, searchData: college },
+      // });
+
+      navigate(`/college/${college._id}`, {
+  state: { status: true, searchData: college },
+});
+
+    } catch (error) {
+      console.error("User activity API error:", error);
+    }
+  } else {
+    setSelectedCollegeId(college._id);
+    setShowOtpPopup(true);
+  }
+};
+
 
   const fetchMoreData = async () => {
     if (page >= searchCollegeData.pagination?.totalPages) {
@@ -213,6 +246,54 @@ const MultiCards = () => {
             Search Other Colleges
           </button>
         </div>
+
+//         <div className="flex justify-center items-center flex-col mt-10 space-y-4">
+//   <img
+//     src={dataNotFound || "/placeholder.svg"}
+//     alt="No colleges found"
+//     className="w-40 sm:w-56 md:w-64 lg:w-72 xl:w-80 object-contain"
+//   />
+//   <h1 className="text-red-700 text-xl font-semibold text-center">
+//     {isRoadmapMode && !showOtherColleges
+//       ? "No Colleges Available for This Roadmap"
+//       : "No College Data Found"}
+//   </h1>
+//   <p className="text-gray-600 text-center max-w-md">
+//     {isRoadmapMode && !showOtherColleges
+//       ? "We couldn't find any colleges that match your selected roadmap. Try exploring other available colleges."
+//       : "No colleges match your current search criteria. Try adjusting your filters or search terms."}
+//   </p>
+
+//   <button
+//     onClick={handleShowOtherColleges}
+//     className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
+//   >
+//     Search Other Colleges
+//   </button>
+
+//   {/* ✅ WhatsApp Info Section */}
+//   <div className="bg-gradient-to-br from-green-50 to-white p-6 rounded-xl border border-green-100 shadow-sm text-center mt-6 w-full max-w-xl">
+//     <p className="text-gray-700 text-base mb-3 leading-relaxed">
+//       ❌ <span className="font-semibold">No colleges found</span> matching your criteria.
+//       <br />
+//       📲 <span className="font-medium">For latest updates and guidance,</span> join our
+//       official WhatsApp group!
+//     </p>
+
+//     <div className="mt-4 flex justify-center">
+//       <a
+//         href="https://whatsapp.com/channel/0029VbADrN54IBh95nFJiR3e"
+//         target="_blank"
+//         rel="noopener noreferrer"
+//         className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-5 py-2.5 rounded-full shadow-md transition-all"
+//       >
+//         <FaWhatsapp size={20} />
+//         Join WhatsApp
+//       </a>
+//     </div>
+//   </div>
+// </div>
+
       ) : (
         <div className="mt-10 px-4">
           {isRoadmapMode && !showOtherColleges && (
@@ -247,7 +328,9 @@ const MultiCards = () => {
                   key={`${college._id}-${index}`}
                   className="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-transform duration-200 cursor-pointer"
                   // onClick={() => navigate(`/college/${college._id}`)}
-                  onClick={() => navigate(`/college/${college._id}`, { state: { status: true } })}
+                  // onClick={() => navigate(`/college/${college._id}`, { state: { status: true } })}
+                  onClick={() => handleCollegeClick(college)}
+
                 >
                   <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
                     <img
@@ -311,6 +394,11 @@ const MultiCards = () => {
           </InfiniteScroll>
         </div>
       )}
+{showOtpPopup && (
+  <OtpLoginPopup onClose={() => setShowOtpPopup(false)} collegeId={selectedCollegeId} />
+)}
+
+
     </>
   )
 }

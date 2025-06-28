@@ -47,10 +47,19 @@ const MyEligibility = () => {
   }, [district]);
 
   // Fetch future education categories
-  const { data: FutureCategory } = useQuery({
-    queryKey: ["currentEducation"],
-    queryFn: getFutureCategory,
-  });
+  // const { data: FutureCategory } = useQuery({
+  //   queryKey: ["currentEducation"],
+  //   queryFn: getFutureCategory,
+  // });
+
+  const {
+  data: FutureCategory,
+  isSuccess: isFutureCategoryLoaded
+} = useQuery({
+  queryKey: ["currentEducation"],
+  queryFn: getFutureCategory,
+});
+
 
   useEffect(() => {
     setCategory(FutureCategory?.data?.data); // Save category list
@@ -102,9 +111,11 @@ const MyEligibility = () => {
           {/* Reusable search form with props */}
           <SearchForm
             selectedEducation={selectedEducation}
+             setSelectedEducation={setSelectedEducation} // ✅ Add this
             selectedExam={selectedExam}
             setSelectedExam={setSelectedExam}
             examOptions={examOptions}
+             setExamOptions={setExamOptions} // ✅ Add this
             percentage1={percentage1}
             setPercentage={setPercentage}
             selectedDistrict={selectedDistrict}
@@ -116,6 +127,7 @@ const MyEligibility = () => {
             setSelectedBranch={setSelectedBranch}
             isSearching={isSearching}
             currentEducation={currentEducation}
+             setCurrentEducation={setCurrentEducation} // ✅ Add this
             subBranch={subBranch}
             setSubBranch={setSubBranch}
             castList={castList}
