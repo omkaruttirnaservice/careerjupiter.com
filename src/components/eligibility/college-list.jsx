@@ -212,70 +212,134 @@ const CollegeList = () => {
     </div>
   );
 
-  return (
-    <div className="space-y-8 mt-6">
-      {/* Matching Branch Section */}
+//   return (
+//     <div className="space-y-8 mt-6">
+//       {/* Matching Branch Section */}
+//       <div>
+//         <h3 className="text-lg font-semibold text-blue-800 mb-4">
+//           🎯 Colleges offering your selected branch: {filters.subCategory}
+//         </h3>
+// {/* 
+//         {filters.subCategory ? (
+//           matchingBranchColleges.length > 0 ? (
+//             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+//               {matchingBranchColleges.map(renderCollegeCard)}
+//             </div>
+//           ) : (
+//             <p className="text-sm text-gray-500 text-center">
+//               ❌ No colleges found for the selected branch "
+//               {filters.subCategory}".
+//             </p>
+//           )
+//         ) : // Nothing is shown if no branch is selected
+//         null} */}
+
+//         {/* {filters.subCategory ? (
+//   matchingBranchColleges.length > 0 ? (
+//     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+//       {matchingBranchColleges.map(renderCollegeCard)}
+//     </div>
+//   ) : (
+//     <p className="text-sm text-gray-500 text-center">
+//       ❌ No colleges found for the selected branch "{filters.subCategory}".
+//     </p>
+//   )
+// ) : (
+//   <p className="text-sm text-gray-500 text-center">
+//     🎓 Please select a branch to view matching colleges.
+//   </p>
+// )} */}
+// {filters.subCategory && matchingBranchColleges.length > 0 && (
+//   <>
+//     <h3 className="text-lg font-semibold text-blue-800 mb-4">
+//       🎓 Colleges for Branch: {filters.subCategory}
+//     </h3>
+//     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+//       {matchingBranchColleges.map(renderCollegeCard)}
+//     </div>
+//   </>
+// )}
+
+
+
+//       </div>
+
+//       {/* Other Colleges Section */}
+//       {/* <div>
+//         <h3 className="text-lg font-semibold text-green-800 mb-4">
+//           🏫 Other eligible colleges in {filters.district}
+//         </h3>
+//         {otherColleges.length > 0 ? (
+//           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+//             {otherColleges.map(renderCollegeCard)}
+//           </div>
+//         ) : (
+//           <p className="text-sm text-gray-500 text-center">
+//             ❌ No other colleges found in district "{filters.district}".
+//           </p>
+//         )}
+//       </div> */}
+
+// {otherColleges.length > 0 && (
+//   <>
+//     <h3 className="text-lg font-semibold text-green-800 mb-4">
+//       🏫 Other eligible colleges in {filters.district}
+//     </h3>
+//     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+//       {otherColleges.map(renderCollegeCard)}
+//     </div>
+//   </>
+// )}
+
+
+
+
+//       {showOtpPopup && (
+//         <OtpLoginPopup
+//           onClose={() => setShowOtpPopup()}
+//           collegeId={selectedCollegeId}
+//         />
+//       )}
+//     </div>
+//   );
+
+return (
+  <div className="space-y-8 mt-6">
+    {/* ✅ Matching Branch Colleges Section */}
+    {filters.subCategory && matchingBranchColleges.length > 0 && (
       <div>
         <h3 className="text-lg font-semibold text-blue-800 mb-4">
           🎯 Colleges offering your selected branch: {filters.subCategory}
         </h3>
-{/* 
-        {filters.subCategory ? (
-          matchingBranchColleges.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {matchingBranchColleges.map(renderCollegeCard)}
-            </div>
-          ) : (
-            <p className="text-sm text-gray-500 text-center">
-              ❌ No colleges found for the selected branch "
-              {filters.subCategory}".
-            </p>
-          )
-        ) : // Nothing is shown if no branch is selected
-        null} */}
-
-        {filters.subCategory ? (
-  matchingBranchColleges.length > 0 ? (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      {matchingBranchColleges.map(renderCollegeCard)}
-    </div>
-  ) : (
-    <p className="text-sm text-gray-500 text-center">
-      ❌ No colleges found for the selected branch "{filters.subCategory}".
-    </p>
-  )
-) : (
-  <p className="text-sm text-gray-500 text-center">
-    🎓 Please select a branch to view matching colleges.
-  </p>
-)}
-
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {matchingBranchColleges.map(renderCollegeCard)}
+        </div>
       </div>
+    )}
 
-      {/* Other Colleges Section */}
+    {/* ✅ Other Colleges Section */}
+    {otherColleges.length > 0 && (
       <div>
         <h3 className="text-lg font-semibold text-green-800 mb-4">
           🏫 Other eligible colleges in {filters.district}
         </h3>
-        {otherColleges.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {otherColleges.map(renderCollegeCard)}
-          </div>
-        ) : (
-          <p className="text-sm text-gray-500 text-center">
-            ❌ No other colleges found in district "{filters.district}".
-          </p>
-        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {otherColleges.map(renderCollegeCard)}
+        </div>
       </div>
+    )}
 
-      {showOtpPopup && (
-        <OtpLoginPopup
-          onClose={() => setShowOtpPopup()}
-          collegeId={selectedCollegeId}
-        />
-      )}
-    </div>
-  );
+    {/* ✅ OTP Popup */}
+    {showOtpPopup && (
+      <OtpLoginPopup
+        onClose={() => setShowOtpPopup(false)}
+        collegeId={selectedCollegeId}
+      />
+    )}
+  </div>
+);
+
+
 };
 
 export default CollegeList;
