@@ -520,7 +520,7 @@ const SearchForm = ({
                       <p className="text-gray-700 text-base mb-3 leading-relaxed">
                         📚{" "}
                         <span className="font-semibold">
-                          Need more details about this college {collegeName}?
+                          Need more details about this college ?
                         </span>
                         <br />
                         📲{" "}

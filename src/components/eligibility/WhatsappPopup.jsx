@@ -4,7 +4,7 @@ const WhatsAppPopup = () => (
   <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
     <div className="bg-gradient-to-br from-green-50 to-white p-6 rounded-xl border border-green-100 shadow-xl text-center max-w-md w-full">
   <p className="text-gray-700 text-base mb-3 leading-relaxed">
-    📚 <span className="font-semibold">Need more details about this college {collegeName}?</span>
+    📚 <span className="font-semibold">Need more details about this college ?</span>
     <br />
     📲 <span className="font-medium">Join our official WhatsApp group</span> for expert guidance and the latest updates!
   </p>
