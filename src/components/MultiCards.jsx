@@ -10,9 +10,10 @@ import InfiniteScroll from "react-infinite-scroll-component"
 import { GetSearchCollege } from "./SearchComp/Api"
 import { useSearchParams } from "react-router-dom"
 import Cookies from "js-cookie";
-import { logUserActivity } from "./Api"; // or wherever it's defined
+// import { logUserActivityAPI } from "./Api"; // or wherever it's defined
 import OtpLoginPopup from "./eligibility/OtpLoginPopup"; // adjust path accordingly
 import { FaWhatsapp } from "react-icons/fa"
+import { logUserActivityAPI } from "./api"
 
 
 const MultiCards = () => {
@@ -127,7 +128,7 @@ const [selectedCollegeId, setSelectedCollegeId] = useState("");
 
   if (token && userId) {
     try {
-      await logUserActivity({ userId, collegeId: college._id, token });
+      await logUserActivityAPI({ userId, collegeId: college.collegeId, token });
       // navigate(`/college/${college._id}`, {
       //   state: { status: false, searchData: college },
       // });

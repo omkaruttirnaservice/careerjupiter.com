@@ -11,7 +11,7 @@ export const getCollege = async (id) => {
 };
 
 // 🔹 Logs user activity
-export const logUserActivity = ({ userId, collegeId, token }) =>
+export const logUserActivityAPI = ({ userId, collegeId, token }) =>
   axios.post(
     `${BASE_URL}/api/user/activity`,
     { userId, collegeId },

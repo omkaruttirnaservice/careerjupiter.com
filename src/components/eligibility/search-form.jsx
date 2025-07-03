@@ -1,5 +1,5 @@
 import { MapPin, Users, BookOpen, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getEligibleColleges } from "./Api";
 import CollegeList from "./college-list";
 import { useDispatch } from "react-redux";
@@ -221,6 +221,20 @@ const SearchForm = ({
             isSearching,
           ]);
 
+          const debounceRef = useRef(null);
+
+          const debouncedFetch = (values) => {
+            // Clear any existing debounce timer
+            if (debounceRef.current) {
+              clearTimeout(debounceRef.current);
+            }
+
+            // Set a new debounce timer
+            debounceRef.current = setTimeout(() => {
+              handleFetchColleges(values);
+            }, 500); // 600ms delay (adjust if needed)
+          };
+
           return (
             <Form className="w-full md:w-[90%] mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 my-6 relative">
               {/* 🔴 Clear History Button */}
@@ -320,32 +334,39 @@ const SearchForm = ({
                   {/* Percentage */}
                   <div>
                     <label className="block text-sm mb-1">Percentage</label>
-                    <Field
-                      name="percentage"
-                      type="number"
-                      min="0"
-                      max="100"
-                      step="0.01"
-                      className="w-full p-2 border rounded"
-                      onBlur={(e) => {
-                        setFieldValue("percentage", e.target.value); // ✅ update Formik state
-                        const perc = parseFloat(e.target.value);
-                        if (
-                          !isNaN(perc) &&
-                          perc >= 0 &&
-                          perc <= 100 &&
-                          values.selectedEducation &&
-                          values.selectedCategory &&
-                          values.selectedCaste &&
-                          values.selectedDistrict
-                        ) {
-                          handleFetchColleges({
-                            ...values,
-                            percentage: perc.toString(), // ✅ ensure percentage is passed
-                          });
-                        }
-                      }}
-                    />
+                    <Field name="percentage">
+                      {({ field }) => (
+                        <input
+                          {...field}
+                          type="number"
+                          min="0"
+                          max="100"
+                          step="0.01"
+                          className="w-full p-2 border rounded"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setFieldValue("percentage", value); // update Formik state
+
+                            const perc = parseFloat(value);
+                            if (
+                              !isNaN(perc) &&
+                              perc >= 0 &&
+                              perc <= 100 &&
+                              values.selectedEducation &&
+                              values.selectedCategory &&
+                              values.selectedCaste &&
+                              values.selectedDistrict
+                            ) {
+                              debouncedFetch({
+                                ...values,
+                                percentage: value,
+                              });
+                            }
+                          }}
+                        />
+                      )}
+                    </Field>
+
                     <ErrorMessage
                       name="percentage"
                       component="div"
@@ -495,17 +516,18 @@ const SearchForm = ({
                   <CollegeList givenData={collegeData} />
                 ) : (
                   showNoCollegeMsg && (
-                    <div className="bg-gradient-to-br from-green-50 to-white p-6 rounded-xl border border-green-100 shadow-sm text-center mt-6">
+                    <div className="bg-gradient-to-br from-green-50 to-white p-6 rounded-xl border border-green-100 shadow-xl text-center max-w-md w-full mt-6">
                       <p className="text-gray-700 text-base mb-3 leading-relaxed">
-                        ❌{" "}
-                        <span className="font-semibold">No colleges found</span>{" "}
-                        matching your criteria.
+                        📚{" "}
+                        <span className="font-semibold">
+                          Need more details about this college {collegeName}?
+                        </span>
                         <br />
                         📲{" "}
                         <span className="font-medium">
-                          For latest updates and guidance,
+                          Join our official WhatsApp group
                         </span>{" "}
-                        join our official WhatsApp group!
+                        for expert guidance and the latest updates!
                       </p>
                       <div className="mt-4 flex justify-center">
                         <a
