@@ -13,7 +13,7 @@ import Cookies from "js-cookie";
 // import { logUserActivityAPI } from "./Api"; // or wherever it's defined
 import OtpLoginPopup from "./eligibility/OtpLoginPopup"; // adjust path accordingly
 import { FaWhatsapp } from "react-icons/fa"
-import { logUserActivityAPI } from "./api"
+import { logUserActivityAPI } from "./api.js"
 
 
 const MultiCards = () => {
