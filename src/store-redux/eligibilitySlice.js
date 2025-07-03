@@ -6,6 +6,7 @@ const initialState = {
   searchParams: {},
   showOtpPopup: false,
     selectedCollegeId: null,
+     showWhatsAppPopup: false,
 };
 
 const eligibilitySlice = createSlice({
@@ -27,6 +28,12 @@ const eligibilitySlice = createSlice({
       state.showOtpPopup = false;
       state.selectedCollegeId = null;
     },
+    showPopup: (state) => {
+      state.showWhatsAppPopup = true;
+    },
+    hidePopup: (state) => {
+      state.showWhatsAppPopup = false;
+    },
   },
 });
 
@@ -36,6 +43,8 @@ export const {
   resetEligibility,
   openOtpPopup, 
   closeOtpPopup,
+    showPopup,       // ✅ newly added in export
+  hidePopup,       // ✅ newly added in export
 } = eligibilitySlice.actions;
 
 export default eligibilitySlice.reducer;
