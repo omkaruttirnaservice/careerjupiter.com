@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { logUserActivityAPI } from "../api";
 import { useDispatch } from "react-redux";
 import { showPopup } from "../../store-redux/eligibilitySlice"; // or your actual path
+import { login } from "../../store-redux/AuthSlice";
 
 const OtpLoginPopup = ({ onClose, collegeId }) => {
   const [mobile, setMobile] = useState("");
@@ -15,6 +16,7 @@ const OtpLoginPopup = ({ onClose, collegeId }) => {
   const [isOtpSent, setIsOtpSent] = useState(false); // ✅ Use this instead
   const navigate = useNavigate();
   const dispatch = useDispatch(); // ✅ Add this inside your component
+  
 
   // ✅ Step 1: Send OTP
   const handleSendOtp = async () => {
@@ -73,7 +75,53 @@ const OtpLoginPopup = ({ onClose, collegeId }) => {
   //   }
   // };
 
-  const handleVerifyOtp = async () => {
+//   const handleVerifyOtp = async () => {
+//   try {
+//     const verifyRes = await verifyOtp(mobile, otp, referenceId);
+//     const success = verifyRes?.data?.success;
+
+//     if (success) {
+//       const loginRes = await userLogin(mobile);
+//       const { token, userId } = loginRes.data.data;
+
+//       Cookies.set("token", token);
+//       Cookies.set("userId", userId);
+
+//       // ⛔ Log user activity
+//       const res = await logUserActivityAPI({ userId, collegeId, token });
+
+//       const usrMsg = res?.data?.usrMsg;
+//       const mongoId = res?.data?.data?.collegeMongoId;
+
+//       // ✅ If college is not in DB → show WhatsApp popup
+//       if (usrMsg === "College not found in DB, but activity logged") {
+//         onClose();
+//         dispatch(showPopup());
+//         return;
+//       }
+
+//       // ✅ If college is found → navigate using mongoId
+//       if (usrMsg === "Activity logged" && mongoId) {
+//         onClose();
+//         navigate(`/college/${mongoId}`, {
+//           state: { status: false, searchData: {} },
+//         });
+//         return;
+//       }
+
+//       // Fallback (just close popup if nothing matches)
+//       onClose();
+//     } else {
+//       console.error("OTP not verified");
+//     }
+//   } catch (err) {
+//     console.error("OTP verification or login failed:", err);
+//     toast.warning(err?.response?.data?.usrMsg || "Please Try Again!");
+//   }
+// };
+
+
+const handleVerifyOtp = async () => {
   try {
     const verifyRes = await verifyOtp(mobile, otp, referenceId);
     const success = verifyRes?.data?.success;
@@ -82,23 +130,24 @@ const OtpLoginPopup = ({ onClose, collegeId }) => {
       const loginRes = await userLogin(mobile);
       const { token, userId } = loginRes.data.data;
 
+      // ✅ Store in cookies
       Cookies.set("token", token);
       Cookies.set("userId", userId);
 
-      // ⛔ Log user activity
-      const res = await logUserActivityAPI({ userId, collegeId, token });
+      // ✅ Update Redux login state immediately
+      dispatch(login(userId));
 
+      // ✅ Log user activity
+      const res = await logUserActivityAPI({ userId, collegeId, token });
       const usrMsg = res?.data?.usrMsg;
       const mongoId = res?.data?.data?.collegeMongoId;
 
-      // ✅ If college is not in DB → show WhatsApp popup
       if (usrMsg === "College not found in DB, but activity logged") {
         onClose();
         dispatch(showPopup());
         return;
       }
 
-      // ✅ If college is found → navigate using mongoId
       if (usrMsg === "Activity logged" && mongoId) {
         onClose();
         navigate(`/college/${mongoId}`, {
@@ -107,8 +156,7 @@ const OtpLoginPopup = ({ onClose, collegeId }) => {
         return;
       }
 
-      // Fallback (just close popup if nothing matches)
-      onClose();
+      onClose(); // fallback
     } else {
       console.error("OTP not verified");
     }
