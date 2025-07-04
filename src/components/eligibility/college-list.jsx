@@ -484,9 +484,13 @@ const CollegeList = () => {
       }
 
       // ✅ All good, go to college page
-      navigate(`/college/${college._id}`, {
-        state: { status: false, searchData: college },
-      });
+      // navigate(`/college/${college._id}`, {
+      //   state: { status: false, searchData: college },
+      // });
+
+       // ✅ Open in a new tab
+      window.open(`/college/${college._id}`, "_blank");
+
     } catch (error) {
       dispatch(showPopup());
     }
