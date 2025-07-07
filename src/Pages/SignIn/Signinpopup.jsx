@@ -49,7 +49,7 @@ const userId = parsedData.userId || parsedData.user_id || parsedData.user?._id;
       onSuccessfulSignIn?.();
       navigate("/profile/personal-details");
       setTimeout(() => {
-        // window.location.reload();
+        window.location.reload();
       });
     },
     // onError: (error) => {
