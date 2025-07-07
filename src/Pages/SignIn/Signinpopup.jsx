@@ -32,7 +32,9 @@ const SignInPopup = ({ setShowSignUp, onSuccessfulSignIn }) => {
       // console.log(data, "-data");
       const parsedData = data.data.data;
       // console.log(parsedData, "-parsedData");
-      const userId = parsedData.user_id || parsedData.user?._id;
+      // const userId = parsedData.user_id || parsedData.user?._id;
+const userId = parsedData.userId || parsedData.user_id || parsedData.user?._id;
+
 
       if (!userId) {
         toast.error("Invalid credentials");
@@ -47,7 +49,7 @@ const SignInPopup = ({ setShowSignUp, onSuccessfulSignIn }) => {
       onSuccessfulSignIn?.();
       navigate("/profile/personal-details");
       setTimeout(() => {
-        // window.location.reload();
+        window.location.reload();
       });
     },
     // onError: (error) => {
