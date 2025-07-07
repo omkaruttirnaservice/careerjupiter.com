@@ -2,8 +2,12 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { sendOtp, verifyOtp, userLogin } from "./Api";
-import {logUserActivity } from "../Api"
+// import {logUserActivity } from "../Api"
 import { toast } from "react-toastify";
+import { logUserActivityAPI } from "../api";
+import { useDispatch } from "react-redux";
+import { showPopup } from "../../store-redux/eligibilitySlice"; // or your actual path
+import { login } from "../../store-redux/AuthSlice";
 
 const OtpLoginPopup = ({ onClose, collegeId }) => {
   const [mobile, setMobile] = useState("");
@@ -11,6 +15,8 @@ const OtpLoginPopup = ({ onClose, collegeId }) => {
   const [referenceId, setReferenceId] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false); // ✅ Use this instead
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // ✅ Add this inside your component
+  
 
   // ✅ Step 1: Send OTP
   const handleSendOtp = async () => {
@@ -32,32 +38,134 @@ const OtpLoginPopup = ({ onClose, collegeId }) => {
   };
 
   // ✅ Step 2: Verify OTP & Login
-  const handleVerifyOtp = async () => {
-    try {
-      const verifyRes = await verifyOtp(mobile, otp, referenceId);
-      const success = verifyRes?.data?.success;
+  // const handleVerifyOtp = async () => {
+  //   try {
+  //     const verifyRes = await verifyOtp(mobile, otp, referenceId);
+  //     const success = verifyRes?.data?.success;
 
-      if (success) {
-        const loginRes = await userLogin(mobile);
-        const { token, userId } = loginRes.data.data;
+  //     if (success) {
+  //       const loginRes = await userLogin(mobile);
+  //       const { token, userId } = loginRes.data.data;
 
-        Cookies.set("token", token);
-        Cookies.set("userId", userId);
+  //       Cookies.set("token", token);
+  //       Cookies.set("userId", userId);
 
-        await logUserActivity({ userId, collegeId, token });
+  //       // ⛔ Log user activity
+  //       const res = await logUserActivityAPI({ userId, collegeId, token });
 
-        onClose(); // ✅ Close modal
-        navigate(`/college/${collegeId}`, {
+  //       if (
+  //         res?.data?.usrMsg === "College not found in DB, but activity logged"
+  //       ) {
+  //         onClose();
+  //         dispatch(showPopup());
+  //         return;
+  //       }
+
+  //       // ✅ Success → Navigate
+  //       onClose();
+  //       navigate(`/college/${college._id}`, {
+  //         state: { status: false, searchData: {} },
+  //       });
+  //     } else {
+  //       console.error("OTP not verified");
+  //     }
+  //   } catch (err) {
+  //     console.error("OTP verification or login failed:", err);
+  //     toast.warning(err?.response?.data?.usrMsg || "Please Try Again!");
+  //   }
+  // };
+
+//   const handleVerifyOtp = async () => {
+//   try {
+//     const verifyRes = await verifyOtp(mobile, otp, referenceId);
+//     const success = verifyRes?.data?.success;
+
+//     if (success) {
+//       const loginRes = await userLogin(mobile);
+//       const { token, userId } = loginRes.data.data;
+
+//       Cookies.set("token", token);
+//       Cookies.set("userId", userId);
+
+//       // ⛔ Log user activity
+//       const res = await logUserActivityAPI({ userId, collegeId, token });
+
+//       const usrMsg = res?.data?.usrMsg;
+//       const mongoId = res?.data?.data?.collegeMongoId;
+
+//       // ✅ If college is not in DB → show WhatsApp popup
+//       if (usrMsg === "College not found in DB, but activity logged") {
+//         onClose();
+//         dispatch(showPopup());
+//         return;
+//       }
+
+//       // ✅ If college is found → navigate using mongoId
+//       if (usrMsg === "Activity logged" && mongoId) {
+//         onClose();
+//         navigate(`/college/${mongoId}`, {
+//           state: { status: false, searchData: {} },
+//         });
+//         return;
+//       }
+
+//       // Fallback (just close popup if nothing matches)
+//       onClose();
+//     } else {
+//       console.error("OTP not verified");
+//     }
+//   } catch (err) {
+//     console.error("OTP verification or login failed:", err);
+//     toast.warning(err?.response?.data?.usrMsg || "Please Try Again!");
+//   }
+// };
+
+
+const handleVerifyOtp = async () => {
+  try {
+    const verifyRes = await verifyOtp(mobile, otp, referenceId);
+    const success = verifyRes?.data?.success;
+
+    if (success) {
+      const loginRes = await userLogin(mobile);
+      const { token, userId } = loginRes.data.data;
+
+      // ✅ Store in cookies
+      Cookies.set("token", token);
+      Cookies.set("userId", userId);
+
+      // ✅ Update Redux login state immediately
+      dispatch(login(userId));
+
+      // ✅ Log user activity
+      const res = await logUserActivityAPI({ userId, collegeId, token });
+      const usrMsg = res?.data?.usrMsg;
+      const mongoId = res?.data?.data?.collegeMongoId;
+
+      if (usrMsg === "College not found in DB, but activity logged") {
+        onClose();
+        dispatch(showPopup());
+        return;
+      }
+
+      if (usrMsg === "Activity logged" && mongoId) {
+        onClose();
+        navigate(`/college/${mongoId}`, {
           state: { status: false, searchData: {} },
         });
-      } else {
-        console.error("OTP not verified");
+        return;
       }
-    } catch (err) {
-      console.error("OTP verification or login failed:", err);
-      toast.warning(err?.response?.data?.usrMsg || "Please Try Again!");
+
+      onClose(); // fallback
+    } else {
+      console.error("OTP not verified");
     }
-  };
+  } catch (err) {
+    console.error("OTP verification or login failed:", err);
+    toast.warning(err?.response?.data?.usrMsg || "Please Try Again!");
+  }
+};
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm">

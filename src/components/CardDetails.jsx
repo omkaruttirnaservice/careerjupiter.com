@@ -19,7 +19,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import HandleNavComp from "./HandleNavComp";
 import { useQuery } from "@tanstack/react-query";
-import { getCollege } from "./Api";
+import { getCollege } from "./api.js";
 import { BACKEND_SERVER_IP } from "../Constant/constantData";
 import Nav from "../Layouts/Nav";
 import Lotify from "./TestComp/Lotify";
