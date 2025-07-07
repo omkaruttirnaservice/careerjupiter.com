@@ -7,6 +7,8 @@ function _isLoggedIn() {
   const _userId = Cookie.get("userId");
   if (!_token || !_userId) return false;
 
+  console.log("User Id from cookie",_userId);
+
   return true;
 }
 
