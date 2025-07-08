@@ -111,8 +111,25 @@ const SearchForm = ({
     if (catMatch) {
       const subCats = catMatch.subCategory?.flat() || [];
       setAvailableSubCategories(subCats);
+
+       localStorage.setItem("availableSubCategories", JSON.stringify(subCats)); // ✅ Save
     }
   }, [currentEducation, category]);
+
+  useEffect(() => {
+  const cachedSubCats = localStorage.getItem("availableSubCategories");
+  if (cachedSubCats) {
+    try {
+      const parsed = JSON.parse(cachedSubCats);
+      if (Array.isArray(parsed)) {
+        setAvailableSubCategories(parsed); // ✅ Restore branch options
+      }
+    } catch (err) {
+      console.error("Failed to parse cached subcategories:", err);
+    }
+  }
+}, []);
+
 
   const handleFetchColleges = async (values) => {
     setIsSearching(true);
@@ -146,19 +163,37 @@ const SearchForm = ({
     }
   };
 
-  const handleEducationChange = (value, setFieldValue) => {
-    setSelectedEducation(value);
-    setFieldValue("selectedEducation", value);
-    const match = currentEducation.find((item) => item.nextLearn === value);
-    if (match) {
-      setExamOptions(match.exam || []);
-      setCasts(match.caste || []);
-    } else {
-      setExamOptions([]); // ✅ update parent state
-      setCasts([]);
-    }
-    setFieldValue("selectedExam", ""); // ✅ Clear selectedExam on education change
-  };
+  // const handleEducationChange = (value, setFieldValue) => {
+  //   setSelectedEducation(value);
+  //   setFieldValue("selectedEducation", value);
+  //   const match = currentEducation.find((item) => item.nextLearn === value);
+  //   if (match) {
+  //     setExamOptions(match.exam || []);
+  //     setCasts(match.caste || []);
+  //   } else {
+  //     setExamOptions([]); // ✅ update parent state
+  //     setCasts([]);
+  //   }
+  //   setFieldValue("selectedExam", ""); // ✅ Clear selectedExam on education change
+  // };
+
+const handleEducationChange = (value, setFieldValue) => {
+  setSelectedEducation(value);
+  setFieldValue("selectedEducation", value);
+
+  const match = currentEducation.find((item) => item.nextLearn === value);
+
+  if (match) {
+    setExamOptions(match.exam || []);
+    setCasts(match.caste || []);
+  } else {
+    setExamOptions([]);
+    setCasts([]);
+  }
+
+  setFieldValue("selectedExam", "");
+};
+
 
   const handleCategoryChange = (value, setFieldValue) => {
     setSelectedCategory(value);
@@ -238,7 +273,7 @@ const SearchForm = ({
           return (
             <Form className="w-full md:w-[90%] mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 my-6 relative">
               {/* 🔴 Clear History Button */}
-              <button
+              {/* <button
                 type="button"
                 onClick={() => {
                   localStorage.removeItem("eligibilityForm");
@@ -269,7 +304,41 @@ const SearchForm = ({
                 className="absolute top-4 right-4 text-sm px-4 py-1 bg-red-100 text-red-600 border border-red-300 rounded-md hover:bg-red-200"
               >
                 Clear History
-              </button>
+              </button> */}
+
+              <button
+  type="button"
+  onClick={() => {
+    localStorage.removeItem("eligibilityForm");
+    localStorage.removeItem("collegeData");
+    localStorage.removeItem("futureCategory");           // ✅ Clear future eligibility list
+    localStorage.removeItem("availableSubCategories");   // ✅ Clear branch list
+
+    setCollegeData([]);
+    setExams([]);
+    setSelectedBranch("");
+    setPercentage("");
+
+    setSearchClicked(false);
+    setShowNoCollegeMsg(false);
+
+    resetForm({
+      values: {
+        selectedEducation: "",
+        selectedExam: "",
+        percentage: "",
+        selectedCategory: "",
+        selectedCaste: "",
+        selectedDistrict: "",
+        selectedBranch: "",
+      },
+    });
+  }}
+  className="absolute top-4 right-4 text-sm px-4 py-1 bg-red-100 text-red-600 border border-red-300 rounded-md hover:bg-red-200"
+>
+  Clear History
+</button>
+
 
               {/* 📘 Academic Information */}
               <div className="mb-6">
