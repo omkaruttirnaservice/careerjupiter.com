@@ -7,9 +7,25 @@ export const getDist = () => {
 };
 
 //get current education
-export const getFutureCategory = () => {
-  return axios.get(`${BASE_URL}/api/cutoff/all-category-cutoff`);
+// export const getFutureCategory = () => {
+//   return axios.get(`${BASE_URL}/api/cutoff/all-category-cutoff`);
+// };
+
+// ✅ Fix this in your Api.js
+// export const getFutureCategory = (nextLearnValue) => {
+//   return axios.post(`${BASE_URL}/api/cutoff/all-category-cutoff`, {
+//     nextLearn: nextLearnValue,
+//   });
+// };
+
+export const getFutureCategory = (nextLearnValue) => {
+  return axios.post(`${BASE_URL}/api/cutoff/all-category-cutoff`, {
+    nextLearn: nextLearnValue, // ✅ send as object
+  });
 };
+
+
+
 
 //get cast education
 export const getCastList = () => {
