@@ -3,7 +3,7 @@ import { BASE_URL } from "../../utils/constansts";
 
 //get dist
 export const getDist = () => {
-  return axios.get(`${BASE_URL}/api/college/Dist`);
+  return axios.get(`${BASE_URL}/api/cutoff/district`);
 };
 
 //get current education
