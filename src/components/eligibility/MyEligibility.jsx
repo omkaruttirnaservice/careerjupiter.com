@@ -33,6 +33,7 @@ const MyEligibility = () => {
   const [subBranch, setSubBranch] = useState([]);
   const [castList, setCastList] = useState([]);
   const [category, setCategory] = useState([]);
+  
 
   // -------------------------------------------------------------
 
@@ -52,18 +53,89 @@ const MyEligibility = () => {
   //   queryFn: getFutureCategory,
   // });
 
-  const {
+//   const {
+//   data: FutureCategory,
+//   isSuccess: isFutureCategoryLoaded
+// } = useQuery({
+//   queryKey: ["currentEducation"],
+//   queryFn: getFutureCategory,
+// });
+
+// const {
+//   data: FutureCategory,
+//   isSuccess: isFutureCategoryLoaded,
+// } = useQuery({
+//   queryKey: ["futureCategory", selectedEducation], // depends on selectedEducation
+//   queryFn: async ({ queryKey }) => {
+//     const selectedId = queryKey[1];
+
+//     const selectedObj = currentEducation.find(item => item.nextLearn === selectedId); // changed line
+
+//     if (!selectedObj?.nextLearn) return;
+
+//     const response = await getFutureCategory(selectedObj.nextLearn);
+//     return response;
+//   },
+//   // enabled: !!selectedEducation && currentEducation.length > 0,
+// });
+
+const {
   data: FutureCategory,
-  isSuccess: isFutureCategoryLoaded
+  isSuccess: isFutureCategoryLoaded,
 } = useQuery({
-  queryKey: ["currentEducation"],
-  queryFn: getFutureCategory,
+  queryKey: ["futureCategory", selectedEducation],
+  queryFn: async ({ queryKey }) => {
+    const selectedValue = queryKey[1];
+    const selectedObj = currentEducation.find(
+      (item) => item.nextLearn === selectedValue
+    );
+
+    // Defensive check
+    if (!selectedObj || !selectedObj.nextLearn) {
+      return { data: { data: [] } }; // return empty data instead of crashing
+    }
+
+    return getFutureCategory(selectedObj.nextLearn);
+  },
+  enabled: !!selectedEducation && Array.isArray(currentEducation) && currentEducation.length > 0
+
+  // enabled: !!selectedEducation && currentEducation.length > 0,
 });
 
 
-  useEffect(() => {
-    setCategory(FutureCategory?.data?.data); // Save category list
-  }, [FutureCategory]);
+useEffect(() => {
+  if (isFutureCategoryLoaded && FutureCategory?.data) {
+    setCategory(FutureCategory.data.data); // ✅ Set in state
+    localStorage.setItem("futureCategory", JSON.stringify(FutureCategory.data.data)); // ✅ Save in localStorage
+  }
+}, [FutureCategory, isFutureCategoryLoaded]);
+
+
+useEffect(() => {
+  console.log("🔍 selectedEducation →", selectedEducation);
+  console.log("🔍 currentEducation →", currentEducation);
+}, [selectedEducation, currentEducation]);
+
+
+useEffect(() => {
+  const cachedCategory = localStorage.getItem("futureCategory");
+  if (cachedCategory) {
+    try {
+      const parsed = JSON.parse(cachedCategory);
+      if (Array.isArray(parsed)) {
+        setCategory(parsed); // ✅ Restore category list
+      }
+    } catch (err) {
+      console.error("Failed to parse cached category:", err);
+    }
+  }
+}, []);
+
+
+
+  // useEffect(() => {
+  //   setCategory(FutureCategory?.data?.data); // Save category list
+  // }, [FutureCategory]);
 
   // Fetch caste list
   const { data: educationData } = useQuery({
@@ -84,9 +156,15 @@ const MyEligibility = () => {
     }
   }, [data]);
 
+  // useEffect(() => {
+  //   setCurrentEducation(educationData?.data?.data?.castes); // Save castes
+  // }, [educationData]);
+
+
   useEffect(() => {
-    setCurrentEducation(educationData?.data?.data?.castes); // Save castes
-  }, [educationData]);
+  const casteList = educationData?.data?.data?.castes || [];
+  setCurrentEducation(casteList); // ✅ ensures array
+}, [educationData]);
 
   // -------------------------------------------------------------
 
