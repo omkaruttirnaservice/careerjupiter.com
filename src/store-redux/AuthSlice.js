@@ -5,6 +5,7 @@ import { createSlice } from "@reduxjs/toolkit";
 function _isLoggedIn() {
   const _token = Cookie.get("token");
   const _userId = Cookie.get("userId");
+   console.log("🔍 _isLoggedIn() check → token:", _token, "| userId:", _userId); // ✅ ADD THIS
   if (!_token || !_userId) return false;
 
   console.log("User Id from cookie",_userId);

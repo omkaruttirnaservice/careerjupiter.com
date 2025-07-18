@@ -66,6 +66,7 @@ export const verifyUserOTP = async (payload) => {
 };
 
 export const getIQTestData = async (payload) => {
+   console.log("📦 IQ Test Payload Sent:", payload); // ✅ debug here
   const response = await axios.post(
     `${BASE_URL}/api/iqtest/questions`,
     payload

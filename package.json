@@ -25,7 +25,7 @@
     "axios": "^1.7.9",
     "chart.js": "^4.4.8",
     "formik": "^2.4.6",
-    "framer-motion": "^12.4.4",
+    "framer-motion": "^12.23.6",
     "html2canvas": "^1.4.1",
     "js-cookie": "^3.0.5",
     "jspdf": "^3.0.1",

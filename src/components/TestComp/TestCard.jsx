@@ -26,17 +26,21 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
   const [iqTestDataPayload, setIqTestDataPayload] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { userId } = useSelector((state) => state.auth);
+  // const { userId } = useSelector((state) => state.auth);
   const [newTestId, setNewTestId] = useState(null);
   const [submitTest, setSubmitTest] = useState(null);
   const [resultsData, setResultsData] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [skipCardRender, setSkipCardRender] = useState(false);
+
 
   // const token = Cookies.get("token");
   // const decodedToken = jwtDecode(token);
   // const userRole = decodedToken.role;
 
   const [loadingIQTest, setLoadingIQTest] = useState(false);
+  // Get from Redux or fallback to cookie
+  const userId = useSelector((state) => state.auth.userId) || Cookies.get("userId");
 
 
    useEffect(() => {
@@ -88,6 +92,15 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
       ),
   });
 
+
+
+const popupFlag = query.get("popup"); // "auto"
+const testIdFromUrl = query.get("testid"); // actual _id of test
+const autoPopup = popupFlag === "auto"; // ✅ define this
+// const query = new URLSearchParams(search);
+const collegeIdFromUrl = query.get("collegeId"); // ✅ get collegeId
+
+
   useEffect(() => {
     if (categoryId && sub_Category && sub_sub_Category) {
       fetchTestList();
@@ -116,6 +129,23 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
   const { mutate: fetchResult, data: resultData } = useMutation({
     mutationFn: ({ testID, userId }) => getResult({ testID, userId }),
   });
+
+  console.log("mutation userId",userId);
+
+useEffect(() => {
+  if (popupFlag === "auto" && testIdFromUrl && iqtests?.length > 0) {
+    const matchedTest = iqtests.find((t) => t._id === testIdFromUrl);
+    if (matchedTest && (matchedTest.attempted === 0 || matchedTest.attempted === -1)) {
+      setSkipCardRender(true); // ✅ hide cards
+      handleTestClick(matchedTest, true); // ✅ trigger popup
+
+      // clear popup params from URL to avoid re-popup on refresh
+      const cleanUrl = window.location.pathname + window.location.search.replace(/([&?])popup=auto(&)?/, "$1").replace(/([&?])testid=.*?(&|$)/, "$1").replace(/[\?&]$/, "");
+      navigate(cleanUrl, { replace: true });
+    }
+  }
+}, [popupFlag, testIdFromUrl, iqtests]);
+
 
   useEffect(() => {
     if (resultData?.data) {
@@ -146,9 +176,10 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
   });
 
   const showInstructionAndStart = (test) => {
-    const newIqTestDataPayload = { testID: test._id, userId };
+    const newIqTestDataPayload = { testID: test._id, userId, collegeId: collegeIdFromUrl};
     setIqTestDataPayload(newIqTestDataPayload);
     getIQTestDataMutation.mutate(newIqTestDataPayload);
+    console.log("College Id :",userId);
     setTestId(test._id);
   };
 
@@ -172,6 +203,7 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
             },
           }
         );
+        console.log("Delete Mutation userId :",userId);
       }
     });
   };
@@ -180,6 +212,7 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
     if (test.attempted === 1) {
       setTestId(test._id);
       await fetchResult({ testID: test._id, userId });
+      console.log("fetchResult userId:",userId);
       return;
     }
   };
@@ -198,7 +231,8 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
       return;
     }
 
-    const newIqTestDataPayload = { testID: test._id, userId };
+    const newIqTestDataPayload = { testID: test._id, userId,  collegeId: collegeIdFromUrl };
+    console.log("******************",userId);
 
     if (test?.attempted === 0 || test?.attempted === -1) {
       Swal.fire({
@@ -260,6 +294,10 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
           checkbox.addEventListener("change", () => {
             confirmBtn.disabled = !checkbox.checked;
           });
+            if (autoPopup) {
+    checkbox.checked = false;
+    confirmBtn.disabled = false;
+  }
         },
       }).then((result) => {
         if (result.isConfirmed) {
@@ -268,8 +306,12 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
           setTestId(test._id);
         }
       });
+     
+
     }
   };
+
+  const collegeId = query.get("collegeId"); // ✅ use this in your payload
   if (selectedTest) {
     return (
       <IQTest
