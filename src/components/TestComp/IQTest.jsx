@@ -34,9 +34,9 @@ const IQTest = ({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showMobileNumberPopup, setShowMobileNumberPopup] = useState(false);
   const dispatch = useDispatch();
-  // const { userId } = useSelector((state) => state.auth);
+  const { userId } = useSelector((state) => state.auth);
   // Get from Redux or fallback to cookie
-  const userId = useSelector((state) => state.auth.userId) || Cookies.get("userId");
+  // const userId = useSelector((state) => state.auth.userId) || Cookies.get("userId");
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [isProgressSaved, setIsProgressSaved] = useState(true);

@@ -579,7 +579,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import HandleNavComp from "./HandleNavComp";
 import { useQuery } from "@tanstack/react-query";
-import { getCollege } from "./api.js";
+// import { getCollege } from "./api.js";
 import { BACKEND_SERVER_IP } from "../Constant/constantData";
 import Nav from "../Layouts/Nav";
 import Lotify from "./TestComp/Lotify";
@@ -591,6 +591,7 @@ import { useLocation } from "react-router-dom";
 import { getIQTestData } from "./TestComp/Api.js";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import { getCollege } from "./Api.js";
   // import { useSelector } from "react-redux";
 
 const CardDetails = () => {

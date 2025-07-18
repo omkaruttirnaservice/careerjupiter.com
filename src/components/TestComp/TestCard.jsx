@@ -26,7 +26,7 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
   const [iqTestDataPayload, setIqTestDataPayload] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const { userId } = useSelector((state) => state.auth);
+  const { userId } = useSelector((state) => state.auth);
   const [newTestId, setNewTestId] = useState(null);
   const [submitTest, setSubmitTest] = useState(null);
   const [resultsData, setResultsData] = useState(null);
@@ -40,7 +40,7 @@ function TestCard({ externalTestList, externalCompetedTestList }) {
 
   const [loadingIQTest, setLoadingIQTest] = useState(false);
   // Get from Redux or fallback to cookie
-  const userId = useSelector((state) => state.auth.userId) || Cookies.get("userId");
+  // const userId = useSelector((state) => state.auth.userId) || Cookies.get("userId");
 
 
    useEffect(() => {
