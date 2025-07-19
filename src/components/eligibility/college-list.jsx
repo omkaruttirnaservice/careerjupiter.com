@@ -402,12 +402,10 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import { FaWhatsapp } from "react-icons/fa";
 
-// import { logUserActivityAPI } from "../api"; // your API wrapper
+import { logUserActivityAPI } from "../api"; // your API wrapper
 import { showPopup, hidePopup } from "../../store-redux/eligibilitySlice"; // redux actions
 import OtpLoginPopup from "./OtpLoginPopup"; // your OTP component
 import { BACKEND_SERVER_IP } from "../../Constant/constantData";
-import { logUserActivityAPI } from "../Api";
-// import { logUserActivityAPI } from "../Api";
 // import { BACKEND_SERVER_IP } from "../constants"; // your server IP
 
 const CollegeList = () => {
