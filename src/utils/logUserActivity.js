@@ -1,6 +1,7 @@
 // // src/utils/logUserActivity.js
+import { logUserActivityAPI } from "../components/Api";
 import { showPopup } from "../redux/eligibilitySlice";
-import { logUserActivityAPI } from "../api";
+// import { logUserActivityAPI } from "../api";
 
 export const logUserActivity = ({ userId, collegeId, token }) => async (dispatch) => {
   try {
