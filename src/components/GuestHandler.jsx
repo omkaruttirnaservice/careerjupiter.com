@@ -20,8 +20,12 @@ const GuestHandler = () => {
       const parsedData = data?.data?.data;
       Cookies.set("token", parsedData.token, { expires: 1 });
       Cookies.set("userId", parsedData.userId, { expires: 1 });
-      dispatch(login(parsedData.userId));
+      // dispatch(login(parsedData.userId));
+      dispatch(login({ userId: parsedData.userId }));
+
+      // console.log("userid guest login", userId);
       console.log("userid guest login", userId);
+
 
         // ✅ After setting cookies and login => Reload the page
         window.location.reload();
