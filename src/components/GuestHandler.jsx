@@ -16,10 +16,16 @@ const GuestHandler = () => {
   const mutation = useMutation({
     mutationFn: createGuestUser,
     onSuccess: (data) => {
+      console.log("✅ Guest user created:", data); // 👈 LOG THIS
       const parsedData = data?.data?.data;
       Cookies.set("token", parsedData.token, { expires: 1 });
       Cookies.set("userId", parsedData.userId, { expires: 1 });
-      dispatch(login(parsedData.userId));
+      // dispatch(login(parsedData.userId));
+      dispatch(login({ userId: parsedData.userId }));
+
+      // console.log("userid guest login", userId);
+      console.log("userid guest login", userId);
+
 
         // ✅ After setting cookies and login => Reload the page
         window.location.reload();
@@ -28,9 +34,12 @@ const GuestHandler = () => {
 
   useEffect(() => {
     const currentPath = location.pathname;
+ console.log("📍 GuestHandler running on path:", currentPath);
+  console.log("🟢 authState.isLoggedIn:", authState.isLoggedIn);
 
     // ✅ Guest creation only for /profile routes
     if (currentPath.startsWith("/profile") && !authState.isLoggedIn) {
+       console.log("🚀 Triggering guest user creation...");
       mutation.mutate({
         mobile_no: "0000000000",
       });

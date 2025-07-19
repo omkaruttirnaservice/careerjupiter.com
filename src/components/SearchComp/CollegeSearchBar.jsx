@@ -490,7 +490,7 @@ const CollegeSearchBar = ({
                 ))}
               </select>
 
-              {!hideRoadmapFilter && (
+              {/* {!hideRoadmapFilter && (
                 <select
                   className="px-4 py-2 w-full border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none cursor-pointer"
                   value={collegeRoadmapValue}
@@ -503,7 +503,7 @@ const CollegeSearchBar = ({
                     </option>
                   ))}
                 </select>
-              )}
+              )} */}
             </>
           )}
 
