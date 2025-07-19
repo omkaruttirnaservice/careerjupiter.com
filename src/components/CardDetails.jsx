@@ -785,8 +785,11 @@ navigate(
       triggerTest: test,
       autoPopup: true,
     },
+    
   }
+  
 );
+window.location.reload();
 
 };
 
