@@ -1249,7 +1249,7 @@ window.location.reload();
         </motion.div>
 
         {/* Test List Table */}
-  {showTestTable && (
+  {/* {showTestTable && (
   <div className="bg-white mt-8 p-6 rounded-xl shadow-xl border border-gray-200">
     <h2 className="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-blue-200 pb-2">
       📝 Test List
@@ -1320,7 +1320,80 @@ window.location.reload();
       <p className="text-gray-500 italic">No tests available.</p>
     )}
   </div>
+)} */}
+
+{showTestTable && (
+  <div className="bg-white mt-8  p-2 lg-p-6 rounded-xl shadow-xl border border-gray-200">
+    <h2 className="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-blue-200 pb-2">
+      📝 Test List
+    </h2>
+
+    {data?.tests?.length > 0 ? (
+      <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gradient-to-r from-blue-50 to-blue-100 sticky top-0 z-10">
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                Title
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider hidden md:table-cell">
+                Questions
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider hidden md:table-cell">
+                Marks
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider hidden md:table-cell">
+                Passing
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider hidden md:table-cell">
+                Duration
+              </th>
+              <th className="px-6 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                Action
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="bg-white divide-y divide-gray-200 text-sm text-gray-700">
+            {data.tests.map((test, index) => (
+              <tr
+                key={test._id}
+                className={`${
+                  index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                } hover:bg-blue-50 transition`}
+              >
+                <td className="px-6 py-3 font-medium text-gray-800">
+                  {test.title}
+                </td>
+                <td className="px-6 py-3 hidden md:table-cell">{test.totalQuestions}</td>
+                <td className="px-6 py-3 hidden md:table-cell">{test.totalMarks}</td>
+                <td className="px-6 py-3 hidden md:table-cell">{test.passingMarks}</td>
+                <td className="px-6 py-3 hidden md:table-cell">
+                  {test.testDuration?.minutes ?? 0}m : {test.testDuration?.seconds ?? 0}s
+                </td>
+                <td className="px-6 py-3 text-center">
+                  <button
+                    onClick={() => handleGiveTest(test)}
+                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-600 transition"
+                  >
+                    {test?.attempted === -1
+                      ? "Resume Test"
+                      : test?.attempted === 1
+                      ? "Re-Test"
+                      : "Give Test"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : (
+      <p className="text-gray-500 italic">No tests available.</p>
+    )}
+  </div>
 )}
+
 
 
         {/* Tabs Section */}
