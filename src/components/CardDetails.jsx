@@ -1249,103 +1249,79 @@ window.location.reload();
         </motion.div>
 
         {/* Test List Table */}
-        {showTestTable && (
-          <div className="bg-white mt-8 p-6 rounded-xl shadow-xl overflow-x-auto border border-gray-200">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-blue-200 pb-2">
-              📝 Test List
-            </h2>
+  {showTestTable && (
+  <div className="bg-white mt-8 p-6 rounded-xl shadow-xl border border-gray-200">
+    <h2 className="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-blue-200 pb-2">
+      📝 Test List
+    </h2>
 
-            {data?.tests?.length > 0 ? (
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider rounded-tl-xl">
-                      Title
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                      Questions
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                      Marks
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                      Passing
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                      Duration
-                    </th>
-                    <th className="px-6 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider rounded-tr-xl">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
+    {data?.tests?.length > 0 ? (
+      <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gradient-to-r from-blue-50 to-blue-100 sticky top-0 z-10">
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider bg-gradient-to-r from-blue-50 to-blue-100 sticky top-0 z-10">
+                Title
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider bg-gradient-to-r from-blue-50 to-blue-100 sticky top-0 z-10">
+                Questions
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider bg-gradient-to-r from-blue-50 to-blue-100 sticky top-0 z-10">
+                Marks
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider bg-gradient-to-r from-blue-50 to-blue-100 sticky top-0 z-10">
+                Passing
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider bg-gradient-to-r from-blue-50 to-blue-100 sticky top-0 z-10">
+                Duration
+              </th>
+              <th className="px-6 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider bg-gradient-to-r from-blue-50 to-blue-100 sticky top-0 z-10">
+                Action
+              </th>
+            </tr>
+          </thead>
 
-                <tbody className="bg-white divide-y divide-gray-200 text-sm text-gray-700">
-                  {data.tests.map((test, index) => (
-                    <tr
-                      key={test._id}
-                      className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"} hover:bg-blue-50 transition`}
-                    >
-                      <td className="px-6 py-3 font-medium text-gray-800">
-                        {test.title}
-                      </td>
-                      <td className="px-6 py-3">{test.totalQuestions}</td>
-                      <td className="px-6 py-3">{test.totalMarks}</td>
-                      <td className="px-6 py-3">{test.passingMarks}</td>
-                      <td className="px-6 py-3">
-                        {test.testDuration?.minutes ?? 0}m :{" "}
-                        {test.testDuration?.seconds ?? 0}s
-                      </td>
-                      {/* <td className="px-6 py-3 text-center">
-                        <button
-                          onClick={() => handleGiveTest(test)}
-                          className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-2 rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-600 transition"
-                        >
-                          Give Test
-                        </button>
-                      </td> */}
-<td className="px-6 py-3 text-center">
-  <button
-    onClick={() => {
-      console.log("Give Test Clicked"); // Debug
-      // const isAccessible =
-      //   (userRole === "GUEST" && test.userType === "0") ||
-      //   (userRole === "USER" &&
-      //     (test.userType === "0" || test.userType === "1"));
+          <tbody className="bg-white divide-y divide-gray-200 text-sm text-gray-700">
+            {data.tests.map((test, index) => (
+              <tr
+                key={test._id}
+                className={`${
+                  index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                } hover:bg-blue-50 transition`}
+              >
+                <td className="px-6 py-3 font-medium text-gray-800">
+                  {test.title}
+                </td>
+                <td className="px-6 py-3">{test.totalQuestions}</td>
+                <td className="px-6 py-3">{test.totalMarks}</td>
+                <td className="px-6 py-3">{test.passingMarks}</td>
+                <td className="px-6 py-3">
+                  {test.testDuration?.minutes ?? 0}m :{" "}
+                  {test.testDuration?.seconds ?? 0}s
+                </td>
+                <td className="px-6 py-3 text-center">
+                  <button
+                    onClick={() => handleGiveTest(test)}
+                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-600 transition"
+                  >
+                    {test?.attempted === -1
+                      ? "Resume Test"
+                      : test?.attempted === 1
+                      ? "Re-Test"
+                      : "Give Test"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : (
+      <p className="text-gray-500 italic">No tests available.</p>
+    )}
+  </div>
+)}
 
-      // if (!isAccessible) {
-      //   Swal.fire({
-      //     icon: "warning",
-      //     title: "Access Denied",
-      //     text: "Please sign up and access this test.",
-      //   });
-      //   return;
-      // }
-
-      handleGiveTest(test); // ✅ Main logic
-    }}
-    // disabled={
-    //   !(
-    //     (userRole === "GUEST" && test.userType === "0") ||
-    //     (userRole === "USER" && ["0", "1"].includes(test.userType))
-    //   )
-    // }
-    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-600 transition"
-  >
-    {test?.attempted === -1 ? "Resume Test" : test?.attempted === 1 ? "Re-Test" : "Give Test"}
-  </button>
-</td>
-
-
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="text-gray-500 italic">No tests available.</p>
-            )}
-          </div>
-        )}
 
         {/* Tabs Section */}
         <motion.div
