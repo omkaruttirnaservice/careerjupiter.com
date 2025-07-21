@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { sendOtp, verifyOtp, userLogin } from "./Api";
 // import {logUserActivity } from "../Api"
 import { toast } from "react-toastify";
-import { logUserActivityAPI } from "../api";
+// import { logUserActivityAPI } from "../api";
 import { useDispatch } from "react-redux";
 import { showPopup } from "../../store-redux/eligibilitySlice"; // or your actual path
 import { login } from "../../store-redux/AuthSlice";
+import { logUserActivityAPI } from "../Api";
 
 const OtpLoginPopup = ({ onClose, collegeId }) => {
   const [mobile, setMobile] = useState("");

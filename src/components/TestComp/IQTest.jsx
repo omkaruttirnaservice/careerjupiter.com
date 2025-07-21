@@ -13,6 +13,8 @@ import { setIqTestId } from "../../store-redux/iqTestSlice";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import { useSearchParams } from "react-router-dom";
+
 
 const IQTest = ({
   questions,
@@ -33,6 +35,8 @@ const IQTest = ({
   const [showMobileNumberPopup, setShowMobileNumberPopup] = useState(false);
   const dispatch = useDispatch();
   const { userId } = useSelector((state) => state.auth);
+  // Get from Redux or fallback to cookie
+  // const userId = useSelector((state) => state.auth.userId) || Cookies.get("userId");
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [isProgressSaved, setIsProgressSaved] = useState(true);
@@ -40,6 +44,8 @@ const IQTest = ({
   const [timeLeft, setTimeLeft] = useState(
     testDuration.minutes * 60 + testDuration.seconds
   );
+   const [searchParams] = useSearchParams();
+const collegeId = searchParams.get("collegeId");
   const [TestProgress, setTestProgress] = useState({
     userId: userId,
     iqTestId: testId,
@@ -48,7 +54,16 @@ const IQTest = ({
     testDuration: "",
     selectedOption: "",
     status: -1,
+      collegeId: collegeId, // ✅ Add this
   });
+ 
+
+  console.log("Payload resultData:", {
+  testID: newTestId,
+  userId: userId,
+  collegeId,
+});
+
 
   // Add refs to store current values that can be accessed in the interval
   const progressIntervalRef = useRef(null);
@@ -145,9 +160,12 @@ const IQTest = ({
   const [resultData, setResultData] = useState({
     testID: newTestId,
     userId: userId,
+   collegeId: collegeId, // ✅ Add this
     // status: 1,
     // answers: questions.map((q) => ({ questionId: q._id, selectedOption: "" })),
   });
+
+  console.log("user id from result data", userId);
 
   dispatch(setIqTestId(testId));
 
@@ -158,6 +176,7 @@ const IQTest = ({
     setResultData({
       testID: newTestId,
       userId: userId,
+      collegeId: collegeId, // ✅ Add this
       // status: -1,
       // answers: questions.map((q) => ({
       //   questionId: q._id,
@@ -165,6 +184,8 @@ const IQTest = ({
       // })),
     });
   }, [questions, testId, userId]);
+
+  console.log("useeffect setresult data",userId);
 
   const handleOptionSelect = (letter) => {
 
@@ -185,6 +206,7 @@ const IQTest = ({
       status: -1,
     };
 
+    console.log("Update progress", userId);
     setTestProgress(updatedProgress);
     updateTestProgressMutation.mutate(updatedProgress); // API call here
 
@@ -215,6 +237,7 @@ const IQTest = ({
     setResultData({
       testID: newTestId,
       userId: userId,
+      collegeId: collegeId, // ✅ Add this
       // status: 1,
       // answers: questions.map((q) => ({
       //   questionId: q._id,
@@ -222,6 +245,8 @@ const IQTest = ({
       // })),
     });
   }, [questions, testId, userId]);
+
+  console.log("useEffect for setAnswer:",userId);
 
   const handleSubmit = async () => {
     if (hasSubmittedRef.current) return; // prevent double call

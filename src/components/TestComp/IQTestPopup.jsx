@@ -24,7 +24,9 @@ const IQTestPopup = () => {
       const parsedData = data?.data?.data;
       Cookies.set("token", parsedData.token, { expires: 1 });
       Cookies.set("userId", parsedData.userId, { expires: 1 });
-      dispatch(login(parsedData.userId));
+      // dispatch(login(parsedData.userId));
+      dispatch(login({ userId: parsedData.userId }));
+
       dispatch(setIsOpen(false));
 
       navigate("/profile/test");
