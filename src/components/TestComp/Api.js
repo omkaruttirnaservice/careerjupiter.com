@@ -41,7 +41,7 @@ export const updateUserDetails = (data) => {
   return axios.put(`${BASE_URL}/api/auth/${data.userId}`, {
     f_name: data.f_name,
     mobile_no: data.mobile_no,
-     institute_name: data.institute_name, // 👈 added here
+     institution_name: data.institution_name, // 👈 added here
   });
 };
 

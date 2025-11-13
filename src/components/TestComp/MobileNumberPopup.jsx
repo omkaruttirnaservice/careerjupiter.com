@@ -53,10 +53,10 @@ const MobileNumberPopup = ({
     otp: Yup.string()
       .matches(/^[0-9]{6}$/, "OTP must be 6 digits")
       .required("OTP is required"),
-       institute_name: Yup.string() // 👈 new validation rule
+       institution_name: Yup.string() // 👈 new validation rule
     .min(2, "School / College name must be at least 2 characters")
     .required("School / College Name is required"),
-    //  institute_name: Yup.string() // 👈 new validation rule
+    //  institution_name: Yup.string() // 👈 new validation rule
     // .min(2, "School / College name must be at least 2 characters")
     // .required("School / College Name is required"),
   });
@@ -113,7 +113,7 @@ const MobileNumberPopup = ({
         userId: response?.data?.userId,
         f_name: variables.name,
         mobile_no: variables.mobile_no,
-         institute_name: variables.institute_name, // 👈 added
+         institution_name: variables.institution_name, // 👈 added
         guestId: userId,
         testID: testID,
       });
@@ -127,7 +127,7 @@ const MobileNumberPopup = ({
           Enter Your Details
         </h2>
         <Formik
-          initialValues={{ name: "", mobileNumber: "", otp: "", institute_name: "" }}
+          initialValues={{ name: "", mobileNumber: "", otp: "", institution_name: "" }}
           validationSchema={validationSchema}
           onSubmit={() => {}}
         >
@@ -153,11 +153,11 @@ const MobileNumberPopup = ({
                 </label>
                 <Field
                   type="text"
-                  name="institute_name"
+                  name="institution_name"
                   className="mt-1 w-full p-2 border rounded-md"
                 />
                 <ErrorMessage
-                  name="institute_name"
+                  name="institution_name"
                   component="div"
                   className="text-red-500 text-sm mt-1"
                 />
@@ -227,7 +227,7 @@ const MobileNumberPopup = ({
                         reference_id: referenceId,
                         otp: values.otp,
                         mobile_no: values.mobileNumber,
-                         institute_name: values.institute_name, // 👈 include this
+                         institution_name: values.institution_name, // 👈 include this
                         name: values.name,
                         userId: otpResponseId,
                         guestId: userId,
