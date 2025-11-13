@@ -47,7 +47,7 @@ const DrawingPopup = () => {
     fullName: "",
     class: "",
     school: "",
-    state: "Andhra Pradesh",
+    state: "Maharashtra",
     district: "",
     mobile: "",
     drawing: null,
@@ -61,7 +61,7 @@ const DrawingPopup = () => {
     onSuccess: (data) => {
       showToast("success", "Form submitted successfully!");
       setIsOpen(false);
-      navigate("/profile/test");
+      //   navigate("/profile/test");
     },
     onError: (err) => {
       showToast("error", err.message);
@@ -128,15 +128,14 @@ const DrawingPopup = () => {
     const fileType = file.type;
     const sizeKB = file.size / 1024; // Convert bytes → KB
 
-    // ✅ File size validation (1 MB = 1024 KB)
-    if (sizeKB > 1024) {
-      showToast("error", "File size must be under 1 MB.");
-      e.target.value = null;
-      return;
-    }
-
-    // ✅ If it's a PDF
+    // ✅ If it's a PDF → limit 1 MB
     if (fileType === "application/pdf") {
+      if (sizeKB > 1024) {
+        showToast("error", "PDF size must be under 1 MB.");
+        e.target.value = null;
+        return;
+      }
+
       setFormData((prev) => ({ ...prev, drawing: file }));
       setErrors((prev) => ({ ...prev, drawing: "" }));
       setPreviewUrl(null);
@@ -151,7 +150,7 @@ const DrawingPopup = () => {
       return;
     }
 
-    // ✅ Compress image
+    // ✅ Compress images automatically
     setIsCompressing(true);
     const compressedBlob = await compressImage(file);
     setIsCompressing(false);
@@ -268,7 +267,7 @@ const DrawingPopup = () => {
 
               {/* School */}
               <label className="flex flex-col">
-                School Name:
+                School / College Name:
                 <input
                   type="text"
                   name="school"
@@ -333,7 +332,7 @@ const DrawingPopup = () => {
 
               {/* File upload */}
               <label className="flex flex-col col-span-2">
-                Upload Your Drawing/Essay (Image / PDF):
+                Upload Your Drawing / Essay (Image / PDF):
                 <input
                   type="file"
                   name="drawing"
