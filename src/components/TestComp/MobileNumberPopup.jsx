@@ -53,6 +53,12 @@ const MobileNumberPopup = ({
     otp: Yup.string()
       .matches(/^[0-9]{6}$/, "OTP must be 6 digits")
       .required("OTP is required"),
+       institution_name: Yup.string() // 👈 new validation rule
+    .min(2, "School / College name must be at least 2 characters")
+    .required("School / College Name is required"),
+    //  institution_name: Yup.string() // 👈 new validation rule
+    // .min(2, "School / College name must be at least 2 characters")
+    // .required("School / College Name is required"),
   });
 
   const sendOTPMutation = useMutation({
@@ -104,9 +110,10 @@ const MobileNumberPopup = ({
       Cookies.set("userId", response?.data?.userId, { expires: 1 });
       dispatch(updateUserId(response?.data?.userId));
       updateUserMutation.mutate({
-        userId:response?.data?.userId,
+        userId: response?.data?.userId,
         f_name: variables.name,
         mobile_no: variables.mobile_no,
+         institution_name: variables.institution_name, // 👈 added
         guestId: userId,
         testID: testID,
       });
@@ -120,7 +127,7 @@ const MobileNumberPopup = ({
           Enter Your Details
         </h2>
         <Formik
-          initialValues={{ name: "", mobileNumber: "", otp: "" }}
+          initialValues={{ name: "", mobileNumber: "", otp: "", institution_name: "" }}
           validationSchema={validationSchema}
           onSubmit={() => {}}
         >
@@ -135,6 +142,22 @@ const MobileNumberPopup = ({
                 />
                 <ErrorMessage
                   name="name"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">
+                  School / College Name
+                </label>
+                <Field
+                  type="text"
+                  name="institution_name"
+                  className="mt-1 w-full p-2 border rounded-md"
+                />
+                <ErrorMessage
+                  name="institution_name"
                   component="div"
                   className="text-red-500 text-sm mt-1"
                 />
@@ -204,6 +227,7 @@ const MobileNumberPopup = ({
                         reference_id: referenceId,
                         otp: values.otp,
                         mobile_no: values.mobileNumber,
+                         institution_name: values.institution_name, // 👈 include this
                         name: values.name,
                         userId: otpResponseId,
                         guestId: userId,
