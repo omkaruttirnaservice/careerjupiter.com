@@ -15,6 +15,7 @@ import IQtestBanner from './IQtestBanner';
 import PremiumServices from "./PremiumServices";
 import CareerRoadmapBanner from "./CareerRoadmapBanner";
 import IqBanner from "./IqBanner";
+import DrawingBanner from "./DrawingBanner";
 
 
 
@@ -41,6 +42,8 @@ const HeroSection = () => {
       <CareerRoadmapBanner />
       <br/>
        <CheckEligibility />
+      <br />
+      <DrawingBanner/>
       <br />
       <BestCollege />
       <br />
