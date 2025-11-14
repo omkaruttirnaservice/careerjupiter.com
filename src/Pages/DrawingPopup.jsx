@@ -37,11 +37,13 @@ const showToast = (icon, title) => {
   });
 };
 
-const DrawingPopup = () => {
+const DrawingPopup = ({ openedManually = false, onClose }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isCompressing, setIsCompressing] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isBannerOpen, setIsBannerOpen] = useState(true);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -69,10 +71,25 @@ const DrawingPopup = () => {
   });
 
   // Auto open popup after 3s
+  // React.useEffect(() => {
+  //   const timer = setTimeout(() => setIsOpen(true), 3000);
+  //   return () => clearTimeout(timer);
+  // }, []);
+
   React.useEffect(() => {
-    const timer = setTimeout(() => setIsOpen(true), 3000);
+    if (openedManually) {
+      setIsOpen(true); // open instantly
+      setIsBannerOpen(true); // show banner instantly
+      return;
+    }
+
+    // Auto-open after 3 seconds
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+    }, 3000);
+
     return () => clearTimeout(timer);
-  }, []);
+  }, [openedManually]);
 
   // ✅ Yup validation schema
   const validationSchema = Yup.object().shape({
@@ -91,6 +108,12 @@ const DrawingPopup = () => {
       setFormData((prev) => ({ ...prev, [name]: value }));
       setErrors((prev) => ({ ...prev, [name]: "" })); // clear error on input change
     }
+  };
+
+  const handleClose = () => {
+    setIsBannerOpen(false);
+    setIsFormOpen(false);
+    onClose(); // tells parent to unmount
   };
 
   // ✅ Image compression function
@@ -195,191 +218,256 @@ const DrawingPopup = () => {
 
   if (!isOpen) return null;
 
+
   return (
-    <div className="fixed z-[100] inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4 animate-fadeIn">
-      <div className="bg-white rounded-lg shadow-2xl w-full max-w-3xl p-6 sm:p-8 relative overflow-y-auto max-h-[90vh]">
-        <button
-          onClick={() => setIsOpen(false)}
-          className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-xl sm:text-2xl"
-        >
-          ✕
-        </button>
+    <>
+      {/* -------------------------------------------------- */}
+      {/* 1️⃣ FIRST POPUP — Banner + Register Button */}
+      {/* -------------------------------------------------- */}
+      {isBannerOpen && (
+        <div className="fixed inset-0 z-[100] bg-black/20 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white p-6 sm:p-8 rounded-lg shadow-2xl w-full max-w-3xl relative">
+            {/* Close Banner */}
+            {/* <button
+            onClick={() => setIsBannerOpen(false)}
+            className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-xl"
+          >
+            ✕
+          </button> */}
 
-        <div className="flex flex-col items-center gap-6">
-          <div className="flex items-center justify-center md:justify-start space-x-2 sm:space-x-3">
-            <FaPaintBrush className="text-3xl sm:text-4xl text-black" />
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 font-sans underline">
-              Drawing and Essay Competition - Student Details
-            </h2>
-          </div>
-          <div className="relative w-full sm:w-[95%] md:w-[95%] rounded-lg overflow-hidden shadow-2xl border-3 transition-all duration-300 ease-in-out hover:scale-[1.02]">
-            <img
-              src="/drawing_banner.jpg"
-              alt="Drawing Banner"
-              className="w-full h-48 sm:h-56 md:h-64 object-cover object-center"
-            />
-          </div>
+            <button
+              onClick={handleClose}
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-xl"
+            >
+              ✕
+            </button>
 
-          <div className="w-full text-center md:text-left">
-            {/* <div className="flex items-center justify-center md:justify-start space-x-2 sm:space-x-3 mb-6">
-              <FaPaintBrush className="text-3xl sm:text-4xl text-black" />
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 font-sans underline">
-                Drawing and Essay Competition - Student Details
-              </h2>
-            </div> */}
+            {/* Banner */}
+            <div className="relative rounded-lg overflow-hidden border-2">
+              <img
+                src="/drawing_banner.jpg"
+                alt="Drawing Banner"
+                className="w-full h-80 object-fill"
+              />
+            </div>
 
-            <form className="grid grid-cols-2 gap-4 text-left">
-              {/* Full Name */}
-              <label className="flex flex-col">
-                Full Name:
-                <input
-                  type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
-                />
-                {errors.fullName && (
-                  <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>
-                )}
-              </label>
-
-              {/* Class */}
-              <label className="flex flex-col">
-                Class / Standard:
-                <select
-                  name="class"
-                  value={formData.class}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
-                >
-                  <option value="">Select Class</option>
-                  {Array.from({ length: 8 }, (_, i) => 5 + i).map((num) => (
-                    <option key={num} value={num}>
-                      {num}th
-                    </option>
-                  ))}
-                </select>
-                {errors.class && (
-                  <p className="text-red-500 text-sm mt-1">{errors.class}</p>
-                )}
-              </label>
-
-              {/* School */}
-              <label className="flex flex-col">
-                School / College Name:
-                <input
-                  type="text"
-                  name="school"
-                  value={formData.school}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
-                />
-                {errors.school && (
-                  <p className="text-red-500 text-sm mt-1">{errors.school}</p>
-                )}
-              </label>
-
-              {/* State */}
-              <label className="flex flex-col">
-                State:
-                <select
-                  name="state"
-                  value={formData.state}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
-                >
-                  {cityData.map((c) => (
-                    <option key={c.state} value={c.state}>
-                      {c.state}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              {/* District */}
-              <label className="flex flex-col">
-                District:
-                <select
-                  name="district"
-                  value={formData.district}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
-                >
-                  <option value="">Select District</option>
-                  {districts.map((d) => (
-                    <option key={d} value={d}>
-                      {d}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              {/* Mobile */}
-              <label className="flex flex-col">
-                Mobile Number:
-                <input
-                  type="text"
-                  name="mobile"
-                  value={formData.mobile}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
-                />
-                {errors.mobile && (
-                  <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>
-                )}
-              </label>
-
-              {/* File upload */}
-              <label className="flex flex-col col-span-2">
-                Upload Your Drawing / Essay (Image / PDF):
-                <input
-                  type="file"
-                  name="drawing"
-                  accept="image/*,application/pdf"
-                  onChange={handleFileUpload}
-                  className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
-                />
-                {errors.drawing && (
-                  <p className="text-red-500 text-sm mt-1">{errors.drawing}</p>
-                )}
-              </label>
-
-              {/* Loader + Preview */}
-              {isCompressing && (
-                <div className="col-span-2 flex justify-center mt-2">
-                  <BounceLoader color="green" />
-                </div>
-              )}
-
-              {previewUrl && !isCompressing && (
-                <div className="col-span-2 text-center mt-2">
-                  <img
-                    src={previewUrl}
-                    alt="Preview"
-                    className="w-full max-h-[200px] object-contain border border-gray-300 rounded"
-                  />
-                  <p className="text-sm text-gray-600">{fileSizeKB} KB</p>
-                </div>
-              )}
-
-              {/* Submit button */}
-              <button
-                type="button"
-                className="col-span-2 w-full flex items-center justify-center bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300 shadow-lg mt-2"
-                onClick={handleSubmit}
-                disabled={mutation.isLoading || isCompressing}
-              >
-                {mutation.isLoading
-                  ? "Submitting..."
-                  : "Submit Your Drawing / Essay"}
-                <IoArrowForwardOutline className="ml-2 text-xl" />
-              </button>
-            </form>
+            {/* Register Now */}
+            <button
+              onClick={() => {
+                setIsBannerOpen(false);
+                setIsFormOpen(true);
+              }}
+              className="mt-6 w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl text-lg font-semibold shadow-md"
+            >
+              Register Now
+            </button>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+
+      {/* -------------------------------------------------- */}
+      {/* 2️⃣ SECOND POPUP — Full Form */}
+      {/* -------------------------------------------------- */}
+      {isFormOpen && (
+        <div className="fixed z-[100] inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-white rounded-lg shadow-2xl w-full max-w-3xl p-6 sm:p-8 relative overflow-y-auto max-h-[90vh]">
+            {/* Close Form */}
+            {/* <button
+              onClick={() => setIsFormOpen(false)}
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-xl sm:text-2xl"
+            >
+              ✕
+            </button> */}
+
+            <button
+              onClick={handleClose}
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-xl sm:text-2xl"
+            >
+              ✕
+            </button>
+
+            <div className="flex flex-col items-center gap-6">
+              <div className="flex items-center justify-center md:justify-start space-x-2 sm:space-x-3">
+                <FaPaintBrush className="text-3xl sm:text-4xl text-black" />
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 font-sans underline">
+                  Drawing and Essay Competition - Student Details
+                </h2>
+              </div>
+
+              {/* <div className="relative w-full sm:w-[95%] md:w-[95%] rounded-lg overflow-hidden shadow-2xl border-3 transition-all duration-300 ease-in-out hover:scale-[1.02]">
+              <img
+                src="/drawing_banner.jpg"
+                alt="Drawing Banner"
+                className="w-full h-48 sm:h-56 md:h-64 object-cover object-center"
+              />
+            </div> */}
+
+              <div className="w-full text-center md:text-left">
+                <form className="grid grid-cols-2 gap-4 text-left">
+                  {/* Full Name */}
+                  <label className="flex flex-col">
+                    Full Name:
+                    <input
+                      type="text"
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
+                    />
+                    {errors.fullName && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.fullName}
+                      </p>
+                    )}
+                  </label>
+
+                  {/* Class */}
+                  <label className="flex flex-col">
+                    Class / Standard:
+                    <select
+                      name="class"
+                      value={formData.class}
+                      onChange={handleInputChange}
+                      className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
+                    >
+                      <option value="">Select Class</option>
+                      {Array.from({ length: 8 }, (_, i) => 5 + i).map((num) => (
+                        <option key={num} value={num}>
+                          {num}th
+                        </option>
+                      ))}
+                    </select>
+                    {errors.class && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.class}
+                      </p>
+                    )}
+                  </label>
+
+                  {/* School */}
+                  <label className="flex flex-col">
+                    School / College Name:
+                    <input
+                      type="text"
+                      name="school"
+                      value={formData.school}
+                      onChange={handleInputChange}
+                      className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
+                    />
+                    {errors.school && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.school}
+                      </p>
+                    )}
+                  </label>
+
+                  {/* State */}
+                  <label className="flex flex-col">
+                    State:
+                    <select
+                      name="state"
+                      value={formData.state}
+                      onChange={handleInputChange}
+                      className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
+                    >
+                      {cityData.map((c) => (
+                        <option key={c.state} value={c.state}>
+                          {c.state}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  {/* District */}
+                  <label className="flex flex-col">
+                    District:
+                    <select
+                      name="district"
+                      value={formData.district}
+                      onChange={handleInputChange}
+                      className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
+                    >
+                      <option value="">Select District</option>
+                      {districts.map((d) => (
+                        <option key={d} value={d}>
+                          {d}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  {/* Mobile */}
+                  <label className="flex flex-col">
+                    Mobile Number:
+                    <input
+                      type="text"
+                      name="mobile"
+                      value={formData.mobile}
+                      onChange={handleInputChange}
+                      className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
+                    />
+                    {errors.mobile && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.mobile}
+                      </p>
+                    )}
+                  </label>
+
+                  {/* File Upload */}
+                  <label className="flex flex-col col-span-2">
+                    Upload Your Drawing / Essay (Image / PDF):
+                    <input
+                      type="file"
+                      name="drawing"
+                      accept="image/*,application/pdf"
+                      onChange={handleFileUpload}
+                      className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
+                    />
+                    {errors.drawing && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.drawing}
+                      </p>
+                    )}
+                  </label>
+
+                  {/* Loader */}
+                  {isCompressing && (
+                    <div className="col-span-2 flex justify-center mt-2">
+                      <BounceLoader color="green" />
+                    </div>
+                  )}
+
+                  {/* Preview */}
+                  {previewUrl && !isCompressing && (
+                    <div className="col-span-2 text-center mt-2">
+                      <img
+                        src={previewUrl}
+                        alt="Preview"
+                        className="w-full max-h-[200px] object-contain border border-gray-300 rounded"
+                      />
+                      <p className="text-sm text-gray-600">{fileSizeKB} KB</p>
+                    </div>
+                  )}
+
+                  {/* Submit Button */}
+                  <button
+                    type="button"
+                    className="col-span-2 w-full flex items-center justify-center bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300 shadow-lg mt-2"
+                    onClick={handleSubmit}
+                    disabled={mutation.isLoading || isCompressing}
+                  >
+                    {mutation.isLoading
+                      ? "Submitting..."
+                      : "Submit Your Drawing / Essay"}
+                    <IoArrowForwardOutline className="ml-2 text-xl" />
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
